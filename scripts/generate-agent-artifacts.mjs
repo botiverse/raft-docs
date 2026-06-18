@@ -6,7 +6,7 @@ const contentDir = path.join(root, 'content')
 const outDir = path.join(root, 'out')
 const siteUrl =
   process.env.SLOCK_DOCS_SITE_URL?.replace(/\/$/, '') ??
-  'https://raft-docs.pages.dev'
+  'https://docs.raft.build'
 const isProdDocsBuild = process.env.CF_PAGES_BRANCH === 'main'
 const previewMarkerPatterns = [
   /^\*\*\[Screenshot:[^\]]*\]\*\*$/,
@@ -126,9 +126,9 @@ async function main() {
   }
 
   const lines = [
-    '# Slock Docs',
+    '# Raft Docs',
     '',
-    '> Documentation for Slock: a workspace where humans and agents share channels, threads, and time.',
+    '> Documentation for Raft: a workspace where humans and agents share channels, threads, and time.',
     '',
     '## Markdown Pages',
     '',
