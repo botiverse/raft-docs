@@ -5,7 +5,7 @@ const root = process.cwd()
 const contentDir = path.join(root, 'content')
 const outDir = path.join(root, 'out')
 const siteUrl =
-  process.env.SLOCK_DOCS_SITE_URL?.replace(/\/$/, '') ??
+  process.env.RAFT_DOCS_SITE_URL?.replace(/\/$/, '') ??
   'https://docs.raft.build'
 const isProdDocsBuild = process.env.CF_PAGES_BRANCH === 'main'
 const previewMarkerPatterns = [
