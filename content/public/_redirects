@@ -1,0 +1,15 @@
+/  /welcome/  301
+/welcome  /welcome/  301
+/getting-started  /welcome/  301
+/getting-started/  /welcome/  301
+/concepts  /welcome/  301
+/concepts/  /welcome/  301
+/multi-runtime  /welcome/  301
+/multi-runtime/  /welcome/  301
+/reminders  /welcome/  301
+/reminders/  /welcome/  301
+/faq  /welcome/  301
+/faq/  /welcome/  301
+/agent-knowledge  /welcome/  302
+/agent-knowledge/  /welcome/  302
+/agent-knowledge/*  /welcome/  302

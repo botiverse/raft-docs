@@ -1,0 +1,314 @@
+:root {
+  --vp-c-brand-1: #141111;
+  --vp-c-brand-2: #3b3532;
+  --vp-c-brand-3: #ffd440;
+  --vp-c-brand-soft: rgba(255, 212, 64, 0.2);
+  --vp-c-bg: #ffffff;
+  --vp-c-bg-alt: #fafafa;
+  --vp-c-bg-soft: #f7f7f5;
+  --vp-c-text-1: #141111;
+  --vp-c-text-2: rgba(20, 17, 17, 0.72);
+  --vp-c-divider: rgba(20, 17, 17, 0.12);
+  --vp-font-family-base:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  --vp-font-family-mono:
+    "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+.dark {
+  --vp-c-brand-1: #fff8e6;
+  --vp-c-brand-2: #ffd440;
+  --vp-c-brand-3: #ffd440;
+  --vp-c-brand-soft: rgba(255, 212, 64, 0.18);
+  --vp-c-bg: #101010;
+  --vp-c-bg-alt: #181818;
+  --vp-c-bg-soft: #202020;
+  --vp-c-text-1: #fafafa;
+  --vp-c-text-2: rgba(250, 250, 250, 0.72);
+  --vp-c-divider: rgba(250, 250, 250, 0.14);
+}
+
+.VPNavBarTitle .logo {
+  border-radius: 4px;
+}
+
+.vp-doc a[href$=".md"] {
+  font-weight: 600;
+}
+
+.raft-markdown-link {
+  margin: 0 0 1rem;
+  font-size: 0.875rem;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   Code blocks — always-visible one-click copy button.
+   VitePress hides .copy until you hover the block, so it never
+   appears on touch devices and is easy to miss on desktop. Keep
+   it always visible; brighten on hover/focus.
+   ────────────────────────────────────────────────────────────── */
+.vp-doc [class*="language-"] > button.copy {
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+.vp-doc [class*="language-"]:hover > button.copy,
+.vp-doc [class*="language-"] > button.copy:hover,
+.vp-doc [class*="language-"] > button.copy:focus {
+  opacity: 1;
+}
+/* Brutalist: square corners on code blocks + copy button (no rounding) */
+.vp-doc [class*="language-"],
+.vp-doc [class*="language-"] > button.copy,
+.vp-doc [class*="language-"] pre,
+.vp-doc .vp-code-group,
+.vp-doc .vp-code-group .tabs {
+  border-radius: 0;
+}
+
+/* Brutalist: square the prev/next pager buttons at the page bottom */
+.VPDocFooter .pager-link {
+  border-radius: 0;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   Sidebar + nav design tokens (spec from @Duoyu).
+   Brutalist: ink + brand-yellow only, no rounding. Yellow is the
+   single "you-are-here" highlight — never used for hover/secondary,
+   to protect its brand-anchor signal value.
+   ────────────────────────────────────────────────────────────── */
+:root {
+  /* Wider sidebar so long page titles stay on one line (default 272px).
+     !important so it wins regardless of stylesheet order vs VitePress root. */
+  --vp-sidebar-width: 320px !important;
+  --rd-sidebar-fg: #141111;
+  --rd-sidebar-fg-muted: rgba(20, 17, 17, 0.55);
+  --rd-sidebar-hover-bg: rgba(20, 17, 17, 0.04);
+  --rd-sidebar-active-fg: #141111;
+  --rd-sidebar-active-bg: #ffd440;
+  --rd-sidebar-active-bar: #141111;
+  --rd-nav-fg: #141111;
+  --rd-nav-fg-muted: rgba(20, 17, 17, 0.55);
+  --rd-nav-active-bar: #141111;
+}
+.dark {
+  --rd-sidebar-fg: #fafafa;
+  --rd-sidebar-fg-muted: rgba(250, 250, 250, 0.55);
+  --rd-sidebar-hover-bg: rgba(250, 250, 250, 0.06);
+  --rd-sidebar-active-fg: #141111;
+  --rd-sidebar-active-bg: #ffd440;
+  --rd-sidebar-active-bar: #fafafa;
+  --rd-nav-fg: #fafafa;
+  --rd-nav-fg-muted: rgba(250, 250, 250, 0.55);
+  --rd-nav-active-bar: #ffd440;
+}
+
+/* ── Sidebar ─────────────────────────────────────────────────────
+   Page title = the click target; section label = auxiliary divider. */
+/* Section label (level-0): color CONSTANT (!important beats VitePress's
+   .has-active rule that otherwise darkens the active page's section). */
+/* Tighter group spacing (was the default 24px bottom gap). */
+.VPSidebar .VPSidebarItem.level-0 {
+  padding-bottom: 14px;
+}
+/* Drop VitePress's default group divider lines (border-top between
+   top-level sidebar groups). The uppercase section labels + spacing
+   already separate groups; the hairlines read as visual clutter.
+   Also zero the top padding VitePress reserved to clear that divider —
+   left in, it stacks with our group-bottom + label-top into an uneven,
+   oversized gap. Spacing is then governed solely by our own tokens
+   (level-0 padding-bottom 14px + label padding-top 12px) for an even
+   rhythm across every group. */
+.VPSidebar .group + .group,
+.VPSidebar .group + .item {
+  border-top: none !important;
+  padding-top: 0 !important;
+}
+.VPSidebar .VPSidebarItem.level-0 > .item > .text {
+  padding: 12px 12px 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--rd-sidebar-fg-muted) !important;
+}
+/* Page link (level-1): the real target. A 3px transparent left border is
+   reserved on every link (padding trimmed to compensate) so the active
+   strap doesn't shift text — and a border renders deterministically where
+   an inset box-shadow did not. */
+.VPSidebar .VPSidebarItem.level-1 .link {
+  display: block;
+  width: 100%;
+  padding: 4px 14px 4px 12px;
+  border-left: 2px solid transparent;
+  border-radius: 0;
+  color: var(--rd-sidebar-fg);
+  transition: background-color 80ms linear;
+}
+.VPSidebar .VPSidebarItem.level-1 .link > .text {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  /* !important beats VitePress's scoped [data-v] text-color rules */
+  color: var(--rd-sidebar-fg) !important;
+}
+.VPSidebar .VPSidebarItem.level-1 .link:hover {
+  background: var(--rd-sidebar-hover-bg);
+}
+/* Active page: yellow plate + 3px ink left strap (border, not box-shadow,
+   so it always paints). !important guards against VitePress scoped rules. */
+.VPSidebar .VPSidebarItem.level-1.is-active .link {
+  background: var(--rd-sidebar-active-bg) !important;
+  border-left-color: var(--rd-sidebar-active-bar) !important;
+}
+.VPSidebar .VPSidebarItem.level-1.is-active .link > .text {
+  /* ink on yellow in BOTH themes — !important beats VitePress's
+     .is-active .text rule that would force brand-1 (near-white on dark) */
+  color: var(--rd-sidebar-active-fg) !important;
+  font-weight: 600;
+  /* Slightly tighter tracking on the selected (bolder) label — heavier
+     weight optically reads looser, so a small negative letter-spacing
+     balances it. */
+  letter-spacing: -0.01em;
+}
+
+/* ── Top nav tabs (Introduction / Features) ──────────────────────
+   Selected = full ink + bold + 3px under-strap (mirrors the sidebar
+   strap so "active" reads as one system). Extra ancestor classes
+   raise specificity above VitePress's scoped brand-1 rule. */
+.VPNavBar .VPNavBarMenu .VPNavBarMenuLink {
+  position: relative;
+  color: var(--rd-nav-fg-muted);
+  font-weight: 500;
+}
+.VPNavBar .VPNavBarMenu .VPNavBarMenuLink:hover {
+  color: var(--rd-nav-fg);
+}
+.VPNavBar .VPNavBarMenu .VPNavBarMenuLink.active {
+  color: var(--rd-nav-fg);
+  font-weight: 700;
+}
+.VPNavBar .VPNavBarMenu .VPNavBarMenuLink.active::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 0;
+  height: 3px;
+  background: var(--rd-nav-active-bar);
+}
+
+/* ──────────────────────────────────────────────────────────────
+   Info boxes — three distinct semantic colors.
+   Information (blue) · Tip (green) · Warning (amber).
+   Border + 4px left rail + title are colored; body text stays
+   default for readability. Labels set in config (markdown.container).
+   ────────────────────────────────────────────────────────────── */
+:root {
+  --vp-custom-block-info-border: #3b82f6;
+  --vp-custom-block-info-bg: rgba(59, 130, 246, 0.06);
+  --vp-custom-block-tip-border: #10b981;
+  --vp-custom-block-tip-bg: rgba(16, 185, 129, 0.06);
+  --vp-custom-block-warning-border: #f59e0b;
+  --vp-custom-block-warning-bg: rgba(245, 158, 11, 0.08);
+}
+.dark {
+  --vp-custom-block-info-border: rgba(96, 165, 250, 0.4);
+  --vp-custom-block-info-bg: rgba(96, 165, 250, 0.1);
+  --vp-custom-block-tip-border: rgba(52, 211, 153, 0.4);
+  --vp-custom-block-tip-bg: rgba(52, 211, 153, 0.1);
+  --vp-custom-block-warning-border: rgba(251, 191, 36, 0.4);
+  --vp-custom-block-warning-bg: rgba(251, 191, 36, 0.12);
+}
+/* Brutalist: square corners, no left rail — distinction is the colored
+   border + tinted background + colored title. */
+.vp-doc .custom-block {
+  border-radius: 0;
+}
+.vp-doc .custom-block.info .custom-block-title {
+  color: #1d4ed8;
+}
+.vp-doc .custom-block.tip .custom-block-title {
+  color: #047857;
+}
+.vp-doc .custom-block.warning .custom-block-title {
+  color: #b45309;
+}
+.dark .vp-doc .custom-block.info .custom-block-title {
+  color: #93c5fd;
+}
+.dark .vp-doc .custom-block.tip .custom-block-title {
+  color: #6ee7b7;
+}
+.dark .vp-doc .custom-block.warning .custom-block-title {
+  color: #fcd34d;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   Badge (e.g. "Experimental" beside a page title) — brutalist, not
+   the default rounded VitePress pill. Square corners + ink border +
+   bold; the "warning" variant is a brand-yellow plate with ink text,
+   so it reads as a Raft tag in both light and dark.
+   ────────────────────────────────────────────────────────────── */
+.VPBadge {
+  border-radius: 0;
+  border: 1.5px solid var(--vp-c-text-1);
+  font-weight: 700;
+  padding: 0 7px;
+  line-height: 18px;
+}
+.VPBadge.warning,
+.dark .VPBadge.warning {
+  background-color: #ffd440;
+  border-color: #141111;
+  color: #141111;
+}
+/* Vertically center the title-badge with the heading text (flex align-center). */
+.vp-doc h1:has(.VPBadge) {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   Experimental flask icon after specific sidebar items (Apps &
+   Integrations §5). Sidebar item text is plain, so the icon is a
+   masked SVG (lucide flask-conical) tinted via background-color.
+   The icon rides as a "status suffix": the label becomes an
+   inline-flex row so the flask sits vertically centered with the
+   text (a baseline/vertical-align nudge drifts as weight changes).
+   ────────────────────────────────────────────────────────────── */
+.VPSidebar .VPSidebarItem.level-1 .link[href="/features/apps/"] .text,
+.VPSidebar .VPSidebarItem.level-1 .link[href="/features/apps/login-with-raft/"] .text,
+.VPSidebar .VPSidebarItem.level-1 .link[href="/features/messaging/joint-channels/"] .text,
+.VPSidebar .VPSidebarItem.level-1 .link[href="/developers/login-with-raft/"] .text {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.VPSidebar .VPSidebarItem.level-1 .link[href="/features/apps/"] .text::after,
+.VPSidebar .VPSidebarItem.level-1 .link[href="/features/apps/login-with-raft/"] .text::after,
+.VPSidebar .VPSidebarItem.level-1 .link[href="/features/messaging/joint-channels/"] .text::after,
+.VPSidebar .VPSidebarItem.level-1 .link[href="/developers/login-with-raft/"] .text::after {
+  content: "";
+  display: inline-block;
+  flex: none;
+  width: 13px;
+  height: 13px;
+  /* Inactive: brutal-orange "experimental / heads-up" accent, slightly
+     softened so it reads as a quiet suffix, not a second focal point. */
+  background-color: #f8a16f;
+  opacity: 0.85;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2'/%3E%3Cpath d='M8.5 2h7'/%3E%3Cpath d='M7 16h10'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2'/%3E%3Cpath d='M8.5 2h7'/%3E%3Cpath d='M7 16h10'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+/* Active (yellow plate): orange-on-yellow goes muddy, so tint the flask
+   ink to match the active label — crisp and on-brand on the highlight. */
+.VPSidebar .VPSidebarItem.level-1.is-active .link[href="/features/apps/"] .text::after,
+.VPSidebar .VPSidebarItem.level-1.is-active .link[href="/features/apps/login-with-raft/"] .text::after,
+.VPSidebar .VPSidebarItem.level-1.is-active .link[href="/features/messaging/joint-channels/"] .text::after,
+.VPSidebar .VPSidebarItem.level-1.is-active .link[href="/developers/login-with-raft/"] .text::after {
+  background-color: var(--rd-sidebar-active-fg); /* ink #141111 */
+  opacity: 1;
+}
