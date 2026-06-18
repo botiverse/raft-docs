@@ -1,2 +1,4 @@
 User-agent: *
 Disallow: /agent-knowledge/
+
+Sitemap: https://docs.raft.build/sitemap.xml
