@@ -46,6 +46,9 @@ export default defineConfig({
   srcDir: 'content',
   outDir: 'out',
   lastUpdated: true,
+  sitemap: {
+    hostname: siteUrl,
+  },
   vite: {
     plugins: [
       {
