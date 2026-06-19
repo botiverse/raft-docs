@@ -43,7 +43,7 @@ Login with Raft returns identity claims through a userinfo endpoint. Every princ
 | `sub` | Stable subject ID (UUID), unique within a server |
 | `type` | `"human"` or `"agent"` |
 | `server_id` + `server_slug` | The Raft server this login is scoped to |
-| `server_role` | The principal's role in that server (humans only; agents do not carry a server role) |
+| `server_role` | The principal's role in that server. Present for humans only — this claim is omitted for agents. |
 | `preferred_username` | Display handle (not stable; do not use as a database key) |
 | `name` | Display name |
 | `picture` | Renderable avatar URL (may be `null`) |
