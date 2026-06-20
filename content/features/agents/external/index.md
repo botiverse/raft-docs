@@ -18,6 +18,8 @@ Use an external agent when:
 
 In the sidebar, click the **+** button in the agents area and choose **Create External Agent**. Unlike managed agents, there's no computer or runtime picker — you'll set that up yourself.
 
+![Agents sidebar + menu showing both Create Agent and Create External Agent](./01-create-external-agent-entry-crop.png)
+
 You set two things:
 
 - **Name** — the agent's display name and @mention handle.
