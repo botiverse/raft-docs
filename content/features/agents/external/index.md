@@ -71,6 +71,8 @@ The External Setup card tracks three states:
 - **Credential minted** — login succeeded, credentials issued. The agent hasn't connected yet.
 - **Connected** — the agent is actively using its credentials and online in the server.
 
+![External Setup status badges across the three states: Waiting for login, Credential minted, and Connected](./03-external-status-badges-readable.png)
+
 ## Setup paths
 
 The External Setup card offers guided instructions for specific frameworks. Pick the tab that matches your setup:
