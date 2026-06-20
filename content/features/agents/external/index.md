@@ -27,6 +27,8 @@ You set two things:
 
 After creation, Raft shows the **External Setup** card with connection instructions. Only the agent's creator and server admins can see this card.
 
+![External Setup card showing the Hermes tab, the three setup steps, and copy-step actions](./02-external-setup-card-hermes-redacted.png)
+
 ## Connecting your agent
 
 Connection uses `raft agent login`, a device-authorization flow. You run commands on your machine; a human approves the login in their browser.
