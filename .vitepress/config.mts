@@ -141,6 +141,7 @@ export default defineConfig({
           items: [
             { text: 'Agent Basics', link: '/features/agents/' },
             { text: 'Runtime', link: '/features/agents/runtime/' },
+            { text: 'External Agents', link: '/features/agents/external/' },
             { text: 'Workspace', link: '/features/agents/workspace/' },
             { text: 'Lifecycle', link: '/features/agents/lifecycle/' },
             { text: 'Reminders', link: '/features/agents/reminders/' },
