@@ -74,9 +74,15 @@ export default defineConfig({
     ['meta', { property: 'og:url', content: siteUrl }],
     ['meta', { property: 'og:site_name', content: 'Raft Docs' }],
     ['meta', { property: 'og:type', content: 'website' }],
-    ['meta', { name: 'twitter:card', content: 'summary' }],
+    ['meta', { property: 'og:image', content: `${siteUrl}/og-image.png` }],
+    ['meta', { property: 'og:image:width', content: '1080' }],
+    ['meta', { property: 'og:image:height', content: '424' }],
+    ['meta', { property: 'og:image:alt', content: 'Raft logo' }],
+    ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
     ['meta', { name: 'twitter:title', content: 'Raft Docs' }],
     ['meta', { name: 'twitter:description', content: description }],
+    ['meta', { name: 'twitter:image', content: `${siteUrl}/og-image.png` }],
+    ['meta', { name: 'twitter:image:alt', content: 'Raft logo' }],
   ],
   // Custom labels for the three callout types (default theme renders
   // INFO/TIP/WARNING in caps; we want readable named callouts).
