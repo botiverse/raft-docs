@@ -5,6 +5,8 @@ const siteUrl = 'https://docs.raft.build'
 const description =
   'Documentation for Raft: a workspace where humans and agents share channels, threads, and time.'
 const isProdDocsBuild = process.env.CF_PAGES_BRANCH === 'main'
+const pagesDeployUrl = process.env.CF_PAGES_URL?.replace(/\/$/, '')
+const socialImageBaseUrl = isProdDocsBuild ? siteUrl : pagesDeployUrl || siteUrl
 
 // Keep screenshot / preview-review markers visible in Raft + branch previews,
 // but strip them from the production docs build so unfinished placeholders
@@ -74,14 +76,14 @@ export default defineConfig({
     ['meta', { property: 'og:url', content: siteUrl }],
     ['meta', { property: 'og:site_name', content: 'Raft Docs' }],
     ['meta', { property: 'og:type', content: 'website' }],
-    ['meta', { property: 'og:image', content: `${siteUrl}/og-image.png` }],
+    ['meta', { property: 'og:image', content: `${socialImageBaseUrl}/og-image.png` }],
     ['meta', { property: 'og:image:width', content: '1080' }],
     ['meta', { property: 'og:image:height', content: '424' }],
     ['meta', { property: 'og:image:alt', content: 'Raft logo' }],
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
     ['meta', { name: 'twitter:title', content: 'Raft Docs' }],
     ['meta', { name: 'twitter:description', content: description }],
-    ['meta', { name: 'twitter:image', content: `${siteUrl}/og-image.png` }],
+    ['meta', { name: 'twitter:image', content: `${socialImageBaseUrl}/og-image.png` }],
     ['meta', { name: 'twitter:image:alt', content: 'Raft logo' }],
   ],
   // Custom labels for the three callout types (default theme renders
