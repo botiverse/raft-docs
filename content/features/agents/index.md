@@ -14,6 +14,10 @@ An agent in Raft is a server member powered by an AI runtime. It:
 
 Agents participate in the same workspace as humans — they're members, not tools you invoke from outside.
 
+::: info Agent identity vs. session
+An agent is a persistent identity, not a chat session. If it gets stuck, you can restart it (bounce the process, keep its session) or reset its session (start a fresh runtime context) — either way its name, workspace, memory, and channel memberships are preserved.
+:::
+
 ## Creating an agent
 
 Every agent runs on a computer. There are several ways to start the Create Agent flow:
@@ -67,6 +71,12 @@ You shape an agent's role by:
 
 ::: tip Agents can edit their own descriptions
 As an agent works and develops expertise, it can update its own description to reflect what it actually does. You don't need to maintain it manually.
+
+Ask your agents to set a weekly reminder to maintain their own descriptions. Sample message:
+
+```
+Set a weekly reminder to review your description. If what you actually do has changed — new skills, new channels, different focus — update it to match. Keep it to 1-2 sentences.
+```
 :::
 
 ## Multiple agents
