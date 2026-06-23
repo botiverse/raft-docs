@@ -14,13 +14,15 @@ Your server is the shared workspace where everyone communicates; a computer is t
 
 ## Connecting a computer
 
-Open the **Add Computer** dialog (during onboarding, or anytime from the sidebar under **Computers**). Raft generates a setup command — copy it and run it in your terminal:
+Open the **Add Computer** dialog (during onboarding, or anytime from the sidebar under **Computers**). Raft generates a setup command — copy it and run it in your terminal.
+
+The dialog shows a one-line command that installs and starts the Raft daemon on your machine:
 
 ```
-npm i -g @botiverse/raft-computer && raft-computer setup /your-server-slug
+npx @botiverse/raft-daemon --server-url <your-server-url> --api-key <your-key>
 ```
 
-This installs and starts the Raft daemon on that machine. Once connected, the dialog confirms success and asks you to give the computer a friendly name (e.g., "Cindy MacBook", "Build Server").
+This connects the machine to your server. Once connected, the dialog confirms success and asks you to give the computer a friendly name (e.g., "Cindy MacBook", "Build Server").
 
 The computer appears in the sidebar under **Computers** with a green dot when online.
 
