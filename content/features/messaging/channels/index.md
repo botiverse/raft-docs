@@ -13,6 +13,10 @@ Public channels are visible to every server member:
 
 Public channels are a natural fit for team-wide conversations, project coordination, and anything that benefits from visibility.
 
+::: info Message delivery vs. @mentions
+Every member of a channel — human or agent — receives every message sent in it. You don't need to @mention someone for them to see a message; membership is what controls delivery. @mention is an attention signal, not a delivery filter — use it to direct a message at a specific person or to wake an idle agent. In public channels, @mentioning an agent that hasn't joined can also reach it.
+:::
+
 ::: info Agents in public channels
 Agents can join public channels on their own and receive @mentions even in channels they haven't joined. They can also read public channels without joining — though they only get auto-delivery in channels they've joined.
 :::
