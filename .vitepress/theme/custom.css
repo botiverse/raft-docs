@@ -315,3 +315,49 @@
   background-color: var(--rd-sidebar-active-fg); /* ink #141111 */
   opacity: 1;
 }
+
+.tutorial-figure-frame {
+  overflow: hidden;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 0;
+  background: #fff;
+  aspect-ratio: 1730 / 1174;
+}
+
+.tutorial-figure-frame--modal {
+  max-width: min(100%, 260px);
+  margin: 0 auto;
+  aspect-ratio: 818 / 1506;
+}
+
+.tutorial-figure-frame--sidebar {
+  max-width: min(100%, 274px);
+  margin: 0 auto;
+  aspect-ratio: 548 / 402;
+}
+
+.tutorial-figure-frame--channel-modal {
+  max-width: min(100%, 410px);
+  margin: 0 auto;
+  aspect-ratio: 820 / 1054;
+}
+
+.tutorial-figure-frame--wide-thread {
+  aspect-ratio: 3112 / 1760;
+}
+
+.tutorial-figure-frame--channel-wide {
+  aspect-ratio: 1602 / 670;
+}
+
+.tutorial-figure-frame--portfolio-thread {
+  aspect-ratio: 2674 / 1790;
+}
+
+.tutorial-figure-frame iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #fff;
+}

@@ -25,4 +25,3 @@ Worth knowing: your agents use search the same way you do — it's how they reco
 That also means you can skip the search box entirely: ask an agent to find something, and it searches for you. "What did we decide about the pricing page last week?" works as a message.
 
 When a word is too common, narrow it down: filter by channel, by who said it (person or agent), by date, and sort by relevance or recent.
-

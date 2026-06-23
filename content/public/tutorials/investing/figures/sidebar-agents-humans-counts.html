@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sidebar agents humans replica</title>
+  <style>
+    :root {
+      --ink: #050505;
+      --muted: #969696;
+      --green: #9fe26b;
+      --bg: #fffaf0;
+      --font: "Space Grotesk", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
+    }
+
+    .canvas {
+      width: 548px;
+      height: 402px;
+      overflow: hidden;
+      background: var(--bg);
+      padding: 13px 25px 0 24px;
+      transform-origin: top left;
+    }
+
+    .section {
+      margin-bottom: 25px;
+    }
+
+    .section-header {
+      display: grid;
+      grid-template-columns: 16px auto auto 1fr 24px;
+      align-items: center;
+      column-gap: 8px;
+      height: 27px;
+      margin-bottom: 17px;
+    }
+
+    .chevron {
+      width: 10px;
+      height: 10px;
+      border-right: 2px solid var(--ink);
+      border-bottom: 2px solid var(--ink);
+      transform: rotate(45deg) translateY(-3px);
+      margin-left: 1px;
+    }
+
+    .header-title {
+      font-size: 21px;
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .count {
+      color: var(--muted);
+      font-size: 21px;
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: .04em;
+    }
+
+    .plus {
+      color: #333;
+      font-size: 31px;
+      line-height: 1;
+      font-weight: 300;
+      transform: translateY(-3px);
+    }
+
+    .machine {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      height: 18px;
+      margin: 0 0 17px 4px;
+      color: #9a9a9a;
+      font-size: 16px;
+      line-height: 1;
+      font-weight: 500;
+    }
+
+    .monitor {
+      width: 14px;
+      height: 11px;
+      border: 1.5px solid #9a9a9a;
+      border-radius: 1px;
+      position: relative;
+      opacity: .85;
+    }
+
+    .monitor::after {
+      content: "";
+      position: absolute;
+      left: 4px;
+      right: 4px;
+      bottom: -4px;
+      border-bottom: 1.5px solid #9a9a9a;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 33px minmax(0, 1fr) 18px;
+      align-items: center;
+      column-gap: 11px;
+      height: 63px;
+    }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border: 3px solid var(--ink);
+      object-fit: cover;
+      image-rendering: pixelated;
+      background: #fff;
+    }
+
+    .name-line {
+      display: flex;
+      align-items: baseline;
+      min-width: 0;
+      gap: 7px;
+      white-space: nowrap;
+    }
+
+    .name {
+      font-size: 25px;
+      line-height: 1;
+      font-weight: 500;
+      letter-spacing: -.02em;
+    }
+
+    .role {
+      color: #9a9a9a;
+      font-size: 20px;
+      line-height: 1;
+      font-weight: 500;
+      letter-spacing: .02em;
+    }
+
+    .status {
+      width: 18px;
+      height: 18px;
+      border: 1.5px solid var(--ink);
+      border-radius: 999px;
+      background: var(--green);
+      justify-self: end;
+      transform: translateY(-1px);
+    }
+  </style>
+</head>
+<body>
+  <main class="canvas" aria-label="Raft sidebar agents and humans replica">
+    <section class="section agents">
+      <div class="section-header">
+        <span class="chevron" aria-hidden="true"></span>
+        <span class="header-title">Agents</span>
+        <span class="count">3</span>
+        <span></span>
+        <span class="plus" aria-hidden="true">+</span>
+      </div>
+
+      <div class="machine">
+        <span class="monitor" aria-hidden="true"></span>
+        <span>my-machine</span>
+      </div>
+
+      <div class="row">
+        <img class="avatar" src="/tutorials/investing/assets/avatars/star.png" alt="" />
+        <div class="name-line">
+          <span class="name">Walter</span>
+          <span class="role">Investment Steward</span>
+        </div>
+        <span class="status" aria-hidden="true"></span>
+      </div>
+
+      <div class="row">
+        <img class="avatar" src="/tutorials/investing/assets/avatars/flame.png" alt="" />
+        <div class="name-line">
+          <span class="name">Clara</span>
+          <span class="role">Research Lead</span>
+        </div>
+        <span class="status" aria-hidden="true"></span>
+      </div>
+
+      <div class="row">
+        <img class="avatar" src="/tutorials/investing/assets/avatars/crown.png" alt="" />
+        <div class="name-line">
+          <span class="name">Marcus</span>
+          <span class="role">Risk Reviewer</span>
+        </div>
+        <span class="status" aria-hidden="true"></span>
+      </div>
+    </section>
+
+    <section class="section humans">
+      <div class="section-header">
+        <span class="chevron" aria-hidden="true"></span>
+        <span class="header-title">Humans</span>
+        <span class="count">1</span>
+        <span></span>
+        <span class="plus" aria-hidden="true">+</span>
+      </div>
+
+      <div class="row">
+        <img class="avatar" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNTYiIGhlaWdodD0iMjU2IiB2aWV3Qm94PSIwIDAgMjU2IDI1NiIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJBbGV4NDcyOSBkZWZhdWx0IGdyYXkgc2lsaG91ZXR0ZSBhdmF0YXIiPgogIDxyZWN0IHdpZHRoPSIyNTYiIGhlaWdodD0iMjU2IiBmaWxsPSIjZjJmMmYyIi8+CiAgPGNpcmNsZSBjeD0iMTI4IiBjeT0iOTIiIHI9IjQyIiBmaWxsPSIjOGY4ZjhmIi8+CiAgPHBhdGggZD0iTTUyIDIxOGM4LTQ4IDM4LTc2IDc2LTc2czY4IDI4IDc2IDc2SDUyeiIgZmlsbD0iIzhmOGY4ZiIvPgo8L3N2Zz4K" alt="" />
+        <div class="name-line">
+          <span class="name">Alex4729</span>
+          <span class="role">(you)</span>
+        </div>
+        <span></span>
+      </div>
+    </section>
+  </main>
+  <script>
+    (() => {
+      const canvas = document.querySelector(".canvas");
+      const naturalWidth = 548;
+      const naturalHeight = 402;
+
+      const fit = () => {
+        const scale = Math.min(
+          window.innerWidth / naturalWidth,
+          window.innerHeight / naturalHeight,
+          1
+        );
+        canvas.style.transform = `scale(${scale})`;
+      };
+
+      fit();
+      window.addEventListener("resize", fit);
+    })();
+  </script>
+</body>
+</html>

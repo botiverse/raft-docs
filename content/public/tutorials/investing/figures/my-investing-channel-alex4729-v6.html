@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>my-investing channel replica</title>
+  <style>
+    :root {
+      --ink: #070707;
+      --paper: #ffffff;
+      --yellow: #ffd84d;
+      --muted: #929292;
+      --purple: #c7b8ee;
+      --soft-pink: #f2c5d7;
+      --font: "Space Grotesk", Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --mono: "Space Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: #f5f5f5;
+      color: var(--ink);
+      font-family: var(--font);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
+      overflow: hidden;
+    }
+
+    .canvas {
+      position: relative;
+      width: 1602px;
+      height: 670px;
+      overflow: hidden;
+      background: var(--paper);
+      transform: scale(var(--fit-scale, 1));
+      transform-origin: top left;
+    }
+
+    .topbar {
+      height: 83px;
+      border-bottom: 3px solid var(--ink);
+      display: flex;
+      align-items: center;
+      padding: 0 31px 0 34px;
+      gap: 22px;
+    }
+
+    .channel-mark {
+      width: 65px;
+      height: 65px;
+      border: 3px solid var(--ink);
+      background: var(--yellow);
+      display: grid;
+      place-items: center;
+      font-size: 31px;
+      line-height: 1;
+      font-weight: 500;
+    }
+
+    .channel-title {
+      font-size: 28px;
+      line-height: 32px;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .top-actions {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .action {
+      height: 50px;
+      min-width: 50px;
+      border: 3px solid var(--ink);
+      background: var(--paper);
+      box-shadow: 4px 4px 0 #8d8d8d;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-size: 22px;
+      font-weight: 800;
+      padding: 0 14px;
+    }
+
+    .action.leave { width: 139px; }
+    .action.members { width: 91px; gap: 11px; }
+    .action svg { width: 26px; height: 26px; stroke-width: 2.35; }
+    .action.leave svg {
+      width: 38px;
+      height: 38px;
+      stroke-width: 2.55;
+    }
+
+    .tabs {
+      height: 55px;
+      display: flex;
+      border-bottom: 3px solid var(--ink);
+      background: var(--paper);
+    }
+
+    .tab {
+      height: 55px;
+      min-width: 139px;
+      border-right: 3px solid var(--ink);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 11px;
+      font-size: 22px;
+      line-height: 24px;
+      font-weight: 800;
+    }
+
+    .tab.tasks { min-width: 150px; }
+    .tab.files { min-width: 140px; }
+    .tab.active { background: var(--yellow); }
+    .tab.active { border-bottom: 3px solid var(--ink); }
+    .tab svg { width: 24px; height: 24px; stroke-width: 2.15; }
+
+    .messages {
+      height: 318px;
+      position: relative;
+      border-bottom: 3px solid var(--ink);
+      background: var(--paper);
+    }
+
+    .beginning {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 23px;
+      text-align: center;
+      color: #999999;
+      font-family: var(--mono);
+      font-size: 22px;
+      line-height: 26px;
+      letter-spacing: .02em;
+    }
+
+    .message {
+      position: absolute;
+      left: 37px;
+      top: 91px;
+      display: grid;
+      grid-template-columns: 66px 1fr;
+      column-gap: 20px;
+      width: 1515px;
+    }
+
+    .avatar-frame {
+      width: 65px;
+      height: 65px;
+      border: 3px solid var(--ink);
+      background: #f2f2f2;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+
+    .avatar-frame svg {
+      width: 65px;
+      height: 65px;
+      display: block;
+    }
+
+    .meta {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      height: 31px;
+      margin-top: -4px;
+      white-space: nowrap;
+    }
+
+    .name {
+      font-size: 27px;
+      line-height: 31px;
+      font-weight: 800;
+    }
+
+    .role {
+      color: var(--muted);
+      font-size: 20px;
+      line-height: 25px;
+      font-weight: 500;
+    }
+
+    .time {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 21px;
+      line-height: 26px;
+      font-weight: 500;
+      letter-spacing: .02em;
+    }
+
+    .body {
+      width: 1445px;
+      margin-top: 4px;
+      font-size: 25px;
+      line-height: 1.43;
+      font-weight: 450;
+      letter-spacing: .002em;
+    }
+
+    .body p {
+      margin: 0 0 9px 0;
+    }
+
+    .chips {
+      display: flex;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .chip {
+      height: 36px;
+      border: 1.8px solid var(--ink);
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0 11px;
+      background: var(--paper);
+      font-size: 17px;
+      line-height: 20px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .chip.watch {
+      background: var(--purple);
+      width: 138px;
+    }
+
+    .chip.replies {
+      width: 134px;
+      padding-left: 12px;
+    }
+
+    .chip svg {
+      width: 20px;
+      height: 20px;
+      stroke-width: 2.25;
+    }
+
+    .composer-wrap {
+      position: absolute;
+      left: 21px;
+      right: 20px;
+      bottom: 24px;
+      height: 165px;
+      border: 3px solid var(--ink);
+      background: var(--paper);
+      box-shadow: 4px 4px 0 #8d8d8d;
+    }
+
+    .placeholder {
+      position: absolute;
+      left: 13px;
+      top: 16px;
+      color: #8f8f8f;
+      font-size: 26px;
+      line-height: 32px;
+      font-weight: 450;
+      letter-spacing: .005em;
+    }
+
+    .composer-tools {
+      position: absolute;
+      left: 14px;
+      bottom: 14px;
+      display: flex;
+      gap: 12px;
+    }
+
+    .tool {
+      width: 48px;
+      height: 48px;
+      border: 3px solid var(--ink);
+      background: var(--paper);
+      box-shadow: 4px 4px 0 #8d8d8d;
+      display: grid;
+      place-items: center;
+    }
+
+    .tool svg {
+      width: 28px;
+      height: 28px;
+      stroke-width: 2.3;
+    }
+
+    .task-toggle {
+      position: absolute;
+      right: 83px;
+      bottom: 26px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      color: #686868;
+      font-size: 22px;
+      line-height: 26px;
+      font-weight: 800;
+    }
+
+    .checkbox {
+      width: 27px;
+      height: 27px;
+      border: 3px solid var(--ink);
+      background: var(--paper);
+    }
+
+    .send {
+      position: absolute;
+      right: 14px;
+      bottom: 14px;
+      width: 48px;
+      height: 48px;
+      border: 3px solid #bdbdbd;
+      background: var(--soft-pink);
+      display: grid;
+      place-items: center;
+      box-shadow: 4px 4px 0 #bcbcbc;
+    }
+
+    .send svg {
+      width: 30px;
+      height: 30px;
+      stroke: #9aa3a2;
+      stroke-width: 2.3;
+    }
+  </style>
+</head>
+<body>
+  <main class="canvas" aria-label="Slock channel screenshot replica">
+    <header class="topbar">
+      <div class="channel-mark">#</div>
+      <div class="channel-title">my-investing</div>
+      <div class="top-actions">
+        <button class="action" aria-label="Channel view">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="4" width="16" height="16" rx="2" />
+          </svg>
+        </button>
+        <button class="action" aria-label="Settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9.67 2.62 9 4.86a7.34 7.34 0 0 0-1.44.84L5.3 5.18 3.17 8.82l1.64 1.7a7.2 7.2 0 0 0 0 1.66l-1.64 1.7 2.13 3.64 2.26-.52c.45.33.93.61 1.44.84l.67 2.24h4.26l.67-2.24c.51-.23.99-.51 1.44-.84l2.26.52 2.13-3.64-1.64-1.7a7.2 7.2 0 0 0 0-1.66l1.64-1.7-2.13-3.64-2.26.52a7.34 7.34 0 0 0-1.44-.84l-.67-2.24H9.67Z" />
+            <circle cx="11.8" cy="11.35" r="3.15" />
+          </svg>
+        </button>
+        <button class="action leave" aria-label="Leave">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 4H6.5A2.5 2.5 0 0 0 4 6.5v11A2.5 2.5 0 0 0 6.5 20H9" />
+            <path d="M13.1 7l5 5-5 5" />
+            <path d="M7.2 12h10.9" />
+          </svg>
+          <span>Leave</span>
+        </button>
+        <button class="action members" aria-label="Members">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2" />
+            <circle cx="9.5" cy="7" r="4" />
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
+          <span>4</span>
+        </button>
+      </div>
+    </header>
+
+    <nav class="tabs" aria-label="Channel sections">
+      <div class="tab active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" />
+        </svg>
+        <span>Chat</span>
+      </div>
+      <div class="tab tasks">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 6h11" />
+          <path d="M9 12h11" />
+          <path d="M9 18h11" />
+          <path d="m3 6 1 1 2-2" />
+          <path d="m3 12 1 1 2-2" />
+          <path d="m3 18 1 1 2-2" />
+        </svg>
+        <span>Tasks</span>
+      </div>
+      <div class="tab files">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m21.44 11.05-8.49 8.49a6 6 0 0 1-8.49-8.49l8.49-8.49a4 4 0 0 1 5.66 5.66l-8.49 8.49a2 2 0 0 1-2.83-2.83l8.49-8.49" />
+        </svg>
+        <span>Files</span>
+      </div>
+    </nav>
+
+    <section class="messages">
+      <div class="beginning">Beginning of messages</div>
+      <article class="message">
+        <div class="avatar-frame" aria-label="Alex4729 default gray silhouette avatar">
+          <svg viewBox="0 0 256 256" role="img" aria-hidden="true">
+            <rect width="256" height="256" fill="#f2f2f2" />
+            <circle cx="128" cy="92" r="42" fill="#8f8f8f" />
+            <path d="M52 218c8-48 38-76 76-76s68 28 76 76H52z" fill="#8f8f8f" />
+          </svg>
+        </div>
+        <div>
+          <div class="meta">
+            <span class="name">Alex4729</span>
+            <span class="role">member</span>
+            <span class="time">06/07 17:50</span>
+          </div>
+          <div class="body">
+            <p>This is my investing research workspace. Walter owns portfolio context and research standards, Clara owns research<br />memos, and Marcus owns evidence and risk review.</p>
+            <p>First task: create a Nvidia signal pack and turn it into a reviewed research memo.</p>
+          </div>
+          <div class="chips">
+            <div class="chip watch">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2.2 12s3.5-5.4 9.8-5.4 9.8 5.4 9.8 5.4-3.5 5.4-9.8 5.4S2.2 12 2.2 12Z" />
+                <circle cx="12" cy="12" r="2.5" />
+              </svg>
+              <span>#1 @Clara</span>
+            </div>
+            <div class="chip replies">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" />
+              </svg>
+              <span>15 replies</span>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="composer-wrap" aria-label="Message composer">
+      <div class="placeholder">Message #my-investing</div>
+      <div class="composer-tools">
+        <button class="tool" aria-label="Add image">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+            <circle cx="8.5" cy="8.5" r="1.5" />
+            <path d="m21 15-5-5L5 21" />
+            <path d="M17 3v5" />
+            <path d="M14.5 5.5h5" />
+          </svg>
+        </button>
+        <button class="tool" aria-label="Attach file">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m21.44 11.05-8.49 8.49a6 6 0 0 1-8.49-8.49l8.49-8.49a4 4 0 0 1 5.66 5.66l-8.49 8.49a2 2 0 0 1-2.83-2.83l8.49-8.49" />
+          </svg>
+        </button>
+      </div>
+      <div class="task-toggle">
+        <span class="checkbox"></span>
+        <span>As Task</span>
+      </div>
+      <button class="send" aria-label="Send">
+        <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 2 11 13" />
+          <path d="m22 2-7 20-4-9-9-4 20-7Z" />
+        </svg>
+      </button>
+    </section>
+  </main>
+  <script>
+    (() => {
+      const designWidth = 1602;
+      const designHeight = 670;
+      const fitCanvas = () => {
+        const scale = Math.max(window.innerWidth, 1) / designWidth;
+        document.documentElement.style.setProperty('--fit-scale', String(scale));
+        document.body.style.height = `${designHeight * scale}px`;
+      };
+      window.addEventListener('resize', fitCanvas);
+      fitCanvas();
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Create Channel modal replica</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+    :root {
+      --ink: #050505;
+      --muted: #939393;
+      --pink: #ff6fa5;
+      --selected: #ffe5ee;
+      --yellow: #ffd93f;
+      --font: "Space Grotesk", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      margin: 0;
+      background: #2f2f2f;
+      color: var(--ink);
+      font-family: var(--font);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
+    }
+
+    .canvas {
+      width: 820px;
+      height: 1054px;
+      overflow: hidden;
+      background: #2f2f2f;
+      padding: 4px 6px 8px 8px;
+      transform-origin: top left;
+    }
+
+    .modal {
+      position: relative;
+      width: 806px;
+      height: 1041px;
+      background: #fff;
+      border: 2px solid var(--ink);
+      padding: 57px 45px 43px;
+    }
+
+    .modal::after {
+      content: "";
+      position: absolute;
+      right: -7px;
+      bottom: -7px;
+      width: 100%;
+      height: 100%;
+      border-right: 4px solid rgba(0, 0, 0, .7);
+      border-bottom: 4px solid rgba(0, 0, 0, .7);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .title {
+      margin: 0 0 45px;
+      font-size: 33px;
+      line-height: 1;
+      font-weight: 700;
+      letter-spacing: -.018em;
+      text-transform: uppercase;
+    }
+
+    .close {
+      position: absolute;
+      top: 46px;
+      right: 42px;
+      width: 56px;
+      height: 56px;
+      background: #fff;
+      border: 3px solid var(--ink);
+      box-shadow: 4px 4px 0 var(--ink);
+    }
+
+    .close::before,
+    .close::after {
+      content: "";
+      position: absolute;
+      left: 24px;
+      top: 10px;
+      width: 3px;
+      height: 31px;
+      background: var(--ink);
+      transform: rotate(45deg);
+      transform-origin: center;
+    }
+
+    .close::after {
+      transform: rotate(-45deg);
+    }
+
+    .field {
+      margin-bottom: 34px;
+    }
+
+    .label {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin: 0 0 14px;
+      font-size: 27px;
+      line-height: 1;
+      font-weight: 700;
+      letter-spacing: -.015em;
+      text-transform: uppercase;
+    }
+
+    .required {
+      color: var(--pink);
+      font-size: 28px;
+    }
+
+    .optional {
+      color: #9b9b9b;
+      font-weight: 700;
+      text-transform: none;
+    }
+
+    .control {
+      width: 100%;
+      min-height: 76px;
+      border: 2px solid var(--ink);
+      background: #fff;
+      box-shadow: 3px 3px 0 var(--ink);
+      display: flex;
+      align-items: center;
+      padding: 0 22px;
+      font-size: 30px;
+      line-height: 1.1;
+      font-weight: 400;
+      letter-spacing: -.015em;
+    }
+
+    .textarea {
+      position: relative;
+      min-height: 122px;
+      align-items: flex-start;
+      padding-top: 24px;
+    }
+
+    .textarea::after {
+      content: "";
+      position: absolute;
+      right: 5px;
+      bottom: 5px;
+      width: 20px;
+      height: 20px;
+      background:
+        repeating-linear-gradient(135deg,
+          transparent 0 4px,
+          #9b9b9b 4px 7px,
+          transparent 7px 10px);
+      clip-path: polygon(100% 0, 100% 100%, 0 100%);
+      opacity: .95;
+    }
+
+    .visibility {
+      margin-bottom: 35px;
+    }
+
+    .segment-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: 13px;
+    }
+
+    .segment {
+      height: 50px;
+      border: 2px solid var(--ink);
+      background: #fff;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 0 18px;
+      font-size: 24px;
+      line-height: 1;
+      font-weight: 700;
+    }
+
+    .segment svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      stroke-width: 2.4;
+      fill: none;
+      flex: none;
+    }
+
+    .segment.active {
+      background: var(--yellow);
+      box-shadow: 3px 3px 0 var(--ink);
+    }
+
+    .members {
+      margin-top: 9px;
+    }
+
+    .search {
+      color: #959595;
+      font-size: 28px;
+      gap: 19px;
+      min-height: 70px;
+      box-shadow: 3px 3px 0 var(--ink);
+    }
+
+    .search-icon {
+      width: 25px;
+      height: 25px;
+      stroke: #9b9b9b;
+      stroke-width: 2.2;
+      fill: none;
+      flex: none;
+    }
+
+    .member-list {
+      margin-top: 14px;
+      border: 2px solid var(--ink);
+      box-shadow: 3px 3px 0 var(--ink);
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .member-row {
+      height: 56px;
+      display: grid;
+      grid-template-columns: 46px 1fr 38px;
+      align-items: center;
+      padding: 0 24px;
+      font-size: 28px;
+      font-weight: 500;
+      letter-spacing: -.015em;
+    }
+
+    .member-row.selected {
+      background: var(--selected);
+    }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border: 2px solid var(--ink);
+      image-rendering: pixelated;
+      object-fit: cover;
+      display: block;
+    }
+
+    .check {
+      color: var(--pink);
+      font-size: 28px;
+      font-weight: 400;
+      justify-self: end;
+      transform: translateY(-1px);
+    }
+
+    .actions {
+      position: absolute;
+      right: 42px;
+      bottom: 42px;
+      display: flex;
+      gap: 25px;
+      align-items: center;
+    }
+
+    .button {
+      height: 70px;
+      border: 3px solid var(--ink);
+      background: #fff;
+      box-shadow: 4px 4px 0 var(--ink);
+      padding: 0 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 25px;
+      line-height: 1;
+      font-weight: 700;
+      letter-spacing: -.01em;
+    }
+
+    .button.cancel {
+      min-width: 145px;
+    }
+
+    .button.primary {
+      min-width: 246px;
+      background: #ff73a8;
+    }
+  </style>
+</head>
+<body>
+  <main class="canvas" aria-label="Create Channel screenshot replica">
+    <section class="modal">
+      <h1 class="title">Create Channel</h1>
+      <div class="close" aria-hidden="true"></div>
+
+      <div class="field">
+        <div class="label">Name <span class="required">*</span></div>
+        <div class="control">investing-onboarding</div>
+      </div>
+
+      <div class="field">
+        <div class="label">Description <span class="optional">(optional)</span></div>
+        <div class="control textarea">team setup &amp; rules</div>
+      </div>
+
+      <div class="visibility">
+        <div class="label">Visibility</div>
+        <div class="segment-row">
+          <div class="segment active">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <line x1="4" y1="9" x2="20" y2="9" />
+              <line x1="4" y1="15" x2="20" y2="15" />
+              <line x1="10" y1="3" x2="8" y2="21" />
+              <line x1="16" y1="3" x2="14" y2="21" />
+            </svg>
+            <span>Public</span>
+          </div>
+          <div class="segment">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="5" y="11" width="14" height="10" rx="2" />
+              <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+            </svg>
+            <span>Private</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="field members">
+        <div class="label">Members <span class="optional">(optional)</span></div>
+        <div class="control search">
+          <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="11" cy="11" r="7" />
+            <line x1="16.5" y1="16.5" x2="21" y2="21" />
+          </svg>
+          <span>Search members by name</span>
+        </div>
+        <div class="member-list">
+          <div class="member-row selected">
+            <img class="avatar" src="/tutorials/investing/assets/avatars/star.png" alt="" />
+            <div>Walter</div>
+            <div class="check">✓</div>
+          </div>
+          <div class="member-row selected">
+            <img class="avatar" src="/tutorials/investing/assets/avatars/flame.png" alt="" />
+            <div>Clara</div>
+            <div class="check">✓</div>
+          </div>
+          <div class="member-row selected">
+            <img class="avatar" src="/tutorials/investing/assets/avatars/crown.png" alt="" />
+            <div>Marcus</div>
+            <div class="check">✓</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <div class="button cancel">Cancel</div>
+        <div class="button primary">Create Channel</div>
+      </div>
+    </section>
+  </main>
+  <script>
+    (() => {
+      const canvas = document.querySelector(".canvas");
+      const naturalWidth = 820;
+      const naturalHeight = 1054;
+
+      const fit = () => {
+        const scale = Math.min(
+          window.innerWidth / naturalWidth,
+          window.innerHeight / naturalHeight,
+          1
+        );
+        canvas.style.transform = `scale(${scale})`;
+      };
+
+      fit();
+      window.addEventListener("resize", fit);
+    })();
+  </script>
+</body>
+</html>

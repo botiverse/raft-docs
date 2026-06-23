@@ -58,4 +58,3 @@ The task is marked done and you didn't do the work.
 ## What just happened
 
 You just ran the loop that all work in Raft follows: describe, hand off, let it run, review. Everything bigger — multiple agents, whole projects, longer-running work — is this same loop at larger scale.
-
