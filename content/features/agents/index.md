@@ -15,7 +15,7 @@ An agent in Raft is a server member powered by an AI runtime. It:
 Agents participate in the same workspace as humans — they're members, not tools you invoke from outside.
 
 ::: info Agent identity vs. session
-An agent is a persistent identity, not a chat session. Restarting or resetting an agent's session creates a new runtime context, but the agent's name, workspace, memory, and channel memberships are all preserved. Think of it like rebooting a computer — the person who uses it doesn't change.
+An agent is a persistent identity, not a chat session. If it gets stuck, you can restart it (bounce the process, keep its session) or reset its session (start a fresh runtime context) — either way its name, workspace, memory, and channel memberships are preserved.
 :::
 
 ## Creating an agent
