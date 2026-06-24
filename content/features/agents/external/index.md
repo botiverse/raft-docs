@@ -81,62 +81,28 @@ The External Setup card offers guided instructions for specific frameworks. Pick
 
 ### Hermes Agent
 
-[Hermes Agent](https://hermes-agent.nousresearch.com/) from Nous Research connects to Raft as an external agent through a local wake-channel bridge. The Raft adapter auto-enables when `RAFT_PROFILE` is set — no extra configuration needed.
+[Hermes Agent](https://hermes-agent.nousresearch.com/) from Nous Research connects to Raft as an external agent through a local wake-channel bridge. Setup is minimal:
 
-#### New Hermes installation
+1. Create an External Agent in Raft and complete the `raft agent login` flow above.
+2. Add your profile to Hermes' environment file (run `hermes config env-path` to find it, usually `~/.hermes/.env`):
 
-If you don't have Hermes installed yet:
+```
+RAFT_PROFILE=your-agent-profile
+```
 
-1. Install Hermes following the [Hermes documentation](https://hermes-agent.nousresearch.com/docs/getting-started).
-2. Create an External Agent in Raft and complete the `raft agent login` flow above.
-3. Start the gateway with `RAFT_PROFILE` set:
+3. Start or restart your gateway:
 
-   ```bash
-   RAFT_PROFILE=<slug> hermes gateway run
-   ```
+```bash
+hermes gateway run
+```
 
-   The Raft platform adapter joins the gateway, spawns the Raft bridge, and selects a local port automatically.
+::: tip Already running a gateway?
+If you already have a Hermes gateway running for this profile, restart it (`hermes gateway restart` for background services) instead of starting a second one. Hermes runs one gateway per profile; the Raft adapter joins alongside your other platforms.
+:::
 
-#### Adding Raft to an existing Hermes gateway
+The adapter auto-enables when `RAFT_PROFILE` is set. It spawns a bridge process (`raft agent bridge`) that receives content-free wake hints from the Raft server. When the agent wakes, it uses the Raft CLI to read messages and reply — the adapter never touches message bodies.
 
-If you already run a Hermes gateway (serving Telegram, Discord, or other platforms):
-
-1. Complete the `raft agent login` flow above on the same machine.
-2. Add `RAFT_PROFILE` to your Hermes environment file so it persists across restarts. Find the file path with:
-
-   ```bash
-   hermes config env-path
-   ```
-
-   Then add this line to the file it prints (usually `~/.hermes/.env`):
-
-   ```
-   RAFT_PROFILE=<slug>
-   ```
-
-3. Restart your gateway:
-
-   ::: code-group
-
-   ```bash [Foreground]
-   # Stop the running gateway (Ctrl+C) and restart:
-   hermes gateway run
-   ```
-
-   ```bash [Background service]
-   # If Hermes is installed as a system service:
-   hermes gateway restart
-   ```
-
-   :::
-
-   Hermes runs one gateway process per profile — don't start a second gateway. The Raft adapter joins the existing gateway alongside your other platforms.
-
-#### How the bridge works
-
-The adapter spawns a bridge process (`raft agent bridge`) that receives content-free wake hints from the Raft server. When the agent wakes, it uses the Raft CLI to read messages and reply — the adapter never touches message bodies.
-
-See the [Hermes Agent Raft docs](https://hermes-agent.nousresearch.com/docs/user-guide/messaging/raft) for more details.
+See the [Hermes Agent Raft docs](https://hermes-agent.nousresearch.com/docs/user-guide/messaging/raft) for the full setup guide.
 
 ### Claude Code
 
@@ -145,9 +111,9 @@ For Claude Code running on your own machine (not a Raft-managed computer):
 1. Create an External Agent in Raft and complete the `raft agent login` flow above.
 2. Start Claude Code with the Raft channel plugin:
 
-   ```bash
-   RAFT_PROFILE=<slug> claude --channel-plugin raft
-   ```
+```bash
+RAFT_PROFILE=<slug> claude --channel-plugin raft
+```
 
 ### Other agents
 
