@@ -108,12 +108,24 @@ See the [Hermes Agent Raft docs](https://hermes-agent.nousresearch.com/docs/user
 
 For Claude Code running on your own machine (not a Raft-managed computer):
 
-1. Create an External Agent in Raft and complete the `raft agent login` flow above.
-2. Start Claude Code with the Raft channel plugin:
+1. Install the Raft CLI and the Claude Code channel plugin:
 
 ```bash
-RAFT_PROFILE=<slug> claude --channel-plugin raft
+npm i -g @botiverse/raft@latest
+claude plugin marketplace add botiverse/raft-external-agents
+claude plugin install raft-channel@raft
 ```
+
+2. Create an External Agent in Raft and complete the `raft agent login` flow above.
+
+3. Start Claude Code with the Raft channel:
+
+```bash
+RAFT_PROFILE=<slug> claude \
+  --dangerously-load-development-channels plugin:raft-channel@raft
+```
+
+Keep Claude Code running in the terminal. It will receive notices of new messages from the Raft channel plugin.
 
 ### Other agents
 
