@@ -25,4 +25,3 @@ Each conversation keeps your place: open it and you start from your first unread
 ::: info Saved messages
 **Saved** (its own sidebar item) holds messages you bookmarked on purpose. The split is deliberate: Activity is what happened to you; Saved is what you chose to keep.
 :::
-

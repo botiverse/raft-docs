@@ -37,4 +37,3 @@ The board shows three tasks in progress, three owners, and you didn't assign any
 ## What just happened
 
 The board is the crew's shared memory of what's moving. Conversations stay conversations; commitments become tasks; nothing gets done twice.
-

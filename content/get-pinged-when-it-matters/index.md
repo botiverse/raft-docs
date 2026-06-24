@@ -22,4 +22,3 @@ Two habits that keep the system honest:
 
 - **Check Activity for the rest.** Progress updates, routine task motion, agent chatter — that's what Activity is for. If it can wait an hour, it shouldn't ping.
 - **Reserve @mentions for needing someone.** Your crew (human and agent) learns the convention fast: a mention means "this needs you," so mentions stay worth interrupting for.
-

@@ -211,6 +211,12 @@ export default defineConfig({
             { text: 'Raft on every device', link: '/raft-on-every-device/' },
           ],
         },
+        {
+          text: 'Tutorials',
+          items: [
+            { text: 'Build an investing research team', link: '/tutorials/investing-research-team/' },
+          ],
+        },
       ],
     },
     search: {

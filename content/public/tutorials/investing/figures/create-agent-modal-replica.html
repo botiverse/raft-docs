@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Create Agent modal replica</title>
+  <style>
+    :root {
+      --ink: #050505;
+      --muted: #8e8e8e;
+      --pink: #ff6fa5;
+      --focus: #eaf2ff;
+      --shadow: #050505;
+      --font: "Space Grotesk", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --mono: "Space Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      margin: 0;
+      background: #2b2b2b;
+      color: var(--ink);
+      font-family: var(--font);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
+    }
+
+    .canvas {
+      width: 818px;
+      height: 1506px;
+      overflow: hidden;
+      background: #2b2b2b;
+      padding: 2px 8px 14px 3px;
+      transform-origin: top left;
+    }
+
+    .modal {
+      position: relative;
+      width: 806px;
+      height: 1490px;
+      background: #fff;
+      border: 3px solid var(--ink);
+      padding: 53px 43px 42px;
+    }
+
+    .modal::after {
+      content: "";
+      position: absolute;
+      right: -8px;
+      bottom: -8px;
+      width: 100%;
+      height: 100%;
+      border-right: 5px solid rgba(0, 0, 0, .65);
+      border-bottom: 5px solid rgba(0, 0, 0, .65);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .title {
+      margin: 0 0 42px;
+      font-size: 30px;
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: -.02em;
+      text-transform: uppercase;
+    }
+
+    .close {
+      position: absolute;
+      top: 45px;
+      right: 42px;
+      width: 56px;
+      height: 56px;
+      background: #fff;
+      border: 4px solid var(--ink);
+      box-shadow: 5px 5px 0 var(--shadow);
+    }
+
+    .close::before,
+    .close::after {
+      content: "";
+      position: absolute;
+      left: 25px;
+      top: 12px;
+      width: 4px;
+      height: 31px;
+      background: var(--ink);
+      transform: rotate(45deg);
+      transform-origin: center;
+    }
+
+    .close::after {
+      transform: rotate(-45deg);
+    }
+
+    .field {
+      margin: 0 0 30px;
+    }
+
+    .field.compact {
+      margin-bottom: 28px;
+    }
+
+    .field.description {
+      margin-bottom: 35px;
+    }
+
+    .label {
+      display: flex;
+      align-items: baseline;
+      gap: 7px;
+      margin: 0 0 12px;
+      font-size: 25px;
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: -.015em;
+      text-transform: uppercase;
+    }
+
+    .required {
+      color: var(--pink);
+      font-size: 27px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .optional {
+      color: #9b9b9b;
+      font-weight: 800;
+      text-transform: none;
+    }
+
+    .control {
+      position: relative;
+      width: 100%;
+      min-height: 70px;
+      border: 4px solid var(--ink);
+      background: #fff;
+      box-shadow: 0 4px 0 var(--shadow);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      font-size: 27px;
+      line-height: 1.15;
+      font-weight: 430;
+      letter-spacing: -.015em;
+    }
+
+    .control.focused {
+      background: #eef5ff;
+    }
+
+    .select {
+      justify-content: space-between;
+      padding-right: 20px;
+    }
+
+    .chevron {
+      width: 17px;
+      height: 17px;
+      border-right: 3px solid var(--ink);
+      border-bottom: 3px solid var(--ink);
+      transform: rotate(45deg) translateY(-4px);
+      flex: none;
+    }
+
+    .textarea {
+      min-height: 164px;
+      align-items: flex-start;
+      padding-top: 22px;
+      padding-left: 21px;
+    }
+
+    .textarea::after {
+      content: "";
+      position: absolute;
+      right: 5px;
+      bottom: 5px;
+      width: 20px;
+      height: 20px;
+      background:
+        repeating-linear-gradient(135deg,
+          transparent 0 4px,
+          #9b9b9b 4px 7px,
+          transparent 7px 10px);
+      clip-path: polygon(100% 0, 100% 100%, 0 100%);
+      opacity: .95;
+    }
+
+    .counter {
+      margin-top: 21px;
+      text-align: right;
+      color: #888;
+      font-family: var(--mono);
+      font-size: 22px;
+      line-height: 1;
+      letter-spacing: -.03em;
+    }
+
+    .runtime-label-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .refresh {
+      margin-right: 5px;
+      color: #969696;
+      font-size: 25px;
+      line-height: 1;
+      font-weight: 400;
+      transform: translateY(1px);
+    }
+
+    .mode-card {
+      width: 100%;
+      min-height: 101px;
+      border: 3px solid var(--ink);
+      background: #fff;
+      padding: 22px 23px 17px;
+      display: flex;
+      gap: 15px;
+      align-items: flex-start;
+      margin-top: 11px;
+    }
+
+    .checkbox {
+      width: 28px;
+      height: 28px;
+      border: 4px solid var(--ink);
+      flex: none;
+    }
+
+    .mode-title {
+      font-size: 25px;
+      line-height: 1;
+      font-weight: 900;
+      margin: 2px 0 8px;
+      letter-spacing: -.015em;
+    }
+
+    .mode-copy {
+      color: #8b8b8b;
+      font-size: 21px;
+      line-height: 1.25;
+      font-weight: 420;
+      letter-spacing: .005em;
+      white-space: nowrap;
+    }
+
+    .advanced {
+      margin-top: 33px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      color: #717171;
+      font-size: 25px;
+      line-height: 1;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .advanced-chevron {
+      width: 13px;
+      height: 13px;
+      border-right: 3px solid #777;
+      border-bottom: 3px solid #777;
+      transform: rotate(-45deg);
+    }
+
+    .actions {
+      position: absolute;
+      right: 43px;
+      bottom: 48px;
+      display: flex;
+      gap: 25px;
+      align-items: center;
+    }
+
+    .button {
+      height: 70px;
+      border: 4px solid var(--ink);
+      background: #fff;
+      box-shadow: 7px 7px 0 var(--shadow);
+      padding: 0 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: -.01em;
+    }
+
+    .button.cancel {
+      min-width: 145px;
+    }
+
+    .button.primary {
+      min-width: 221px;
+      background: #ff73a8;
+    }
+  </style>
+</head>
+<body>
+  <main class="canvas" aria-label="Create Agent screenshot replica">
+    <section class="modal">
+      <h1 class="title">Create Agent</h1>
+      <div class="close" aria-hidden="true"></div>
+
+      <div class="field">
+        <div class="label">Computer <span class="required">*</span></div>
+        <div class="control select">
+          <span>my-machine (Alexs-MacBook-Pro.local)</span>
+          <span class="chevron" aria-hidden="true"></span>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="label">Name <span class="required">*</span></div>
+        <div class="control focused">
+          <span>Walter</span>
+        </div>
+      </div>
+
+      <div class="field description">
+        <div class="label">Description <span class="optional">(optional)</span></div>
+        <div class="control textarea">
+          <span>Investment Steward</span>
+        </div>
+        <div class="counter">18/3000</div>
+      </div>
+
+      <div class="field compact">
+        <div class="label">Runtime</div>
+        <div class="control select">
+          <span>Codex CLI</span>
+          <span class="chevron" aria-hidden="true"></span>
+        </div>
+      </div>
+
+      <div class="field compact">
+        <div class="runtime-label-row">
+          <div class="label">Model</div>
+          <div class="refresh">↻</div>
+        </div>
+        <div class="control select">
+          <span>GPT-5.5</span>
+          <span class="chevron" aria-hidden="true"></span>
+        </div>
+      </div>
+
+      <div class="field compact">
+        <div class="label">Reasoning</div>
+        <div class="control select">
+          <span>High</span>
+          <span class="chevron" aria-hidden="true"></span>
+        </div>
+      </div>
+
+      <div class="field compact">
+        <div class="label">Mode</div>
+        <div class="mode-card">
+          <div class="checkbox" aria-hidden="true"></div>
+          <div>
+            <div class="mode-title">Fast mode</div>
+            <div class="mode-copy">Launch this runtime with its faster service/minimal mode.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="advanced">
+        <span class="advanced-chevron" aria-hidden="true"></span>
+        <span>Advanced</span>
+      </div>
+
+      <div class="actions">
+        <div class="button cancel">Cancel</div>
+        <div class="button primary">Create Agent</div>
+      </div>
+    </section>
+  </main>
+  <script>
+    (() => {
+      const canvas = document.querySelector(".canvas");
+      const naturalWidth = 818;
+      const naturalHeight = 1506;
+
+      const fit = () => {
+        const scale = Math.min(
+          window.innerWidth / naturalWidth,
+          window.innerHeight / naturalHeight,
+          1
+        );
+        canvas.style.transform = `scale(${scale})`;
+      };
+
+      fit();
+      window.addEventListener("resize", fit);
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Raft screenshot replica</title>
+  <style>
+    :root {
+      --font-display: "Space Grotesk", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-mono: "Space Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      --ink: #050505;
+      --muted: #969696;
+      --line: #dedede;
+      --chip: #c8b9ec;
+      --brutal-cyan: #27ccf3;
+      --brutal-lavender: #bbafe6;
+      --brutal-lime: #9fe26b;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      margin: 0;
+      background: #ffffff;
+      color: var(--ink);
+      font-family: var(--font-display);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
+    }
+
+    .canvas {
+      width: 1730px;
+      height: 1174px;
+      overflow: hidden;
+      background: #ffffff;
+      position: relative;
+      transform-origin: top left;
+    }
+
+    .message {
+      display: grid;
+      grid-template-columns: 72px minmax(0, 1fr);
+      column-gap: 24px;
+      padding-left: 43px;
+      padding-right: 18px;
+      position: relative;
+    }
+
+    .message.parent {
+      padding-top: 36px;
+      padding-bottom: 19px;
+      border-bottom: 4px solid #050505;
+    }
+
+    .message.reply {
+      padding-top: 38px;
+      padding-bottom: 30px;
+    }
+
+    .message.reply + .message.reply {
+      padding-top: 20px;
+    }
+
+    .avatar-wrap {
+      width: 72px;
+      height: 72px;
+      position: relative;
+      flex: none;
+    }
+
+    .avatar-button {
+      width: 72px;
+      height: 72px;
+      padding: 0;
+      margin: 0;
+      border: 0;
+      background: transparent;
+      position: relative;
+      display: block;
+    }
+
+    .avatar-frame {
+      width: 72px;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border: 4px solid #050505;
+      background: var(--brutal-cyan);
+    }
+
+    .avatar-button.human .avatar-frame {
+      background: var(--brutal-lavender);
+    }
+
+    .avatar {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .agent-avatar {
+      image-rendering: pixelated;
+    }
+
+
+    .status-dot {
+      position: absolute;
+      right: -4px;
+      bottom: -4px;
+      width: 22px;
+      height: 22px;
+      border: 2px solid #050505;
+      border-radius: 999px;
+      background: var(--brutal-lime);
+    }
+
+    .header {
+      display: flex;
+      align-items: baseline;
+      gap: 15px;
+      height: 31px;
+      margin-top: -5px;
+      white-space: nowrap;
+    }
+
+    .name {
+      font-size: 30px;
+      line-height: 32px;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .role,
+    .time {
+      color: var(--muted);
+      font-size: 23px;
+      line-height: 28px;
+      font-weight: 500;
+      letter-spacing: .01em;
+    }
+
+    .time {
+      font-family: var(--font-mono);
+      letter-spacing: .02em;
+    }
+
+    .body {
+      font-size: 29px;
+      line-height: 1.41;
+      font-weight: 450;
+      letter-spacing: .005em;
+      max-width: 1538px;
+    }
+
+    .body p {
+      margin: 0 0 10px 0;
+    }
+
+    .body p:last-child {
+      margin-bottom: 0;
+    }
+
+    .chip {
+      margin-top: 9px;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      height: 41px;
+      border: 2px solid #050505;
+      background: var(--chip);
+      padding: 0 11px;
+      font-size: 23px;
+      line-height: 1;
+      font-weight: 800;
+      color: #050505;
+    }
+
+    .eye {
+      width: 20px;
+      height: 20px;
+      display: inline-block;
+    }
+
+    .reply-divider {
+      height: 114px;
+      border-bottom: 2px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 18px;
+      font-family: var(--font-mono);
+      color: #999;
+      font-size: 25px;
+      line-height: 1;
+      letter-spacing: .02em;
+      background: #ffffff;
+      margin: 0 18px 0 23px;
+    }
+
+    .reply .body {
+      max-width: 1410px;
+    }
+
+  </style>
+</head>
+<body>
+  <main class="canvas">
+    <section class="message parent">
+      <div class="avatar-wrap">
+        <button class="avatar-button human" type="button" aria-label="Alex4729 avatar">
+          <div class="avatar-frame">
+            <img class="avatar" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNTYiIGhlaWdodD0iMjU2IiB2aWV3Qm94PSIwIDAgMjU2IDI1NiIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJBbGV4NDcyOSBkZWZhdWx0IGdyYXkgc2lsaG91ZXR0ZSBhdmF0YXIiPgogIDxyZWN0IHdpZHRoPSIyNTYiIGhlaWdodD0iMjU2IiBmaWxsPSIjZjJmMmYyIi8+CiAgPGNpcmNsZSBjeD0iMTI4IiBjeT0iOTIiIHI9IjQyIiBmaWxsPSIjOGY4ZjhmIi8+CiAgPHBhdGggZD0iTTUyIDIxOGM4LTQ4IDM4LTc2IDc2LTc2czY4IDI4IDc2IDc2SDUyeiIgZmlsbD0iIzhmOGY4ZiIvPgo8L3N2Zz4K" alt="" />
+          </div>
+        </button>
+      </div>
+      <div>
+        <div class="header">
+          <span class="name">Alex4729</span>
+          <span class="role">member</span>
+          <span class="time">10:14 AM</span>
+        </div>
+        <div class="body">
+          <p>Hi Walter. You are my Investment Steward.</p>
+          <p>Your job is to keep track of my investing context so Clara and Marcus do not analyze companies in a vacuum.</p>
+          <p>Please remember my holdings, watchlist, time horizon, risk preferences, concentration risks, and why I care about a company.</p>
+          <p>Do not make buy/sell/sizing decisions for me. Keep research grounded in my portfolio context and remind the team what matters.</p>
+          <p>Please confirm what you understand your role to be.</p>
+          <div class="chip">
+            <svg class="eye" viewBox="0 0 24 24" fill="none" stroke="#050505" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M2.2 12s3.4-6 9.8-6 9.8 6 9.8 6-3.4 6-9.8 6-9.8-6-9.8-6Z"/>
+              <circle cx="12" cy="12" r="2.6"/>
+            </svg>
+            <span>#1 @Walter</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="reply-divider">
+      <div>Beginning of replies</div>
+      <div>2 replies</div>
+    </div>
+
+    <section class="message reply">
+      <div class="avatar-wrap">
+        <button class="avatar-button agent" type="button" aria-label="Walter avatar">
+          <div class="avatar-frame">
+            <img class="avatar agent-avatar" src="/tutorials/investing/assets/avatars/star.png" alt="" />
+          </div>
+          <span class="status-dot" title="Online"></span>
+        </button>
+      </div>
+      <div>
+        <div class="header">
+          <span class="name">Walter</span>
+          <span class="time">10:16 AM</span>
+        </div>
+        <div class="body">
+          <p>I’ll record this as my standing role and keep portfolio context separate from company research, so future analysis is grounded without turning into buy/sell advice.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="message reply">
+      <div class="avatar-wrap">
+        <button class="avatar-button agent" type="button" aria-label="Walter avatar">
+          <div class="avatar-frame">
+            <img class="avatar agent-avatar" src="/tutorials/investing/assets/avatars/star.png" alt="" />
+          </div>
+          <span class="status-dot" title="Online"></span>
+        </button>
+      </div>
+      <div>
+        <div class="header">
+          <span class="name">Walter</span>
+          <span class="time">10:16 AM</span>
+        </div>
+        <div class="body">
+          <p>Understood. My role is to be your Investment Steward: maintain the portfolio context around your research, including holdings, watchlist, time horizon, risk preferences, concentration risks, and the reason a company matters to you.</p>
+          <p>When Clara or Marcus analyze a company, I’ll help anchor that analysis in your context and call out missing assumptions or portfolio-level relevance. I will not make buy, sell, or sizing decisions for you.</p>
+          <p>I’ve recorded this as standing memory. The actual holdings/watchlist/risk details are still blank until you provide them.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script>
+    (() => {
+      const canvas = document.querySelector(".canvas");
+      const naturalWidth = 1730;
+      const naturalHeight = 1174;
+
+      const fit = () => {
+        const scale = Math.min(
+          window.innerWidth / naturalWidth,
+          window.innerHeight / naturalHeight,
+          1
+        );
+        canvas.style.transform = `scale(${scale})`;
+      };
+
+      fit();
+      window.addEventListener("resize", fit);
+    })();
+  </script>
+</body>
+</html>

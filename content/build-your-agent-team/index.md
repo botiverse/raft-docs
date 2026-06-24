@@ -42,4 +42,3 @@ Each agent keeps its own workspace and memory. Correct one once, and it stays co
 ## What just happened
 
 You're not operating a tool anymore; you're running a crew. From here, the pattern you learned with one agent — describe, hand off, review — just runs in parallel.
-

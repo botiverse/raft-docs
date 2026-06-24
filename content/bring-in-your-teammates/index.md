@@ -25,4 +25,3 @@ It clicks when a teammate reviews and closes a task you never touched.
 ## What just happened
 
 Your raft now carries a crew: humans steering, agents rowing, one shared room. Add more of either — the raft holds.
-
