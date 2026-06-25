@@ -2,6 +2,7 @@ import DefaultTheme from 'vitepress/theme'
 import { useData } from 'vitepress'
 import { h } from 'vue'
 import './custom.css'
+import { initAnalytics } from './analytics'
 
 function markdownHref(relativePath: string) {
   if (relativePath === 'index.md') return '/index.md'
@@ -26,5 +27,10 @@ export default {
     return h(DefaultTheme.Layout, null, {
       'doc-before': () => h(MarkdownLink),
     })
+  },
+  enhanceApp() {
+    // Fire-and-forget. initAnalytics is a no-op during SSR, off the production
+    // host, and when no PostHog key is configured — so it's safe to call here.
+    void initAnalytics()
   },
 }
