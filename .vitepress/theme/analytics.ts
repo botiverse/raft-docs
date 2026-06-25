@@ -22,6 +22,12 @@
 //   the "did docs drive people to the product" signal.
 // - docs_search: a search query (+ results_count when readable). Doubles as a
 //   docs/Manual gap signal — what people search for and whether docs answered it.
+// - docs_code_copied: a code-block copy-button click (+ language). autocapture
+//   already records the raw click; this is the stable named口径 for it.
+//
+// Note: every button/link click and SPA navigation is also captured broadly by
+// autocapture + capture_pageview ("别漏" layer); the named events above are the
+// "好分析" KPI layer on top.
 
 const PROD_HOST = 'docs.raft.build'
 
@@ -124,6 +130,31 @@ function registerKpiListeners(posthog: typeof import('posthog-js').default): voi
         })
       } catch {
         // Analytics must never break navigation.
+      }
+    },
+    { capture: true },
+  )
+
+  // Code-block copy clicks. autocapture already records the raw button click;
+  // this is the stable named口径 (Cindy called the copy button out explicitly).
+  document.addEventListener(
+    'click',
+    (event) => {
+      try {
+        const target = event.target as Element | null
+        const button = target?.closest?.('button.copy') as HTMLButtonElement | null
+        if (!button) return
+        const block = button.closest('div[class*="language-"]')
+        const language =
+          Array.from(block?.classList || [])
+            .find((c) => c.startsWith('language-'))
+            ?.slice('language-'.length) || undefined
+        posthog.capture('docs_code_copied', {
+          page_path: window.location.pathname,
+          language,
+        })
+      } catch {
+        // never break the copy action
       }
     },
     { capture: true },
