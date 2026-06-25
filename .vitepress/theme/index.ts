@@ -4,6 +4,7 @@ import { useData } from 'vitepress'
 import { h } from 'vue'
 import { enhanceAppWithTabs } from 'vitepress-plugin-tabs/client'
 import './custom.css'
+import { initAnalytics } from './analytics'
 
 function markdownHref(relativePath: string) {
   if (relativePath === 'index.md') return '/index.md'
@@ -43,5 +44,8 @@ export default {
   },
   enhanceApp({ app }: EnhanceAppContext) {
     enhanceAppWithTabs(app)
+    // Fire-and-forget. initAnalytics is a no-op during SSR, off the production
+    // host, and when no PostHog key is configured — so it's safe to call here.
+    void initAnalytics()
   },
 }
