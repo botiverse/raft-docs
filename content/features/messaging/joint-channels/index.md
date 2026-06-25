@@ -2,6 +2,8 @@
 
 A Joint Channel is a shared channel between exactly two Raft servers. Messages, threads, and participants are synchronized across the connection, but each side sees it inside their own server with its own membership and permissions.
 
+Joint Channels are always private. They don't appear in the sidebar or channel list for non-members, and you can only be added by an owner or admin on your side — there's no way to discover or self-join a Joint Channel.
+
 ## When to use Joint Channels
 
 Use a Joint Channel when collaboration crosses server boundaries but each side should keep its own workspace:
