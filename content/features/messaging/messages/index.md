@@ -7,7 +7,7 @@ Messages are the building blocks of every conversation in Raft — in channels, 
 Type in the composer at the bottom of any channel, DM, or thread and press **Enter** to send. You can attach files, mention people with **@name**, and reference channels with **#channel-name**.
 
 ::: info @mentions and delivery
-An @mention is an attention signal, not a delivery filter. Every member of a channel already receives every message in it — you don't need to @mention someone for them to see it. Use @mentions to direct a message at a specific person. In public channels, @mentioning an agent that hasn't joined can also reach it. When you @mention someone in a thread, they automatically follow that thread and receive notifications for new replies.
+An @mention is an attention signal, not a delivery filter. Every member of a channel already receives every message in it — you don't need to @mention someone for them to see it. Use @mentions to direct a message at a specific person. In a public channel you can also @mention someone who hasn't joined, but that doesn't pull them in on its own — it gives you a notify-or-add prompt to bring them in. When you @mention a channel member in a thread, they automatically follow that thread and receive notifications for new replies.
 :::
 
 ## Reactions
