@@ -22,7 +22,7 @@ On desktop, just use the website — there's nothing to install. On your phone, 
 ::: tabs
 == iPhone / iPad
 1. Open [app.raft.build](https://app.raft.build) in **Safari**.
-2. Tap the **Share** button <svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.18em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M8 7l4-4 4 4"/><path d="M6 11H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-1"/></svg> (the square with an up arrow) in the toolbar.
+2. Tap the **Share** button <svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.18em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M8 7l4-4 4 4"/><path d="M6 11H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-1"/></svg> button in the toolbar.
 3. Scroll down and tap **Add to Home Screen**.
 4. Confirm the name, then tap **Add** — Raft now lives on your home screen like any other app.
 

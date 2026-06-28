@@ -377,24 +377,30 @@
 .VPNavScreen a[href^="https://app.raft.build"] {
   display: inline-flex;
   align-items: center;
-  /* Compact primary button spec (Wug): fixed 32px height so it never grows the
-     nav bar; 1px ink border, square, no shadow. */
-  height: 32px;
-  padding: 0 12px;
-  border: 1px solid #141111;
+  /* The product's standard `.btn-brutal` treatment (per design-system spec):
+     2px ink border + shadow-brutal (4px 4px 0), square, hover-lift, active-press.
+     Compact padding/font keeps it nav-sized. */
+  padding: 4px 12px;
+  border: 2px solid #141111;
   border-radius: 0;
   background: var(--raft-cta-pink);
   color: #141111 !important;
   font-size: 13px;
   font-weight: 700;
-  line-height: 1;
-  box-shadow: none;
-  transition: background-color 0.1s ease;
+  line-height: 1.3;
+  box-shadow: 4px 4px 0 #141111;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
 .VPNavBar .VPNavBarMenu .VPNavBarMenuLink[href^="https://app.raft.build"]:hover,
 .VPNavScreen a[href^="https://app.raft.build"]:hover {
-  background: #fd6a9c; /* slightly deeper pink, keep ink text */
+  transform: translateY(-1px);
+  box-shadow: 6px 6px 0 #141111; /* shadow-brutal-lg lift */
   color: #141111 !important;
+}
+.VPNavBar .VPNavBarMenu .VPNavBarMenuLink[href^="https://app.raft.build"]:active,
+.VPNavScreen a[href^="https://app.raft.build"]:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 #141111; /* press */
 }
 /* Suppress the active under-strap on the CTA — it's an external link, not a
    doc tab, so the "current location" strap shouldn't apply to it. */
