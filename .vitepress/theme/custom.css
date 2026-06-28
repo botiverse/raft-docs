@@ -377,15 +377,18 @@
 .VPNavScreen a[href^="https://app.raft.build"] {
   display: inline-flex;
   align-items: center;
-  /* Compact so the button fits the existing nav height — no drop-shadow, no
-     rounding (brutalist primary button: pink fill, ink border + text). */
-  padding: 2px 12px;
-  border: 2px solid #141111;
+  /* Compact primary button spec (Wug): fixed 32px height so it never grows the
+     nav bar; 1px ink border, square, no shadow. */
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid #141111;
   border-radius: 0;
   background: var(--raft-cta-pink);
   color: #141111 !important;
+  font-size: 13px;
   font-weight: 700;
-  line-height: 1.5;
+  line-height: 1;
+  box-shadow: none;
   transition: background-color 0.1s ease;
 }
 .VPNavBar .VPNavBarMenu .VPNavBarMenuLink[href^="https://app.raft.build"]:hover,
