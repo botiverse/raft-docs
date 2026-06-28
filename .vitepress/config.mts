@@ -234,9 +234,8 @@ export default defineConfig({
     outline: {
       label: 'On this page',
     },
-    socialLinks: [
-      { icon: 'github', link: 'https://github.com/botiverse/raft-docs' },
-    ],
+    // GitHub icon removed from the nav per design pass — Open Raft is the
+    // single right-side action now. (Per-page "Edit on GitHub" link kept below.)
     editLink: {
       pattern: 'https://github.com/botiverse/raft-docs/blob/main/content/:path',
       text: 'Edit this page on GitHub',

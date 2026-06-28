@@ -186,6 +186,13 @@
   color: var(--rd-nav-fg-muted);
   font-weight: 500;
 }
+/* Tighter spacing among the docs nav links (Intro / Features / Developers) so
+   the action group (Open Raft, with its own larger margin-left) reads as a
+   separate hierarchy group. Excludes the CTA. */
+.VPNavBar .VPNavBarMenu .VPNavBarMenuLink:not([href^="https://app.raft.build"]) {
+  padding-left: 8px;
+  padding-right: 8px;
+}
 .VPNavBar .VPNavBarMenu .VPNavBarMenuLink:hover {
   color: var(--rd-nav-fg);
 }
@@ -196,8 +203,8 @@
 .VPNavBar .VPNavBarMenu .VPNavBarMenuLink.active::after {
   content: "";
   position: absolute;
-  left: 12px;
-  right: 12px;
+  left: 8px;
+  right: 8px;
   bottom: 0;
   height: 3px;
   background: var(--rd-nav-active-bar);
@@ -386,7 +393,10 @@
      shadow-brutal-sm (2px 2px 0), square, hover-lift, active-press. The lighter
      -sm shadow keeps the brutal button language without reading as a heavy
      block in the nav (Wug + cindyz). */
-  padding: 3px 12px;
+  padding: 5px 12px;
+  /* Bigger gap before the CTA than between the docs nav links — separates the
+     action group from the docs-links group (nav hierarchy: groups > items). */
+  margin-left: 20px;
   border: 2px solid #141111;
   border-radius: 0;
   background: var(--raft-cta-pink);
