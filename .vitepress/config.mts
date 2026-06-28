@@ -1,5 +1,6 @@
 import { defineConfig } from 'vitepress'
 import taskLists from 'markdown-it-task-lists'
+import { tabsMarkdownPlugin } from 'vitepress-plugin-tabs'
 
 const siteUrl = 'https://docs.raft.build'
 const description =
@@ -100,6 +101,10 @@ export default defineConfig({
     // checklists like the Login with Raft testing checklist.
     config: (md) => {
       md.use(taskLists)
+      // Content tabs (`:::tabs` / `== Tab ==`) for the per-platform install
+      // walkthrough on /raft-on-every-device/. Built-in code-group is for code
+      // blocks only; this adds general content tabs.
+      md.use(tabsMarkdownPlugin)
     },
   },
   themeConfig: {
@@ -122,6 +127,9 @@ export default defineConfig({
       { text: 'Features', link: '/features/server/', activeMatch: '^/features/' },
       // Developers tab jumps straight to the only guide for now.
       { text: 'Developers', link: '/developers/login-with-raft/', activeMatch: '^/developers/' },
+      // NB: the "Open Raft" CTA is NOT a nav item — it's rendered in the
+      // `nav-bar-content-after` theme slot so it sits to the RIGHT of the
+      // appearance toggle (absolute rightmost). See .vitepress/theme/index.ts.
     ],
     sidebar: {
       // Features tab — reference tree. Server + Agents + Messaging +
@@ -225,9 +233,8 @@ export default defineConfig({
     outline: {
       label: 'On this page',
     },
-    socialLinks: [
-      { icon: 'github', link: 'https://github.com/botiverse/raft-docs' },
-    ],
+    // GitHub icon removed from the nav per design pass — Open Raft is the
+    // single right-side action now. (Per-page "Edit on GitHub" link kept below.)
     editLink: {
       pattern: 'https://github.com/botiverse/raft-docs/blob/main/content/:path',
       text: 'Edit this page on GitHub',

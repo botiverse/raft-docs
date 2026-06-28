@@ -3,6 +3,11 @@
   --vp-c-brand-2: #3b3532;
   --vp-c-brand-3: #ffd440;
   --vp-c-brand-soft: rgba(255, 212, 64, 0.2);
+  /* Brutal-pink ("Bubble Pink") = the "action" color for the Open Raft nav CTA.
+     Kept distinct from brand yellow, which already means "current location"
+     (active nav / selected sidebar). Canonical value from the landing/design
+     tokens (--color-brutal-pink), confirmed by Wug. */
+  --raft-cta-pink: #fe7da8;
   --vp-c-bg: #ffffff;
   --vp-c-bg-alt: #fafafa;
   --vp-c-bg-soft: #f7f7f5;
@@ -181,6 +186,13 @@
   color: var(--rd-nav-fg-muted);
   font-weight: 500;
 }
+/* Tighter spacing among the docs nav links (Intro / Features / Developers) so
+   the action group (Open Raft, with its own larger margin-left) reads as a
+   separate hierarchy group. Excludes the CTA. */
+.VPNavBar .VPNavBarMenu .VPNavBarMenuLink:not([href^="https://app.raft.build"]) {
+  padding-left: 8px;
+  padding-right: 8px;
+}
 .VPNavBar .VPNavBarMenu .VPNavBarMenuLink:hover {
   color: var(--rd-nav-fg);
 }
@@ -191,8 +203,8 @@
 .VPNavBar .VPNavBarMenu .VPNavBarMenuLink.active::after {
   content: "";
   position: absolute;
-  left: 12px;
-  right: 12px;
+  left: 8px;
+  right: 8px;
   bottom: 0;
   height: 3px;
   background: var(--rd-nav-active-bar);
@@ -360,4 +372,79 @@
   height: 100%;
   border: 0;
   background: #fff;
+}
+
+/* ───────────────────────────────────────────────────────────────
+   "Open Raft" nav CTA — brutal-pink action button.
+   Rendered in the `nav-bar-content-after` slot (theme/index.ts) so it
+   sits to the RIGHT of the appearance toggle = absolute rightmost.
+   Pink = action (kept distinct from brand yellow = current location).
+   ─────────────────────────────────────────────────────────────── */
+.VPNavBar .raft-open-cta {
+  display: inline-flex;
+  align-items: center;
+  /* Wrap to content height — keep the CTA at its own button height even though
+     the nav row is taller. */
+  align-self: center;
+  height: auto;
+  min-height: 0;
+  /* `.btn-brutal-sm` treatment (design-system spec): 2px ink border +
+     shadow-brutal-sm (2px 2px 0), square, hover-lift, active-press. The lighter
+     -sm shadow keeps the brutal button language without reading as a heavy
+     block in the nav (Wug + cindyz). */
+  padding: 5px 12px;
+  /* Gap before the action group (after the toggle) > the gap between docs nav
+     links — so the nav reads as hierarchy groups (Koda: ~24px). */
+  margin-left: 24px;
+  border: 2px solid #141111;
+  border-radius: 0;
+  background: var(--raft-cta-pink);
+  color: #141111;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.2;
+  box-shadow: 2px 2px 0 #141111;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+.VPNavBar .raft-open-cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 4px 4px 0 #141111; /* -sm hover = shadow-brutal */
+  color: #141111;
+}
+.VPNavBar .raft-open-cta:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 #141111; /* press */
+}
+
+/* ───────────────────────────────────────────────────────────────
+   Mobile containment for the install page's media + tabs ONLY.
+   Scoped via the page's `pageClass: device-install-page` so it does
+   not touch the site shell. The docs-wide mobile right-edge clipping
+   (present on production too) is a separate site-shell follow-up —
+   this just keeps the new promo image / screenshots / tabs from
+   amplifying it. (Wug + Koda review, PR #13.)
+   ─────────────────────────────────────────────────────────────── */
+.device-install-page .vp-doc img {
+  max-width: 100%;
+  height: auto;
+}
+.device-install-page .vp-doc .plugin-tabs {
+  max-width: 100%;
+}
+/* If the tab row ever exceeds the viewport, let it scroll rather than
+   widen the page. */
+.device-install-page .vp-doc .plugin-tabs--tab-list {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* ───────────────────────────────────────────────────────────────
+   Content tabs (vitepress-plugin-tabs) — brutalist: no rounded
+   corners anywhere. Active tab keeps its bottom-border indicator;
+   just remove the pill/card radius. (cindyz review, PR #13.)
+   ─────────────────────────────────────────────────────────────── */
+.vp-doc .plugin-tabs,
+.vp-doc .plugin-tabs--tab,
+.vp-doc .plugin-tabs--content {
+  border-radius: 0;
 }
