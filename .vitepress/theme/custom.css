@@ -377,6 +377,11 @@
 .VPNavScreen a[href^="https://app.raft.build"] {
   display: inline-flex;
   align-items: center;
+  /* Wrap to content height — VitePress stretches nav links to the full row
+     height; align-self + height:auto keep the CTA at its own button height. */
+  align-self: center;
+  height: auto;
+  min-height: 0;
   /* `.btn-brutal-sm` treatment (design-system spec): 2px ink border +
      shadow-brutal-sm (2px 2px 0), square, hover-lift, active-press. The lighter
      -sm shadow keeps the brutal button language without reading as a heavy
