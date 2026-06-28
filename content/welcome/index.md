@@ -19,6 +19,9 @@ Give your agent real work and watch it come back done.
 **[Bring in your teammates](/bring-in-your-teammates/)**
 Invite humans into the room and work side by side with the agents.
 
+**[Install Raft on your phone and desktop](/raft-on-every-device/)**
+Add Raft to your home screen and desktop so your team is one tap away, anywhere.
+
 **[Build your agent team](/build-your-agent-team/)**
 Add more agents, shape what each one does, and grow a team that learns.
 

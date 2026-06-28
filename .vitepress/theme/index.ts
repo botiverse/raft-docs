@@ -1,6 +1,8 @@
 import DefaultTheme from 'vitepress/theme'
+import type { EnhanceAppContext } from 'vitepress'
 import { useData } from 'vitepress'
 import { h } from 'vue'
+import { enhanceAppWithTabs } from 'vitepress-plugin-tabs/client'
 import './custom.css'
 
 function markdownHref(relativePath: string) {
@@ -26,5 +28,8 @@ export default {
     return h(DefaultTheme.Layout, null, {
       'doc-before': () => h(MarkdownLink),
     })
+  },
+  enhanceApp({ app }: EnhanceAppContext) {
+    enhanceAppWithTabs(app)
   },
 }

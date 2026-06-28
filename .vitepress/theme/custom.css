@@ -3,6 +3,11 @@
   --vp-c-brand-2: #3b3532;
   --vp-c-brand-3: #ffd440;
   --vp-c-brand-soft: rgba(255, 212, 64, 0.2);
+  /* Brutal-pink ("Bubble Pink") = the "action" color for the Open Raft nav CTA.
+     Kept distinct from brand yellow, which already means "current location"
+     (active nav / selected sidebar). Canonical value from the landing/design
+     tokens (--color-brutal-pink), confirmed by Wug. */
+  --raft-cta-pink: #fe7da8;
   --vp-c-bg: #ffffff;
   --vp-c-bg-alt: #fafafa;
   --vp-c-bg-soft: #f7f7f5;
@@ -360,4 +365,37 @@
   height: 100%;
   border: 0;
   background: #fff;
+}
+
+/* ───────────────────────────────────────────────────────────────
+   "Open Raft" nav CTA — brutal-pink action button.
+   Scoped to .VPNavBar + .VPNavScreen (mobile menu) by href, so it
+   NEVER restyles app.raft.build links that appear in page body.
+   Pink = action (kept distinct from brand yellow = current location).
+   ─────────────────────────────────────────────────────────────── */
+.VPNavBar .VPNavBarMenu .VPNavBarMenuLink[href^="https://app.raft.build"],
+.VPNavScreen a[href^="https://app.raft.build"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border: 2px solid #141111;
+  border-radius: 6px;
+  background: var(--raft-cta-pink);
+  color: #141111 !important;
+  font-weight: 700;
+  box-shadow: 2px 2px 0 #141111;
+  transition: transform 0.06s ease, box-shadow 0.06s ease;
+}
+.VPNavBar .VPNavBarMenu .VPNavBarMenuLink[href^="https://app.raft.build"]:hover,
+.VPNavScreen a[href^="https://app.raft.build"]:hover {
+  /* subtle brutalist press; keep the pink, no color flip (Koda) */
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 #141111;
+  color: #141111 !important;
+}
+/* Suppress the active under-strap on the CTA — it's an external link, not a
+   doc tab, so the "current location" strap shouldn't apply to it. */
+.VPNavBar .VPNavBarMenu .VPNavBarMenuLink[href^="https://app.raft.build"]::after {
+  display: none;
 }

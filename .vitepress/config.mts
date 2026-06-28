@@ -1,5 +1,6 @@
 import { defineConfig } from 'vitepress'
 import taskLists from 'markdown-it-task-lists'
+import { tabsMarkdownPlugin } from 'vitepress-plugin-tabs'
 
 const siteUrl = 'https://docs.raft.build'
 const description =
@@ -100,6 +101,10 @@ export default defineConfig({
     // checklists like the Login with Raft testing checklist.
     config: (md) => {
       md.use(taskLists)
+      // Content tabs (`:::tabs` / `== Tab ==`) for the per-platform install
+      // walkthrough on /raft-on-every-device/. Built-in code-group is for code
+      // blocks only; this adds general content tabs.
+      md.use(tabsMarkdownPlugin)
     },
   },
   themeConfig: {
@@ -122,6 +127,12 @@ export default defineConfig({
       { text: 'Features', link: '/features/server/', activeMatch: '^/features/' },
       // Developers tab jumps straight to the only guide for now.
       { text: 'Developers', link: '/developers/login-with-raft/', activeMatch: '^/developers/' },
+      // Outbound entry points: a secondary link back to the marketing homepage,
+      // then the primary "Open Raft" CTA (styled as a brutal-pink button via
+      // custom.css, scoped to the nav). Open Raft sits last so it's rightmost,
+      // just before the GitHub social icon.
+      { text: 'raft.build', link: 'https://raft.build' },
+      { text: 'Open Raft', link: 'https://app.raft.build' },
     ],
     sidebar: {
       // Features tab — reference tree. Server + Agents + Messaging +
