@@ -376,16 +376,15 @@
 
 /* ───────────────────────────────────────────────────────────────
    "Open Raft" nav CTA — brutal-pink action button.
-   Scoped to .VPNavBar + .VPNavScreen (mobile menu) by href, so it
-   NEVER restyles app.raft.build links that appear in page body.
+   Rendered in the `nav-bar-content-after` slot (theme/index.ts) so it
+   sits to the RIGHT of the appearance toggle = absolute rightmost.
    Pink = action (kept distinct from brand yellow = current location).
    ─────────────────────────────────────────────────────────────── */
-.VPNavBar .VPNavBarMenu .VPNavBarMenuLink[href^="https://app.raft.build"],
-.VPNavScreen a[href^="https://app.raft.build"] {
+.VPNavBar .raft-open-cta {
   display: inline-flex;
   align-items: center;
-  /* Wrap to content height — VitePress stretches nav links to the full row
-     height; align-self + height:auto keep the CTA at its own button height. */
+  /* Wrap to content height — keep the CTA at its own button height even though
+     the nav row is taller. */
   align-self: center;
   height: auto;
   min-height: 0;
@@ -394,34 +393,27 @@
      -sm shadow keeps the brutal button language without reading as a heavy
      block in the nav (Wug + cindyz). */
   padding: 5px 12px;
-  /* Bigger gap before the CTA than between the docs nav links — separates the
-     action group from the docs-links group (nav hierarchy: groups > items). */
-  margin-left: 20px;
+  /* Gap before the action group (after the toggle) > the gap between docs nav
+     links — so the nav reads as hierarchy groups (Koda: ~24px). */
+  margin-left: 24px;
   border: 2px solid #141111;
   border-radius: 0;
   background: var(--raft-cta-pink);
-  color: #141111 !important;
+  color: #141111;
   font-size: 13px;
   font-weight: 700;
   line-height: 1.2;
   box-shadow: 2px 2px 0 #141111;
   transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
-.VPNavBar .VPNavBarMenu .VPNavBarMenuLink[href^="https://app.raft.build"]:hover,
-.VPNavScreen a[href^="https://app.raft.build"]:hover {
+.VPNavBar .raft-open-cta:hover {
   transform: translateY(-1px);
   box-shadow: 4px 4px 0 #141111; /* -sm hover = shadow-brutal */
-  color: #141111 !important;
+  color: #141111;
 }
-.VPNavBar .VPNavBarMenu .VPNavBarMenuLink[href^="https://app.raft.build"]:active,
-.VPNavScreen a[href^="https://app.raft.build"]:active {
+.VPNavBar .raft-open-cta:active {
   transform: translate(1px, 1px);
   box-shadow: 1px 1px 0 #141111; /* press */
-}
-/* Suppress the active under-strap on the CTA — it's an external link, not a
-   doc tab, so the "current location" strap shouldn't apply to it. */
-.VPNavBar .VPNavBarMenu .VPNavBarMenuLink[href^="https://app.raft.build"]::after {
-  display: none;
 }
 
 /* ───────────────────────────────────────────────────────────────

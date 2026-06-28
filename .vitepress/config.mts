@@ -127,10 +127,9 @@ export default defineConfig({
       { text: 'Features', link: '/features/server/', activeMatch: '^/features/' },
       // Developers tab jumps straight to the only guide for now.
       { text: 'Developers', link: '/developers/login-with-raft/', activeMatch: '^/developers/' },
-      // Primary "Open Raft" CTA → the app. Styled as the design-library primary
-      // button via custom.css (scoped to the nav). Sits last so it's rightmost,
-      // just before the GitHub social icon.
-      { text: 'Open Raft', link: 'https://app.raft.build' },
+      // NB: the "Open Raft" CTA is NOT a nav item — it's rendered in the
+      // `nav-bar-content-after` theme slot so it sits to the RIGHT of the
+      // appearance toggle (absolute rightmost). See .vitepress/theme/index.ts.
     ],
     sidebar: {
       // Features tab — reference tree. Server + Agents + Messaging +
