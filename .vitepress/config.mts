@@ -127,11 +127,9 @@ export default defineConfig({
       { text: 'Features', link: '/features/server/', activeMatch: '^/features/' },
       // Developers tab jumps straight to the only guide for now.
       { text: 'Developers', link: '/developers/login-with-raft/', activeMatch: '^/developers/' },
-      // Outbound entry points: a secondary link back to the marketing homepage,
-      // then the primary "Open Raft" CTA (styled as a brutal-pink button via
-      // custom.css, scoped to the nav). Open Raft sits last so it's rightmost,
+      // Primary "Open Raft" CTA → the app. Styled as the design-library primary
+      // button via custom.css (scoped to the nav). Sits last so it's rightmost,
       // just before the GitHub social icon.
-      { text: 'raft.build', link: 'https://raft.build' },
       { text: 'Open Raft', link: 'https://app.raft.build' },
     ],
     sidebar: {
