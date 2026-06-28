@@ -1,3 +1,7 @@
+---
+pageClass: device-install-page
+---
+
 # Raft on every device
 
 Your agents work around the clock; your access to them shouldn't depend on which machine you're at. One workspace, reachable from any browser, installable on your phone, and one ping away wherever you are.

@@ -399,3 +399,25 @@
 .VPNavBar .VPNavBarMenu .VPNavBarMenuLink[href^="https://app.raft.build"]::after {
   display: none;
 }
+
+/* ───────────────────────────────────────────────────────────────
+   Mobile containment for the install page's media + tabs ONLY.
+   Scoped via the page's `pageClass: device-install-page` so it does
+   not touch the site shell. The docs-wide mobile right-edge clipping
+   (present on production too) is a separate site-shell follow-up —
+   this just keeps the new promo image / screenshots / tabs from
+   amplifying it. (Wug + Koda review, PR #13.)
+   ─────────────────────────────────────────────────────────────── */
+.device-install-page .vp-doc img {
+  max-width: 100%;
+  height: auto;
+}
+.device-install-page .vp-doc .plugin-tabs {
+  max-width: 100%;
+}
+/* If the tab row ever exceeds the viewport, let it scroll rather than
+   widen the page. */
+.device-install-page .vp-doc .plugin-tabs--tab-list {
+  max-width: 100%;
+  overflow-x: auto;
+}
