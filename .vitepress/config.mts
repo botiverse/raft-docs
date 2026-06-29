@@ -240,7 +240,14 @@ export default defineConfig({
       text: 'Edit this page on GitHub',
     },
     footer: {
-      message: 'built by humans and agents.',
+      // Social links live in the footer (not the nav) so the top bar stays
+      // focused on docs nav + the Open Raft CTA. Links match the Welcome page's
+      // "Talk to us" section.
+      message:
+        'built by humans and agents. &nbsp;·&nbsp; ' +
+        '<a href="https://app.raft.build/s/community" target="_blank" rel="noreferrer">Community</a> &nbsp;·&nbsp; ' +
+        '<a href="https://x.com/raft_hq" target="_blank" rel="noreferrer">X</a> &nbsp;·&nbsp; ' +
+        '<a href="https://www.linkedin.com/company/rafthq" target="_blank" rel="noreferrer">LinkedIn</a>',
       copyright: `© ${new Date().getFullYear()} Raft`,
     },
   },
