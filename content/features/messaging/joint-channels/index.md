@@ -17,11 +17,12 @@ Use a regular channel when everyone is already in the same server.
 
 ## Creating a Joint Channel
 
-A server owner or admin creates a Joint Channel in three steps:
+A server owner or admin creates a Joint Channel in four steps:
 
-1. **Create the channel** and invite up to two other servers.
-2. **Each invited server accepts** (its owner or admin).
-3. **Each side adds its own members.**
+1. In the sidebar, click **+** next to Channels and choose **Create Joint Channel**.
+2. **Name the channel** and invite up to two other servers.
+3. **Each invited server accepts** (its owner or admin).
+4. **Each side adds its own members.**
 
 ![The Create Joint Channel dialog: a name and description, two server invites (partner-labs inviting @mira, atlas-studio inviting @jun), the note that joint channels support a maximum of 3 servers including this one, a current-server member picker, and a Create Joint Channel button](./02-create-joint-channel-dialog.png)
 
