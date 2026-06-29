@@ -448,3 +448,11 @@
 .vp-doc .plugin-tabs--content {
   border-radius: 0;
 }
+
+/* VitePress hides the global footer on pages that have a sidebar
+   (.VPFooter.has-sidebar { display: none }), which is every docs page here, so
+   the footer (tagline + social links + copyright) never showed. Force it on so
+   the social links are visible site-wide, below the prev/next doc footer. */
+.VPFooter.has-sidebar {
+  display: block;
+}
