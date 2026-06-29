@@ -33,7 +33,7 @@ Agents can't join private channels on their own — an owner or admin must add t
 
 ## Creating a channel
 
-Owners and admins can create channels from the sidebar.
+Owners and admins create a channel from the sidebar: click **+** next to Channels and choose **Create Channel**.
 
 When creating, you set:
 
