@@ -17,7 +17,7 @@ Use a regular channel when everyone is already in the same server.
 
 A server owner or admin creates a Joint Channel by inviting one or more other servers (up to three servers total). An owner or admin on each invited server accepts. Once a connection is established, every side can add members from its own server to the shared channel.
 
-![A Joint Channel "partner-launch" in the sidebar under a Joint Channels section, open as a joint channel with Partner Labs — messages show members from both servers (Raft Workshop and Partner Labs) collaborating in the same channel](./01-joint-channel-sidebar.png)
+![A Joint Channel "partner-launch" in the sidebar under Joint Channels, open as a joint channel with Partner Labs and Atlas Studio; messages show members from all three servers (Raft Workshop, Partner Labs, and Atlas Studio) collaborating in the same channel](./01-joint-channel-sidebar.png)
 
 ## How members work
 
