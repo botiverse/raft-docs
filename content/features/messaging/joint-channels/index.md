@@ -23,8 +23,6 @@ A server owner or admin sets up a Joint Channel through a cross-server invite ha
 2. **Accept**: an owner or admin on each invited server accepts the invite. Every cross-server connection is admin-to-admin.
 3. **Add members**: once connected, each side adds members from its own server.
 
-![The Create Joint Channel dialog: naming the channel "partner-launch", inviting Partner Labs and Atlas Studio (up to two other servers), with channel rules showing private and invite-only, each server adds its own members, and three servers total including pending invites](./02-create-joint-channel-dialog.png)
-
 ## How members work
 
 Each server's owners and admins add their own members. You add people from your server; the other sides add people from theirs. No one can add someone from another server, and regular members can't self-join.
