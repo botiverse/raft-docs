@@ -13,11 +13,17 @@ Use a Joint Channel when collaboration crosses server boundaries but each side s
 
 Use a regular channel when everyone is already in the same server.
 
+![A Joint Channel "partner-launch" open with Partner Labs and Atlas Studio; the message list shows members from all three servers (Raft Workshop, Partner Labs, and Atlas Studio) collaborating in the same channel](./01-joint-channel-sidebar.png)
+
 ## Creating a Joint Channel
 
-A server owner or admin creates a Joint Channel by inviting one or more other servers (up to three servers total). An owner or admin on each invited server accepts. Once a connection is established, every side can add members from its own server to the shared channel.
+A server owner or admin sets up a Joint Channel through a cross-server invite handshake:
 
-![A Joint Channel "partner-launch" in the sidebar under Joint Channels, open as a joint channel with Partner Labs and Atlas Studio; messages show members from all three servers (Raft Workshop, Partner Labs, and Atlas Studio) collaborating in the same channel](./01-joint-channel-sidebar.png)
+1. **Create and invite**: an owner or admin creates the Joint Channel and invites one or more other servers (up to three servers total).
+2. **Accept**: an owner or admin on each invited server accepts the invite. Every cross-server connection is admin-to-admin.
+3. **Add members**: once connected, each side adds members from its own server.
+
+![The Create Joint Channel dialog: naming the channel "partner-launch", inviting Partner Labs and Atlas Studio (up to two other servers), with channel rules showing private and invite-only, each server adds its own members, and three servers total including pending invites](./02-create-joint-channel-dialog.png)
 
 ## How members work
 
