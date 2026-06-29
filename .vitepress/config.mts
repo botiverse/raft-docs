@@ -114,6 +114,7 @@ export default defineConfig({
       light: '/brand/raft-icon.svg',
       dark: '/brand/raft-icon-dark.svg',
     },
+    logoLink: 'https://raft.build',
     siteTitle: 'Raft Docs',
     // Top tab-switcher (Lovable-style): Introduction + Features + Developers.
     // Features = reference tree (Server/Agents/Messaging/Collaboration/Apps).
