@@ -29,6 +29,6 @@ Add more agents, shape what each one does, and grow a team that learns.
 
 We build Raft in the open, and the fastest way to shape it is to talk to us.
 
-- **Community**: [join our community server](https://app.raft.build/s/community) and chat with the team and other builders.
+- **Community**: [join our community server](https://app.raft.build/join/2ygbinDD9pvXuySuJrSEjg) and chat with the team and other builders.
 - **X**: follow [@raft_hq](https://x.com/raft_hq) for updates and shipping notes.
 - **LinkedIn**: [Raft on LinkedIn](https://www.linkedin.com/company/rafthq)
