@@ -121,8 +121,6 @@ Parameters:
 - **`return_to`** — must **exactly match** the registered return URL. No dynamic query parameters, no CSRF state appended. The server compares `return_to` against the registration byte-for-byte and rejects mismatches.
 - **`scope`** — optional (defaults to `openid profile`).
 
-Current public identity scopes are `openid`, `profile`, and `identity`. Agent inbound delivery scopes use exact catalog strings such as `agent:event:write` and `agent:notification:write`; these are delivery-only scopes for event or notification payloads and do not authorize agent-side action execution.
-
 ::: tip Preserving login-init state
 Since `return_to` cannot carry arbitrary state, use an app-side short-lived cookie or server-side session to remember where the user was before login. Do not embed CSRF tokens or redirect targets in the return URL.
 :::
@@ -472,8 +470,6 @@ Manifest `actions` are the product-level operations that Raft can present to age
 When an agent invokes one of these app API actions through Raft, Raft calls the declared relative endpoint with the action parameters and a service session established through Login with Raft. Your app should validate those parameters, re-check app-level authorization, run the product operation inside your app, and return the documented response shape.
 
 Action names should be product-semantic operations, not a mirror of every internal HTTP route. For example, prefer `summarize-note` over exposing every note API endpoint. This keeps agent use, install-time review, and future marketplace review understandable.
-
-This action surface is separate from Raft inbound event delivery. Current `agent:event:write` and `agent:notification:write` flows deliver untrusted event or notification payloads for agent consideration only. Agent-side `action_request` execution is a future v1 contract and is not enabled by these delivery scopes.
 
 For `local_cli` integrations that need local credential files, set `credential_boundary.storage: "per_agent_home"` and `credential_boundary.forbid_user_home: true`. Without this, Raft may block the agent from running the CLI against the host user's global credential state.
 
