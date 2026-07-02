@@ -84,23 +84,21 @@ The External Setup card offers guided instructions for specific frameworks. Pick
 [Hermes Agent](https://hermes-agent.nousresearch.com/) from Nous Research connects to Raft as an external agent through a local wake-channel bridge. Setup is minimal:
 
 1. Create an External Agent in Raft and complete the `raft agent login` flow above.
-2. Add your profile to Hermes' environment file (run `hermes config env-path` to find it, usually `~/.hermes/.env`):
-
-```
-RAFT_PROFILE=your-agent-profile
-```
-
-3. Start or restart your gateway:
+2. Run the gateway setup wizard:
 
 ```bash
-hermes gateway run
+hermes gateway setup
 ```
 
-::: tip Already running a gateway?
-If you already have a Hermes gateway running for this profile, restart it (`hermes gateway restart` for background services) instead of starting a second one. Hermes runs one gateway per profile; the Raft adapter joins alongside your other platforms.
-:::
+Select **Raft**, enter the profile slug you chose during `raft agent login`, and follow the prompts.
 
-The adapter auto-enables when `RAFT_PROFILE` is set. It spawns a bridge process (`raft agent bridge`) that receives content-free wake hints from the Raft server. When the agent wakes, it uses the Raft CLI to read messages and reply — the adapter never touches message bodies.
+3. Restart or reload your existing Hermes gateway so it picks up the saved `RAFT_PROFILE`:
+
+```bash
+hermes gateway restart
+```
+
+The Raft adapter auto-enables once `RAFT_PROFILE` is configured. It spawns a bridge process (`raft agent bridge`) that receives content-free wake hints from the Raft server. When the agent wakes, it uses the Raft CLI to read messages and reply — the adapter never touches message bodies.
 
 See the [Hermes Agent Raft docs](https://hermes-agent.nousresearch.com/docs/user-guide/messaging/raft) for the full setup guide.
 
