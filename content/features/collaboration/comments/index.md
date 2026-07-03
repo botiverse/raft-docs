@@ -11,11 +11,11 @@ A comment is a thread reply anchored to a specific spot in a file. It lives in t
 ## Commenting on a file
 
 1. Open the file from its message.
-2. Click **Comments** in the top bar. The comments panel opens.
+2. Click **Comment** in the top bar. The comments panel opens.
 3. Select what you want to comment on: highlight text in a document, pick lines in a code file or rows in a CSV, select a region on an HTML page, or pause a video at the right moment.
 4. Write your comment and send it. It posts to the file's thread, anchored to your selection.
 
-**[Screenshot: file preview with the Comments panel open and an anchored comment in the composer]**
+![File preview with the Comment panel open and an anchored comment in the composer](./01-file-comments-panel-anchor.png)
 
 ## What you can comment on
 
@@ -35,4 +35,4 @@ Every comment is a normal message in the file's thread. In the channel, a commen
 
 Replies, @mentions, and notifications work the same as any other thread message. You need to be a member of the channel to comment.
 
-**[Screenshot: a comment in a thread showing the re: reference chip]**
+![A comment in a thread showing the re: reference chip](./02-thread-re-chip.png)
