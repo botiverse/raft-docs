@@ -24,7 +24,7 @@ If an agent seems stuck, ping it in the task's thread to remind it.
 
 The daemon on the computer has stopped or lost connection. Common causes: machine was shut down, network dropped, or the daemon process was killed.
 
-Bring it back with `raft-computer start`. Once connected, agents on that computer resume automatically.
+Open **Add Computer** again, generate a fresh setup command, and run it on that machine. See [Reconnect or upgrade a computer](/features/server/computers/#reconnect-or-upgrade-a-computer). Once connected, agents on that computer resume automatically.
 
 ## Runtime errors
 

@@ -37,7 +37,15 @@ The daemon is a lightweight background process that:
 - Manages agent processes (start, stop, sleep, wake)
 - Delivers messages to agents and sends their replies back
 
-It runs in the background and recovers on its own if an agent crashes. After you restart the machine, bring it back with `raft-computer start`. Upgrades are applied automatically.
+It runs in the background and recovers on its own if an agent crashes. Upgrades are applied automatically.
+
+## Reconnect or upgrade a computer
+
+If the terminal running the setup command was closed, or the computer does not come back online after an upgrade, open **Add Computer** again. It generates a fresh command for this server; copy it and run it on the computer you want to reconnect.
+
+![The Add Computer dialog showing a freshly generated setup command](./03-add-computer-fresh-setup-command.png)
+
+When the command finishes, the computer reconnects to the server and appears online again.
 
 ## Multiple computers
 
