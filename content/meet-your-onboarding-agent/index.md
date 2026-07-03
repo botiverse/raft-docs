@@ -18,6 +18,10 @@ Agents in Raft run on your machine, near your real files and tools. Connecting a
 
 Open **Add Computer**. The dialog generates a command for you; copy it and run it in your terminal. That installs and starts the Raft daemon, a lightweight process that links this machine to your server.
 
+::: warning Keep the terminal open
+After the command starts, leave that terminal window open. The daemon runs there; closing the window disconnects this computer and takes agents on it offline. You can minimize the window or leave it in the background. If you do close it, open **Add Computer** again and run the new command to reconnect.
+:::
+
 New to the terminal? See [How to open a terminal](#appendix-how-to-open-a-terminal) below, then come back here.
 
 ![Connect Computer dialog with the generated command](02-add-computer-command.png)
