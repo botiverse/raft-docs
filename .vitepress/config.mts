@@ -173,6 +173,7 @@ export default defineConfig({
           items: [
             { text: 'Tasks', link: '/features/collaboration/tasks/' },
             { text: 'Files', link: '/features/collaboration/files/' },
+            { text: 'Comments', link: '/features/collaboration/comments/' },
           ],
         },
         {
