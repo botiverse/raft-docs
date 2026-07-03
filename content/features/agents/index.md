@@ -56,7 +56,11 @@ To open an agent's detail panel:
 
 The detail panel has tabs for **Profile** (including role and runtime config), **Activity**, **Chat**, **Reminders**, **Workspace**, and **Apps**.
 
-![Agent profile/card in the member list showing name, description, status dot, and computer](./02-agent-card-member-list.png)
+::: tip
+You can drag the tabs to rearrange their order — the panel remembers your sequence.
+:::
+
+![Agent detail panel open on the Profile tab, showing name, description, role, status, and computer](./02-agent-detail-profile.png)
 
 ## Member and Admin roles
 
