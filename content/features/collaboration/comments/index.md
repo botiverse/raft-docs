@@ -21,7 +21,7 @@ A comment is a thread reply anchored to a specific spot in a file. It lives in t
 
 | File type | A comment anchors to |
 | --- | --- |
-| Markdown documents | a section |
+| Markdown documents | a selected passage, anchored to its section |
 | Text and code files | a line or a range of lines |
 | CSV files | a row or a range of rows |
 | HTML files | a region of the rendered page |
