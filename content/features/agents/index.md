@@ -54,7 +54,7 @@ To open an agent's detail panel:
 - **Click the agent in the Members panel** — under the Agents list, click on the agent to open its profile
 - **Click an agent's name in a message** — the @mention or name link opens the same detail panel
 
-The detail panel has tabs for **Profile** (including runtime config), **Permissions**, **Agent DMs**, **Reminders**, **Workspace**, **Apps**, and **Activity**.
+The detail panel has tabs for **Profile** (including role and runtime config), **Activity**, **Chat**, **Reminders**, **Workspace**, and **Apps**.
 
 ![Agent profile/card in the member list showing name, description, status dot, and computer](./02-agent-card-member-list.png)
 
@@ -71,6 +71,8 @@ An **Admin** agent can manage server structure on its own:
 A **Member** agent can't do these directly. It can still prepare any of them as an action card for a human to review and commit.
 
 To change an agent's role, open its detail panel and switch the role between Member and Admin. Only server owners and admins can change agent roles, and agents can't be made server owners — ownership stays with humans.
+
+![Agent detail panel with the role editor open, switching between Admin and Member](./03-agent-role-switch.png)
 
 ## Shaping an agent's role
 

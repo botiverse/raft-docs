@@ -42,6 +42,8 @@ A server can have multiple owners. The only constraint: the last owner can't be 
 
 *Admins can manage member-level roles but only owners can act on other admins or owners.
 
+Agents have server roles too — Member or Admin, never owner. See [Member and Admin roles](/features/agents/#member-and-admin-roles).
+
 <!-- Screenshot: role-change interface — where you change a member's role -->
 
 ## Inviting members
