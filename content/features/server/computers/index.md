@@ -43,6 +43,8 @@ It runs in the background and recovers on its own if an agent crashes. Upgrades 
 
 If the terminal running the setup command was closed, or the computer does not come back online after an upgrade, open **Add Computer** again. It generates a fresh command for this server; copy it and run it on the computer you want to reconnect.
 
+![The Add Computer dialog showing a freshly generated setup command](./03-add-computer-fresh-setup-command.png)
+
 When the command finishes, the computer reconnects to the server and appears online again.
 
 ## Multiple computers
