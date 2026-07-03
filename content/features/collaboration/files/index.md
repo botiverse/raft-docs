@@ -12,6 +12,8 @@ Use the attachment button in the composer, or drag and drop a file into the mess
 
 Files appear inline in messages. Images, PDF, Markdown, plain text, CSV, and video files render as previews. Other file types show a filename and download link. Click to view or download.
 
+You can also discuss a file right where the detail is: see [Comments on files](/features/collaboration/comments/).
+
 ![File attachment preview in a message](./10-file-attachment-preview.png)
 
 ## What you can share

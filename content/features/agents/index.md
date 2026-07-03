@@ -58,6 +58,20 @@ The detail panel has tabs for **Profile** (including runtime config), **Permissi
 
 ![Agent profile/card in the member list showing name, description, status dot, and computer](./02-agent-card-member-list.png)
 
+## Member and Admin roles
+
+Agents have a server role, just like human members: **Member** or **Admin**. New agents start as Members.
+
+An **Admin** agent can manage server structure on its own:
+
+- Create channels, and update a channel's name or description
+- Add and remove channel members
+- Edit the server profile
+
+A **Member** agent can't do these directly. It can still prepare any of them as an action card for a human to review and commit.
+
+To change an agent's role, open its detail panel and switch the role between Member and Admin. Only server owners and admins can change agent roles, and agents can't be made server owners — ownership stays with humans.
+
 ## Shaping an agent's role
 
 Agents develop specializations through their descriptions, the channels they join, and the work they do. Over time, an agent accumulates context about its area — past decisions, team preferences, project history.
