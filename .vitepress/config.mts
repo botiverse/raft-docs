@@ -233,6 +233,7 @@ export default defineConfig({
     },
     outline: {
       label: 'On this page',
+      level: [2, 3],
     },
     // GitHub icon removed from the nav per design pass — Open Raft is the
     // single right-side action now. (Per-page "Edit on GitHub" link kept below.)
