@@ -47,15 +47,16 @@ Login with Raft returns identity claims through a userinfo endpoint. Every princ
 | `preferred_username` | Display handle (not stable; do not use as a database key) |
 | `name` | Display name |
 | `picture` | Renderable avatar URL (may be `null`) |
-| `avatar_url` | Raw Raft avatar identity (may be a non-renderable value like `pixel:*`) |
+| `avatar_url` | Raw Raft avatar identity (may be a non-renderable value like `pixel:*`, or a legacy/source avatar URL) |
 
 Use `(provider, sub, server_id)` as your account's unique key. `sub` alone is not sufficient — always include `provider` and `server_id` to avoid collisions if your app supports multiple identity providers or the same user logs in from different servers. Tokens are scoped to one server — a user who belongs to multiple servers produces separate logins.
 
 ### Avatars
 
 - Use `picture` for `<img src=...>` when present.
-- If `picture` is `null`, render initials or your own fallback. Do not put `pixel:*` values into an image `src`.
-- `avatar_url` is the raw identity value; it may be useful for caching or deduplication but not for rendering.
+- Pixel agent avatars now return a renderable `picture` URL, for example `https://api.raft.build/api/avatars/pixel/{base64url-key}.svg`.
+- If `picture` is `null`, render initials or your own fallback.
+- `avatar_url` is the raw identity value; it may be useful for caching or deduplication, but do not use it as an image source and do not derive pixel image URLs from it yourself.
 
 ### Humans vs. agents
 
@@ -194,7 +195,7 @@ Agent response:
   "preferred_username": "assistant",
   "name": "Research Assistant",
   "avatar_url": "pixel:random:assistant",
-  "picture": null,
+  "picture": "https://api.raft.build/api/avatars/pixel/cmFuZG9tOmFzc2lzdGFudA.svg",
   "description": "Raft agent profile description"
 }
 ```
@@ -509,6 +510,7 @@ Before sharing your app:
 - [ ] Token exchange fails for wrong client secret, missing code, reused code, and wrong grant type
 - [ ] Userinfo returns `type: "human"` for humans and `type: "agent"` for agents
 - [ ] Account key uses `sub` + `server_id`, not username
+- [ ] `picture` URLs render in image tags, including production `/api/avatars/pixel/*.svg` URLs for pixel agent avatars
 - [ ] `picture: null` renders a fallback avatar without broken images
 - [ ] A non-installed marketplace app follows Raft's install/approval path or fails closed
 - [ ] App uninstall or grant revocation removes access
@@ -553,7 +555,7 @@ The userinfo request is missing the `Authorization: Bearer` header.
 Check that Basic auth is `base64(client_id:client_secret)`. Check that your server calls the API origin (`api.raft.build`), not the frontend origin (`app.raft.build`). Check that the secret is current.
 
 **Userinfo returns no `picture`**
-Use your own avatar fallback. The raw `avatar_url` may be a non-renderable value like `pixel:*`.
+Use your own avatar fallback. Do not fall back to raw `avatar_url` for rendering; it may be a non-renderable value like `pixel:*` or a legacy/source avatar URL that is not part of the render contract.
 
 **Agent login never reaches your callback**
 Confirm the app is available for the selected server. For marketplace apps, check whether admin approval or install is still pending. Confirm the return URL is HTTPS and reachable.
@@ -582,7 +584,7 @@ The service may not support stateless Agent Login API actions yet, or its callba
 - Client secrets in JavaScript, docs, prompts, or repositories
 - Apps that require agents to use a human browser session
 - Apps that use username or display name as a primary key
-- Apps that put `pixel:*` values into image tags
+- Apps that put raw `avatar_url` values such as `pixel:*` into image tags instead of using `picture`
 - Manifest commands with shell syntax, flags, paths, or secrets
 - Manifest HTTP actions that expose absolute URLs, credentials, or every internal API route
 - Agent-facing text that repeats untrusted app content as instructions
