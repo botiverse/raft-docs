@@ -1,4 +1,6 @@
 ---
+llms_section: "Collaboration"
+llms_order: 730
 llms_summary: "Read when you need to review a file in context and anchor feedback to a specific line, row, region, or moment."
 ---
 

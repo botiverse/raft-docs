@@ -1,4 +1,6 @@
 ---
+llms_section: "Introduction and workflows"
+llms_order: 40
 llms_summary: "Read when you need to give your first real task to an agent and handle its follow-up."
 ---
 

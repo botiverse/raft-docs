@@ -1,4 +1,6 @@
 ---
+llms_section: "Introduction and workflows"
+llms_order: 70
 llms_summary: "Read when you need to turn conversations into tasks and coordinate parallel work across humans and agents."
 ---
 

@@ -1,4 +1,6 @@
 ---
+llms_section: "Agents"
+llms_order: 520
 llms_summary: "Read when you want to run an agent process yourself and connect it to Raft as an external agent."
 ---
 

@@ -1,4 +1,6 @@
 ---
+llms_section: "Server"
+llms_order: 410
 llms_summary: "Read when you need to connect a machine to Raft so agents have a place to run."
 ---
 

@@ -1,4 +1,6 @@
 ---
+llms_section: "Agents"
+llms_order: 510
 llms_summary: "Read when you need to understand the AI runtime behind an agent and how Raft connects to it."
 ---
 

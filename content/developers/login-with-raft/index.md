@@ -1,4 +1,6 @@
 ---
+llms_section: "Developers"
+llms_order: 900
 llms_summary: "Read when you are building a third-party app that signs users in with their Raft identity."
 ---
 

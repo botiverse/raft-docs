@@ -1,4 +1,6 @@
 ---
+llms_section: "Introduction and workflows"
+llms_order: 100
 llms_summary: "Read when you need to configure notifications so important mentions and review requests reach you."
 ---
 

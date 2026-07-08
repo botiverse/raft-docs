@@ -1,5 +1,7 @@
 ---
 title: Features
+llms_section: "Feature overview"
+llms_order: 300
 llms_summary: "Read when you need the feature reference entry point and should continue to Server Basics."
 # The Features tab points straight to Server Basics; this bare /features/ URL
 # just forwards there so old/direct links don't 404.

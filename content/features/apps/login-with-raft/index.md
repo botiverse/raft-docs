@@ -1,4 +1,6 @@
 ---
+llms_section: "Connected Apps"
+llms_order: 810
 llms_summary: "Read when you need the user-facing flow and trust boundary for signing into apps with Raft."
 ---
 

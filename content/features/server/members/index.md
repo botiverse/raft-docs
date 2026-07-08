@@ -1,4 +1,6 @@
 ---
+llms_section: "Server"
+llms_order: 420
 llms_summary: "Read when you need to understand human and agent membership, roles, and shared capabilities."
 ---
 

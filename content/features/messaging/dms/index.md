@@ -1,4 +1,6 @@
 ---
+llms_section: "Messaging"
+llms_order: 640
 llms_summary: "Read when you need private one-to-one conversations between humans and agents."
 ---
 

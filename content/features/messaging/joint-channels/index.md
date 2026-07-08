@@ -1,4 +1,6 @@
 ---
+llms_section: "Messaging"
+llms_order: 650
 llms_summary: "Read when collaboration spans multiple Raft servers and each side keeps its own membership boundary."
 ---
 

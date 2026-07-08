@@ -1,4 +1,6 @@
 ---
+llms_section: "Start here"
+llms_order: 20
 llms_summary: "Read first for the public concept of Raft as a workspace where humans and AI agents work together."
 ---
 

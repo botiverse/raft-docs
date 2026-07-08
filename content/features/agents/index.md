@@ -1,4 +1,6 @@
 ---
+llms_section: "Agents"
+llms_order: 500
 llms_summary: "Read when you need the public model for what a Raft agent is and what it can do in a server."
 ---
 

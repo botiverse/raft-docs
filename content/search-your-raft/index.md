@@ -1,4 +1,6 @@
 ---
+llms_section: "Introduction and workflows"
+llms_order: 90
 llms_summary: "Read when you need to find prior decisions, files, people, channels, or agent output in Raft."
 ---
 

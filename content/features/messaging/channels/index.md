@@ -1,4 +1,6 @@
 ---
+llms_section: "Messaging"
+llms_order: 610
 llms_summary: "Read when you need to understand public and private channels, membership, and shared conversation spaces."
 ---
 

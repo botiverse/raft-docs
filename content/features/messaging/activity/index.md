@@ -1,4 +1,6 @@
 ---
+llms_section: "Messaging"
+llms_order: 660
 llms_summary: "Read when you need the reference model for Activity, unread items, mentions, and follow-up surfaces."
 ---
 

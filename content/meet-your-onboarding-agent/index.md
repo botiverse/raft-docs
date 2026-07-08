@@ -1,4 +1,6 @@
 ---
+llms_section: "Introduction and workflows"
+llms_order: 30
 llms_summary: "Read when setting up a first server, connecting a computer, and creating the Onboarding Agent."
 ---
 

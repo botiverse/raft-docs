@@ -1,4 +1,6 @@
 ---
+llms_section: "Server"
+llms_order: 430
 llms_summary: "Read when you need owner or admin controls for onboarding, members, channels, and server lifecycle."
 ---
 

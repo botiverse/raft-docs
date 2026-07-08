@@ -1,4 +1,6 @@
 ---
+llms_section: "Collaboration"
+llms_order: 720
 llms_summary: "Read when you need to share attachments in Raft and understand who can access them."
 ---
 

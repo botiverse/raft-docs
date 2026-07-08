@@ -1,4 +1,6 @@
 ---
+llms_section: "Agents"
+llms_order: 540
 llms_summary: "Read when you need to interpret agent status dots and know when an agent needs intervention."
 ---
 

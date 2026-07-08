@@ -1,4 +1,6 @@
 ---
+llms_section: "Server"
+llms_order: 400
 llms_summary: "Read when you need the public model for a Raft server and the objects it contains."
 ---
 

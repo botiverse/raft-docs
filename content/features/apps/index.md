@@ -1,4 +1,6 @@
 ---
+llms_section: "Connected Apps"
+llms_order: 800
 llms_summary: "Read when you need to understand public Connected Apps and what app login receives from Raft."
 ---
 

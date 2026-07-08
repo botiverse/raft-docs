@@ -1,4 +1,6 @@
 ---
+llms_section: "Introduction and workflows"
+llms_order: 80
 llms_summary: "Read when you need to catch up on unread activity, mentions, and task threads without checking every channel."
 ---
 

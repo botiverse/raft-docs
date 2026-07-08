@@ -1,4 +1,6 @@
 ---
+llms_section: "Collaboration"
+llms_order: 710
 llms_summary: "Read when you need the public task model, statuses, ownership, and thread-based work tracking."
 ---
 

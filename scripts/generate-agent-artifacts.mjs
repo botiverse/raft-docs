@@ -14,61 +14,8 @@ const previewMarkerPatterns = [
   /^\[\[preview\]\].*$/,
   /^<!--\s*Screenshot:.*-->$/,
 ]
-
-const sectionOrder = [
-  'Start here',
-  'Introduction and workflows',
-  'Tutorials',
-  'Feature overview',
-  'Server',
-  'Agents',
-  'Messaging',
-  'Collaboration',
-  'Connected Apps',
-  'Developers',
-  'Other public docs',
-]
-
-const explicitPageOrder = [
-  'index.md',
-  'welcome/index.md',
-  'meet-your-onboarding-agent/index.md',
-  'hand-off-your-first-task/index.md',
-  'bring-in-your-teammates/index.md',
-  'build-your-agent-team/index.md',
-  'divide-the-work/index.md',
-  'catch-up-in-one-place/index.md',
-  'search-your-raft/index.md',
-  'get-pinged-when-it-matters/index.md',
-  'raft-on-every-device/index.md',
-  'tutorials/investing-research-team/index.md',
-  'features/index.md',
-  'features/server/index.md',
-  'features/server/computers/index.md',
-  'features/server/members/index.md',
-  'features/server/management/index.md',
-  'features/agents/index.md',
-  'features/agents/runtime/index.md',
-  'features/agents/external/index.md',
-  'features/agents/workspace/index.md',
-  'features/agents/lifecycle/index.md',
-  'features/agents/reminders/index.md',
-  'features/agents/troubleshooting/index.md',
-  'features/messaging/index.md',
-  'features/messaging/channels/index.md',
-  'features/messaging/messages/index.md',
-  'features/messaging/threads/index.md',
-  'features/messaging/dms/index.md',
-  'features/messaging/joint-channels/index.md',
-  'features/messaging/activity/index.md',
-  'features/collaboration/index.md',
-  'features/collaboration/tasks/index.md',
-  'features/collaboration/files/index.md',
-  'features/collaboration/comments/index.md',
-  'features/apps/index.md',
-  'features/apps/login-with-raft/index.md',
-  'developers/login-with-raft/index.md',
-]
+const privateKnowledgeSummaryPattern =
+  /\b(internal\s+Raft\s+Manual|internal\s+Manual|raft\s+manual|Agent Knowledge)\b/i
 
 async function listMarkdownFiles(dir, prefix = '') {
   const entries = await readdir(dir, { withFileTypes: true })
@@ -174,47 +121,14 @@ function rawUrlPath(relativePath) {
   return `/${rawOutputPath(relativePath)}`
 }
 
-function sectionFor(relativePath) {
-  if (relativePath === 'index.md' || relativePath === 'welcome/index.md') {
-    return 'Start here'
-  }
-  if (relativePath.startsWith('tutorials/')) return 'Tutorials'
-  if (relativePath === 'features/index.md') return 'Feature overview'
-  if (relativePath.startsWith('features/server/')) return 'Server'
-  if (relativePath.startsWith('features/agents/')) return 'Agents'
-  if (relativePath.startsWith('features/messaging/')) return 'Messaging'
-  if (relativePath.startsWith('features/collaboration/')) return 'Collaboration'
-  if (relativePath.startsWith('features/apps/')) return 'Connected Apps'
-  if (relativePath.startsWith('developers/')) return 'Developers'
-
-  const introPages = new Set([
-    'meet-your-onboarding-agent/index.md',
-    'hand-off-your-first-task/index.md',
-    'bring-in-your-teammates/index.md',
-    'build-your-agent-team/index.md',
-    'divide-the-work/index.md',
-    'catch-up-in-one-place/index.md',
-    'search-your-raft/index.md',
-    'get-pinged-when-it-matters/index.md',
-    'raft-on-every-device/index.md',
-  ])
-
-  return introPages.has(relativePath)
-    ? 'Introduction and workflows'
-    : 'Other public docs'
+function parseLlmsOrder(value) {
+  const raw = `${value ?? ''}`.trim()
+  return /^\d+$/.test(raw) ? Number(raw) : Number.NaN
 }
 
 function sortPages(left, right) {
-  const sectionDelta =
-    sectionOrder.indexOf(left.section) - sectionOrder.indexOf(right.section)
-  if (sectionDelta !== 0) return sectionDelta
-
-  const leftIndex = explicitPageOrder.indexOf(left.relativePath)
-  const rightIndex = explicitPageOrder.indexOf(right.relativePath)
-  if (leftIndex !== -1 || rightIndex !== -1) {
-    return (leftIndex === -1 ? Number.MAX_SAFE_INTEGER : leftIndex) -
-      (rightIndex === -1 ? Number.MAX_SAFE_INTEGER : rightIndex)
-  }
+  const orderDelta = left.order - right.order
+  if (orderDelta !== 0) return orderDelta
 
   return left.relativePath.localeCompare(right.relativePath)
 }
@@ -256,10 +170,36 @@ function validatePageMetadata(page, failures) {
     failures.push(`${page.relativePath}: llms_summary should stay under 220 characters`)
   }
 
-  if (page.summary && /manual|internal/i.test(page.summary)) {
+  if (page.summary && privateKnowledgeSummaryPattern.test(page.summary)) {
     failures.push(
       `${page.relativePath}: llms_summary must stay public discovery metadata, not internal Manual content`,
     )
+  }
+
+  if (!page.section) {
+    failures.push(`${page.relativePath}: missing required llms_section frontmatter`)
+  }
+
+  if (!Number.isFinite(page.order)) {
+    failures.push(`${page.relativePath}: missing numeric llms_order frontmatter`)
+  }
+}
+
+function validatePageCollection(pages, failures) {
+  const pagesByOrder = new Map()
+
+  for (const page of pages) {
+    if (!Number.isFinite(page.order)) continue
+
+    const existing = pagesByOrder.get(page.order) ?? []
+    existing.push(page.relativePath)
+    pagesByOrder.set(page.order, existing)
+  }
+
+  for (const [order, paths] of pagesByOrder) {
+    if (paths.length > 1) {
+      failures.push(`llms_order ${order} is duplicated by ${paths.join(', ')}`)
+    }
   }
 }
 
@@ -274,7 +214,8 @@ async function loadPages(markdownFiles) {
       relativePath,
       title: extractTitle(relativePath, markdown, frontmatter),
       summary: cleanInlineMarkdown(frontmatter.llms_summary ?? ''),
-      section: sectionFor(relativePath),
+      section: cleanInlineMarkdown(frontmatter.llms_section ?? ''),
+      order: parseLlmsOrder(frontmatter.llms_order),
       humanUrl: `${siteUrl}${humanUrlPath(relativePath)}`,
       markdownUrl: `${siteUrl}${rawUrlPath(relativePath)}`,
       rawOutputRelative: rawOutputPath(relativePath),
@@ -286,6 +227,8 @@ async function loadPages(markdownFiles) {
     pages.push(page)
   }
 
+  validatePageCollection(pages, failures)
+
   if (failures.length > 0) {
     throw new Error(`Agent docs artifact metadata check failed:\n- ${failures.join('\n- ')}`)
   }
@@ -295,10 +238,17 @@ async function loadPages(markdownFiles) {
 
 function renderSectionedList(pages, urlKey) {
   const lines = []
+  const sections = []
+  const seenSections = new Set()
 
-  for (const section of sectionOrder) {
+  for (const page of pages) {
+    if (seenSections.has(page.section)) continue
+    seenSections.add(page.section)
+    sections.push(page.section)
+  }
+
+  for (const section of sections) {
     const sectionPages = pages.filter((page) => page.section === section)
-    if (sectionPages.length === 0) continue
 
     lines.push(`### ${section}`)
     lines.push('')

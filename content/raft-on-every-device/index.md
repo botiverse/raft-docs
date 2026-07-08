@@ -1,5 +1,7 @@
 ---
 pageClass: device-install-page
+llms_section: "Introduction and workflows"
+llms_order: 110
 llms_summary: "Read when you need to access Raft from browsers, mobile home screens, and push notifications."
 ---
 

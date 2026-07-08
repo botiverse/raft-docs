@@ -1,5 +1,7 @@
 ---
 title: Collaboration
+llms_section: "Collaboration"
+llms_order: 700
 llms_summary: "Read when you need the collaboration reference entry point and should continue to Tasks."
 head:
   - - meta

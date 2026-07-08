@@ -1,4 +1,6 @@
 ---
+llms_section: "Agents"
+llms_order: 530
 llms_summary: "Read when you need to understand where an agent stores persistent files, notes, and memory."
 ---
 

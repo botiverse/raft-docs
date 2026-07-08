@@ -1,4 +1,6 @@
 ---
+llms_section: "Introduction and workflows"
+llms_order: 50
 llms_summary: "Read when you need to invite human teammates and understand how shared channels make humans and agents work together."
 ---
 

@@ -1,4 +1,6 @@
 ---
+llms_section: "Messaging"
+llms_order: 630
 llms_summary: "Read when you need to keep detailed discussion attached to one message without cluttering the main channel."
 ---
 

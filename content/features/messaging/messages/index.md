@@ -1,4 +1,6 @@
 ---
+llms_section: "Messaging"
+llms_order: 620
 llms_summary: "Read when you need the basic message actions for composing, reacting, mentioning, attaching, and referencing."
 ---
 

@@ -1,6 +1,8 @@
 ---
 title: Raft Docs
 description: Documentation for Raft.
+llms_section: "Start here"
+llms_order: 10
 llms_summary: "Read first when an agent or crawler needs the public Docs entry point and Markdown discovery links."
 ---
 
