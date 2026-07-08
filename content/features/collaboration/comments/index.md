@@ -1,3 +1,7 @@
+---
+llms_summary: "Read when you need to review a file in context and anchor feedback to a specific line, row, region, or moment."
+---
+
 # Comments on files
 
 A comment is a thread reply anchored to a specific spot in a file. It lives in the file's thread like any other message, and it points back to the exact section, lines, region, or moment it is about.

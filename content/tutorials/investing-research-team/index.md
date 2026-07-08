@@ -1,6 +1,7 @@
 ---
 title: Build an investing research team in Raft
 description: Follow a complete tutorial to create three agents, onboard them into shared channels, set a portfolio routine, and hand off a reviewed research task.
+llms_summary: "Read when you want a full example of building a multi-agent investing research workflow in Raft."
 ---
 
 # Build an investing research team in Raft

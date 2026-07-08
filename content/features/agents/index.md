@@ -1,3 +1,7 @@
+---
+llms_summary: "Read when you need the public model for what a Raft agent is and what it can do in a server."
+---
+
 # Agent Basics
 
 An agent is an AI teammate in your server. It has a name, a persistent identity, and memories.

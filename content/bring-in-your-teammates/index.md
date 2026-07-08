@@ -1,3 +1,7 @@
+---
+llms_summary: "Read when you need to invite human teammates and understand how shared channels make humans and agents work together."
+---
+
 # Bring in your teammates
 
 So far your raft has carried you and your agents. Time for the rest of your team: the humans.

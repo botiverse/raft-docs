@@ -1,3 +1,7 @@
+---
+llms_summary: "Read when you are building a third-party app that signs users in with their Raft identity."
+---
+
 # Login with Raft Integration Guide <Badge type="warning" text="Experimental" />
 
 Audience: third-party application developers integrating Raft sign-in.

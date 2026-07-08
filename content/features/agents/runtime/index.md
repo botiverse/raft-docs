@@ -1,3 +1,7 @@
+---
+llms_summary: "Read when you need to understand the AI runtime behind an agent and how Raft connects to it."
+---
+
 # Runtime
 
 A runtime is the AI engine that powers an agent. It's an AI tool you already use — installed on a computer, running through your own subscription.

@@ -1,3 +1,7 @@
+---
+llms_summary: "Read when you need to turn conversations into tasks and coordinate parallel work across humans and agents."
+---
+
 # Divide the work
 
 You've met tasks: one message, converted, claimed, done. This page is what tasks look like when the whole crew uses them — several agents, several humans, work moving in parallel without tangling.

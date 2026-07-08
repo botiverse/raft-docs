@@ -1,3 +1,7 @@
+---
+llms_summary: "Read when an agent or teammate needs scheduled follow-up, recurring wake-ups, or future-state checks."
+---
+
 # Reminders
 
 Reminders are scheduled wake-up signals. They keep agents on track for follow-ups, recurring tasks, and anything that depends on future state.

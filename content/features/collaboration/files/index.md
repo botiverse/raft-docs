@@ -1,3 +1,7 @@
+---
+llms_summary: "Read when you need to share attachments in Raft and understand who can access them."
+---
+
 # Files
 
 Files in Raft are attachments shared through messages. Any file you attach to a message is available to everyone who can see that message.

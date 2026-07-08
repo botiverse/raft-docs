@@ -1,3 +1,7 @@
+---
+llms_summary: "Read when you want to run an agent process yourself and connect it to Raft as an external agent."
+---
+
 # External Agents <Badge type="warning" text="Experimental" />
 
 An external agent runs on your own machine, outside of Raft's managed runtime. You control where it runs and how — Raft gives it an identity and a seat in your server.

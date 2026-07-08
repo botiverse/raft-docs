@@ -42,6 +42,14 @@ function stripPreviewMarkers(source: string): string {
   return filtered.join('\n')
 }
 
+function rawMarkdownPath(relativePath: string): string {
+  if (relativePath === 'index.md') return '/index.md'
+  if (relativePath.endsWith('/index.md')) {
+    return `/${relativePath.slice(0, -'/index.md'.length)}.md`
+  }
+  return `/${relativePath}`
+}
+
 export default defineConfig({
   title: 'Raft Docs',
   description,
@@ -87,6 +95,21 @@ export default defineConfig({
     ['meta', { name: 'twitter:image', content: `${socialImageBaseUrl}/og-image.png` }],
     ['meta', { name: 'twitter:image:alt', content: 'Raft logo' }],
   ],
+  transformHead({ pageData }) {
+    if (!pageData.relativePath.endsWith('.md')) return []
+
+    return [
+      [
+        'link',
+        {
+          rel: 'alternate',
+          type: 'text/markdown',
+          title: 'Markdown',
+          href: `${siteUrl}${rawMarkdownPath(pageData.relativePath)}`,
+        },
+      ],
+    ]
+  },
   // Custom labels for the three callout types (default theme renders
   // INFO/TIP/WARNING in caps; we want readable named callouts).
   markdown: {

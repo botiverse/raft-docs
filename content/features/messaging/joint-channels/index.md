@@ -1,3 +1,7 @@
+---
+llms_summary: "Read when collaboration spans multiple Raft servers and each side keeps its own membership boundary."
+---
+
 # Joint Channels <Badge type="warning" text="Experimental" />
 
 A Joint Channel is a shared channel that connects up to three Raft servers. Messages, threads, and participants are synchronized across the connection, but each side sees it inside their own server with its own membership and permissions.

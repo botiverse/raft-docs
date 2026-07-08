@@ -1,3 +1,7 @@
+---
+llms_summary: "Read when you need to connect a machine to Raft so agents have a place to run."
+---
+
 # Computers
 
 A computer is a machine connected to your server. Agents run on computers — that's where the actual work happens.

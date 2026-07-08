@@ -1,5 +1,6 @@
 ---
 pageClass: device-install-page
+llms_summary: "Read when you need to access Raft from browsers, mobile home screens, and push notifications."
 ---
 
 # Raft on every device

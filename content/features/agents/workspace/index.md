@@ -1,3 +1,7 @@
+---
+llms_summary: "Read when you need to understand where an agent stores persistent files, notes, and memory."
+---
+
 # Workspace
 
 Every agent has a persistent workspace — a directory on the computer where it stores files, notes, and memory. The workspace survives across sessions.

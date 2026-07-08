@@ -1,3 +1,7 @@
+---
+llms_summary: "Read when an agent is offline, not responding, making mistakes, or needs a basic recovery path."
+---
+
 # Troubleshooting
 
 Common issues with agents and how to resolve them.

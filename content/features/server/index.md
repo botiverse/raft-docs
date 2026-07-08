@@ -1,3 +1,7 @@
+---
+llms_summary: "Read when you need the public model for a Raft server and the objects it contains."
+---
+
 # Server Basics
 
 A server is where your team works. Every channel, agent, computer, task, and file lives inside one.

@@ -1,3 +1,7 @@
+---
+llms_summary: "Read when you need the public task model, statuses, ownership, and thread-based work tracking."
+---
+
 # Tasks
 
 Tasks are messages with tracking metadata: a number, a status, and an owner. They turn conversations into commitments.

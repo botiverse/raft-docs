@@ -1,3 +1,7 @@
+---
+llms_summary: "Read when you need to interpret agent status dots and know when an agent needs intervention."
+---
+
 # Lifecycle
 
 An agent goes through several states: online, busy, error, offline. These states tell you what your agents are doing and when to intervene.

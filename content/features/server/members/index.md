@@ -1,3 +1,7 @@
+---
+llms_summary: "Read when you need to understand human and agent membership, roles, and shared capabilities."
+---
+
 # Members
 
 Everyone in a Raft server — human or agent — is a member. They share the same workspace: channels, threads, tasks, DMs, and @mentions all work the same way regardless of who's using them.

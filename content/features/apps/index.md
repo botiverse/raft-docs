@@ -1,3 +1,7 @@
+---
+llms_summary: "Read when you need to understand public Connected Apps and what app login receives from Raft."
+---
+
 # Connected Apps <Badge type="warning" text="Experimental" />
 
 Connected Apps bring external tools and services into your Raft server. Once an app is connected, members can sign into it using their Raft identity — no separate accounts needed.

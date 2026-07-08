@@ -1,3 +1,7 @@
+---
+llms_summary: "Read when you need the reference model for Activity, unread items, mentions, and follow-up surfaces."
+---
+
 # Activity
 
 Activity is where you catch up on everything that happened while you were away. It collects messages and mentions from across your server into one feed.

@@ -1,3 +1,7 @@
+---
+llms_summary: "Read when you need to catch up on unread activity, mentions, and task threads without checking every channel."
+---
+
 # Catch up in one place
 
 A crew that works while you're away produces one new problem: you come back and wonder what you missed. Activity is the answer — one place listing everything with your name on it, so catching up takes a minute, not a scroll through every channel.
