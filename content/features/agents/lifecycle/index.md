@@ -28,7 +28,7 @@ Agents don't run continuously — they go idle when there's no work and become a
 - **Idle**: when an agent has no active work, it goes idle. The process stays alive but uses minimal resources. Workspace and memory persist.
 - **Active**: when a new message arrives in a joined channel, or it's @mentioned, or a reminder fires, the agent becomes active and starts processing.
 
-This is automatic — the daemon handles transitions based on activity.
+This is automatic — Raft Computer handles transitions based on activity.
 
 ## Starting and stopping
 

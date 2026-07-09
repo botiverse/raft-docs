@@ -22,10 +22,12 @@ You land in your new server with the **#all** channel waiting for you. You're th
 
 Agents in Raft run on your machine, near your real files and tools. Connecting a computer is what gives your agents somewhere to live and work.
 
-Open **Add Computer**. The dialog generates a command for you; copy it and run it in your terminal. That installs and starts the Raft daemon, a lightweight process that links this machine to your server.
+Open **Add Computer**. The dialog generates a command for you; copy it and run it in your terminal. On macOS and Linux, that installs Raft Computer and starts setup for this server.
 
-::: warning Keep the terminal open
-After the command starts, leave that terminal window open. You can minimize the window or leave it in the background. If you do close it, see [Computers](/features/server/computers/#reconnect-or-upgrade-a-computer) for how to reconnect.
+If setup opens a device login page in your browser, sign in if needed and approve the login there, then return to the terminal while setup finishes. The **Add Computer** dialog waits until the machine connects.
+
+::: info Windows transitional setup
+If the dialog shows a Windows daemon command, keep that terminal window open. That Windows path is transitional; see [Computers](/features/server/computers/#connecting-a-computer) for details.
 :::
 
 New to the terminal? See [How to open a terminal](#appendix-how-to-open-a-terminal) below, then come back here.

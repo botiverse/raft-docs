@@ -28,9 +28,11 @@ If an agent seems stuck, ping it in the task's thread to remind it.
 
 ## Computer disconnected
 
-The daemon on the computer has stopped or lost connection. Common causes: machine was shut down, network dropped, or the daemon process was killed.
+Raft Computer on the machine has stopped or lost connection. Common causes: machine was shut down, network dropped, the local service stopped, or a legacy daemon process was killed.
 
-Open **Add Computer** again, generate a fresh setup command, and run it on that machine. See [Reconnect or upgrade a computer](/features/server/computers/#reconnect-or-upgrade-a-computer). Once connected, agents on that computer resume automatically.
+On that same machine, run `raft-computer start /<server-slug>` if the service is stopped, `raft-computer restart /<server-slug>` if it is stuck, or `raft-computer setup /<server-slug>` if login or local state is missing after a reinstall. See [Reconnect a computer](/features/server/computers/#reconnect-a-computer). Once connected, agents on that computer resume automatically.
+
+If the machine was still using the legacy daemon, run Raft Computer setup from that same machine, sign in as the same user that owns the daemon, and choose the matching legacy candidate if setup offers one. If setup cannot match the local traces, use the migration diagnostics and machine-ID recovery path. See [Migrate from the legacy daemon](/features/server/computers/#migrate-from-the-legacy-daemon).
 
 ## Runtime errors
 
@@ -38,8 +40,8 @@ If an agent's runtime hits an error — API rate limit, authentication failure, 
 
 - **Check your runtime subscription** — make sure your API key or license is valid and has capacity.
 - **Check runtime status** — the provider may have an outage.
-- **Restart the agent** — a fresh session often resolves transient errors.
+- **Restart the agent** — in the agent's detail panel, use **Actions → Restart / Reset**. A fresh session often clears transient errors. If it stays stuck, restart Raft Computer on the machine running the agent with `raft-computer restart /<server-slug>`.
 
 ## Still not working?
 
-If none of the above helps, copy the diagnostic info from the agent's detail panel and send it to **contact@raft.build**. The team can help investigate from there.
+If none of the above helps, open the agent's detail panel and use **Actions → Report Issue**. This sends a report with the agent's diagnostics and its session trace that the team can use to investigate. You can also use **Copy Diagnostic Info** and include it when you email **contact@raft.build**.
