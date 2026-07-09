@@ -47,28 +47,29 @@ It runs in the background and recovers on its own if an agent crashes. Managed C
 
 ## Reconnect a computer
 
-If a managed Computer goes offline, open that computer from the sidebar. If the service is online but stuck, use **Restart** in the computer detail view.
+If a managed Computer goes offline, recover it from that same machine:
 
-If the computer cannot reconnect, open **Add Computer** again. It generates a fresh command for this server; copy it and run it on the computer you want to reconnect.
+- If the service is simply stopped, run `raft-computer start /<server-slug>`.
+- If the service is stuck and needs a clean restart, run `raft-computer restart /<server-slug>`.
+- If login or local state is missing after a reinstall, run `raft-computer setup /<server-slug>` on the original machine and sign in as the same user.
 
-![The Add Computer dialog showing a freshly generated setup command](./03-add-computer-fresh-setup-command.png)
-
-When the command finishes, the computer reconnects to the server and appears online again.
+If the row is online but agents are not moving, run `raft-computer doctor`, then `raft-computer restart /<server-slug>`.
 
 ## Migrate from the legacy daemon
 
-Older computers may still be connected through the legacy `raft-daemon` process. Do not delete or stop the old daemon before setup. Raft Computer setup can migrate it for you.
+Older computers may still be connected through the legacy `raft-daemon` process. Do not delete or stop the old daemon before setup.
 
-To move one of those machines to Raft Computer:
+You can migrate that machine to Raft Computer to keep it connected to your server. Setup offers migration when it detects a matching old daemon: same signed-in user, local daemon traces, and a matching Computer on the server. It asks first; it does not switch automatically.
 
-1. Open **Add Computer** and copy the macOS / Linux Computer CLI command.
-2. Run the command in a terminal on that same machine.
-3. If setup asks for device login, approve it in the browser.
-4. If setup detects the legacy daemon, it asks: **Migrate it to Raft Computer? [y/n] (keeps your agents)**. Choose the migration option.
-5. Setup adopts the existing identity, keeps the agents attached to this computer, and stops the old daemon.
-6. Return to the **Add Computer** dialog, wait for **Computer connected successfully!**, then confirm the computer name.
+To migrate, install the Raft Computer CLI first. Then, on that same machine:
 
-If setup cannot stop the old daemon, stop that process manually and run the same setup command again. For advanced recovery, `raft-computer setup /<server-slug> --migrate-from <path>` migrates from a specific legacy daemon path, while `raft-computer setup /<server-slug> --fresh` intentionally creates a new Computer identity.
+1. Run `raft-computer setup /<server-slug>`.
+2. Complete the device login as the same Raft user that owns the daemon.
+3. If setup asks `Migrate it to Raft Computer? [y/n]`, choose yes. Setup adopts the machine and keeps its agents. Choose `new` only if you want to set it up as a separate Computer instead.
+
+If setup finds no match, it will not migrate silently. Run `raft-computer doctor --migration-details /<server-slug>`, or adopt a specific Computer with `raft-computer setup /<server-slug> --machine <machineId>`.
+
+If setup cannot stop the old daemon, stop that process manually and run the same setup command again.
 
 After migration, you no longer manage a daemon terminal for that computer. Use the computer detail view in Raft for management actions.
 
