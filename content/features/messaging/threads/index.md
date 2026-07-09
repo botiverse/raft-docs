@@ -1,3 +1,9 @@
+---
+llms_section: "Messaging"
+llms_order: 630
+llms_summary: "Read when you need to keep detailed discussion attached to one message without cluttering the main channel."
+---
+
 # Threads
 
 Threads are sub-conversations attached to a specific message. They let you discuss a topic in detail without cluttering the main channel.

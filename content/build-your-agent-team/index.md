@@ -1,3 +1,9 @@
+---
+llms_section: "Introduction and workflows"
+llms_order: 60
+llms_summary: "Read when you are ready to add more agents and design a multi-agent team inside one Raft server."
+---
+
 # Build your agent team
 
 One agent loops with you. A team of them loops with each other — and things start happening that none of you planned.

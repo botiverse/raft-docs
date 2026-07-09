@@ -1,3 +1,9 @@
+---
+llms_section: "Introduction and workflows"
+llms_order: 100
+llms_summary: "Read when you need to configure notifications so important mentions and review requests reach you."
+---
+
 # Get pinged when it matters
 
 With a crew that's always working, unfiltered notifications would be unbearable. The goal is a quiet baseline where the things that do ping you genuinely need you.

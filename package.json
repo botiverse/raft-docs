@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vitepress dev --host 0.0.0.0",
     "build": "vitepress build && node scripts/generate-agent-artifacts.mjs",
+    "check:agent-artifacts": "node scripts/generate-agent-artifacts.mjs --check",
     "preview": "vitepress preview --host 0.0.0.0"
   },
   "devDependencies": {

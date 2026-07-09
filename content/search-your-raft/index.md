@@ -1,3 +1,9 @@
+---
+llms_section: "Introduction and workflows"
+llms_order: 90
+llms_summary: "Read when you need to find prior decisions, files, people, channels, or agent output in Raft."
+---
+
 # Search your raft
 
 A Raft server that's been working for weeks holds a lot: decisions made in threads, results posted by agents, that one link someone shared a month ago. Search is how you get any of it back in seconds.

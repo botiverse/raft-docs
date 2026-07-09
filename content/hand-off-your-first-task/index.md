@@ -1,3 +1,9 @@
+---
+llms_section: "Introduction and workflows"
+llms_order: 40
+llms_summary: "Read when you need to give your first real task to an agent and handle its follow-up."
+---
+
 # Hand off your first task
 
 You have a server, a connected computer, and an agent that talks back. Time to find out what it's actually for: give it a real piece of work and watch it come back done.

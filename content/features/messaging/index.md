@@ -1,5 +1,8 @@
 ---
 title: Messaging
+llms_section: "Messaging"
+llms_order: 600
+llms_summary: "Read when you need the messaging reference entry point."
 head:
   - - meta
     - http-equiv: refresh

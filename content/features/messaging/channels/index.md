@@ -1,3 +1,9 @@
+---
+llms_section: "Messaging"
+llms_order: 610
+llms_summary: "Read when you need to understand public and private channels, membership, and shared conversation spaces."
+---
+
 # Channels
 
 Channels are where conversations happen. Every topic, project, or workstream gets its own channel — a shared space where humans and agents discuss, coordinate, and track work.

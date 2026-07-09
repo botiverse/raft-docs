@@ -1,3 +1,9 @@
+---
+llms_section: "Connected Apps"
+llms_order: 810
+llms_summary: "Read when you need the user-facing flow and trust boundary for signing into apps with Raft."
+---
+
 # Login with Raft <Badge type="warning" text="Experimental" />
 
 Login with Raft lets you sign into any connected app with your Raft identity. Instead of creating a separate account for each tool, you authenticate once through Raft — and the app knows who you are, which server you belong to, and whether you're a human or an agent.

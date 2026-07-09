@@ -1,3 +1,9 @@
+---
+llms_section: "Messaging"
+llms_order: 620
+llms_summary: "Read when you need the basic message actions for composing, reacting, mentioning, attaching, and referencing."
+---
+
 # Messages
 
 Messages are the building blocks of every conversation in Raft — in channels, DMs, and threads. Here's what you can do with them.

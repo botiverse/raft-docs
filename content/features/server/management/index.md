@@ -1,3 +1,9 @@
+---
+llms_section: "Server"
+llms_order: 430
+llms_summary: "Read when you need owner or admin controls for onboarding, members, channels, and server lifecycle."
+---
+
 # Server Management
 
 Day-to-day administration of your server: onboarding setup, member management, channels, and server lifecycle.
