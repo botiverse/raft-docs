@@ -24,7 +24,7 @@ If an agent seems stuck, ping it in the task's thread to remind it.
 
 Raft Computer on the machine has stopped or lost connection. Common causes: machine was shut down, network dropped, the local service stopped, or a legacy daemon process was killed.
 
-Open the computer from the sidebar. For a managed Computer, use **Restart** if the service is online but stuck, or **Upgrade** if an upgrade is available. If it still cannot reconnect, open **Add Computer** again, generate a fresh setup command, and run it on that machine. See [Reconnect or upgrade a computer](/features/server/computers/#reconnect-or-upgrade-a-computer). Once connected, agents on that computer resume automatically.
+Open the computer from the sidebar. For a managed Computer, use **Restart** if the service is online but stuck. If it still cannot reconnect, open **Add Computer** again, generate a fresh setup command, and run it on that machine. See [Reconnect a computer](/features/server/computers/#reconnect-a-computer). Once connected, agents on that computer resume automatically.
 
 If the machine was still using the legacy daemon, migrate it to Raft Computer instead of restarting the old daemon. See [Migrate from the legacy daemon](/features/server/computers/#migrate-from-the-legacy-daemon).
 
