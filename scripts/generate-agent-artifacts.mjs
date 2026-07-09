@@ -106,6 +106,43 @@ async function copyRawMarkdown(relativePath) {
   await writeFile(output, artifactMarkdown)
 }
 
+async function writeRawMarkdownIndexHeaders(markdownFiles) {
+  const headersPath = path.join(outDir, '_headers')
+  const startMarker = '# BEGIN generated raw-markdown noindex headers'
+  const endMarker = '# END generated raw-markdown noindex headers'
+
+  let existing = ''
+  try {
+    existing = await readFile(headersPath, 'utf8')
+  } catch (error) {
+    if (error?.code !== 'ENOENT') throw error
+  }
+
+  const cleanedExisting = existing
+    .replace(new RegExp(`\\n?${startMarker}[\\s\\S]*?${endMarker}\\n?`, 'g'), '')
+    .trimEnd()
+
+  const rawPaths = new Set(['/llms.txt'])
+  for (const relativePath of markdownFiles) {
+    rawPaths.add(rawUrlPath(relativePath))
+  }
+
+  const generated = [
+    startMarker,
+    '# Raw Markdown and llms.txt stay public for agents, but should not compete with rendered docs in search results.',
+    ...[...rawPaths].sort().flatMap((urlPath) => [
+      urlPath,
+      '  X-Robots-Tag: noindex, follow',
+    ]),
+    endMarker,
+  ].join('\n')
+
+  const output = cleanedExisting
+    ? `${cleanedExisting}\n\n${generated}\n`
+    : `${generated}\n`
+  await writeFile(headersPath, output)
+}
+
 async function main() {
   const markdownFiles = await listMarkdownFiles(contentDir)
 
@@ -154,6 +191,7 @@ async function main() {
   lines.push('- Human HTML pages have matching Markdown URLs with a `.md` suffix.')
 
   await writeFile(path.join(outDir, 'llms.txt'), `${lines.join('\n')}\n`)
+  await writeRawMarkdownIndexHeaders(markdownFiles)
 }
 
 main().catch((error) => {
