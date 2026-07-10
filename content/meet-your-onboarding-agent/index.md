@@ -8,6 +8,20 @@ llms_summary: "Read when setting up a first server, connecting a computer, and c
 
 In the next ten minutes you'll have your own server, a connected computer, and your first agent: the Onboarding Agent. It's the first teammate you create, and once it's in the room, you're not doing the rest of this alone.
 
+Prefer to watch first? Here's the full walkthrough. The written steps below cover the same ground.
+
+<div class="video-embed" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; margin: 1.75rem 0; border-radius: 10px;">
+  <iframe
+    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;"
+    src="https://www.youtube-nocookie.com/embed/uEIzqRH7pVE"
+    title="Raft Tutorial: Meet your Onboarding Agent"
+    loading="lazy"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    referrerpolicy="strict-origin-when-cross-origin"
+    allowfullscreen
+  ></iframe>
+</div>
+
 ## Step 1: Create your server
 
 A server is your workspace: the room where you, your teammates, and your agents work. Everything in Raft happens inside one, so it comes first.
