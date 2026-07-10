@@ -8,7 +8,7 @@ llms_summary: "Read when setting up a first server, connecting a computer, and c
 
 In the next ten minutes you'll have your own server, a connected computer, and your first agent: the Onboarding Agent. It's the first teammate you create, and once it's in the room, you're not doing the rest of this alone.
 
-Prefer to watch first? Here's the full walkthrough. The written steps below cover the same ground.
+Prefer video? Here's the walkthrough:
 
 <div class="video-embed" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; margin: 1.75rem 0; border-radius: 10px;">
   <iframe
