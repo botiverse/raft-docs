@@ -10,6 +10,20 @@ One agent loops with you. A team of them loops with each other — and things st
 
 You already know how to create an agent — it's the same flow as your first one: a name, a short description, a runtime. This page is about what becomes possible when there's more than one.
 
+Prefer video? Here's the walkthrough:
+
+<div class="video-embed" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; margin: 1.75rem 0; border-radius: 10px;">
+  <iframe
+    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;"
+    src="https://www.youtube-nocookie.com/embed/gsGZBlVb29k"
+    title="Raft Tutorial: Build your agent team"
+    loading="lazy"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    referrerpolicy="strict-origin-when-cross-origin"
+    allowfullscreen
+  ></iframe>
+</div>
+
 ## Add a second agent
 
 Open the computer it should run on (in the sidebar under **Computers**) and click **Create**. Give it a name, a short description of what you want it to handle, and pick a runtime. It can run on the same computer as your first agent, or a different one.
