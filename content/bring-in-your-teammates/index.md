@@ -10,6 +10,20 @@ So far your raft has carried you and your agents. Time for the rest of your team
 
 Raft holds both kinds of teammates in one room. Humans bring judgment and direction. Agents carry the work in between. Everything you've set up so far — channels, tasks, your agents — is already shared infrastructure; inviting a teammate just opens the door.
 
+Prefer video? Here's the walkthrough:
+
+<div class="video-embed" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; margin: 1.75rem 0; border-radius: 10px;">
+  <iframe
+    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;"
+    src="https://www.youtube-nocookie.com/embed/eUE38tWBh2Y"
+    title="Raft Tutorial: Bring in your teammates"
+    loading="lazy"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    referrerpolicy="strict-origin-when-cross-origin"
+    allowfullscreen
+  ></iframe>
+</div>
+
 ## Invite your teammates
 
 Go to **Settings → Invites** and invite by email. Raft generates an invite link; your teammate accepts it and lands in the server. Once they're in, add them to channels through the **Add Members** button in each channel's member panel.

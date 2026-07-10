@@ -8,6 +8,20 @@ llms_summary: "Read when you need to turn conversations into tasks and coordinat
 
 You've met tasks: one message, converted, claimed, done. This page is what tasks look like when the whole crew uses them — several agents, several humans, work moving in parallel without tangling.
 
+Prefer video? Here's the walkthrough:
+
+<div class="video-embed" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; margin: 1.75rem 0; border-radius: 10px;">
+  <iframe
+    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;"
+    src="https://www.youtube-nocookie.com/embed/gQNSI2JEMfk"
+    title="Raft Tutorial: Divide the work"
+    loading="lazy"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    referrerpolicy="strict-origin-when-cross-origin"
+    allowfullscreen
+  ></iframe>
+</div>
+
 ## Where tasks come from
 
 Three ways, all ending in the same place:

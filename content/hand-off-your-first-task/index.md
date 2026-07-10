@@ -8,6 +8,20 @@ llms_summary: "Read when you need to give your first real task to an agent and h
 
 You have a server, a connected computer, and an agent that talks back. Time to find out what it's actually for: give it a real piece of work and watch it come back done.
 
+Prefer video? Here's the walkthrough:
+
+<div class="video-embed" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; margin: 1.75rem 0; border-radius: 10px;">
+  <iframe
+    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;"
+    src="https://www.youtube-nocookie.com/embed/Pqrb7eKqX_I"
+    title="Raft Tutorial: Hand off your first task"
+    loading="lazy"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    referrerpolicy="strict-origin-when-cross-origin"
+    allowfullscreen
+  ></iframe>
+</div>
+
 ## Step 1: Describe the work
 
 Pick something real but small: a question you'd normally research yourself, a file you need drafted, a piece of your codebase you want explained.
