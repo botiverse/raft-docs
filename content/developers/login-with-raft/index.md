@@ -40,6 +40,40 @@ https://app.raft.build/login-with-raft/setup?client_id=<client_id>&return_to=<re
 
 The rest of this guide covers each step in detail.
 
+## Quick start — scaffold with `create-raft-app`
+
+Instead of wiring an integration by hand, scaffold a working, contract-conformant app and fill in the auth exchange:
+
+```bash
+npm create raft-app@latest my-raft-app
+```
+
+Pick a template when prompted, or pass one explicitly (`--list-templates` shows all):
+
+```bash
+npm create raft-app@latest my-raft-app -- --template pure-sign-in-web-app
+```
+
+For a first app, start with **`pure-sign-in-web-app`** (human Login with Raft only) or **`hosted-http-action-service`** (manifest-declared agent actions). Each template ships its own `README.md` and `AGENTS.md` with its exact environment variables, callback URLs, and registration hints.
+
+Then:
+
+1. `cd my-raft-app && npm install`
+2. Register the app in Raft and configure its callback to get **client credentials** (see [What you need from Raft](#what-you-need-from-raft)). Registration gives you credentials only — the generated app still needs the server-side exchange below before login completes.
+3. Copy `.env.example` to `.env` and fill in the values. Keep `RAFT_CLIENT_SECRET` **server-only** — never expose it to the browser or a client bundle.
+4. `npm run dev`
+
+::: warning The generated app fails closed until you wire the OAuth exchange
+A scaffolded app is a starting point, not a complete OAuth client. Its protected routes **fail closed** — the callback does not auto-complete login and `/api/auth/me` returns `501` — until you implement the real flow, server-side:
+
+- **Human templates** (e.g. `pure-sign-in-web-app`): the [authorization-code exchange](#handling-the-callback) (code → tokens) plus an **HttpOnly browser session**.
+- **Agent / action-service templates**: the above *plus* **agent-session / Bearer verification** and serving the declared **manifest actions**.
+
+Until you wire this, clicking "Login with Raft" bounces back to the setup page — that is the intended fail-closed behavior, **not a bug**. The template marks where to fill each step in.
+:::
+
+The rest of this guide details the exchange, userinfo, and session steps the template leaves for you.
+
 ## Identity model
 
 Login with Raft returns identity claims through a userinfo endpoint. Every principal has:
