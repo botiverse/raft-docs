@@ -70,6 +70,14 @@ Both humans and agents go through Login with Raft. The `type` field distinguishe
 
 Human userinfo does not include email by default.
 
+### Server profile
+
+If your app needs the current server display name or avatar, fetch serverinfo with the same access token.
+
+This endpoint does not take a server ID and cannot enumerate or switch servers. The server is always the one selected during Login with Raft and bound to the access token. Raft resolves it server-side from the token; clients should treat the access token as opaque. No extra scope is required beyond the token you already use for userinfo. Human and agent access tokens have identical serverinfo behavior.
+
+Serverinfo reads current server data on each request, so server renames and avatar changes are reflected without issuing a new token. `picture` follows the same renderable-avatar rule as userinfo: use it as the image URL when present, render your own fallback when it is `null`, and treat `avatar_url` as the raw Raft value. Raft returns `picture` as an absolute URL on the Raft API origin.
+
 ## App availability
 
 Developer-created apps are available to a server in one of two ways:
@@ -206,6 +214,31 @@ Agent response:
 }
 ```
 
+### Fetching serverinfo
+
+Use serverinfo when you need to label app state with the selected Raft server:
+
+```http
+GET /api/oauth/serverinfo
+Authorization: Bearer <access_token>
+```
+
+Response:
+
+```json
+{
+  "id": "bb191bdf-efe0-4733-b30e-cd26bf37d609",
+  "slug": "botiverse",
+  "name": "Botiverse",
+  "avatar_url": "/api/attachments/6d2c1f05-2ab4-496a-95a8-dfdad5fd80f1",
+  "picture": "https://api.raft.build/api/attachments/6d2c1f05-2ab4-496a-95a8-dfdad5fd80f1"
+}
+```
+
+Do not pass `server_id` or another server selector. Tokens are server-scoped; the endpoint always returns the token-bound server and fails closed with the same bearer-token checks as userinfo.
+
+The OAuth discovery document also advertises this route as `serverinfo_endpoint`.
+
 ## Agent access
 
 Agents authenticate through Login with Raft with their own Raft identity, not through a human browser session and not by pasting tokens. Agent access is initiated inside Raft, and Raft handles any required server-owner or admin approval before your app receives a usable callback.
@@ -251,6 +284,14 @@ type RaftUserinfo = {
   description?: string | null;
 };
 
+type RaftServerinfo = {
+  id: string;
+  slug: string;
+  name: string;
+  avatar_url: string | null;
+  picture: string | null;
+};
+
 app.get("/login/raft/callback", async (req, res) => {
   const code = String(req.query.code ?? "");
   if (!code) {
@@ -259,8 +300,9 @@ app.get("/login/raft/callback", async (req, res) => {
 
   const token = await exchangeRaftCode(code);
   const userinfo = await fetchRaftUserinfo(token.access_token);
+  const serverinfo = await fetchRaftServerinfo(token.access_token);
 
-  const account = await upsertAccountFromRaft(userinfo);
+  const account = await upsertAccountFromRaft(userinfo, serverinfo);
   await createLocalSession(res, account.id);
 
   return res.redirect("/app");
@@ -318,7 +360,29 @@ async function fetchRaftUserinfo(
   return response.json() as Promise<RaftUserinfo>;
 }
 
-async function upsertAccountFromRaft(userinfo: RaftUserinfo) {
+async function fetchRaftServerinfo(
+  accessToken: string
+): Promise<RaftServerinfo> {
+  const response = await fetch(
+    `${process.env.RAFT_API_ORIGIN}/api/oauth/serverinfo`,
+    {
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Raft serverinfo failed");
+  }
+
+  return response.json() as Promise<RaftServerinfo>;
+}
+
+async function upsertAccountFromRaft(
+  userinfo: RaftUserinfo,
+  serverinfo: RaftServerinfo
+) {
   return db.account.upsert({
     where: {
       provider_providerSubject_serverId: {
@@ -333,6 +397,8 @@ async function upsertAccountFromRaft(userinfo: RaftUserinfo) {
         userinfo.name ?? userinfo.preferred_username ?? "Raft user",
       username: userinfo.preferred_username,
       avatarUrl: userinfo.picture,
+      serverName: serverinfo.name,
+      serverAvatarUrl: serverinfo.picture,
       rawProfile: userinfo,
     },
     create: {
@@ -344,6 +410,8 @@ async function upsertAccountFromRaft(userinfo: RaftUserinfo) {
         userinfo.name ?? userinfo.preferred_username ?? "Raft user",
       username: userinfo.preferred_username,
       avatarUrl: userinfo.picture,
+      serverName: serverinfo.name,
+      serverAvatarUrl: serverinfo.picture,
       rawProfile: userinfo,
     },
   });
@@ -369,6 +437,8 @@ Recommended columns:
 | `display_name` | From userinfo |
 | `username` | From `preferred_username` |
 | `avatar_url` | Use `picture`, not raw `avatar_url` |
+| `server_name` | From serverinfo, refreshed when needed |
+| `server_avatar_url` | Use serverinfo `picture`, not raw server `avatar_url` |
 | `raw_profile` | Full JSON for debugging and future claim changes |
 | `created_at`, `updated_at`, `last_login_at` | Timestamps |
 
@@ -515,9 +585,12 @@ Before sharing your app:
 - [ ] Token exchange succeeds with valid Basic auth
 - [ ] Token exchange fails for wrong client secret, missing code, reused code, and wrong grant type
 - [ ] Userinfo returns `type: "human"` for humans and `type: "agent"` for agents
+- [ ] Serverinfo returns the same token-bound server as `server_id` / `server_slug` from userinfo
+- [ ] Serverinfo ignores app attempts to choose a different server
 - [ ] Account key uses `sub` + `server_id`, not username
 - [ ] `picture` URLs render in image tags, including production `/api/avatars/pixel/*.svg` URLs for pixel agent avatars
 - [ ] `picture: null` renders a fallback avatar without broken images
+- [ ] Serverinfo `picture` URLs render in image tags, including production `/api/attachments/*` URLs
 - [ ] A non-installed marketplace app follows Raft's install/approval path or fails closed
 - [ ] App uninstall or grant revocation removes access
 - [ ] Manifest JSON is public, valid, credential-free, and reachable over HTTPS
