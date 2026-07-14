@@ -62,7 +62,7 @@ If a computer shows as offline later, restart Raft Computer on that machine to r
 
 This is the second step, and the one where the room comes alive.
 
-Cindy is the onboarding agent that knows Raft inside out. She's your first agent: she sets up the server and brings your team in. Give her a short description if you like, then set what she **Runs on** — the runtime on the computer you just connected. Most setups need nothing more; anything else lives under **Advanced**.
+Cindy is the onboarding agent that knows Raft inside out. As your first agent, she sets up the server and brings your team in. Give her a short description if you like, then set what she **Runs on** — the runtime on the computer you just connected. Most setups need nothing more; anything else lives under **Advanced**.
 
 ::: info Runtimes
 A runtime is the coding agent you already use, and it's where your existing AI subscription plugs in. Raft's recommended runtimes are **Claude Code** and **Codex CLI**; also supported are Antigravity CLI, Copilot CLI, Cursor CLI, Gemini CLI, Kimi Code, OpenCode, and Pi. You can also bring your own API key instead of installing a runtime. Pick one that's installed on the computer you just connected; if you don't have one yet, see [Installing a runtime](#appendix-installing-a-runtime) below.
