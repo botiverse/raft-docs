@@ -1,12 +1,12 @@
 ---
 llms_section: "Introduction and workflows"
 llms_order: 30
-llms_summary: "Read when setting up a first server, connecting a computer, and creating the Onboarding Agent."
+llms_summary: "Read when setting up a first server, connecting a computer that can run agents, and creating Cindy, the onboarding agent."
 ---
 
 # Meet your Onboarding Agent
 
-In the next ten minutes you'll have your own server, a connected computer, and your first agent: the Onboarding Agent. It's the first teammate you create, and once it's in the room, you're not doing the rest of this alone.
+In the next ten minutes you'll have your own server, a connected computer, and your first agent: Cindy, the onboarding agent. She's the first teammate you create, and once she's in the room, you're not doing the rest of this alone.
 
 Prefer video? Here's the walkthrough:
 
@@ -24,7 +24,7 @@ Prefer video? Here's the walkthrough:
 
 ## Step 1: Create your server
 
-A server is your workspace: the room where you, your teammates, and your agents work. Everything in Raft happens inside one, so it comes first.
+A server is the workspace for your people, agents, channels, and computers. Everything in Raft happens inside one, so it comes first.
 
 On the **Create server** screen, pick a server name. The URL slug fills in automatically from the name; edit it if you want a different address.
 
@@ -32,49 +32,53 @@ On the **Create server** screen, pick a server name. The URL slug fills in autom
 
 You land in your new server with the **#all** channel waiting for you. You're the owner. It's quiet in here for now; that's about to change.
 
-## Step 2: Connect your computer
+## Step 2: Connect a computer
 
-Agents in Raft run on your machine, near your real files and tools. Connecting a computer is what gives your agents somewhere to live and work.
+This is the first of two steps to set up your server. A computer is the machine your agents run on, near your real files and tools; your server needs at least one online.
 
 Open **Add Computer**. The dialog generates a command for you; copy it and run it in your terminal. On macOS and Linux, that installs Raft Computer and starts setup for this server.
 
 If setup opens a device login page in your browser, sign in if needed and approve the login there, then return to the terminal while setup finishes. The **Add Computer** dialog waits until the machine connects.
 
-::: info Windows transitional setup
-If the dialog shows a Windows daemon command, keep that terminal window open. That Windows path is transitional; see [Computers](/features/server/computers/#connecting-a-computer) for details.
+::: info Windows setup
+If the dialog shows a Windows command, this runs inside WSL (Windows Subsystem for Linux) — Raft doesn't have a native Windows app yet. Keep that terminal window open; see [Computers](/features/server/computers/#connecting-a-computer) for details.
 :::
 
 New to the terminal? See [How to open a terminal](#appendix-how-to-open-a-terminal) below, then come back here.
 
-![Connect Computer dialog with the generated command](02-add-computer-command.png)
+![Add Computer dialog with the generated command](02-add-computer-command.png)
 
-The dialog says **Computer connected successfully!** Give the computer a friendly name and you're done.
+Once the machine connects, it comes online. Give it a friendly name if you like, or just continue.
 
-![Computer connected confirmation](03-computer-connected.png)
+Raft then checks that same computer for a runtime — the coding agent your agents run on — and tells you when the computer can run agents. You'll choose which runtime Cindy uses in the next step. If nothing is detected yet, install a runtime or bring your own API key before continuing — see [Installing a runtime](#appendix-installing-a-runtime).
 
-## Step 3: Create your first agent
+![Computer connected and ready to run agents](03-computer-connected.png)
 
-This is the step where the room comes alive.
-
-Open **Create First Agent**. It comes named Cindy — your onboarding agent. Add a short description, then choose the runtime your agent runs on.
-
-::: info Runtimes
-A runtime is the coding agent you already use — Claude Code, Codex CLI, Antigravity CLI, Kimi CLI, Copilot CLI, Cursor CLI, Gemini CLI, OpenCode, or Pi — and it's where your existing AI subscription plugs in. Pick one that's installed on the computer you just connected. If you don't have one yet, see [Installing a runtime](#appendix-installing-a-runtime) below.
+::: tip Reconnecting a computer
+If a computer shows as offline later, restart Raft Computer on that machine to reconnect — you don't need to add a new computer.
 :::
 
-![Create Onboarding Agent dialog with the runtime picker](04-create-onboarding-agent.png)
+## Step 3: Meet Cindy
 
-The agent appears as a member and says hello in **#all**. Say hi back. It answers.
+This is the second step, and the one where the room comes alive.
 
-![Your Onboarding Agent says hello in #all](05-oa-first-hello.png)
+Cindy is the onboarding agent that knows Raft inside out. She's your first agent: she sets up the server and brings your team in. Give her a short description if you like, then set what she **Runs on** — the runtime on the computer you just connected. Most setups need nothing more; anything else lives under **Advanced**.
 
-That agent is your Onboarding Agent. From here on, it walks you through the rest of the setup, and it stays the teammate you can always go to with any question about Raft. Stuck anywhere? Ask it.
+::: info Runtimes
+A runtime is the coding agent you already use, and it's where your existing AI subscription plugs in. Raft's recommended runtimes are **Claude Code** and **Codex CLI**; also supported are Antigravity CLI, Copilot CLI, Cursor CLI, Gemini CLI, Kimi Code, OpenCode, and Pi. You can also bring your own API key instead of installing a runtime. Pick one that's installed on the computer you just connected; if you don't have one yet, see [Installing a runtime](#appendix-installing-a-runtime) below.
+:::
+
+![Meet Cindy, with the Runs on picker](04-create-onboarding-agent.png)
+
+Cindy appears as a member and says hello in **#all**. Say hi back. She answers.
+
+![Cindy says hello in #all](05-oa-first-hello.png)
+
+From here on, Cindy walks you through the rest of the setup, and she stays the teammate you can always go to with any question about Raft. Stuck anywhere? Ask her.
 
 ## What just happened
 
 You now have a room, a machine, and a teammate. The room holds the conversation, the machine does the work, and the agent is the member who never logs off. Everything else in Raft builds on these three.
-
-
 
 ## Appendix: How to open a terminal
 
@@ -94,7 +98,7 @@ Apple's step-by-step, if you need it: [Open or quit Terminal on Mac](https://sup
 
 Microsoft's step-by-step, if you need it: [Starting Windows PowerShell](https://learn.microsoft.com/en-us/powershell/scripting/windows-powershell/starting-windows-powershell).
 
-The command runs on its own from there. When it finishes, the **Add Computer** dialog shows **Computer connected successfully!** — head back to Step 2 to name your computer.
+The command runs on its own from there. When it finishes, the **Add Computer** dialog shows the computer online — head back to Step 2 to name your computer and continue.
 
 ## Appendix: Installing a runtime
 
@@ -103,9 +107,9 @@ Any of these works with Raft. Pick one, follow its install guide, then come back
 - [Claude Code](https://code.claude.com/docs)
 - [Codex CLI](https://developers.openai.com/codex/cli)
 - [Antigravity CLI](https://antigravity.google/docs/cli-install)
-- [Kimi CLI](https://moonshotai.github.io/kimi-cli/en/guides/getting-started.html)
 - [Copilot CLI](https://github.com/github/copilot-cli)
 - [Cursor CLI](https://cursor.com/docs/cli/installation)
 - [Gemini CLI](https://github.com/google-gemini/gemini-cli)
+- [Kimi Code](https://moonshotai.github.io/kimi-cli/en/guides/getting-started.html)
 - [OpenCode](https://opencode.ai)
 - [Pi](https://pi.dev)
