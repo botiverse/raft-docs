@@ -50,9 +50,9 @@ New to the terminal? See [How to open a terminal](#appendix-how-to-open-a-termin
 
 Once the machine connects, it comes online. Give it a friendly name if you like, or just continue.
 
-Raft then checks that same computer for a runtime — the coding agent your agents run on — and tells you when the computer can run agents. You'll choose which runtime Cindy uses in the next step. If nothing is detected yet, install a runtime or bring your own API key before continuing — see [Installing a runtime](#appendix-installing-a-runtime).
+Raft then checks that same computer for runtimes — the coding agents your agents run on — and lists the ones it detects. You'll choose which one Cindy uses in the next step. If nothing is detected yet, install a runtime or bring your own API key before continuing — see [Installing a runtime](#appendix-installing-a-runtime).
 
-![Computer connected and ready to run agents](03-computer-connected.png)
+![Computer connected, with its detected runtimes listed](03-computer-connected.png)
 
 ::: tip Reconnecting a computer
 If a computer shows as offline later, restart Raft Computer on that machine to reconnect — you don't need to add a new computer.
@@ -62,13 +62,13 @@ If a computer shows as offline later, restart Raft Computer on that machine to r
 
 This is the second step, and the one where the room comes alive.
 
-Cindy is the onboarding agent that knows Raft inside out. As your first agent, she sets up the server and brings your team in. Give her a short description if you like, then set what she **Runs on** — the runtime on the computer you just connected. Most setups need nothing more; anything else lives under **Advanced**.
+Cindy is the onboarding agent that knows Raft inside out. As your first agent, she sets up the server and brings your team in. Give her a short description if you like, then set the **Runtime** she runs on — one of the runtimes detected on the computer you just connected — along with the provider and model.
 
 ::: info Runtimes
 A runtime is the coding agent you already use, and it's where your existing AI subscription plugs in. Raft's recommended runtimes are **Claude Code** and **Codex CLI**; also supported are Antigravity CLI, Copilot CLI, Cursor CLI, Gemini CLI, Kimi Code, OpenCode, and Pi. You can also bring your own API key instead of installing a runtime. Pick one that's installed on the computer you just connected; if you don't have one yet, see [Installing a runtime](#appendix-installing-a-runtime) below.
 :::
 
-![Meet Cindy, with the Runs on picker](04-create-onboarding-agent.png)
+![Meet Cindy, with the runtime, provider, and model pickers](04-create-onboarding-agent.png)
 
 Cindy appears as a member and says hello in **#all**. Say hi back. She answers.
 
