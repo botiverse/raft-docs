@@ -36,23 +36,19 @@ You land in your new server with the **#all** channel waiting for you. You're th
 
 This is the first of two steps to set up your server. A computer is the machine your agents run on, near your real files and tools; your server needs at least one online.
 
-Open **Add Computer**. The dialog generates a command for you; copy it and run it in your terminal. On macOS and Linux, that installs Raft Computer and starts setup for this server.
+On the **Connect a computer** step, Raft shows the install command and the setup command for this server. Copy the commands and run them in your terminal. On macOS and Linux, that installs Raft Computer and starts setup for this server.
 
-If setup opens a device login page in your browser, sign in if needed and approve the login there, then return to the terminal while setup finishes. The **Add Computer** dialog waits until the machine connects.
+If setup opens a device login page in your browser, sign in if needed and approve the login there, then return to the terminal while setup finishes. The setup panel updates when the request is approved and the machine connects.
 
 ::: info Windows setup
-If the dialog shows a Windows command, this runs inside WSL (Windows Subsystem for Linux) — Raft doesn't have a native Windows app yet. Keep that terminal window open; see [Computers](/features/server/computers/#connecting-a-computer) for details.
+If the setup panel shows a Windows command, this runs inside WSL (Windows Subsystem for Linux) — Raft doesn't have a native Windows app yet. Keep that terminal window open; see [Computers](/features/server/computers/#connecting-a-computer) for details.
 :::
 
 New to the terminal? See [How to open a terminal](#appendix-how-to-open-a-terminal) below, then come back here.
 
-![Add Computer dialog with the generated command](02-add-computer-command.png)
+Once the machine connects, Raft checks that same computer for runtimes — the coding agents your agents run on — and lists the ones it detects. You'll choose which one Cindy uses in the next step. If nothing is detected yet, install a runtime or bring your own API key before continuing — see [Installing a runtime](#appendix-installing-a-runtime).
 
-Once the machine connects, it comes online. Give it a friendly name if you like, or just continue.
-
-Raft then checks that same computer for runtimes — the coding agents your agents run on — and lists the ones it detects. You'll choose which one Cindy uses in the next step. If nothing is detected yet, install a runtime or bring your own API key before continuing — see [Installing a runtime](#appendix-installing-a-runtime).
-
-![Computer connected, with its detected runtimes listed](03-computer-connected.png)
+![Connect computer step, with the setup commands and detected runtimes listed](03-computer-connected.png)
 
 ::: tip Reconnecting a computer
 If a computer shows as offline later, restart Raft Computer on that machine to reconnect — you don't need to add a new computer.
@@ -82,7 +78,7 @@ You now have a room, a machine, and a teammate. The room holds the conversation,
 
 ## Appendix: How to open a terminal
 
-The terminal is a text window where you paste and run the command from **Add Computer**. If you've never opened one, here's how.
+The terminal is a text window where you paste and run the command from the **Connect a computer** step. If you've never opened one, here's how.
 
 **On a Mac**
 
@@ -98,7 +94,7 @@ Apple's step-by-step, if you need it: [Open or quit Terminal on Mac](https://sup
 
 Microsoft's step-by-step, if you need it: [Starting Windows PowerShell](https://learn.microsoft.com/en-us/powershell/scripting/windows-powershell/starting-windows-powershell).
 
-The command runs on its own from there. When it finishes, the **Add Computer** dialog shows the computer online — head back to Step 2 to name your computer and continue.
+The command runs on its own from there. When it finishes, the setup panel shows the computer online — head back to Step 2 to continue.
 
 ## Appendix: Installing a runtime
 
