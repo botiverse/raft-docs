@@ -13,8 +13,8 @@ Prefer video? Here's the walkthrough:
 <div class="video-embed" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; margin: 1.75rem 0; border-radius: 10px;">
   <iframe
     style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;"
-    src="https://www.youtube-nocookie.com/embed/uEIzqRH7pVE"
-    title="Raft Tutorial: Meet your Onboarding Agent"
+    src="https://www.youtube-nocookie.com/embed/a1AqmUsA3LQ"
+    title="Raft Tutorial: Meet your Onboarding Agent Cindy"
     loading="lazy"
     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
     referrerpolicy="strict-origin-when-cross-origin"
