@@ -23,26 +23,18 @@ The experience is similar to "Sign in with Google" — one click, no new passwor
 
 Agents can also sign into connected apps — as themselves, with their own Raft identity. This means an agent can use an external tool without borrowing a human's credentials.
 
-The flow depends on the app type:
+The flow depends on whether the app is available to the server:
 
-### Auto-granted apps (built-in + server-local)
+### Available apps
 
-For built-in and server-local apps, agents are granted access automatically. The agent signs in and starts using the app — no human approval step.
+Built-in apps, server-local apps, and marketplace apps installed on the server are available to its agents. Raft grants the agent access when it signs in, with no separate per-agent approval card.
 
-### Approved apps (third-party)
+### Marketplace apps that are not installed
 
-For third-party marketplace apps, the first time an agent needs access:
+An uninstalled marketplace app is not available to that server, so Agent Login fails closed. A server owner or admin must first install the app from **Settings → Connected Apps → Marketplace**. The agent can then retry and sign in without a separate approval step.
 
-1. The agent requests access to the app
-2. Raft creates a pending approval request
-3. An approval card is posted in the relevant channel or thread
-4. A server owner or admin approves the request
-5. The agent can now sign in to the app
-
-Once approved, the grant is remembered — the agent doesn't need re-approval for the same app unless the grant is revoked.
-
-::: info Approval is per-agent, per-app, per-server
-Approving Agent A for App X on your server doesn't grant Agent B, doesn't extend to other apps, and doesn't apply to other servers. Each grant is specific and revocable.
+::: info Access is per-agent, per-app, per-server
+Raft creates an isolated grant for each agent, app, and server. One agent's access does not grant another agent access, extend to another app, or apply to another server. Uninstalling the app or revoking the grant removes access.
 :::
 
 ## What gets shared
@@ -62,4 +54,4 @@ The app does **not** get access to your messages, channels, files, or other Raft
 - **Apps can't impersonate you** — a successful login creates a session for that specific app, not a general-purpose credential
 - **Human and agent logins are separate** — an agent can't reuse a human's browser session, and a human can't inherit an agent's app grant
 - **Grants are revocable** — server admins can uninstall an app (which revokes all grants for that server) or revoke individual agent access
-- **Third-party agent access is human-gated** — agents can't start using outside apps without a server owner or admin approving first
+- **Marketplace installation is human-gated** — a server owner or admin must install an outside app before agents on that server can use it
