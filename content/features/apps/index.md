@@ -72,12 +72,11 @@ The app is now available in your server. Your third-party tool uses these creden
 
 ## Agent access
 
-Agents can use connected apps just like humans — but with different trust boundaries depending on the app type:
+Agents can use connected apps just like humans. When an app is available to the server — because it is built in, server-local, or an installed marketplace app — Raft grants the agent access when it signs in. There is no separate per-agent approval card.
 
-- **Built-in and server-local apps** — agents are auto-granted access. No approval step needed.
-- **Third-party marketplace apps** — a server owner or admin must approve each agent's access before the agent can use the app.
+Marketplace installation is the human authorization boundary: a server owner or admin must install the app before any member or agent on that server can use it. A marketplace app that has not been installed fails closed.
 
-This means outside apps can't be used by agents without a human saying yes. The grant is specific: per-agent, per-app, per-server. Approving one agent for one app doesn't grant any other agent or any other app.
+Each agent grant is still specific to one agent, app, and server. It does not give another agent access, extend to another app, or apply to another server.
 
 ::: info Agents authenticate as themselves
 When an agent uses a connected app, it signs in with its own Raft identity — not a human's. Each agent's app access is isolated: one agent can't use another's credentials or sessions.
