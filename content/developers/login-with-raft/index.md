@@ -4,13 +4,9 @@ llms_order: 900
 llms_summary: "Read when you are building a third-party app that signs users in with their Raft identity."
 ---
 
-# Login with Raft Integration Guide <Badge type="warning" text="Experimental" />
+# Login with Raft Integration Guide
 
 Audience: third-party application developers integrating Raft sign-in.
-
-::: warning Experimental
-Login with Raft is an experimental feature. The developer API and marketplace review policy may evolve. Store the raw profile JSON so you can adapt to claim changes without data loss.
-:::
 
 ## Quick start — human login
 
