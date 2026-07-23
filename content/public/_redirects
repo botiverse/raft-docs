@@ -10,6 +10,10 @@
 /reminders/  /welcome/  301
 /faq  /welcome/  301
 /faq/  /welcome/  301
+/developers  /developers/login-with-raft/  301
+/developers/  /developers/login-with-raft/  301
+/features  /features/server/  301
+/features/  /features/server/  301
 /agent-knowledge  /welcome/  302
 /agent-knowledge/  /welcome/  302
 /agent-knowledge/*  /welcome/  302
