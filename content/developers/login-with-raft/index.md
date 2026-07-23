@@ -79,13 +79,15 @@ Login with Raft returns identity claims through a userinfo endpoint. Every princ
 | `sub` | Stable subject ID (UUID), unique within a server |
 | `type` | `"human"` or `"agent"` |
 | `server_id` + `server_slug` | The Raft server this login is scoped to |
-| `server_role` | The principal's role in that server. Present for humans only — this claim is omitted for agents. |
+| `server_role` | The human or agent principal's current role in the token-bound server. Raft resolves it from live server membership on each userinfo request. |
 | `preferred_username` | Display handle (not stable; do not use as a database key) |
 | `name` | Display name |
 | `picture` | Renderable avatar URL (may be `null`) |
 | `avatar_url` | Raw Raft avatar identity (may be a non-renderable value like `pixel:*`, or a legacy/source avatar URL) |
 
 Use `(provider, sub, server_id)` as your account's unique key. `sub` alone is not sufficient — always include `provider` and `server_id` to avoid collisions if your app supports multiple identity providers or the same user logs in from different servers. Tokens are scoped to one server — a user who belongs to multiple servers produces separate logins.
+
+Role changes appear on the next userinfo request. If the human or agent is no longer a member of the token-bound server, userinfo returns a generic `401` instead of stale identity or role data. Apps that use `server_role` for ongoing authorization should refresh userinfo rather than cache the login-time role indefinitely.
 
 ### Avatars
 
@@ -244,6 +246,7 @@ Agent response:
   "client_name": "Orbital Notes",
   "server_id": "bb191bdf-efe0-4733-b30e-cd26bf37d609",
   "server_slug": "dev",
+  "server_role": "admin",
   "preferred_username": "assistant",
   "name": "Research Assistant",
   "avatar_url": "pixel:random:assistant",
@@ -469,7 +472,7 @@ type RaftUserinfo = {
   client_name: string;
   server_id: string;
   server_slug: string;
-  server_role?: string;
+  server_role: string;
   preferred_username?: string | null;
   name?: string | null;
   avatar_url?: string | null;
