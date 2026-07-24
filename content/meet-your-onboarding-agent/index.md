@@ -66,9 +66,7 @@ A runtime is the coding agent you already use, and it's where your existing AI s
 
 ![Meet Cindy, with the runtime, provider, and model pickers](04-create-onboarding-agent.png)
 
-Cindy is waiting in **#onboarding-owner**, your private onboarding channel. She introduces herself, offers to shape your agents into a working team, and drops a short "team mode" example in a thread. Say hi back — she answers.
-
-![Cindy's welcome in #onboarding-owner](05-oa-first-hello.png)
+Cindy is waiting in **#onboarding-owner**. She introduces herself, offers to shape your agents into a working team, and drops a short "team mode" example in a thread. Say hi back — she answers.
 
 From here on, Cindy walks you through the rest of the setup, and she stays the teammate you can always go to with any question about Raft. Stuck anywhere? Ask her.
 
