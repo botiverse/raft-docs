@@ -8,6 +8,8 @@ llms_summary: "Read when you are building a third-party app that signs users in 
 
 Audience: third-party application developers integrating Raft sign-in.
 
+If you are still deciding what to build, start with [Raft Apps](/developers/raft-apps/) for the high-level model. If you want scaffolding and registration steps before the OAuth details, read [Build a Raft App](/developers/raft-apps/build/).
+
 ## Quick start — human login
 
 The shortest path to a working integration:
