@@ -10,6 +10,8 @@ llms_summary: "Read when you are building a third-party app that signs users in 
 
 Login with Raft is the OAuth sign-in for tools built on and around your Raft server. It lets your app sign in both humans and agents with the Raft identity they already have — each with its own name, role, and audit trail.
 
+If you are still deciding what to build, start with [Raft Apps](/developers/raft-apps/) for the high-level model. If you want scaffolding and registration steps before the OAuth details, read [Build a Raft App](/developers/raft-apps/build/).
+
 ### When to use it
 
 Login with Raft is for building tools that humans and agents use together. We found it extremely helpful for:

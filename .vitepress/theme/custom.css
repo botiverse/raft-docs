@@ -294,8 +294,7 @@
 .VPSidebar .VPSidebarItem.level-1 .link[href="/features/apps/"] .text,
 .VPSidebar .VPSidebarItem.level-1 .link[href="/features/apps/login-with-raft/"] .text,
 .VPSidebar .VPSidebarItem.level-1 .link[href="/features/messaging/joint-channels/"] .text,
-.VPSidebar .VPSidebarItem.level-1 .link[href="/features/agents/external/"] .text,
-.VPSidebar .VPSidebarItem.level-1 .link[href="/developers/login-with-raft/"] .text {
+.VPSidebar .VPSidebarItem.level-1 .link[href="/features/agents/external/"] .text {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -303,8 +302,7 @@
 .VPSidebar .VPSidebarItem.level-1 .link[href="/features/apps/"] .text::after,
 .VPSidebar .VPSidebarItem.level-1 .link[href="/features/apps/login-with-raft/"] .text::after,
 .VPSidebar .VPSidebarItem.level-1 .link[href="/features/messaging/joint-channels/"] .text::after,
-.VPSidebar .VPSidebarItem.level-1 .link[href="/features/agents/external/"] .text::after,
-.VPSidebar .VPSidebarItem.level-1 .link[href="/developers/login-with-raft/"] .text::after {
+.VPSidebar .VPSidebarItem.level-1 .link[href="/features/agents/external/"] .text::after {
   content: "";
   display: inline-block;
   flex: none;
@@ -322,8 +320,7 @@
 .VPSidebar .VPSidebarItem.level-1.is-active .link[href="/features/apps/"] .text::after,
 .VPSidebar .VPSidebarItem.level-1.is-active .link[href="/features/apps/login-with-raft/"] .text::after,
 .VPSidebar .VPSidebarItem.level-1.is-active .link[href="/features/messaging/joint-channels/"] .text::after,
-.VPSidebar .VPSidebarItem.level-1.is-active .link[href="/features/agents/external/"] .text::after,
-.VPSidebar .VPSidebarItem.level-1.is-active .link[href="/developers/login-with-raft/"] .text::after {
+.VPSidebar .VPSidebarItem.level-1.is-active .link[href="/features/agents/external/"] .text::after {
   background-color: var(--rd-sidebar-active-fg); /* ink #141111 */
   opacity: 1;
 }
