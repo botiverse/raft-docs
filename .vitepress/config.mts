@@ -141,7 +141,7 @@ export default defineConfig({
     siteTitle: 'Raft Docs',
     // Top tab-switcher (Lovable-style): Introduction + Features + Developers.
     // Features = reference tree (Server/Agents/Messaging/Collaboration/Apps).
-    // Developers = integration guides (Login with Raft).
+    // Developers = builder docs for Raft Apps and Login with Raft.
     nav: [
       // Introduction is the default tab: active for anything NOT under the
       // other tabs' roots.
@@ -149,8 +149,7 @@ export default defineConfig({
       // Features tab jumps straight to the first reference page (Server Basics);
       // the sidebar carries the section structure, so no intermediate landing.
       { text: 'Features', link: '/features/server/', activeMatch: '^/features/' },
-      // Developers tab jumps straight to the only guide for now.
-      { text: 'Developers', link: '/developers/login-with-raft/', activeMatch: '^/developers/' },
+      { text: 'Developers', link: '/developers/raft-apps/', activeMatch: '^/developers/' },
       // NB: the "Open Raft" CTA is NOT a nav item — it's rendered in the
       // `nav-bar-content-after` theme slot so it sits to the RIGHT of the
       // appearance toggle (absolute rightmost). See .vitepress/theme/index.ts.
@@ -210,13 +209,15 @@ export default defineConfig({
           ],
         },
       ],
-      // Developers tab — integration guides for building on Raft.
+      // Developers tab — guides for building on Raft.
       '/developers/': [
         {
-          text: 'Integration Guides',
+          text: 'Raft Apps',
           items: [
             // Experimental: colored flask icon appended via CSS (custom.css),
             // keyed by href — same treatment as the §5 Apps pages.
+            { text: 'Overview', link: '/developers/raft-apps/' },
+            { text: 'Build a Raft App', link: '/developers/raft-apps/build/' },
             { text: 'Login with Raft', link: '/developers/login-with-raft/' },
           ],
         },
