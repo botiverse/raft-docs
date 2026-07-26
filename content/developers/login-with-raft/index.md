@@ -141,6 +141,7 @@ Register your app and callback to get:
 - **Client ID** (e.g. `orbital-notes`)
 - **Client secret** (generated afterward by the app owner, shown once)
 - **Return URL** (e.g. `https://orbital.example.com/login/raft/callback`)
+- **Primary category** — AI & Automation, Communication, Productivity & Collaboration, Developer Tools, Data & Analytics, Business Ops, Infrastructure, Content & Creative, or Other
 - Optional: homepage URL, description, logo, agent manifest URL
 - Availability and publication state
 
@@ -182,7 +183,9 @@ Since `return_to` cannot carry arbitrary state, use an app-side short-lived cook
 
 ### Handling the callback
 
-Raft redirects to your return URL with `?code=...`. Exchange it server-side:
+Raft redirects to your return URL with `?code=...`. Human authorization codes
+are single-use and expire after 10 minutes, so exchange the code server-side as
+soon as the callback arrives:
 
 ```http
 POST /api/oauth/token
@@ -762,7 +765,7 @@ For `http_api` integrations or apps that only use Raft-managed bearer tokens, no
 
 Required safeguards:
 
-- Validate callback `code` server-side and exchange it only through the Raft API with your client secret
+- Validate callback `code` server-side, exchange it within 10 minutes and only once, and send it only to the Raft API with your client secret
 - Bind local sessions to your own secure session cookie after userinfo succeeds
 - Store client secrets server-side only
 - Redact access tokens, callback codes, client secrets, and raw profile dumps from logs
@@ -781,7 +784,7 @@ Before sharing your app:
 
 - [ ] Human setup redirects to Raft and returns to the exact registered callback URL
 - [ ] Token exchange succeeds with valid Basic auth
-- [ ] Token exchange fails for wrong client secret, missing code, reused code, and wrong grant type
+- [ ] Token exchange fails for wrong client secret, missing code, expired code, reused code, and wrong grant type
 - [ ] Userinfo returns `type: "human"` for humans and `type: "agent"` for agents
 - [ ] Serverinfo returns the same token-bound server as `server_id` / `server_slug` from userinfo
 - [ ] Serverinfo ignores app attempts to choose a different server
@@ -818,6 +821,11 @@ The token exchange is missing the callback code.
 
 **`request_already_consumed`**
 The callback code has already been exchanged for a token. Codes are single-use. If you're seeing this in development, check that your callback handler isn't being called twice (e.g. browser prefetch).
+
+**`authorization_code_expired`**
+The human callback code was not exchanged within 10 minutes. Discard it and
+start a fresh Login with Raft authorization; do not replay the expired
+callback. The response includes `next_action: "obtain_fresh_authorization"`.
 
 **`authorization_pending`**
 Raft-internal agent-request flow. Apps currently available to a server auto-grant Agent Login, so third-party apps should not encounter this during the app callback. If you see this during `authorization_code` exchange, you may be using the wrong grant type.
