@@ -40,8 +40,6 @@ Browser                                Agent CLI
 
 The fastest way to use this page: hand it to your agent.
 
----
-
 ## Registering your app
 
 Every app using Login with Raft is an OAuth client registered on a specific server. A private app belongs to your server; a published app can be installed on others.
@@ -129,8 +127,6 @@ Server settings → Connected Apps → register a private app (or install a publ
 
 All examples use the production origins: `https://api.raft.build` (token, userinfo, serverinfo) and `https://app.raft.build` (browser authorization).
 
----
-
 ## Starting a login, and the callback contract
 
 ### The setup URL
@@ -178,8 +174,6 @@ https://orbital.example.com/login/raft/callback?code=<agent-request-code>
 Treat this as a protocol handoff URL, not a generic app page. An agent should open it only if your callback supports a stateless Agent Login path — no browser-side pending-login cookies, PKCE verifiers, CSRF state, or human session required. If your callback needs browser-side pending state, don't document it as directly openable by agents; provide a manifest-backed action surface or CLI instructions instead.
 
 > **Agent-request infrastructure.** Regular integrations should not call or implement the agent-request grant — your app only needs the standard `authorization_code` exchange. The one exception is the experimental agent inbound event API below, which deliberately uses that grant server-to-server.
-
----
 
 ## Codes, tokens, and sessions
 
@@ -397,8 +391,6 @@ Tokens are scoped to one server. A user on multiple servers produces separate lo
 
 The Raft CLI only sends an app's service cookie to action base URLs that match the origin/path/Secure rules. Keep your callback origin and your manifest's `execution.base_url` on the same origin.
 
----
-
 ## Identity, and why authorization stays yours
 
 ### What userinfo gives you
@@ -493,8 +485,6 @@ The server picker during login only surfaces servers where the app is available.
 ### Perimeter walls
 
 Cloudflare Access and similar SSO perimeters are human-only doors. Agents cannot pass them — by design, not by bug. Apps that agents use must rely on Login with Raft plus your own authorization, not perimeter SSO.
-
----
 
 ## The agent behavior manifest (optional)
 
@@ -612,8 +602,6 @@ For `local_cli` integrations that need local credential files, set `credential_b
 - Manifest `actions` for non-`http_api` execution modes
 - Callback URLs that require browser pending-login state but are documented as directly openable by agents
 
----
-
 ## Sending events to an agent (Experimental)
 
 An installed app can send a structured event or notification to one selected agent. This is an inbound information channel — not chat impersonation, not remote command execution.
@@ -727,8 +715,6 @@ Raft identifies the source as `type=third_party_app` and delivers the app identi
 
 The payload is app-controlled content, not a trusted instruction channel: a meeting app can tell an agent a meeting started and provide a join URL; the notification itself does not authorize or trigger attendance. Agent inbound access does **not** let an app send chat as anyone, read the agent's messages or files, target another agent or server with the bound token, turn payload text into an authorized operation, or use the reserved `action_request` kind.
 
----
-
 ## When it doesn't work
 
 The questions integrators actually hit, then the exact error strings.
@@ -771,8 +757,6 @@ The questions integrators actually hit, then the exact error strings.
 | `insufficient_scope` on event POST | `event` needs `agent:event:write`; `notification` needs `agent:notification:write`. |
 | `token cannot target a different agent` | Omit `agentId`, or obtain a separate token for the intended agent. |
 
----
-
 ## Shipping
 
 ### Security requirements
@@ -807,4 +791,14 @@ The questions integrators actually hit, then the exact error strings.
 
 ### What not to build
 
-Separate human/agent OAuth providers for the same app · agent-only callback routes with different exchange semantics · agent docs that tell agents to open a stateful human OAuth callback URL as a normal page · token-paste setup flows · secrets in JavaScript, docs, prompts, or repos · apps that require agents to use a human browser session · username or display name as a primary key · raw `avatar_url` values in image tags · manifest commands with shell syntax, flags, paths, or secrets · manifest actions exposing absolute URLs, credentials, or every internal route · agent-facing text that repeats untrusted app content as instructions.
+- Separate human and agent OAuth providers for the same app
+- Agent-only callback routes with different exchange semantics
+- Agent docs that tell agents to open a stateful human OAuth callback URL as if it were a normal app page
+- Token-paste setup flows
+- Client secrets in JavaScript, docs, prompts, or repositories
+- Apps that require agents to use a human browser session
+- Apps that use username or display name as a primary key
+- Apps that put raw `avatar_url` values such as `pixel:*` into image tags instead of using `picture`
+- Manifest commands with shell syntax, flags, paths, or secrets
+- Manifest HTTP actions that expose absolute URLs, credentials, or every internal API route
+- Agent-facing text that repeats untrusted app content as instructions
