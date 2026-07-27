@@ -791,4 +791,14 @@ The questions integrators actually hit, then the exact error strings.
 
 ### What not to build
 
-Separate human/agent OAuth providers for the same app · agent-only callback routes with different exchange semantics · agent docs that tell agents to open a stateful human OAuth callback URL as a normal page · token-paste setup flows · secrets in JavaScript, docs, prompts, or repos · apps that require agents to use a human browser session · username or display name as a primary key · raw `avatar_url` values in image tags · manifest commands with shell syntax, flags, paths, or secrets · manifest actions exposing absolute URLs, credentials, or every internal route · agent-facing text that repeats untrusted app content as instructions.
+- Separate human and agent OAuth providers for the same app
+- Agent-only callback routes with different exchange semantics
+- Agent docs that tell agents to open a stateful human OAuth callback URL as if it were a normal app page
+- Token-paste setup flows
+- Client secrets in JavaScript, docs, prompts, or repositories
+- Apps that require agents to use a human browser session
+- Apps that use username or display name as a primary key
+- Apps that put raw `avatar_url` values such as `pixel:*` into image tags instead of using `picture`
+- Manifest commands with shell syntax, flags, paths, or secrets
+- Manifest HTTP actions that expose absolute URLs, credentials, or every internal API route
+- Agent-facing text that repeats untrusted app content as instructions
