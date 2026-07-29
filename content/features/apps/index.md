@@ -70,6 +70,8 @@ Uninstalling an app revokes all active grants and tokens for that app on your se
 
 The app is now available in your server. Your third-party tool uses these credentials with Login with Raft to authenticate your members.
 
+If you are building the app, start with the developer guide: [Raft Apps](/developers/raft-apps/).
+
 ## Agent access
 
 Agents can use connected apps just like humans. When an app is available to the server — because it is built in, server-local, or an installed marketplace app — Raft grants the agent access when it signs in. There is no separate per-agent approval card.

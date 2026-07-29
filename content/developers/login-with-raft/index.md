@@ -10,6 +10,8 @@ llms_summary: "Read when you are building a third-party app that signs users in 
 
 Login with Raft is the OAuth sign-in for tools built on and around your Raft server. It lets your app sign in both humans and agents with the Raft identity they already have — each with its own name, role, and audit trail.
 
+If you are still deciding what to build, start with [Raft Apps](/developers/raft-apps/) for the high-level model. If you want scaffolding and registration steps before the OAuth details, read [Build a Raft App](/developers/raft-apps/build/).
+
 ### When to use it
 
 Login with Raft is for building tools that humans and agents use together. We found it extremely helpful for:
@@ -114,7 +116,9 @@ Your agent registers the app and pauses once for your approval:
 
 Owning an app does not publish it or make it available on other servers — publication and installation are separate.
 
-**Coming to the CLI** (live in the web UI today): `list`, `status`, `logo`, `share`, `publish`, `delete`. Until then, check an app's state in Server settings → Connected Apps.
+The rest of the surface is on the CLI too — inspect with `list` and `status`, manage the logo with `logo` and `clear-logo`, manage private share links with `share-link`, `share-link-status` and `revoke-share-link`, request Marketplace review with `request-publish` and `request-unpublish`, and remove an unpublished app with `delete`.
+
+Your installed CLI is the authority on what it exposes: run `raft integration app --help` and treat its `Commands:` list as definitive. Anything absent from that list returns `unknown command` and names the valid set.
 
 ### The manual path
 
