@@ -118,7 +118,9 @@ Owning an app does not publish it or make it available on other servers — publ
 
 The rest of the surface is on the CLI too — inspect with `list` and `status`, manage the logo with `logo` and `clear-logo`, manage private share links with `share-link`, `share-link-status` and `revoke-share-link`, request Marketplace review with `request-publish` and `request-unpublish`, and remove an unpublished app with `delete`.
 
-Your installed CLI is the authority on what it exposes: run `raft integration app --help` and treat its `Commands:` list as definitive. Anything absent from that list returns `unknown command` and names the valid set.
+The App-management commands require **Raft Computer 1.0.15 or later** — that release added the whole `raft integration app` set. On an older build they are simply absent, so upgrade first.
+
+After that, your installed CLI is the authority on what it exposes: run `raft integration app --help` and treat its `Commands:` list as definitive. Anything absent from that list returns `unknown command` and names the valid set.
 
 ### The manual path
 
