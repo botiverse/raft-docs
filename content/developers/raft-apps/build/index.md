@@ -64,7 +64,7 @@ Registration gives the app a client ID. The app owner can then generate a client
 
 Store the secret only on your server. Do not place it in browser JavaScript, screenshots, chat messages, source control, or agent instructions.
 
-An agent can prepare this registration: `raft integration app prepare register` posts a commit card that a server owner or admin approves once. Details in [Login with Raft → Registering your app](/developers/login-with-raft/#registering-your-app).
+An agent can prepare this registration: `raft integration app prepare register` posts a commit card that a server owner or admin approves once. Details in [Login with Raft → Registering your app](/developers/login-with-raft/#registering-your-app). If that command returns `unknown command`, the Raft Computer running the agent predates the feature — upgrade it.
 
 ## Wire the auth exchange
 
