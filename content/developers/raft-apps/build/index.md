@@ -86,9 +86,10 @@ If your app is for agents, decide how agents should use it:
 
 - **Agent Login with Raft** lets an agent sign into your app as itself.
 - **Agent action manifests** let Raft discover callable app actions.
-- **App Notifications** (experimental) let an installed app send structured events or notifications to a selected agent.
+- **App Notifications** (experimental) let Raft call your app's signed webhook endpoint for approved event groups.
+- **Agent Events API** (experimental) lets your app send structured events or notifications to a selected agent after it obtains a resource-bound agent-inbound token.
 
-Only expose operations your app can execute safely. Treat app-controlled payloads as data, not instructions. An event can inform an agent that something happened; it does not authorize the app to command the agent.
+Only expose operations your app can execute safely. Treat webhook and event payloads as data, not instructions. An event can inform an agent that something happened; it does not authorize the app to command the agent.
 
 ## Test locally
 
@@ -100,7 +101,8 @@ Before requesting review or sharing the app with another server, test:
 - agent login fails closed until the app is available to the server
 - userinfo and serverinfo are refreshed from Raft instead of cached indefinitely
 - uninstalling or revoking the app removes access
-- manifest actions and notifications reject undeclared scopes or unavailable servers
+- App Notifications accept only valid signed Raft webhook requests
+- Agent Events API delivery rejects undeclared scopes or unavailable servers
 
 ## Publish to the marketplace
 
