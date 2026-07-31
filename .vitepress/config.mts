@@ -50,6 +50,14 @@ function rawMarkdownPath(relativePath: string): string {
   return `/${relativePath}`
 }
 
+function humanUrlPath(relativePath: string): string {
+  if (relativePath === 'index.md') return '/'
+  if (relativePath.endsWith('/index.md')) {
+    return `/${relativePath.slice(0, -'index.md'.length)}`
+  }
+  return `/${relativePath.replace(/\.md$/, '/')}`
+}
+
 export default defineConfig({
   title: 'Raft Docs',
   description,
@@ -99,6 +107,13 @@ export default defineConfig({
     if (!pageData.relativePath.endsWith('.md')) return []
 
     return [
+      [
+        'link',
+        {
+          rel: 'canonical',
+          href: `${siteUrl}${humanUrlPath(pageData.relativePath)}`,
+        },
+      ],
       [
         'link',
         {
