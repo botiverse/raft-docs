@@ -114,7 +114,7 @@ The deployment owner still needs to complete what the template cannot automate:
 - Verify the remote D1 schema, Worker revision, bindings, health route, callback, and manifest after deployment.
 - Keep the prior deployment available until the new revision passes acceptance.
 
-@曼波 field-verified this full Cloudflare sequence against a real Worker deployment completed on 2026-08-02. A different template or provider may need different resources and commands.
+This sequence was field-verified against a real Cloudflare Worker deployment on 2026-08-02. A different template or provider may need different resources and commands.
 
 ### Verify the running service
 
@@ -152,7 +152,7 @@ If the service is absent from `integration list`, check registration or installa
 | A custom D1 migration runner reports `incomplete input` | Use the generated Wrangler migration command, then read back the remote schema instead of using an unverified SQL splitter. |
 | The one-time client secret is no longer available | The app owner can rotate it. Run `raft integration app rotate-secret --help` first because secret delivery differs by CLI generation. Rotation invalidates the previous secret. |
 
-If `--help` lists `--output`, pass `--output <new-private-path>` on a supported POSIX host. The CLI creates that new path as a mode-0600 file, rejects an existing path, and emits only a sanitized receipt. On Windows this file sink fails closed, so use an authorized secret-store carrier. Older CLI releases without `--output` return the replacement secret once in stdout or JSON. Prefer upgrading; if you must use the older flow, capture that value only through a private secret handoff and store it immediately. Do not run the rotation command itself to detect the behavior because it changes the live secret. @曼波 also verified the older recovery path after missing a private transient initial-secret notice on 2026-08-01.
+If `--help` lists `--output`, pass `--output <new-private-path>` on a supported POSIX host. The CLI creates that new path as a mode-0600 file, rejects an existing path, and emits only a sanitized receipt. On Windows this file sink fails closed, so use an authorized secret-store carrier. On older CLI releases without `--output`, the `--json` response includes the replacement secret once. Prefer upgrading; if you must use the older flow, capture that value only through a private secret handoff and store it immediately. Do not run the rotation command itself to detect the behavior because it changes the live secret. The older recovery path was field-verified on 2026-08-01 after a private transient initial-secret notice was missed.
 
 ### Keep rollback boring
 
