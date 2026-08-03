@@ -38,11 +38,11 @@ For a nontechnical app owner, lead with their three actions:
 
 1. Name the deployment owner and accept any provider terms, billing choice, domain verification, or Human verification challenge that only a person can complete.
 2. Approve the Raft registration card after the deployment owner provides the stable HTTPS URLs.
-3. Open the deployed link, complete the acceptance flow, and know who can disable or roll back the app.
+3. Open the deployed link, complete the acceptance flow, and verify that an admin can disable or unpublish the app.
 
-The technical answer should be the smallest component set that satisfies the six requirements above.
+The beginner path stops there. The deployment owner gets the technical comparison and should choose the smallest component set that satisfies the six requirements above, with one default recommendation and one-line rationale instead of a cloud catalog.
 
-### Match the app to its components
+### For the deployment owner: match the app to its components
 
 | App shape | Components you need | Concrete combinations |
 | --- | --- | --- |
@@ -53,6 +53,8 @@ The technical answer should be the smallest component set that satisfies the six
 | App with imports, webhooks, retries, or other background work | The previous row plus a queue or long-running worker | Cloudflare Worker + [Queues](https://developers.cloudflare.com/queues/), [Vercel Queues](https://vercel.com/docs/queues) where its current Beta status is acceptable, or a separately hosted worker process |
 
 A pure frontend can only display public information or call APIs that require no private credential. Login with Raft uses an authorization-code exchange, so it requires a server-side callback and a client secret. Never put that secret in browser JavaScript.
+
+Provider accounts, dashboards, and access gates control the hosting platform. They do not replace Login with Raft as the human or agent identity inside the app.
 
 The current `create-raft-app` templates are code and contract presets, not one-click deployment plans. Their generated `README.md` and `AGENTS.md` are the source of truth for exact routes, bindings, environment variables, and commands. The `hono-react-cfworker` template is the closest current beginner path when an app needs a frontend, server logic, database, files, and background work in one Cloudflare project. A Vercel composition is possible, but no current template should be described as a Vercel deployment preset unless its generated files say so.
 
