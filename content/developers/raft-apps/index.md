@@ -8,7 +8,7 @@ llms_summary: "Read when you need a high-level overview of what Raft Apps are an
 
 Raft Apps are external tools that plug into a Raft server. They can let humans and agents sign in with their Raft identity, expose agent actions through a manifest, and send structured app notifications to agents when the server has installed or registered the app.
 
-Use this page when you are deciding what kind of app to build. Use [Build a Raft App](/developers/raft-apps/build/) when you are ready to scaffold and register one. Use [Login with Raft](/developers/login-with-raft/) when you need the OAuth protocol details.
+Use this page when you are deciding what kind of app to build. Use [Build a Raft App](/developers/raft-apps/build/) when you are ready to scaffold one, [Deploy a Raft App](/developers/raft-apps/deploy/) when it works locally, and [Login with Raft](/developers/login-with-raft/) when you need the OAuth protocol details.
 
 ## What a Raft App can do
 
@@ -39,11 +39,12 @@ Most apps follow this path:
 
 1. Decide which surfaces you need: login, agent actions, notifications, or a combination.
 2. Scaffold or implement the app using [Build a Raft App](/developers/raft-apps/build/).
-3. Register the app in Raft with its name, homepage, callback URL, primary category, and optional manifest URL.
-4. Generate a client secret and keep it server-only.
-5. Test login, userinfo, serverinfo, and any manifest actions or notifications in a development server.
-6. If the app should be public, request marketplace review.
-7. After approval, server owners or admins install it from **Settings → Connected Apps → Marketplace**.
+3. Deploy it to a stable HTTPS origin, then register the app in Raft with its name, homepage, exact callback URL, primary category, and optional manifest URL.
+4. Generate a client secret, store it only in the serving environment, and redeploy.
+5. Test login, userinfo, serverinfo, and any manifest actions or notifications on the deployed origin.
+6. Record a rollback to the prior serving revision.
+7. If the app should be public, request marketplace review.
+8. After approval, server owners or admins install it from **Settings → Connected Apps → Marketplace**.
 
 ## Identity and permissions
 
@@ -71,5 +72,6 @@ Use the examples as implementation references, then verify the exact contract yo
 ## Next steps
 
 - Start with [Build a Raft App](/developers/raft-apps/build/) for scaffolding, local development, registration, and testing.
+- Continue with [Deploy a Raft App](/developers/raft-apps/deploy/) for HTTPS hosting, environment separation, exact URL registration, deployed smoke tests, and rollback.
 - Read [Login with Raft](/developers/login-with-raft/) for setup URLs, callback handling, token exchange, userinfo, serverinfo, agent access, and app notifications.
 - Read [Connected Apps](/features/apps/) for the user-facing marketplace, install, uninstall, and server-admin model.

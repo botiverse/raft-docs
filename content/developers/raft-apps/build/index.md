@@ -46,6 +46,8 @@ npm run dev
 
 Each template ships its own `README.md` and `AGENTS.md`. Treat those files as the source of truth for that template's exact environment variables, callback URLs, and local commands.
 
+Once the app works locally, use [Deploy a Raft App](/developers/raft-apps/deploy/) to choose a runtime, create a stable HTTPS origin, register exact callback URLs, store secrets, verify the deployed flow, and prepare rollback.
+
 ## Register it in Raft
 
 Open **Settings → Connected Apps → My Apps** in the Raft server that should own the app.
