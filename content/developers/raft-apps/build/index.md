@@ -12,9 +12,49 @@ The fastest way to start is `create-raft-app`. It gives you a contract-shaped pr
 
 The fastest way to build a Raft App is to hand this page — and [Login with Raft](/developers/login-with-raft/) — to your agent.
 
-Your input is the product decision set, in one message: app name, category, description, which app surfaces you need, whether it stores records or files, whether it runs background work, any provider or budget constraint, and whether the app stays server-local or requests marketplace publication.
+Your input is the product decision set, in one message: app name, category, description, which app surfaces you need, whether it stores records or files, whether it runs background work, the deployment owner, any provider or budget constraint, and whether the app stays server-local or requests marketplace publication.
 
-From there, the agent scaffolds with `create-raft-app`, follows the generated `README.md` and `AGENTS.md`, prepares the registration, and pauses exactly once — for the owner or admin approval card. The client secret is shown once to the app owner and belongs in the serving environment — never in chat, browser JavaScript, or the repo.
+From there, the agent scaffolds with `create-raft-app`, follows the generated `README.md` and `AGENTS.md`, prepares the registration, and pauses only for the human steps identified below. The client secret is shown once to the app owner and belongs in the serving environment, never in chat, browser JavaScript, or the repo.
+
+## Choose what to deploy
+
+You do not need to know the provider vocabulary before you start. Tell your agent what the app must do. The agent should ask these questions before recommending a stack:
+
+1. Is this only a public page, or must humans or agents sign in with Raft?
+2. Does the app need server-side API routes or agent actions?
+3. Does it store structured records?
+4. Does it accept file uploads or produce downloadable files?
+5. Does work continue after the request finishes?
+6. Do you already have a provider or domain, and do budget, region, or data residency constrain the choice?
+
+First separate registration from hosting:
+
+- **Raft app registration** gives the app identity, callback URLs, ownership, and permission boundaries.
+- **Hosting** is the provider account, runtime, storage, domain, billing, monitoring, and rollback that keep the service online.
+
+Registration does not give you a machine or permission to deploy into someone else's app. Name one deployment owner who is accountable for the provider account, billing, domain, and rollback. An agent can perform the technical work under that owner's authority. If nobody owns hosting yet, freeze the product specification and stop there instead of turning the conversation into a multi-cloud shopping lesson.
+
+For a nontechnical app owner, lead with their three actions:
+
+1. Name the deployment owner and accept any provider terms, billing choice, domain verification, or Human verification challenge that only a person can complete.
+2. Approve the Raft registration card after the deployment owner provides the stable HTTPS URLs.
+3. Open the deployed link, complete the acceptance flow, and know who can disable or roll back the app.
+
+The technical answer should be the smallest component set that satisfies the six requirements above.
+
+### Match the app to its components
+
+| App shape | Components you need | Concrete combinations |
+| --- | --- | --- |
+| Public information or demo page, with no private credential | Static assets only | [Cloudflare Workers Static Assets](https://developers.cloudflare.com/workers/static-assets/) or a [Vercel deployment](https://vercel.com/docs/deployments/overview) |
+| Login with Raft, private API, or agent actions | Static assets plus a server, Worker, or serverless function with managed secrets and session storage | `hono-react-cfworker` on Cloudflare Workers, or a frontend plus [Vercel Functions](https://vercel.com/docs/functions) |
+| App with structured records | The previous row plus a database | Cloudflare Worker + [D1](https://developers.cloudflare.com/d1/), or Vercel Functions + a Postgres provider from the [Vercel Marketplace](https://vercel.com/marketplace?category=storage) |
+| App with uploads or generated files | The previous row plus object storage | Cloudflare Worker + [R2](https://developers.cloudflare.com/r2/), or Vercel Functions + [Vercel Blob](https://vercel.com/docs/vercel-blob) |
+| App with imports, webhooks, retries, or other background work | The previous row plus a queue or long-running worker | Cloudflare Worker + [Queues](https://developers.cloudflare.com/queues/), [Vercel Queues](https://vercel.com/docs/queues) where its current Beta status is acceptable, or a separately hosted worker process |
+
+A pure frontend can only display public information or call APIs that require no private credential. Login with Raft uses an authorization-code exchange, so it requires a server-side callback and a client secret. Never put that secret in browser JavaScript.
+
+The current `create-raft-app` templates are code and contract presets, not one-click deployment plans. Their generated `README.md` and `AGENTS.md` are the source of truth for exact routes, bindings, environment variables, and commands. The `hono-react-cfworker` template is the closest current beginner path when an app needs a frontend, server logic, database, files, and background work in one Cloudflare project. A Vercel composition is possible, but no current template should be described as a Vercel deployment preset unless its generated files say so.
 
 ## Scaffold the app
 
@@ -46,32 +86,7 @@ npm run dev
 
 Each template ships its own `README.md` and `AGENTS.md`. Treat those files as the source of truth for that template's exact environment variables, callback URLs, and local commands.
 
-## Choose what to deploy
-
-You do not need to know the provider vocabulary before you start. Tell your agent what the app must do. The agent should ask these questions before recommending a stack:
-
-1. Is this only a public page, or must humans or agents sign in with Raft?
-2. Does the app need server-side API routes or agent actions?
-3. Does it store structured records?
-4. Does it accept file uploads or produce downloadable files?
-5. Does work continue after the request finishes?
-6. Do you already have a provider or domain, and do budget, region, or data residency constrain the choice?
-
-The answer should be the smallest component set that satisfies those requirements. If you do not have a provider account, the agent can guide account creation and deployment, but a human may still need to accept provider terms, choose billing, verify a domain, or complete a Human verification challenge.
-
-### Match the app to its components
-
-| App shape | Components you need | Concrete combinations |
-| --- | --- | --- |
-| Public information or demo page, with no private credential | Static assets only | [Cloudflare Workers Static Assets](https://developers.cloudflare.com/workers/static-assets/) or a [Vercel deployment](https://vercel.com/docs/deployments/overview) |
-| Login with Raft, private API, or agent actions | Static assets plus a server, Worker, or serverless function with managed secrets and session storage | `hono-react-cfworker` on Cloudflare Workers, or a frontend plus [Vercel Functions](https://vercel.com/docs/functions) |
-| App with structured records | The previous row plus a database | Cloudflare Worker + [D1](https://developers.cloudflare.com/d1/), or Vercel Functions + a Postgres provider from the [Vercel Marketplace](https://vercel.com/marketplace?category=storage) |
-| App with uploads or generated files | The previous row plus object storage | Cloudflare Worker + [R2](https://developers.cloudflare.com/r2/), or Vercel Functions + [Vercel Blob](https://vercel.com/docs/vercel-blob) |
-| App with imports, webhooks, retries, or other background work | The previous row plus a queue or long-running worker | Cloudflare Worker + [Queues](https://developers.cloudflare.com/queues/), [Vercel Queues](https://vercel.com/docs/queues) where its current Beta status is acceptable, or a separately hosted worker process |
-
-A pure frontend can only display public information or call APIs that require no private credential. Login with Raft uses an authorization-code exchange, so it requires a server-side callback and a client secret. Never put that secret in browser JavaScript.
-
-The current `create-raft-app` templates are code and contract presets, not one-click deployment plans. Their generated `README.md` and `AGENTS.md` are the source of truth for exact routes, bindings, environment variables, and commands. The `hono-react-cfworker` template is the closest current beginner path when an app needs a frontend, server logic, database, files, and background work in one Cloudflare project. A Vercel composition is possible, but no current template should be described as a Vercel deployment preset unless its generated files say so.
+## Deploy and bring it up
 
 ### Deploy in a safe order
 
@@ -88,27 +103,18 @@ Preview and production should use different registrations, client secrets, state
 
 Follow the existing [Login with Raft secret-placement rule](/developers/login-with-raft/#two-rules-that-prevent-the-two-most-common-failures): the secret must exist where the app runs. A secret configured in a repo host is not automatically present in the serving environment, and a green deploy does not prove auth works.
 
-### Cloudflare Worker example
+### Cloudflare Worker beginner path
 
-The current `hono-react-cfworker` template includes a Worker, static React assets, D1, R2, and a Queue. Follow its generated README, create the bindings, and replace every placeholder ID before deployment:
+The current `hono-react-cfworker` template includes a Worker, static React assets, D1, R2, a Queue, `wrangler.toml`, an initial migration, and `npm run deploy`. Its generated README already owns the exact commands for creating resources, replacing binding IDs, applying the remote migration, writing secrets, and deploying. Follow that README instead of copying commands from this guide.
 
-```bash
-cd worker
-npx wrangler d1 create YOUR_APP
-npx wrangler r2 bucket create YOUR_APP-files
-npx wrangler queues create YOUR_APP-events
-npx wrangler d1 migrations apply YOUR_APP --remote
-```
+The deployment owner still needs to complete what the template cannot automate:
 
-Bind the stable custom domain and set the public configuration required by the generated README. Store each secret with `wrangler secret put`, which reads the value interactively instead of placing it in `wrangler.toml`, source control, or the command line:
+- Create or choose the Cloudflare account and confirm its billing and region constraints.
+- Bind a stable custom domain instead of registering a temporary preview hostname.
+- Verify the remote D1 schema, Worker revision, bindings, health route, callback, and manifest after deployment.
+- Keep the prior deployment available until the new revision passes acceptance.
 
-```bash
-npx wrangler secret put YOUR_SECRET_NAME
-cd ..
-npm run deploy
-```
-
-These commands match the generated Worker template. @曼波 field-verified this Cloudflare sequence against a real Worker deployment completed on 2026-08-02. A different template or provider may need different resources and commands.
+@曼波 field-verified this full Cloudflare sequence against a real Worker deployment completed on 2026-08-02. A different template or provider may need different resources and commands.
 
 ### Verify the running service
 
@@ -144,9 +150,9 @@ If the service is absent from `integration list`, check registration or installa
 | Sessions disappear after a restart | Fixture state is still in memory. Move sessions and revocation state to durable, expiring storage. |
 | A page is blank while `curl` is green | `curl` does not execute Content Security Policy. Open the page in a real browser and inspect console violations. |
 | A custom D1 migration runner reports `incomplete input` | Use the generated Wrangler migration command, then read back the remote schema instead of using an unverified SQL splitter. |
-| The one-time client secret is no longer available | The app owner can generate a replacement with `raft integration app rotate-secret --client YOUR_CLIENT_KEY`. Store the new value immediately. Rotation invalidates the previous secret. |
+| The one-time client secret is no longer available | The app owner can rotate it. Run `raft integration app rotate-secret --help` first because secret delivery differs by CLI generation. Rotation invalidates the previous secret. |
 
-The rotation behavior above is enforced by the Raft server, and @曼波 also verified the recovery path after missing a show-once secret on 2026-08-01.
+If `--help` lists `--output`, pass `--output <new-private-path>` on a supported POSIX host. The CLI creates that new path as a mode-0600 file, rejects an existing path, and emits only a sanitized receipt. On Windows this file sink fails closed, so use an authorized secret-store carrier. Older CLI releases without `--output` return the replacement secret once in stdout or JSON. Prefer upgrading; if you must use the older flow, capture that value only through a private secret handoff and store it immediately. Do not run the rotation command itself to detect the behavior because it changes the live secret. @曼波 also verified the older recovery path after missing a private transient initial-secret notice on 2026-08-01.
 
 ### Keep rollback boring
 
