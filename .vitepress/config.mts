@@ -1,5 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
+// @ts-expect-error -- plain .mjs helper shared with scripts/check-sitemap-redirects.mjs
+import { parseRedirectRules, redirectTargetFor } from '../scripts/redirect-rules.mjs'
 import { defineConfig } from 'vitepress'
 import taskLists from 'markdown-it-task-lists'
 import { tabsMarkdownPlugin } from 'vitepress-plugin-tabs'
@@ -61,42 +63,15 @@ function humanUrlPath(relativePath: string): string {
 }
 
 // A page can exist as real content (so VitePress emits it into the sitemap)
-// while `_redirects` sends it somewhere else, which puts 301 URLs in a file
-// that should only contain canonical, directly-200 ones. Read the redirect
-// table rather than hard-coding today's offenders: the pair that drift apart
-// is (content pages, _redirects), so the check has to be derived from the
-// redirect table itself or it goes stale the next time someone adds one.
+// while `_redirects` sends it somewhere else, which puts 301/302 URLs in a file
+// that should only contain canonical, directly-200 ones. Parsing/matching lives
+// in scripts/redirect-rules.mjs so this filter and the build-time check cannot
+// drift apart -- when they were separate, both skipped wildcard rules and the
+// check still claimed full coverage.
 const REDIRECTS_FILE = resolve(__dirname, '../content/public/_redirects')
 
-function redirectSourcePaths(): Set<string> {
-  const sources = new Set<string>()
-
-  for (const line of readFileSync(REDIRECTS_FILE, 'utf-8').split('\n')) {
-    const trimmed = line.trim()
-    if (!trimmed || trimmed.startsWith('#')) continue
-
-    const [from, to] = trimmed.split(/\s+/)
-    if (!from || !to || from.includes('*')) continue
-
-    // Compare sources EXACTLY as written -- do not normalise trailing slashes.
-    // The table holds canonicalisation rules like `/welcome -> /welcome/`, and
-    // slash-normalising that source turns it into its own target, which would
-    // drop the real 200 page from the sitemap. (It did: the first version of
-    // this filter removed /welcome/ along with the two genuine offenders.)
-    // A rule only disqualifies a sitemap URL when it points somewhere else.
-    if (from === to) continue
-    sources.add(from)
-  }
-
-  if (sources.size === 0) {
-    throw new Error(
-      `Parsed 0 redirect sources from ${REDIRECTS_FILE}. That is almost ` +
-        `certainly a format change rather than an empty redirect table, and ` +
-        `silently filtering nothing would let 301s back into the sitemap.`,
-    )
-  }
-
-  return sources
+function redirectRules() {
+  return parseRedirectRules(readFileSync(REDIRECTS_FILE, 'utf-8'))
 }
 
 export default defineConfig({
@@ -109,11 +84,11 @@ export default defineConfig({
   sitemap: {
     hostname: siteUrl,
     transformItems(items) {
-      const redirected = redirectSourcePaths()
+      const rules = redirectRules()
 
       return items.filter((item) => {
         const path = item.url.startsWith('/') ? item.url : `/${item.url}`
-        return !redirected.has(path)
+        return redirectTargetFor(path, rules) === null
       })
     },
   },
