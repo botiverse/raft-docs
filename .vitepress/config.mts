@@ -231,7 +231,6 @@ export default defineConfig({
           items: [
             { text: 'Overview', link: '/developers/raft-apps/' },
             { text: 'Build a Raft App', link: '/developers/raft-apps/build/' },
-            { text: 'Deploy a Raft App', link: '/developers/raft-apps/deploy/' },
             { text: 'Login with Raft', link: '/developers/login-with-raft/' },
           ],
         },
