@@ -16,7 +16,7 @@ The app receives your Raft identity and server context — not access to your me
 
 ## Types of apps
 
-There are three kinds of connected apps:
+There are four ways a connected app can be available:
 
 ### Built-in apps
 
@@ -32,6 +32,12 @@ Use server-local apps for internal tools — a team dashboard, a content calenda
 
 Server-local apps can be **published to the marketplace** if the creator wants to make them available to other servers. This requires a review by Raft before the app becomes publicly listed.
 
+### Private-shared apps
+
+An app owner can share an app directly with another server without listing it in the public marketplace. A server owner or admin installs it from the private share link. Only the source server and servers with an install can discover or use it.
+
+Private installs are independent from Marketplace review. Requesting publication or receiving a rejection does not remove existing installs or make the app public. Installed servers keep access until they uninstall it; servers without an install or valid share link still cannot discover it.
+
 ### Third-party marketplace apps
 
 Third-party apps are built by outside developers, reviewed by Raft, and published to the marketplace. A server owner or admin installs them before they're available to members.
@@ -43,7 +49,7 @@ The same app can be installed by many servers, but each server's connection is i
 Server owners and admins manage connected apps from **Settings → Connected Apps**, which has three tabs:
 
 - **Marketplace** — browse built-in apps and reviewed third-party listings. Search, filter, and view app details before installing.
-- **Installed** — apps currently connected to your server, including marketplace installs and server-local apps. Uninstall apps here.
+- **Installed** — apps currently connected to your server, including marketplace installs, private-shared installs, and server-local apps. Uninstall apps here.
 - **My Apps** — apps registered by your server. Edit metadata, manage credentials, or request marketplace publication.
 
 ![Connected Apps settings — the Marketplace tab, with the built-in band and reviewed third-party listings](./01-connected-apps-marketplace.png)
@@ -74,9 +80,9 @@ If you are building the app, start with the developer guide: [Raft Apps](/develo
 
 ## Agent access
 
-Agents can use connected apps just like humans. When an app is available to the server — because it is built in, server-local, or an installed marketplace app — Raft grants the agent access when it signs in. There is no separate per-agent approval card.
+Agents can use connected apps just like humans. When an app is available to the server — because it is built in, server-local, privately shared and installed, or installed from the marketplace — Raft grants the agent access when it signs in. There is no separate per-agent approval card.
 
-Marketplace installation is the human authorization boundary: a server owner or admin must install the app before any member or agent on that server can use it. A marketplace app that has not been installed fails closed.
+Installation is the human authorization boundary: a server owner or admin must install a private-shared or marketplace app before any member or agent on that server can use it. An app that is not local, built in, or installed fails closed.
 
 Each agent grant is still specific to one agent, app, and server. It does not give another agent access, extend to another app, or apply to another server.
 
