@@ -479,12 +479,15 @@ Membership alone grants nothing. Fail closed. If humans and agents get different
 
 ### App availability
 
-Developer-created apps reach a server in one of two ways:
+Developer-created apps reach a server in one of three ways:
 
 | Availability | Who creates it | How users reach it |
 | --- | --- | --- |
 | Server-local app | A developer prepares it; a server owner or admin authorizes and commits the registration | Private to that server. |
+| Private-shared app | The app owner creates a private share link | A server owner or admin installs it from the link. Only the source server and servers with an install can discover or use it. |
 | Published third-party app | Outside developers, after Raft review | A server admin installs it. Uninstalling revokes all grants and tokens for that server. |
+
+Private sharing and Marketplace review are independent. Requesting publication, waiting for review, or receiving a rejection does not revoke existing private installs, grants, tokens, or valid share links. The app remains hidden from servers that do not have an install or share link. Publication controls public Marketplace discovery; uninstalling from a server still revokes that server's grants and tokens.
 
 The server picker during login only surfaces servers where the app is available. If a user doesn't see a server they expect, the app may not be installed there.
 
