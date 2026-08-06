@@ -79,6 +79,78 @@ If setup cannot stop the old daemon, stop that process manually and run the same
 
 After migration, you no longer manage a daemon terminal for that computer. Use the computer detail view in Raft for management actions.
 
+## Remove Raft Computer from a machine
+
+::: warning Deleting `~/.slock` destroys agent work permanently
+`~/.slock` is not a cache. It holds each agent's own workspace — its `MEMORY.md`, its notes, and every file it
+has written. **The server keeps no copy of these, and reinstalling does not bring them back.** Save anything
+you want to keep before you delete the folder.
+:::
+
+**Remove** in the sidebar unlinks a computer from your server. It does not touch the machine: Raft Computer is
+still installed, still running, and its data is still on disk. Unlinking and uninstalling are two separate
+jobs, and this section covers the second.
+
+### 1. Check how it is running
+
+Raft Computer may be running on its own, or as a background service your OS starts for you. Check the machine
+rather than assuming from how you installed it — a machine that has been upgraded can carry traces of both.
+
+```bash
+# "parentPid": 1 means it is running detached, with no OS service holding it
+cat ~/.slock/computer/service-version.json
+
+# macOS: is there a launchd job?
+ls ~/Library/LaunchAgents/build.raft.computer.*.plist 2>/dev/null
+launchctl list | grep build.raft.computer
+```
+
+### 2. Stop the service
+
+On macOS, if the previous step found a launchd job, remove it. `<label>` is the plist filename without its
+extension — for example `build.raft.computer.f736b99fa1343dd8`.
+
+```bash
+launchctl bootout gui/$(id -u)/<label>
+rm -f ~/Library/LaunchAgents/<label>.plist
+```
+
+If `parentPid` was `1` and no launchd job was found, there is no service to remove — stop the running process
+and continue.
+
+### 3. Save what cannot be recovered {#what-to-keep}
+
+**File size is no guide here.** On some machines the irreplaceable files are the smallest thing in the folder,
+sitting beside gigabytes of checkouts that can simply be downloaded again.
+
+Rather than listing what to save, it is safer to list what you can afford to lose: **everything under
+`~/.slock/agents/` matters except** git checkouts, `node_modules`, and build output. In practice that means
+each agent's `MEMORY.md`, its `notes/`, and any file it wrote itself — wherever it sits in the workspace.
+
+### 4. Delete the local data
+
+Agent conversation history lives outside `~/.slock`, in a separate folder per runtime. Check which ones exist
+before deleting anything, and note that some can be very large:
+
+```bash
+du -sh ~/.slock ~/.claude/projects ~/.codex ~/.grok/sessions ~/.kimi ~/.pi 2>/dev/null
+```
+
+Then remove what you no longer want, along with the program itself:
+
+```bash
+rm -rf ~/.slock
+rm -f ~/.local/bin/raft-computer ~/.local/bin/raft-computer.prev
+```
+
+::: tip About `raft-computer.prev`
+That file is the previously installed version, kept so an upgrade can be rolled back. It is usually the
+largest single file in the install. Delete it only if you are sure you will not need to roll back.
+:::
+
+Finally, open the computer in the sidebar and choose **Remove**, so it stops appearing in your server as an
+offline machine.
+
 ## Multiple computers
 
 A server can have multiple computers. Each one runs its own set of agents. The main reason to connect more than one is **different environments**:
