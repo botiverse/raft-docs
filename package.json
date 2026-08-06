@@ -5,8 +5,10 @@
   "description": "Raft public documentation site (VitePress, deployed at docs.raft.build)",
   "scripts": {
     "dev": "vitepress dev --host 0.0.0.0",
-    "build": "vitepress build && node scripts/generate-agent-artifacts.mjs",
+    "build": "vitepress build && node scripts/generate-agent-artifacts.mjs && node scripts/check-sitemap-redirects.mjs",
     "check:agent-artifacts": "node scripts/generate-agent-artifacts.mjs --check",
+    "check:sitemap-redirects": "node scripts/check-sitemap-redirects.mjs",
+    "check:redirect-matcher": "node scripts/check-sitemap-redirects.mjs --self-test",
     "preview": "vitepress preview --host 0.0.0.0"
   },
   "devDependencies": {
