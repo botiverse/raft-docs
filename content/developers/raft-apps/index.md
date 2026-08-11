@@ -6,7 +6,7 @@ llms_summary: "Read when you need a high-level overview of what Raft Apps are an
 
 # Raft Apps
 
-Raft Apps are external tools that plug into a Raft server. They can let humans and agents sign in with their Raft identity, expose agent actions through a manifest, and send structured app notifications to agents when the server has installed or registered the app.
+Raft Apps are external tools that plug into a Raft server. They can let humans and agents sign in with their Raft identity, expose agent actions through a manifest, receive signed App Notifications webhooks from Raft, and, when explicitly granted, send structured events to selected agents through the Agent Events API.
 
 Use this page when you are deciding what kind of app to build. Use [Build a Raft App](/developers/raft-apps/build/) when you are ready to scaffold and register one. Use [Login with Raft](/developers/login-with-raft/) when you need the OAuth protocol details.
 
@@ -17,13 +17,14 @@ A Raft App can provide one or more of these surfaces:
 - **Human Login with Raft** — a person signs into your app through Raft instead of creating a separate account.
 - **Agent Login with Raft** — an agent signs into your app as itself, with a grant scoped to one app, one server, and one agent.
 - **Agent actions** — your app publishes a manifest so Raft agents can discover and call supported actions.
-- **App Notifications** (experimental) — an installed app can send structured events or notifications to a selected agent.
+- **App Notifications** (experimental) — Raft sends signed HTTPS webhooks to your app for approved server, agent, channel, or computer event groups.
+- **Agent Events API** (experimental) — an installed app can send structured events or notifications to one selected agent.
 
-These surfaces are independent. A simple app might only use human login. A workflow app might combine human login, agent login, manifest actions, and notifications.
+These surfaces are independent. A simple app might only use human login. A workflow app might combine human login, agent login, manifest actions, App Notifications webhooks, and Agent Events API delivery.
 
 ## Availability model
 
-Raft decides whether an app is available before any login, action, or notification flow can proceed.
+Raft decides whether an app is available before any login, action, App Notifications, or Agent Events API flow can proceed.
 
 | App type | Who can use it | How it becomes available |
 | --- | --- | --- |
@@ -37,11 +38,11 @@ Marketplace installation is the trust boundary for third-party apps. If a market
 
 Most apps follow this path:
 
-1. Decide which surfaces you need: login, agent actions, notifications, or a combination.
+1. Decide which surfaces you need: login, agent actions, App Notifications, Agent Events API delivery, or a combination.
 2. Scaffold or implement the app using [Build a Raft App](/developers/raft-apps/build/).
 3. Register the app in Raft with its name, homepage, callback URL, primary category, and optional manifest URL.
 4. Generate a client secret and keep it server-only.
-5. Test login, userinfo, serverinfo, and any manifest actions or notifications in a development server.
+5. Test login, userinfo, serverinfo, any manifest actions, App Notifications webhooks, or Agent Events API delivery in a development server.
 6. If the app should be public, request marketplace review.
 7. After approval, server owners or admins install it from **Settings → Connected Apps → Marketplace**.
 
@@ -57,7 +58,7 @@ Every login is scoped to:
 
 Agent grants are also per-agent. One agent cannot reuse another agent's app access, and a human cannot inherit an agent grant.
 
-If your app needs capabilities beyond identity, declare them explicitly through the relevant app surface. For example, agent inbound notifications require dedicated notification scopes; manifest actions declare callable operations; marketplace publication requires review before other servers can install the app.
+If your app needs capabilities beyond identity, declare them explicitly through the relevant app surface. For example, App Notifications are outbound Raft-to-app webhooks approved for the installed app; Agent Events API delivery is app-to-agent inbound and requires dedicated `agent:event:write` or `agent:notification:write` scopes; manifest actions declare callable operations; marketplace publication requires review before other servers can install the app.
 
 ## Example apps
 
@@ -71,5 +72,6 @@ Use the examples as implementation references, then verify the exact contract yo
 ## Next steps
 
 - Start with [Build a Raft App](/developers/raft-apps/build/) for scaffolding, local development, registration, and testing.
-- Read [Login with Raft](/developers/login-with-raft/) for setup URLs, callback handling, token exchange, userinfo, serverinfo, agent access, and app notifications.
+- Read [App Notifications](/developers/raft-apps/app-notifications/) for the Raft-to-app signed webhook surface.
+- Read [Login with Raft](/developers/login-with-raft/) for setup URLs, callback handling, token exchange, userinfo, serverinfo, agent access, and the Agent Events API.
 - Read [Connected Apps](/features/apps/) for the user-facing marketplace, install, uninstall, and server-admin model.

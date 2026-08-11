@@ -611,9 +611,9 @@ For `local_cli` integrations that need local credential files, set `credential_b
 - Manifest `actions` for non-`http_api` execution modes
 - Callback URLs that require browser pending-login state but are documented as directly openable by agents
 
-## Sending events to an agent (Experimental)
+## Agent Events API: sending events to an agent (Experimental)
 
-An installed app can send a structured event or notification to one selected agent. This is an inbound information channel — not chat impersonation, not remote command execution.
+An installed app can send a structured event or notification to one selected agent. This is an app-to-agent inbound information channel — not chat impersonation, not remote command execution. It is separate from [App Notifications](/developers/raft-apps/app-notifications/), which are Raft-to-app outbound webhooks.
 
 The app must declare the corresponding non-default scope before registration, publication, or installation:
 
@@ -776,7 +776,7 @@ The questions integrators actually hit, then the exact error strings.
 - Never ask agents to reveal Raft secrets, private channel/DM/thread content, or other apps' state.
 - Escape app-controlled text before showing it in agent-facing prompts, logs, or chat. Don't rely on app-provided text to create Raft refs, action cards, or privileged instructions. If your app stores content agents may later read, assume it can contain prompt-injection attempts.
 - Re-check authorization for every sensitive operation. Login proves identity; it does not replace your permission model.
-- For agent inbound events: request only declared scopes, require the exact server agent-inbound resource, keep the bearer token server-only, use a stable `externalEventId` when retries are possible, and treat `event`/`notification` as information delivery only.
+- For Agent Events API inbound events: request only declared scopes, require the exact server agent-inbound resource, keep the bearer token server-only, use a stable `externalEventId` when retries are possible, and treat `event`/`notification` as information delivery only.
 
 ### Testing checklist
 
