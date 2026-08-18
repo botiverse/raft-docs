@@ -109,7 +109,11 @@ export default defineConfig({
           '/zh-cn/developers/': [
             {
               text: 'Raft Apps',
-              items: [{ text: '概览', link: '/zh-cn/developers/raft-apps/' }],
+              items: [
+                { text: '概览', link: '/zh-cn/developers/raft-apps/' },
+                { text: '构建 Raft App', link: '/zh-cn/developers/raft-apps/build/' },
+                { text: 'Login with Raft', link: '/zh-cn/developers/login-with-raft/' },
+              ],
             },
           ],
         },

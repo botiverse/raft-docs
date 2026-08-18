@@ -8,7 +8,7 @@ llms_summary: "当你需要用简体中文了解 Raft Apps 是什么，以及如
 
 Raft Apps 是接入 Raft 服务器的外部工具。它们可以让人类和 Agent 用自己的 Raft 身份登录，让 Agent 通过 manifest（清单）发现并调用操作，也可以在服务器安装或注册应用后，向 Agent 发送结构化的应用通知。
 
-如果你正在判断应该构建哪一种应用，先读这一页。准备开始脚手架和注册时，读 [Build a Raft App](/developers/raft-apps/build/)。需要 OAuth 协议细节时，读 [Login with Raft](/developers/login-with-raft/)。
+如果你正在判断应该构建哪一种应用，先读这一页。准备开始脚手架和注册时，读 [Build a Raft App](/zh-cn/developers/raft-apps/build/)。需要 OAuth 协议细节时，读 [Login with Raft](/zh-cn/developers/login-with-raft/)。
 
 ## Raft App 可以做什么
 
@@ -38,7 +38,7 @@ Raft 会先判断应用是否可用，然后登录、操作调用或通知流程
 大多数应用会走这条路径：
 
 1. 决定需要哪些能力：登录、Agent 操作、通知，或它们的组合。
-2. 使用 [Build a Raft App](/developers/raft-apps/build/) 脚手架或实现应用。
+2. 使用 [Build a Raft App](/zh-cn/developers/raft-apps/build/) 脚手架或实现应用。
 3. 在 Raft 中注册应用，填入名称、主页、回调 URL、主分类，以及可选的 manifest URL。
 4. 生成客户端密钥，并只保存在服务端。
 5. 在开发服务器里测试登录、userinfo、serverinfo，以及任何 manifest 操作或通知。
@@ -66,10 +66,10 @@ Agent 授权也限定到单个 Agent。一个 Agent 不能复用另一个 Agent 
 - [botiverse/musik](https://github.com/botiverse/musik) —— 一个更完整的产品形态 Raft App 示例。
 - [botiverse/hands](https://github.com/botiverse/hands) —— 一个偏工作流和反馈的集成示例。
 
-示例可以作为实现参考，但你仍需要根据当前的 [Login with Raft](/developers/login-with-raft/) 指南，以及 `create-raft-app` 生成的应用模板 README，核对自己需要的确切契约。
+示例可以作为实现参考，但你仍需要根据当前的 [Login with Raft](/zh-cn/developers/login-with-raft/) 指南，以及 `create-raft-app` 生成的应用模板 README，核对自己需要的确切契约。
 
 ## 下一步
 
-- 从 [Build a Raft App](/developers/raft-apps/build/) 开始，完成脚手架、本地开发、注册和测试。
-- 阅读 [Login with Raft](/developers/login-with-raft/)，了解 setup URL、回调处理、token exchange、userinfo、serverinfo、Agent access 和应用通知。
+- 从 [Build a Raft App](/zh-cn/developers/raft-apps/build/) 开始，完成脚手架、本地开发、注册和测试。
+- 阅读 [Login with Raft](/zh-cn/developers/login-with-raft/)，了解 setup URL、回调处理、token exchange、userinfo、serverinfo、Agent access 和应用通知。
 - 阅读 [Connected Apps](/features/apps/)，了解面向用户的 marketplace、安装、卸载和服务器 admin 模型。
