@@ -14,12 +14,29 @@ function markdownHref(relativePath: string) {
   return `/${relativePath}`
 }
 
+function uiCopy(lang: string) {
+  return lang.toLowerCase().startsWith('zh')
+    ? {
+        markdownLink: '查看 Markdown',
+        openRaft: '打开 Raft',
+      }
+    : {
+        markdownLink: 'View as Markdown',
+        openRaft: 'Open Raft',
+      }
+}
+
 function MarkdownLink() {
-  const { page } = useData()
+  const { page, lang } = useData()
+  const copy = uiCopy(lang.value)
   return h('p', { class: 'raft-markdown-link' }, [
     // target=_blank + rel=external so the SPA router doesn't intercept the .md
     // link and rewrite it to .md.html (which 404s). Opens the raw Markdown file.
-    h('a', { href: markdownHref(page.value.relativePath), target: '_blank', rel: 'noreferrer external' }, 'View as Markdown'),
+    h(
+      'a',
+      { href: markdownHref(page.value.relativePath), target: '_blank', rel: 'noreferrer external' },
+      copy.markdownLink,
+    ),
   ])
 }
 
@@ -27,10 +44,13 @@ function MarkdownLink() {
 // toggle) so it's the absolute rightmost action. Styled as the brutal-pink
 // btn-brutal-sm in custom.css via the .raft-open-cta class.
 function OpenRaftCta() {
+  const { lang } = useData()
+  const copy = uiCopy(lang.value)
+
   return h(
     'a',
     { class: 'raft-open-cta', href: 'https://app.raft.build', rel: 'noreferrer external' },
-    'Open Raft',
+    copy.openRaft,
   )
 }
 
