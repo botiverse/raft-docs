@@ -1,10 +1,16 @@
 import DefaultTheme from 'vitepress/theme'
 import type { EnhanceAppContext } from 'vitepress'
 import { useData } from 'vitepress'
-import { h } from 'vue'
+import { defineComponent, h, nextTick, onMounted, onUnmounted, watch } from 'vue'
 import { enhanceAppWithTabs } from 'vitepress-plugin-tabs/client'
 import './custom.css'
 import { initAnalytics } from './analytics'
+
+const localePathPairs = new Map([
+  ['/developers/raft-apps/', '/zh-cn/developers/raft-apps/'],
+  ['/developers/raft-apps/build/', '/zh-cn/developers/raft-apps/build/'],
+  ['/developers/login-with-raft/', '/zh-cn/developers/login-with-raft/'],
+])
 
 function markdownHref(relativePath: string) {
   if (relativePath === 'index.md') return '/index.md'
@@ -25,6 +31,61 @@ function uiCopy(lang: string) {
         openRaft: 'Open Raft',
       }
 }
+
+function normalizePagePath(pathname: string) {
+  if (pathname.endsWith('/')) return pathname
+  return `${pathname}/`
+}
+
+function counterpartLocalePath(pathname: string, label: string) {
+  const currentPath = normalizePagePath(pathname)
+
+  for (const [englishPath, zhPath] of localePathPairs) {
+    if (label === '简体中文' && currentPath === englishPath) return zhPath
+    if (label === 'English' && currentPath === zhPath) return englishPath
+  }
+
+  return null
+}
+
+function rewriteLocaleLinks() {
+  const anchors = document.querySelectorAll<HTMLAnchorElement>('.VPNavBarTranslations a, .VPNavBarExtra a, .VPNavScreen a')
+
+  for (const anchor of anchors) {
+    const label = anchor.textContent?.trim()
+    if (!label) continue
+
+    const href = counterpartLocalePath(window.location.pathname, label)
+    if (href) anchor.href = href
+  }
+}
+
+const LocaleLinkRewriter = defineComponent({
+  setup() {
+    const { page } = useData()
+    let observer: MutationObserver | null = null
+
+    function refresh() {
+      void nextTick(() => {
+        window.requestAnimationFrame(rewriteLocaleLinks)
+      })
+    }
+
+    onMounted(() => {
+      refresh()
+      observer = new MutationObserver(refresh)
+      observer.observe(document.body, { childList: true, subtree: true })
+    })
+
+    onUnmounted(() => {
+      observer?.disconnect()
+    })
+
+    watch(() => page.value.relativePath, refresh)
+
+    return () => null
+  },
+})
 
 function MarkdownLink() {
   const { page, lang } = useData()
@@ -60,6 +121,7 @@ export default {
     return h(DefaultTheme.Layout, null, {
       'doc-before': () => h(MarkdownLink),
       'nav-bar-content-after': () => h(OpenRaftCta),
+      'layout-bottom': () => h(LocaleLinkRewriter),
     })
   },
   enhanceApp({ app }: EnhanceAppContext) {
