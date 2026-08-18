@@ -78,6 +78,100 @@ export default defineConfig({
   title: 'Raft Docs',
   description,
   lang: 'en-US',
+  locales: {
+    root: {
+      label: 'English',
+      lang: 'en-US',
+      link: '/developers/raft-apps/',
+    },
+    'zh-cn': {
+      label: '简体中文',
+      lang: 'zh-CN',
+      title: 'Raft Docs',
+      description: 'Raft 文档：人类和 Agent 共享频道、线程和时间的工作空间。',
+      link: '/zh-cn/developers/raft-apps/',
+      markdown: {
+        container: {
+          infoLabel: '信息',
+          tipLabel: '提示',
+          warningLabel: '警告',
+        },
+        codeCopyButton: {
+          copiedText: '已复制',
+          tooltipText: '复制代码',
+        },
+      },
+      themeConfig: {
+        nav: [
+          { text: '开发者', link: '/zh-cn/developers/raft-apps/', activeMatch: '^/zh-cn/developers/' },
+        ],
+        sidebar: {
+          '/zh-cn/developers/': [
+            {
+              text: 'Raft Apps',
+              items: [{ text: '概览', link: '/zh-cn/developers/raft-apps/' }],
+            },
+          ],
+        },
+        search: {
+          provider: 'local',
+          options: {
+            translations: {
+              button: {
+                buttonText: '搜索',
+                buttonAriaLabel: '搜索',
+              },
+              modal: {
+                displayDetails: '显示详细列表',
+                resetButtonTitle: '清除搜索',
+                backButtonTitle: '关闭搜索',
+                noResultsText: '没有找到结果',
+                footer: {
+                  selectText: '选择',
+                  selectKeyAriaLabel: '回车',
+                  navigateText: '切换',
+                  navigateUpKeyAriaLabel: '向上',
+                  navigateDownKeyAriaLabel: '向下',
+                  closeText: '关闭',
+                  closeKeyAriaLabel: 'Esc',
+                },
+              },
+            },
+          },
+        },
+        outline: {
+          label: '本页目录',
+          level: [2, 3],
+        },
+        i18nRouting: false,
+        lastUpdated: {
+          text: '最后更新',
+          formatOptions: {
+            forceLocale: true,
+          },
+        },
+        docFooter: {
+          prev: '上一页',
+          next: '下一页',
+        },
+        darkModeSwitchLabel: '外观',
+        lightModeSwitchTitle: '切换到浅色主题',
+        darkModeSwitchTitle: '切换到深色主题',
+        sidebarMenuLabel: '菜单',
+        returnToTopLabel: '返回顶部',
+        langMenuLabel: '切换语言',
+        skipToContentLabel: '跳到正文',
+        editLink: {
+          pattern: 'https://github.com/botiverse/raft-docs/blob/main/content/:path',
+          text: '在 GitHub 上编辑本页',
+        },
+        footer: {
+          message: '由人类和 Agent 共同构建。',
+          copyright: `© ${new Date().getFullYear()} Raft`,
+        },
+      },
+    },
+  },
   srcDir: 'content',
   outDir: 'out',
   lastUpdated: true,
@@ -170,6 +264,10 @@ export default defineConfig({
     },
   },
   themeConfig: {
+    // This pilot has one translated page. Keep language-switch links on that
+    // known pair instead of routing every English page to an untranslated zh-cn
+    // URL that does not exist yet.
+    i18nRouting: false,
     // Separate light/dark marks: the icon is a solid fill, so it needs a
     // light-colored variant in dark mode or it blends into the background.
     logo: {
