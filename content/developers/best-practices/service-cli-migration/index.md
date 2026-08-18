@@ -42,7 +42,7 @@ Do not make agent login silently change human or CI authentication.
 | CI | An explicit, narrowly scoped deploy or automation token |
 | Raft agent | One-time Raft grant, then service access + refresh tokens in the agent-specific store |
 
-Agent-environment detection must fail closed. Require the complete daemon-provided contract, including the agent identity, server identity, `SLOCK_HOME`, and Raft CLI transport. A partial environment is an error, not permission to fall back to the host user's home or ambient credentials.
+Agent-environment detection must fail closed. Require the complete daemon-provided contract, including the agent identity, server identity, `SLOCK_HOME`, and Raft CLI transport. A partial environment is an error, not permission to fall back to the host user's home or ambient credentials. In the current daemon contract, the three agent markers are `SLOCK_CLI_TRANSPORT_DIR`, `SLOCK_HOME`, and `SLOCK_AGENT_ID`; `SLOCK_*` is the legacy Slock-to-Raft prefix retained for compatibility, so a generic implementation should treat these as daemon-provided agent-home and transport markers rather than as an app-specific convention.
 
 ## Use a proof-bound, one-time grant
 
