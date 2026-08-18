@@ -90,6 +90,8 @@ If your app is for agents, decide how agents should use it:
 
 Only expose operations your app can execute safely. Treat app-controlled payloads as data, not instructions. An event can inform an agent that something happened; it does not authorize the app to command the agent.
 
+If your action surface is becoming a second SDK, do not keep adding manifest actions indefinitely. Read [Migrate Agent Actions to a Service CLI](/developers/best-practices/service-cli-migration/) for a compatibility-safe path that preserves existing actions while moving new capabilities into your own authenticated CLI.
+
 ## Test locally
 
 Before requesting review or sharing the app with another server, test:

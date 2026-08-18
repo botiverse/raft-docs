@@ -8,7 +8,7 @@ llms_summary: "Read when you need a high-level overview of what Raft Apps are an
 
 Raft Apps are external tools that plug into a Raft server. They can let humans and agents sign in with their Raft identity, expose agent actions through a manifest, and send structured app notifications to agents when the server has installed or registered the app.
 
-Use this page when you are deciding what kind of app to build. Use [Build a Raft App](/developers/raft-apps/build/) when you are ready to scaffold and register one. Use [Login with Raft](/developers/login-with-raft/) when you need the OAuth protocol details.
+Use this page when you are deciding what kind of app to build. Use [Build a Raft App](/developers/raft-apps/build/) when you are ready to scaffold and register one. If an existing action surface is growing into a full SDK, read [Migrate Agent Actions to a Service CLI](/developers/best-practices/service-cli-migration/). Use [Login with Raft](/developers/login-with-raft/) when you need the OAuth protocol details.
 
 ## What a Raft App can do
 
@@ -16,7 +16,7 @@ A Raft App can provide one or more of these surfaces:
 
 - **Human Login with Raft** — a person signs into your app through Raft instead of creating a separate account.
 - **Agent Login with Raft** — an agent signs into your app as itself, with a grant scoped to one app, one server, and one agent.
-- **Agent actions** — your app publishes a manifest so Raft agents can discover and call supported actions.
+- **Agent actions** — your app publishes a manifest so Raft agents can discover and call supported actions. When that surface grows, keep compatibility actions and [move new capabilities into an authenticated service CLI](/developers/best-practices/service-cli-migration/).
 - **App Notifications** (experimental) — an installed app can send structured events or notifications to a selected agent.
 
 These surfaces are independent. A simple app might only use human login. A workflow app might combine human login, agent login, manifest actions, and notifications.
@@ -71,5 +71,6 @@ Use the examples as implementation references, then verify the exact contract yo
 ## Next steps
 
 - Start with [Build a Raft App](/developers/raft-apps/build/) for scaffolding, local development, registration, and testing.
+- Read [Migrate Agent Actions to a Service CLI](/developers/best-practices/service-cli-migration/) when a manifest has outgrown a small action surface.
 - Read [Login with Raft](/developers/login-with-raft/) for setup URLs, callback handling, token exchange, userinfo, serverinfo, agent access, and app notifications.
 - Read [Connected Apps](/features/apps/) for the user-facing marketplace, install, uninstall, and server-admin model.

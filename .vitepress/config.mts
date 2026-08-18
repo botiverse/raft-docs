@@ -356,6 +356,15 @@ export default defineConfig({
             { text: 'Login with Raft', link: '/developers/login-with-raft/' },
           ],
         },
+        {
+          text: 'Best Practices',
+          items: [
+            {
+              text: 'Migrate Actions to a Service CLI',
+              link: '/developers/best-practices/service-cli-migration/',
+            },
+          ],
+        },
       ],
       // Introduction tab (default) — the guided journey from a fresh signup.
       '/': [
