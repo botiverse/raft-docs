@@ -20,6 +20,9 @@
 // - docs_external_link_clicked: an outbound link click, tagged with
 //   destination_product_surface=app|signup|landing when recognizable. This is
 //   the "did docs drive people to the product" signal.
+// - docs_markdown_source_clicked: the VitePress "Edit this page on GitHub"
+//   source link. This shows when readers leave docs to inspect or improve the
+//   Markdown source.
 // - docs_search: a search query (+ results_count when readable). Doubles as a
 //   docs/Manual gap signal — what people search for and whether docs answered it.
 // - docs_code_copied: a code-block copy-button click (+ language). autocapture
@@ -56,6 +59,33 @@ function anchorLocation(anchor: Element): string {
   if (anchor.closest('.VPDocFooter')) return 'doc_footer'
   if (anchor.closest('.VPFooter, footer')) return 'footer'
   return 'content'
+}
+
+function currentDocsSection(): string {
+  const [section] = window.location.pathname.split('/').filter(Boolean)
+  return section || 'home'
+}
+
+function sharedDocsProps(): { page_path: string; docs_section: string } {
+  return {
+    page_path: window.location.pathname,
+    docs_section: currentDocsSection(),
+  }
+}
+
+function isMarkdownSourceLink(anchor: HTMLAnchorElement, url: URL): boolean {
+  if (
+    anchor.closest('.raft-markdown-link') !== null &&
+    url.origin === window.location.origin &&
+    url.pathname.endsWith('.md')
+  ) {
+    return true
+  }
+  return (
+    anchor.closest('.VPDocFooter') !== null &&
+    url.hostname === 'github.com' &&
+    url.pathname.startsWith('/botiverse/raft-docs/blob/main/content/')
+  )
 }
 
 // VitePress local search renders an input inside the VPLocalSearchBox modal.
@@ -119,12 +149,22 @@ function registerKpiListeners(posthog: typeof import('posthog-js').default): voi
           return
         }
         if (url.protocol !== 'http:' && url.protocol !== 'https:') return
+        const linkText = (anchor.textContent || '').trim().slice(0, 120)
+        const linkLocation = anchorLocation(anchor)
+        if (isMarkdownSourceLink(anchor, url)) {
+          posthog.capture('docs_markdown_source_clicked', {
+            ...sharedDocsProps(),
+            link_url: url.href,
+            link_text: linkText,
+            link_location: linkLocation,
+          })
+        }
         if (url.origin === window.location.origin) return // internal nav => pageview covers it
         posthog.capture('docs_external_link_clicked', {
-          page_path: window.location.pathname,
+          ...sharedDocsProps(),
           link_url: url.href,
-          link_text: (anchor.textContent || '').trim().slice(0, 120),
-          link_location: anchorLocation(anchor),
+          link_text: linkText,
+          link_location: linkLocation,
           is_external: true,
           destination_product_surface: classifyProductSurface(url),
         })
@@ -150,7 +190,7 @@ function registerKpiListeners(posthog: typeof import('posthog-js').default): voi
             .find((c) => c.startsWith('language-'))
             ?.slice('language-'.length) || undefined
         posthog.capture('docs_code_copied', {
-          page_path: window.location.pathname,
+          ...sharedDocsProps(),
           language,
         })
       } catch {
@@ -173,7 +213,7 @@ function registerKpiListeners(posthog: typeof import('posthog-js').default): voi
       if (!query) return
       searchTimer = setTimeout(() => {
         posthog.capture('docs_search', {
-          page_path: window.location.pathname,
+          ...sharedDocsProps(),
           query,
           results_count: readSearchResultsCount(),
         })
