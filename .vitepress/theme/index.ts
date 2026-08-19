@@ -7,6 +7,8 @@ import './custom.css'
 import { initAnalytics } from './analytics'
 
 const translatedZhPaths = new Set([
+  '/zh-cn/',
+  '/zh-cn/welcome/',
   '/zh-cn/developers/raft-apps/',
   '/zh-cn/developers/raft-apps/build/',
   '/zh-cn/developers/login-with-raft/',

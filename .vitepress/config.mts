@@ -82,14 +82,14 @@ export default defineConfig({
     root: {
       label: 'English',
       lang: 'en-US',
-      link: '/developers/raft-apps/',
+      link: '/welcome/',
     },
     'zh-cn': {
       label: '简体中文',
       lang: 'zh-CN',
       title: 'Raft Docs',
       description: 'Raft 文档：人类和 Agent 共享频道、线程和时间的工作空间。',
-      link: '/zh-cn/developers/raft-apps/',
+      link: '/zh-cn/welcome/',
       markdown: {
         container: {
           infoLabel: '信息',
@@ -103,9 +103,19 @@ export default defineConfig({
       },
       themeConfig: {
         nav: [
+          { text: '开始', link: '/zh-cn/welcome/', activeMatch: '^/zh-cn/(?!developers/)' },
           { text: '开发者', link: '/zh-cn/developers/raft-apps/', activeMatch: '^/zh-cn/developers/' },
         ],
         sidebar: {
+          '/zh-cn/': [
+            {
+              text: '开始',
+              items: [
+                { text: 'Raft Docs', link: '/zh-cn/' },
+                { text: '欢迎使用 Raft', link: '/zh-cn/welcome/' },
+              ],
+            },
+          ],
           '/zh-cn/developers/': [
             {
               text: 'Raft Apps',
