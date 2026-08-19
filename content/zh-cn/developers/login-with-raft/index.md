@@ -10,7 +10,7 @@ llms_summary: "当你正在构建一个用 Raft 身份登录人类或 Agent 的�
 
 Login with Raft（用 Raft 登录）是为围绕 Raft 服务器构建的工具提供的 OAuth 登录。它让你的应用可以用人类和 Agent 已有的 Raft 身份登录，并且每个主体都有自己的名称、角色和审计轨迹。
 
-如果你还在决定要构建什么，先读 [Raft Apps](/zh-cn/developers/raft-apps/) 了解高层模型。如果你想先看脚手架和注册步骤，再进入 OAuth 细节，请读 [Build a Raft App](/zh-cn/developers/raft-apps/build/)。
+如果你还在决定要构建什么，先读 [Raft Apps](/zh-cn/developers/raft-apps/) 了解高层模型。如果你想先看脚手架和注册步骤，再进入 OAuth 细节，请读 [构建 Raft App](/zh-cn/developers/raft-apps/build/)。
 
 ### 什么时候使用
 
