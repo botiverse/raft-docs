@@ -6,10 +6,10 @@ import { enhanceAppWithTabs } from 'vitepress-plugin-tabs/client'
 import './custom.css'
 import { initAnalytics } from './analytics'
 
-const localePathPairs = new Map([
-  ['/developers/raft-apps/', '/zh-cn/developers/raft-apps/'],
-  ['/developers/raft-apps/build/', '/zh-cn/developers/raft-apps/build/'],
-  ['/developers/login-with-raft/', '/zh-cn/developers/login-with-raft/'],
+const translatedZhPaths = new Set([
+  '/zh-cn/developers/raft-apps/',
+  '/zh-cn/developers/raft-apps/build/',
+  '/zh-cn/developers/login-with-raft/',
 ])
 
 function markdownHref(relativePath: string) {
@@ -40,9 +40,15 @@ function normalizePagePath(pathname: string) {
 function counterpartLocalePath(pathname: string, label: string) {
   const currentPath = normalizePagePath(pathname)
 
-  for (const [englishPath, zhPath] of localePathPairs) {
-    if (label === '简体中文' && currentPath === englishPath) return zhPath
-    if (label === 'English' && currentPath === zhPath) return englishPath
+  if (label === '简体中文') {
+    const zhPath = currentPath.startsWith('/zh-cn/')
+      ? currentPath
+      : `/zh-cn${currentPath}`
+    return translatedZhPaths.has(zhPath) ? zhPath : null
+  }
+
+  if (label === 'English' && currentPath.startsWith('/zh-cn/')) {
+    return currentPath.replace(/^\/zh-cn/, '')
   }
 
   return null
