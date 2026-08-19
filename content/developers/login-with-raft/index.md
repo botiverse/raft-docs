@@ -179,6 +179,17 @@ https://orbital.example.com/login/raft/callback?code=<agent-request-code>
 
 Treat this as a protocol handoff URL, not a generic app page. An agent should open it only if your callback supports a stateless Agent Login path — no browser-side pending-login cookies, PKCE verifiers, CSRF state, or human session required. If your callback needs browser-side pending state, don't document it as directly openable by agents; provide a manifest-backed action surface or CLI instructions instead.
 
+#### The portable Agent Login boundary
+
+A third-party app must be implementable and testable without Raft client source, private Computer files, or an internal Raft build. For a portable v0 HTTP action service:
+
+- accept the Agent handoff at the registered callback without a prior browser cookie, PKCE verifier, CSRF state, or human session;
+- exchange the code and use `userinfo.type` to prove the principal is an Agent — never infer Agent identity from missing state;
+- keep human login stateful: if the callback has no valid login-init state and userinfo says `human`, reject it;
+- mint the app's own service session on the callback response, with cookie origin/path/Secure attributes that cover the declared action endpoint.
+
+Visiting `auth.login_url` to pre-seed browser state is not part of this portable v0 contract. A manifest action does not make a stateful human callback Agent-compatible by itself.
+
 > **Agent-request infrastructure.** Regular integrations should not call or implement the agent-request grant — your app only needs the standard `authorization_code` exchange. The one exception is the experimental agent inbound event API below, which deliberately uses that grant server-to-server.
 
 ## Codes, tokens, and sessions
@@ -265,19 +276,37 @@ type RaftUserinfo = {
   description?: string | null;
 };
 
+type LoginState = { returnTo: string };
+
 app.get("/login/raft/callback", async (req, res) => {
   const code = String(req.query.code ?? "");
   if (!code) {
     return res.status(400).send("Missing Raft callback code");
   }
 
+  // Created by the human /login route as a signed, short-lived cookie.
+  const rawLoginState = readLoginStateCookie(req);
+  const loginState: LoginState | null = rawLoginState
+    ? await verifySignedLoginState(rawLoginState)
+    : null;
+  // Never turn an invalid human-state attempt into the no-state Agent path.
+  if (rawLoginState && !loginState) {
+    return res.status(400).send("Invalid login state");
+  }
+
   const token = await exchangeRaftCode(code);
   const userinfo = await fetchRaftUserinfo(token.access_token);
+
+  // Human callbacks require login-init state. A no-state callback is accepted
+  // only after the exchanged identity proves that the principal is an Agent.
+  if (!loginState && userinfo.type !== "agent") {
+    return res.status(400).send("Missing login state");
+  }
 
   const account = await upsertAccountFromRaft(userinfo);
   await createLocalSession(res, account.id);
 
-  return res.redirect("/app");
+  return res.redirect(loginState?.returnTo ?? "/app");
 });
 
 async function exchangeRaftCode(code: string) {
@@ -575,7 +604,7 @@ The manifest is metadata only. Raft never runs commands from a manifest automati
 | `execution.base_url` | No | HTTPS URL | Base URL for HTTP API usage. |
 | `execution.command` | Required for `local_cli` | Bare command name | CLI command agents use after login. No shell fragments, paths, or flags. |
 | `auth.type` | No | `login_with_raft` | The service uses Login with Raft for agent API actions. |
-| `auth.login_url` | No | HTTPS URL | Optional service login entry URL. Not a replacement for the registered OAuth callback. |
+| `auth.login_url` | No | HTTPS URL | Optional human or interactive service entry link. Portable v0 clients are not required to fetch it or retain/replay its cookies. Actions must not depend on it to seed callback state. |
 | `actions` | No | Array | Declared HTTP API actions Raft can present to agents after login. |
 | `credential_boundary.storage` | No | `per_agent_home` | Requests per-agent HOME/XDG isolation for CLI credentials. |
 | `credential_boundary.forbid_user_home` | Required with `per_agent_home` | `true` | The CLI must not use the host user's credential state. |
@@ -595,7 +624,7 @@ Manifest `actions` are the product-level operations Raft can present to agents a
 | `parameters` | No | Named parameter specs (`type`, optional `description`, optional `required`). |
 | `returns` | No | Named return-field specs (`type`, optional `description`). |
 
-When an agent invokes an action through Raft, Raft calls the declared relative endpoint with the action parameters and a service session established through Login with Raft. Your app should validate the parameters, re-check app-level authorization, run the operation, and return the documented response shape.
+When an agent invokes an action through Raft, Raft calls the declared relative endpoint with the action parameters and a service session established through the stateless Agent callback handoff. Your app should validate the parameters, re-check app-level authorization, run the operation, and return the documented response shape.
 
 Action names should be product-semantic operations, not a mirror of every internal route — prefer `summarize-note` over exposing every note API endpoint. This keeps agent use and install-time review understandable.
 
@@ -734,12 +763,13 @@ The questions integrators actually hit, then the exact error strings.
 4. **I stored the authorization code and reused it.** `request_already_consumed` — codes are single-use. Exchange immediately, mint your own session. In dev, check your handler isn't firing twice.
 5. **Are a human and their agent the same user?** No. Different principals, different `sub`. Key accounts on `(provider, sub, server_id)`, never on username.
 6. **The manifest fetch succeeded but the action failed.** Manifest success proves shape, not permission or outcome. Your endpoint still validates parameters and re-checks authorization at invoke time.
-7. **The CLI won't send my session cookie.** The service cookie only goes to action base URLs matching the origin/path/Secure rules. Align your callback origin with `execution.base_url`.
+7. **The CLI won't send my session cookie.** First verify the callback mints a service cookie without prior browser state. Then check that its origin/path/Secure rules cover `execution.base_url`.
 8. **We put Cloudflare Access in front and agents broke.** As designed: perimeter SSO is a human-only door.
 9. **Deploy is green but auth 500s in production.** The secret must exist where the app runs. Check the serving environment, not the repo host.
 10. **How many human steps does agent-led integration need?** Two: answer the one-shot decision set, approve one registration card. After that, availability is the boundary — agent logins to an available app need no per-agent approval. (→ A1, A2)
 11. **Agent login never reaches my callback.** Check the app is available on the selected server; for third-party apps, install may still be pending; check the return URL is HTTPS and reachable.
 12. **Is it safe to retry a failed event POST?** Use a stable `externalEventId` — retries return the original event instead of double-delivering.
+13. **Fresh login still returns 401.** A generic session-rejected response does not prove the session expired. Confirm, using only your app's public callback and logs, that the Agent callback succeeds without browser state and sets a correctly scoped service cookie. If it does and a released Raft client still fails, report the service, action, released CLI and Computer versions, and a redacted error/request ID. Do not inspect or paste private Raft session files.
 
 ### Error strings, verbatim
 
@@ -756,10 +786,11 @@ The questions integrators actually hit, then the exact error strings.
 | `Missing bearer token` | No `Authorization: Bearer` header on userinfo. |
 | Token exchange unauthorized | Check Basic auth is `base64(client_id:client_secret)`; check you're calling `api.raft.build`, not `app.raft.build`; check the secret is current. |
 | No `picture` in userinfo | Render your own fallback. Never fall back to raw `avatar_url` for rendering. |
-| Callback shows a CSRF/session error when an agent opens it | Your callback needs browser pending state. Implement a stateless Agent Login handoff, or provide a manifest-backed action surface instead. |
+| Callback shows a CSRF/session error when an agent opens it | The app is not compatible with the portable v0 Agent handoff. Keep browser state for humans, but allow a no-state callback only after userinfo proves `type: "agent"`. Adding `auth.login_url` does not make a stateful callback portable. |
 | No actions appear to agents | Manifest needs `execution.mode: "http_api"` and an `actions` array; each action needs a unique `name`, a supported method, and a relative path starting with `/`. |
 | Action reports a missing required parameter | The manifest marks it `required: true`; match the parameter names your endpoint expects. |
-| Action handoff did not set a session cookie | The callback's cookie host/path/Secure attributes must allow the declared action endpoint to receive it. |
+| Action handoff did not set a session cookie | The callback must mint the app session without prior browser state, and its cookie host/path/Secure attributes must allow the declared action endpoint to receive it. |
+| `service session was rejected or expired` | Generic action-session failure; it does not distinguish missing, wrongly scoped, expired, or app-rejected sessions. Re-login helps only if the callback can create a usable session. Use the black-box checks above before attributing the failure. |
 | `invalid_scope` on agent access request | The app didn't declare `agent:event:write` / `agent:notification:write`. Update the registration first. |
 | `resource is required` / `resource does not match requested server` | Build exactly `urn:raft:server:<agent.serverId>:agent-inbound` from the access-request response. |
 | `resource-bound token required` | The token is identity-only. Obtain a fresh agent request and exchange it with the required resource. |
@@ -793,7 +824,9 @@ The questions integrators actually hit, then the exact error strings.
 - [ ] Local CLI manifests use a bare command and a safe credential boundary
 - [ ] HTTP API manifests list only relative action endpoints and product-semantic action names, and Raft discovers the expected actions
 - [ ] A harmless test action succeeds through the Raft agent path and fails closed for missing required parameters
-- [ ] Agent callback handoff either works statelessly or is not documented as a directly openable app URL
+- [ ] From a clean profile with no prior app session, Agent callback handoff works statelessly and mints the service session; human callback without valid login-init state fails closed
+- [ ] Agent action auth does not depend on visiting `auth.login_url` or replaying a browser pending-state cookie
+- [ ] Agent Login conformance uses only public docs, the public manifest, and a released Raft client — no Raft source imports, private Computer/session files, local source builds, or internal proxies
 - [ ] App-controlled text shown to agents is escaped
 - [ ] An agent inbound request fails for an undeclared scope, unavailable app, unknown agent, missing/wrong resource, identity-only token, or a target-agent override
 - [ ] Event retries reuse a stable `externalEventId` and do not double-deliver; payloads stay within 32 KiB and contain facts, not instructions
@@ -806,6 +839,8 @@ The questions integrators actually hit, then the exact error strings.
 - Token-paste setup flows
 - Client secrets in JavaScript, docs, prompts, or repositories
 - Apps that require agents to use a human browser session
+- Apps that require Agent callbacks to replay human browser pending state
+- Apps that depend on Raft's private session-file shape, internal CLI source/builds, Computer packaging, or undocumented cookie-jar behavior
 - Apps that use username or display name as a primary key
 - Apps that put raw `avatar_url` values such as `pixel:*` into image tags instead of using `picture`
 - Manifest commands with shell syntax, flags, paths, or secrets

@@ -33,6 +33,14 @@ Raft decides whether an app is available before any login, action, or notificati
 
 Marketplace installation is the trust boundary for third-party apps. If a marketplace app is not installed on a server, human and agent access fail closed.
 
+## Public contract boundary
+
+Treat every Raft App — including one built by the Raft team — as an external third-party app. Its supported dependencies are the public API, this documentation, the published manifest schema, generated templates, and released Raft clients.
+
+Raft client source, Computer storage and session files, internal proxies, unpublished builds, packaging relationships, and release procedures are platform internals. They are a black box, not an app integration surface. If an app needs one of them to log in, diagnose a normal failure, or prove acceptance, the integration is not portable.
+
+Use the same ownership rule for every app: fix the app when it violates the public contract; fix Raft when an app that follows the public contract fails on a released client. Internal apps do not receive a private compatibility path.
+
 ## Build lifecycle
 
 Most apps follow this path:
