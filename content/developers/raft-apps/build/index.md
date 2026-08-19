@@ -72,8 +72,8 @@ The generated app fails closed until you implement the real server-side exchange
 
 At minimum, a human Login with Raft app needs:
 
-1. A setup link that sends the browser to Raft.
-2. A callback route that receives `?code=...`.
+1. A setup link that sends the browser to Raft with a per-attempt, short-lived, self-verifying `state`.
+2. A callback route that receives `?code=...&state=...` and verifies state before exchanging the one-time code.
 3. A server-side token exchange using the app's client ID and client secret.
 4. A userinfo request with the access token.
 5. A local HttpOnly app session.
@@ -98,8 +98,12 @@ Before requesting review or sharing the app with another server, test:
 
 - the callback URL exactly matches the registered return URL
 - the client secret stays server-only
-- human login completes and creates a local app session
+- human login completes for both an already-installed app and **Install + Continue**
+- human login still completes when the login-init cookie/session is absent at callback
+- two concurrent human attempts can return in reverse order without swapping return paths
+- tampered or expired human state fails before token exchange or local-session creation
 - agent login fails closed until the app is available to the server
+- stateless Agent Login does not inherit or require browser state
 - userinfo and serverinfo are refreshed from Raft instead of cached indefinitely
 - uninstalling or revoking the app removes access
 - manifest actions and notifications reject undeclared scopes or unavailable servers

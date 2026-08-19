@@ -62,6 +62,7 @@ RAFT_ORIGIN="https://app.raft.build"
 RAFT_API_ORIGIN="https://api.raft.build"
 RAFT_CLIENT_ID="orbital-notes"
 RAFT_CLIENT_SECRET="<client-secret-from-raft>"
+LOGIN_STATE_SECRET="<at-least-32-random-bytes>"
 APP_ORIGIN="https://orbital.example.com"
 ```
 
@@ -140,7 +141,7 @@ All examples use the production origins: `https://api.raft.build` (token, userin
 Send the browser to:
 
 ```text
-https://app.raft.build/login-with-raft/setup?client_id=<client_id>&return_to=<registered_return_url>
+https://app.raft.build/login-with-raft/setup?client_id=<client_id>&return_to=<registered_return_url>&state=<signed_attempt_state>
 ```
 
 Parameters:
@@ -148,20 +149,37 @@ Parameters:
 - **`client_id`** — required.
 - **`return_to`** — must exactly match the registered return URL. Compared byte-for-byte; mismatches are rejected.
 - **`scope`** — optional (defaults to `openid profile`).
+- **`state`** — strongly recommended for every human browser login. Use a short-lived, per-attempt, self-verifying value; Raft returns it unchanged to the callback.
 
-Raft shows the user a server picker (only servers where your app is available), handles consent, and redirects to your return URL with `?code=...`.
+Raft shows the user a server picker (only servers where your app is available), handles consent, and redirects to your return URL with `?code=...&state=...`. The same top-level `state` survives both the already-installed path and **Install + Continue** for a server where a marketplace app still needs installation.
 
 The legacy `/login-with-slock/setup` path remains accepted for existing integrations — nothing is broken if you're already on it.
 
 > **Literal protocol strings.** A few wire-format values keep legacy tokens as compatibility aliases (e.g. the old setup path, the `slock-agent-manifest.v0` schema value). New integrations use the Raft-branded values shown in this guide.
 
-### Three callback rules
+### Four callback rules
 
 **1. The returnUrl is byte-exact.** No wildcards, no prefix match, no extra query parameters — including CSRF state. Define it once as a constant. Deriving it from an inbound `Host` header, or letting it differ between preview and production, creates mismatches that only show up in production.
 
-**2. Login-init state lives on your side.** `return_to` can't carry state, so remember where the user was with a short-lived cookie or a server-side session. Never encode a redirect target into the return URL. If you need multiple destinations after login, decide server-side after verifying identity.
+**2. Human login state must survive without a local cookie.** Put a self-verifying, short-lived attempt value in the top-level `state` parameter. Sign or authenticated-encrypt at least a purpose, random nonce, safe local return path, issued time, and expiry. Do not put secrets or absolute redirect URLs in it. Raft transports this opaque value; your app creates and verifies it.
 
-**3. One returnUrl per client.** Want different human and agent callback paths? Register two clients. Using one shared callback? Branch on `userinfo.type` after the exchange — never guess from a missing parameter.
+**3. Verify state before consuming the one-time code.** Reject missing, malformed, tampered, wrong-purpose, future, or expired human `state` before calling `/api/oauth/token` or creating any local session. A login-init cookie may be an extra signal, but it must not be the only proof: cross-site navigation, concurrent attempts, and Install + Continue can outlive or replace it.
+
+**4. Keep stateless Agent Login explicit.** One client has one registered return URL. For the cleanest boundary, use separate clients/callbacks for browser humans and agents: the human callback always requires signed state, while the agent callback requires no browser state. If an existing client shares one callback, validate any supplied state before exchange; when state is absent, exchange only so userinfo can prove `type: "agent"`, and reject a human result without creating a session. Never guess principal type from a missing parameter.
+
+### Why cookie-only state fails
+
+A cookie or server-side session can work on a short, already-installed browser round trip, then fail when the same user must select a server, install the app, and continue. It also gives two concurrent login attempts one mutable slot unless you build a per-attempt server-side store. If the callback exchanges `code` first and checks that local slot afterward, the app consumes a single-use code and still cannot create the intended session.
+
+A signed per-attempt `state` removes that dependency:
+
+1. Generate a new nonce and safe local return path for each click.
+2. Add issued/expiry times and a human-login purpose.
+3. HMAC-sign the encoded payload with server-only `LOGIN_STATE_SECRET`.
+4. Send it as the setup page's top-level `state`.
+5. At callback, verify signature, purpose, times, nonce shape, and return-path safety before code exchange.
+
+Keep the lifetime short (10 minutes matches the human authorization-code window). Rotating the signing key intentionally invalidates outstanding attempts; users restart login.
 
 ### Agents arrive at the same callback
 
@@ -183,7 +201,7 @@ Treat this as a protocol handoff URL, not a generic app page. An agent should op
 
 ## Codes, tokens, and sessions
 
-The authorization code is **one-time exchange material, not a session**. Human codes expire after 10 minutes, so exchange the code server-side as soon as the callback arrives; verify userinfo; create your own session; discard the code.
+The authorization code is **one-time exchange material, not a session**. Human codes expire after 10 minutes. First validate the human attempt state, then exchange the code server-side immediately; verify userinfo; create your own session; discard the code.
 
 ### The exchange
 
@@ -242,12 +260,29 @@ Authorization: Bearer <access_token>
 
 Do not pass `server_id` or another server selector. Tokens are server-scoped: the endpoint always returns the token-bound server, fails closed with the same bearer checks as userinfo, and needs no extra scope. Serverinfo reads current data on each request, so renames and avatar changes show up without a new token. The OAuth discovery document advertises this route as `serverinfo_endpoint`.
 
-### A complete callback handler
+### A complete human login and callback handler
 
 ```ts
+import crypto from "node:crypto";
 import express from "express";
 
 const app = express();
+const callbackUrl = `${process.env.APP_ORIGIN}/login/raft/callback`;
+const stateSecret = process.env.LOGIN_STATE_SECRET;
+const raftOrigin = process.env.RAFT_ORIGIN;
+if (!stateSecret || Buffer.byteLength(stateSecret, "utf8") < 32) {
+  throw new Error("LOGIN_STATE_SECRET must contain at least 32 random bytes");
+}
+if (!raftOrigin) throw new Error("RAFT_ORIGIN is required");
+
+type HumanLoginState = {
+  version: 1;
+  purpose: "raft-human-login";
+  nonce: string;
+  returnTo: string;
+  issuedAt: number;
+  expiresAt: number;
+};
 
 type RaftUserinfo = {
   sub: string;
@@ -265,20 +300,99 @@ type RaftUserinfo = {
   description?: string | null;
 };
 
+app.get("/login/raft", (req, res) => {
+  const now = Math.floor(Date.now() / 1000);
+  const payload: HumanLoginState = {
+    version: 1,
+    purpose: "raft-human-login",
+    nonce: crypto.randomBytes(18).toString("base64url"),
+    returnTo: safeLocalPath(req.query.return_to),
+    issuedAt: now,
+    expiresAt: now + 10 * 60,
+  };
+  const state = signState(payload);
+  const setup = new URL("/login-with-raft/setup", raftOrigin);
+  setup.searchParams.set("client_id", process.env.RAFT_CLIENT_ID!);
+  setup.searchParams.set("return_to", callbackUrl);
+  setup.searchParams.set("scope", "openid profile identity");
+  setup.searchParams.set("state", state);
+  return res.redirect(setup.toString());
+});
+
 app.get("/login/raft/callback", async (req, res) => {
   const code = String(req.query.code ?? "");
-  if (!code) {
-    return res.status(400).send("Missing Raft callback code");
+  let attempt: HumanLoginState;
+  try {
+    // This must happen before exchangeRaftCode(code).
+    attempt = verifyState(String(req.query.state ?? ""));
+  } catch {
+    return res.status(400).send("Invalid or expired Raft login state");
   }
+  if (!code) return res.status(400).send("Missing Raft callback code");
 
   const token = await exchangeRaftCode(code);
   const userinfo = await fetchRaftUserinfo(token.access_token);
+  if (userinfo.type !== "human") {
+    return res.status(400).send("Expected a human browser login");
+  }
 
   const account = await upsertAccountFromRaft(userinfo);
   await createLocalSession(res, account.id);
 
-  return res.redirect("/app");
+  return res.redirect(attempt.returnTo);
 });
+
+function signState(payload: HumanLoginState): string {
+  const encoded = Buffer.from(JSON.stringify(payload), "utf8").toString("base64url");
+  const signature = crypto.createHmac("sha256", stateSecret).update(encoded).digest("base64url");
+  return `${encoded}.${signature}`;
+}
+
+function verifyState(value: string): HumanLoginState {
+  const [encoded, supplied, extra] = value.split(".");
+  if (
+    !encoded ||
+    !/^[A-Za-z0-9_-]+$/.test(encoded) ||
+    !/^[A-Za-z0-9_-]{43}$/.test(supplied ?? "") ||
+    extra
+  ) {
+    throw new Error("invalid state shape");
+  }
+
+  const expected = crypto.createHmac("sha256", stateSecret).update(encoded).digest();
+  const actual = Buffer.from(supplied, "base64url");
+  if (actual.length !== expected.length || !crypto.timingSafeEqual(actual, expected)) {
+    throw new Error("invalid state signature");
+  }
+
+  const payload = JSON.parse(Buffer.from(encoded, "base64url").toString("utf8")) as HumanLoginState;
+  const now = Math.floor(Date.now() / 1000);
+  if (
+    Object.keys(payload).sort().join(",") !== "expiresAt,issuedAt,nonce,purpose,returnTo,version" ||
+    payload.version !== 1 ||
+    payload.purpose !== "raft-human-login" ||
+    !/^[A-Za-z0-9_-]{16,128}$/.test(payload.nonce) ||
+    !Number.isInteger(payload.issuedAt) ||
+    !Number.isInteger(payload.expiresAt) ||
+    payload.expiresAt - payload.issuedAt !== 10 * 60 ||
+    payload.issuedAt > now + 30 ||
+    payload.expiresAt < now ||
+    payload.returnTo !== safeLocalPath(payload.returnTo)
+  ) {
+    throw new Error("invalid state payload");
+  }
+  return payload;
+}
+
+function safeLocalPath(value: unknown): string {
+  return typeof value === "string" &&
+    value.startsWith("/") &&
+    !value.startsWith("//") &&
+    !value.includes("\\") &&
+    !/[\u0000-\u001f\u007f]/.test(value)
+    ? value
+    : "/app";
+}
 
 async function exchangeRaftCode(code: string) {
   const response = await fetch(
@@ -364,8 +478,11 @@ async function upsertAccountFromRaft(userinfo: RaftUserinfo) {
 }
 ```
 
+That handler is intentionally human-only, so every callback must have valid state before exchange. A separate Agent Login callback omits browser state, exchanges its code server-side, requires `userinfo.type === "agent"`, and creates only an agent-scoped local session. Do not reuse the human state requirement as an Agent Login cookie requirement.
+
 ### Failures
 
+- **Missing, tampered, or expired human `state` starts a fresh login.** Reject it before token exchange. Do not consume `code` and then fall back to a default page.
 - **A reused code fails with `request_already_consumed`.** Codes are single-use. Seeing this in development usually means your callback handler runs twice (browser prefetch is a classic cause).
 - **An unexchanged human code expires after 10 minutes** (`authorization_code_expired`, with `next_action: "obtain_fresh_authorization"`). Discard it and start a fresh login; do not replay it.
 - **If an exchange fails or expires, start a fresh login.** Never retry with a stored code.
