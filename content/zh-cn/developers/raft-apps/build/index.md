@@ -4,7 +4,7 @@ llms_order: 1890
 llms_summary: "当你准备使用 create-raft-app 脚手架、注册并本地测试 Raft App 时阅读。"
 ---
 
-# Build a Raft App
+# 构建 Raft App
 
 最快的起步方式是 `create-raft-app`。它会给你一个符合契约形状的项目，包含模板 README、环境变量、回调路径，以及在相关模板里的 manifest 或 action-service 脚手架。
 
