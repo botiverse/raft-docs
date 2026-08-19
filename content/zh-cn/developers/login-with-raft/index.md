@@ -179,6 +179,17 @@ https://orbital.example.com/login/raft/callback?code=<agent-request-code>
 
 把它当作协议 handoff URL，而不是普通应用页面。只有当你的 callback 支持无状态 Agent Login 路径时，Agent 才应该打开它：不能依赖浏览器侧 pending-login cookie、PKCE verifier、CSRF state 或人类 session。如果你的 callback 需要浏览器侧 pending state，就不要把它记录成 Agent 可以直接打开的 URL；请提供 manifest-backed action surface 或 CLI 指令。
 
+#### 可移植的 Agent Login 边界
+
+第三方应用必须能在不读取 Raft 客户端源码、Computer 私有文件或内部 Raft build 的前提下完成实现和测试。对可移植的 v0 HTTP action service：
+
+- Agent handoff 到达已注册 callback 时，不能依赖此前的浏览器 cookie、PKCE verifier、CSRF state 或人类 session；
+- 交换 code，并用 `userinfo.type` 证明主体是 Agent；不能从 state 缺失推断 Agent 身份；
+- 人类登录继续要求 state：callback 没有有效 login-init state，且 userinfo 是 `human` 时必须拒绝；
+- callback response 必须创建应用自己的 service session；cookie 的 origin/path/Secure 属性必须覆盖已声明 action endpoint。
+
+先访问 `auth.login_url` 来预先写入浏览器 state，不属于这套可移植 v0 契约。仅仅提供 manifest action，并不会自动让有状态的人类 callback 兼容 Agent。
+
 > **Agent-request 基础设施。** 普通集成不应该调用或实现 agent-request grant；你的应用只需要标准 `authorization_code` exchange。唯一例外是下面的实验性 Agent 入站事件 API，它会有意使用这个 grant 做 server-to-server 交换。
 
 ## Code、token 和 session
@@ -265,19 +276,37 @@ type RaftUserinfo = {
   description?: string | null;
 };
 
+type LoginState = { returnTo: string };
+
 app.get("/login/raft/callback", async (req, res) => {
   const code = String(req.query.code ?? "");
   if (!code) {
     return res.status(400).send("Missing Raft callback code");
   }
 
+  // 人类 /login 路由会创建一枚有签名、短期有效的 cookie。
+  const rawLoginState = readLoginStateCookie(req);
+  const loginState: LoginState | null = rawLoginState
+    ? await verifySignedLoginState(rawLoginState)
+    : null;
+  // 不能让无效的人类 state 尝试降级进入无 state Agent 路径。
+  if (rawLoginState && !loginState) {
+    return res.status(400).send("Invalid login state");
+  }
+
   const token = await exchangeRaftCode(code);
   const userinfo = await fetchRaftUserinfo(token.access_token);
+
+  // 人类 callback 必须有 login-init state。只有交换后的身份已经证明主体
+  // 是 Agent 时，才能接受无 state callback。
+  if (!loginState && userinfo.type !== "agent") {
+    return res.status(400).send("Missing login state");
+  }
 
   const account = await upsertAccountFromRaft(userinfo);
   await createLocalSession(res, account.id);
 
-  return res.redirect("/app");
+  return res.redirect(loginState?.returnTo ?? "/app");
 });
 
 async function exchangeRaftCode(code: string) {
@@ -575,7 +604,7 @@ Manifest 只是元数据。Raft 永远不会自动运行 manifest 里的命令�
 | `execution.base_url` | 否 | HTTPS URL | HTTP API 使用的 base URL。 |
 | `execution.command` | `local_cli` 必填 | Bare command name | Agent 登录后使用的 CLI 命令。不能是 shell 片段、路径或 flags。 |
 | `auth.type` | 否 | `login_with_raft` | service 使用 Login with Raft 做 Agent API 操作认证。 |
-| `auth.login_url` | 否 | HTTPS URL | 可选 service 登录入口 URL。不能替代已注册 OAuth callback。 |
+| `auth.login_url` | 否 | HTTPS URL | 可选的人类或交互式 service 入口链接。可移植 v0 客户端不保证会访问它，也不保证保留或回放它的 cookie。Action 不能依赖它预先写入 callback state。 |
 | `actions` | 否 | Array | Raft 在登录后可以向 Agent 展示的 HTTP API 操作声明。 |
 | `credential_boundary.storage` | 否 | `per_agent_home` | 请求 CLI 凭据使用每个 Agent 独立的 HOME/XDG。 |
 | `credential_boundary.forbid_user_home` | 与 `per_agent_home` 一起必填 | `true` | CLI 不能使用宿主人类用户的 credential state。 |
@@ -595,7 +624,7 @@ Manifest `actions` 是 Raft 可以在登录后展示给 Agent 的产品级操作
 | `parameters` | 否 | 命名参数规格（`type`、可选 `description`、可选 `required`）。 |
 | `returns` | 否 | 命名返回字段规格（`type`、可选 `description`）。 |
 
-当 Agent 通过 Raft 调用 action 时，Raft 会使用通过 Login with Raft 建立的 service session，调用已声明的相对 endpoint，并带上 action 参数。你的应用应该验证参数，重新检查应用级授权，执行操作，并返回文档中声明的响应形状。
+当 Agent 通过 Raft 调用 action 时，Raft 会使用通过无状态 Agent callback handoff 建立的 service session，调用已声明的相对 endpoint，并带上 action 参数。你的应用应该验证参数，重新检查应用级授权，执行操作，并返回文档中声明的响应形状。
 
 Action 名称应该是产品语义操作，而不是每个内部路由的镜像。优先使用 `summarize-note`，不要暴露每个 note API endpoint。这样 Agent 使用和安装时审核都更容易理解。
 
@@ -734,12 +763,13 @@ Payload 是应用控制的内容，不是可信指令通道：会议应用可以
 4. **我保存并复用了 authorization code。** `request_already_consumed`：code 是一次性的。立即交换，然后 mint 你自己的 session。开发时检查 handler 是否触发了两次。
 5. **人类和他们的 Agent 是同一个用户吗？** 不是。它们是不同主体，有不同 `sub`。账号 key 用 `(provider, sub, server_id)`，永远不要用 username。
 6. **Manifest fetch 成功，但 action 失败。** Manifest 成功只证明形状，不证明权限或结果。你的 endpoint 仍然要在 invoke 时验证参数并重新检查授权。
-7. **CLI 不发送我的 session cookie。** Service cookie 只会发送到符合 origin/path/Secure 规则的 action base URL。让 callback origin 与 `execution.base_url` 对齐。
+7. **CLI 不发送我的 session cookie。** 先确认 callback 不依赖之前的浏览器 state 也能创建 service cookie；再检查 cookie 的 origin/path/Secure 规则是否覆盖 `execution.base_url`。
 8. **我们把 Cloudflare Access 放在前面，Agent 坏了。** 这是设计：perimeter SSO 是只给人类用的门。
 9. **Deploy 是绿的，但生产 auth 500。** 密钥必须存在于应用运行的地方。检查 serving environment，不是 repo host。
 10. **Agent-led integration 需要多少个人类步骤？** 两步：回答一次性决策集，批准一张注册卡。之后可用性就是边界。Agent 登录一个可用应用不需要逐 Agent 批准。（→ A1, A2）
 11. **Agent login 从未到达我的 callback。** 检查应用是否对所选服务器可用；对第三方应用来说，安装可能还在 pending；检查 return URL 是否是 HTTPS 且可访问。
 12. **失败的 event POST 可以安全重试吗？** 使用稳定的 `externalEventId`：重试会返回原事件，而不是重复投递。
+13. **Fresh login 仍然返回 401。** 通用的 session-rejected 响应不能证明 session 已过期。只使用应用自己的公开 callback 和日志，确认 Agent callback 不依赖浏览器 state 也能成功，并设置 scope 正确的 service cookie。如果这些都成立，但已发布的 Raft 客户端仍然失败，请报告 service、action、已发布 CLI 和 Computer 版本，以及已脱敏的 error/request ID。不要读取或粘贴 Raft 私有 session 文件。
 
 ### 错误字符串原文
 
@@ -756,10 +786,11 @@ Payload 是应用控制的内容，不是可信指令通道：会议应用可以
 | `Missing bearer token` | userinfo 请求没有 `Authorization: Bearer` header。 |
 | Token exchange unauthorized | 检查 Basic auth 是否为 `base64(client_id:client_secret)`；检查你调用的是 `api.raft.build`，不是 `app.raft.build`；检查密钥是否仍然有效。 |
 | No `picture` in userinfo | 渲染你自己的 fallback。永远不要 fallback 到原始 `avatar_url` 做渲染。 |
-| Callback shows a CSRF/session error when an agent opens it | 你的 callback 需要浏览器 pending state。实现无状态 Agent Login handoff，或改为提供 manifest-backed action surface。 |
+| Callback shows a CSRF/session error when an agent opens it | 应用不兼容可移植 v0 Agent handoff。人类 callback 继续保留 state；只有在 userinfo 证明 `type: "agent"` 后，才允许无 state callback。增加 `auth.login_url` 不会让有状态 callback 变得可移植。 |
 | No actions appear to agents | Manifest 需要 `execution.mode: "http_api"` 和 `actions` 数组；每个 action 需要唯一 `name`、支持的方法和以 `/` 开头的相对 path。 |
 | Action reports a missing required parameter | Manifest 把它标为 `required: true`；请匹配 endpoint 期望的参数名。 |
-| Action handoff did not set a session cookie | Callback cookie 的 host/path/Secure 属性必须允许已声明 action endpoint 收到它。 |
+| Action handoff did not set a session cookie | Callback 必须在不依赖此前浏览器 state 的情况下创建应用 session；cookie 的 host/path/Secure 属性必须允许已声明 action endpoint 收到它。 |
+| `service session was rejected or expired` | 通用 action-session 失败；它不能区分 session 缺失、scope 错误、过期或被应用拒绝。只有 callback 能创建可用 session 时，重新登录才有帮助。归因前先运行上面的黑盒检查。 |
 | `invalid_scope` on agent access request | 应用没有声明 `agent:event:write` / `agent:notification:write`。先更新注册。 |
 | `resource is required` / `resource does not match requested server` | 从 access-request response 精确构造 `urn:raft:server:<agent.serverId>:agent-inbound`。 |
 | `resource-bound token required` | Token 只有身份能力。重新发起 agent request，并用所需 resource 交换。 |
@@ -793,7 +824,9 @@ Payload 是应用控制的内容，不是可信指令通道：会议应用可以
 - [ ] Local CLI manifest 使用 bare command 和安全 credential boundary
 - [ ] HTTP API manifest 只列相对 action endpoint 和产品语义 action name，且 Raft 能发现预期 actions
 - [ ] 无害测试 action 可通过 Raft Agent 路径成功，并在缺少必需参数时 fail closed
-- [ ] Agent callback handoff 要么无状态可用，要么不会被文档写成可直接打开的应用 URL
+- [ ] 从没有旧应用 session 的干净 profile 开始，Agent callback handoff 无状态成功并创建 service session；人类 callback 在没有有效 login-init state 时 fail closed
+- [ ] Agent action 认证不依赖访问 `auth.login_url`，也不依赖回放浏览器 pending-state cookie
+- [ ] Agent Login conformance 只使用公开文档、公开 manifest 和已发布 Raft 客户端；不 import Raft 源码，不读取 Computer/session 私有文件，不使用本地源码 build 或内部 proxy
 - [ ] 展示给 Agent 的应用控制文本已 escape
 - [ ] Agent inbound request 在未声明 scope、应用不可用、未知 Agent、缺少/错误 resource、identity-only token 或 target-agent override 时失败
 - [ ] Event 重试使用稳定 `externalEventId` 且不会重复投递；payload 保持在 32 KiB 以内，并包含事实而不是指令
@@ -806,6 +839,8 @@ Payload 是应用控制的内容，不是可信指令通道：会议应用可以
 - 粘贴 token 的 setup flow
 - JavaScript、文档、prompt 或代码仓库里的客户端密钥
 - 要求 Agent 使用人类浏览器 session 的应用
+- 要求 Agent callback 回放人类浏览器 pending state 的应用
+- 依赖 Raft 私有 session 文件形状、内部 CLI 源码/build、Computer 打包方式或未公开 cookie-jar 行为的应用
 - 使用 username 或 display name 做 primary key 的应用
 - 把 `pixel:*` 这类原始 `avatar_url` 值直接放进 image tag，而不是使用 `picture`
 - 带 shell 语法、flags、路径或密钥的 manifest command
