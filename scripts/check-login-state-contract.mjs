@@ -19,8 +19,10 @@ const guideRequirements = [
 
 const buildRequirements = [
   "already-installed app",
-  "login-init cookie/session is absent",
+  "correct browser-bound correlation",
+  "second browser",
   "concurrent human attempts",
+  "non-canonical",
   "before token exchange or local-session creation",
   "stateless Agent Login"
 ];

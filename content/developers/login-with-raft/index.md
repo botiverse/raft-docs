@@ -161,23 +161,27 @@ The legacy `/login-with-slock/setup` path remains accepted for existing integrat
 
 **1. The returnUrl is byte-exact.** No wildcards, no prefix match, no extra query parameters — including CSRF state. Define it once as a constant. Deriving it from an inbound `Host` header, or letting it differ between preview and production, creates mismatches that only show up in production.
 
-**2. Human login state must survive without a local cookie.** Put a self-verifying, short-lived attempt value in the top-level `state` parameter. Sign or authenticated-encrypt at least a purpose, random nonce, safe local return path, issued time, and expiry. Do not put secrets or absolute redirect URLs in it. Raft transports this opaque value; your app creates and verifies it.
+**2. Bind human state to the initiating browser.** Put a self-verifying, short-lived attempt value in the top-level `state` parameter, and also keep a bounded per-attempt correlation in an HttpOnly, SameSite browser cookie or server-side attempt store. Sign or authenticated-encrypt at least a purpose, random nonce, safe local return path, issued time, and expiry. Do not put secrets or absolute redirect URLs in it. Raft transports the opaque state; your app creates and verifies it. A valid HMAC proves that your app minted the value, not that this browser initiated the callback.
 
-**3. Verify state before consuming the one-time code.** Reject missing, malformed, tampered, wrong-purpose, future, or expired human `state` before calling `/api/oauth/token` or creating any local session. A login-init cookie may be an extra signal, but it must not be the only proof: cross-site navigation, concurrent attempts, and Install + Continue can outlive or replace it.
+**3. Verify state before consuming the one-time code, including browser binding.** Reject missing, malformed, tampered, wrong-purpose, future, expired, or browser-mismatched human state before calling `/api/oauth/token` or creating any local session. Missing or mismatched browser correlation must fail closed or restart the login. Keep multiple concurrent attempts independently bound; do not overwrite them with one mutable slot.
 
-**4. Keep stateless Agent Login explicit.** One client has one registered return URL. For the cleanest boundary, use separate clients/callbacks for browser humans and agents: the human callback always requires signed state, while the agent callback requires no browser state. If an existing client shares one callback, validate any supplied state before exchange; when state is absent, exchange only so userinfo can prove `type: "agent"`, and reject a human result without creating a session. Never guess principal type from a missing parameter.
+**4. Keep stateless Agent Login explicit.** One client has one registered return URL. For the cleanest boundary, use separate clients/callbacks for browser humans and agents: the human callback requires signed state plus browser binding, while the agent callback requires no browser state. If an existing client shares one callback, validate any supplied human state and browser binding before exchange; when state is absent, exchange only so userinfo can prove `type: "agent"`, and reject a human result without creating a session. Never guess principal type from a missing parameter.
 
-### Why cookie-only state fails
+### Why neither cookie-only nor signed-state-only is enough
 
-A cookie or server-side session can work on a short, already-installed browser round trip, then fail when the same user must select a server, install the app, and continue. It also gives two concurrent login attempts one mutable slot unless you build a per-attempt server-side store. If the callback exchanges `code` first and checks that local slot afterward, the app consumes a single-use code and still cannot create the intended session.
+A single mutable cookie or server-side session can be overwritten by concurrent attempts. Signed state fixes integrity and survives Install + Continue, but it does not bind the callback to the browser that started the login: an attacker can initiate a valid login in browser A and deliver the valid callback URL to browser B. Browser B must not accept that callback without its own matching correlation.
 
-A signed per-attempt `state` removes that dependency:
+Use both pieces:
 
 1. Generate a new nonce and safe local return path for each click.
 2. Add issued/expiry times and a human-login purpose.
 3. HMAC-sign the encoded payload with server-only `LOGIN_STATE_SECRET`.
-4. Send it as the setup page's top-level `state`.
-5. At callback, verify signature, purpose, times, nonce shape, and return-path safety before code exchange.
+4. Store the nonce, or a digest/reference to it, in a bounded HttpOnly browser cookie or per-attempt server record that supports concurrent attempts.
+5. Send the signed value as the setup page's top-level `state`.
+6. At callback, require canonical base64url text, verify signature, purpose, times, nonce shape, return-path safety, and the initiating-browser correlation before code exchange.
+7. Consume only the completed attempt and preserve other outstanding attempts.
+
+Canonical base64url validation means decode and re-encode must reproduce the exact original text. Some decoders accept different final characters whose unused padding bits decode to the same bytes; merely decoding and comparing bytes allows textual aliases.
 
 Keep the lifetime short (10 minutes matches the human authorization-code window). Rotating the signing key intentionally invalidates outstanding attempts; users restart login.
 

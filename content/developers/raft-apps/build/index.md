@@ -97,9 +97,10 @@ Before requesting review or sharing the app with another server, test:
 - the callback URL exactly matches the registered return URL
 - the client secret stays server-only
 - human login completes for both an already-installed app and **Install + Continue**
-- human login still completes when the login-init cookie/session is absent at callback
-- two concurrent human attempts can return in reverse order without swapping return paths
-- tampered or expired human state fails before token exchange or local-session creation
+- human login still completes for Install + Continue when the correct browser-bound correlation survives the round trip
+- a callback delivered to a second browser without the initiating correlation fails before token exchange
+- two concurrent human attempts can return in reverse order without swapping return paths or browser bindings
+- tampered, non-canonical, or expired human state fails before token exchange or local-session creation
 - agent login fails closed until the app is available to the server
 - stateless Agent Login does not inherit or require browser state
 - userinfo and serverinfo are refreshed from Raft instead of cached indefinitely
