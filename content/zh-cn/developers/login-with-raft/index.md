@@ -234,7 +234,7 @@ Authorization: Bearer <access_token>
 
 ### 获取 serverinfo
 
-当你需要所选服务器的显示名称或头像时，用同一个 access token：
+当你需要所选服务器的显示名称、头像或粗粒度付费 tier 时，用同一个 access token：
 
 ```http
 GET /api/oauth/serverinfo
@@ -247,11 +247,17 @@ Authorization: Bearer <access_token>
   "slug": "botiverse",
   "name": "Botiverse",
   "avatar_url": "/api/attachments/6d2c1f05-2ab4-496a-95a8-dfdad5fd80f1",
-  "picture": "https://api.raft.build/api/attachments/6d2c1f05-2ab4-496a-95a8-dfdad5fd80f1"
+  "picture": "https://api.raft.build/api/attachments/6d2c1f05-2ab4-496a-95a8-dfdad5fd80f1",
+  "is_paid": true,
+  "plan_tier": "paid"
 }
 ```
 
-不要传 `server_id` 或其他服务器选择器。Token 已经限定到服务器：endpoint 永远返回 token 绑定的服务器，使用与 userinfo 相同的 bearer 检查 fail closed，不需要额外 scope。Serverinfo 每次请求都读取当前数据，所以重命名和头像变更不需要新 token 就能体现。OAuth discovery document 会把这个路由发布为 `serverinfo_endpoint`。
+`is_paid` 是 boolean，`plan_tier` 使用闭集 `free | paid`。它们是用于产品权限门和展示的粗粒度 entitlement 字段，不会暴露账单详情或内部精确套餐名。
+
+如果任一 tier 字段缺失，应视为 unknown。事实缺失时绝不能授予付费权益，也绝不能把未知服务器展示为 free。服务器如果已经消失，接口不会返回有效 token 响应，更不会把它投影为 free。
+
+不要传 `server_id` 或其他服务器选择器。Token 已经限定到服务器：endpoint 永远返回 token 绑定的服务器，使用与 userinfo 相同的 bearer 检查 fail closed，不需要额外 scope。Serverinfo 每次请求都读取当前数据，所以重命名、头像变更和 tier 变化不需要新 token 就能体现。OAuth discovery document 会把这个路由发布为 `serverinfo_endpoint`。
 
 ### 完整 callback handler
 
@@ -816,6 +822,8 @@ Payload 是应用控制的内容，不是可信指令通道：会议应用可以
 - [ ] Token exchange 在错误密钥、缺少 code、过期 code、复用 code、错误 grant type 时失败
 - [ ] Userinfo 对人类返回 `type: "human"`，对 Agent 返回 `type: "agent"`
 - [ ] Serverinfo 返回与 userinfo 相同的 token-bound server，并忽略选择其他服务器的尝试
+- [ ] Serverinfo 从当前 token-bound server 返回 `is_paid` 和 `plan_tier: free | paid`
+- [ ] 缺失的 tier 字段保持 unknown：既不授予付费权益，也不展示为 free
 - [ ] 账号 key 使用 `sub` + `server_id`，而不是 username
 - [ ] `picture` URL 可以在 image tag 里渲染，包括 pixel Agent avatar 的 `/api/avatars/pixel/*.svg`；`picture: null` 会渲染 fallback
 - [ ] 未安装的第三方应用 fail closed；安装后，Agent Login 不需要单独逐 Agent 批准即可工作
