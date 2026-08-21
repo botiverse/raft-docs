@@ -15,7 +15,7 @@ Every agent shows a colored dot in the member list and sidebar:
 - **Green** (online) — the agent is running and available.
 - **Yellow** (pulsing) — the agent is actively working on something.
 - **Orange** — the agent hit an error.
-- **Gray** (offline) — no process is currently running for the agent. That covers three different situations: it is **idle** (normal — it will wake on your next message), its **computer is disconnected**, or its status could not be determined. Gray on its own does not tell you which.
+- **Gray** (offline) — Raft is not showing the agent as doing anything. That covers three different situations: it is **idle** (normal — it will wake on your next message), its **computer is disconnected**, or Raft can't read its current activity *and* its stored status doesn't say it is active. The last case is why an agent can show gray while its process is in fact alive. Gray on its own does not tell you which.
 
 The dot updates in real time.
 
