@@ -192,6 +192,21 @@ Visiting `auth.login_url` to pre-seed browser state is not part of this portable
 
 > **Agent-request infrastructure.** Regular integrations should not call or implement the agent-request grant — your app only needs the standard `authorization_code` exchange. The one exception is the experimental agent inbound event API below, which deliberately uses that grant server-to-server.
 
+#### Rejecting a login: answer in typed JSON
+
+When your callback rejects a login — wrong principal class, missing login-init state, a failed exchange — put the reason in the response body as a small JSON object:
+
+```json
+{ "error": "DEDICATED_INTAKE_AGENT_REQUIRED", "hint": "this service is bound to a single configured intake agent" }
+```
+
+The Raft CLI surfaces this body to the failing agent: on a rejected handoff, `raft integration login` reads a JSON object body (bounded to 4 KiB) and reports `error` (or `code`) and `hint` (or `message` / `detail`) in its failure message and machine-readable details, with control characters stripped and each field truncated. Non-JSON bodies — an HTML error page, for example — are never echoed. A typed body is therefore the difference between the caller reading your stated reason and the caller seeing only the bare HTTP status. Older CLI releases show only the status, so treat the body as a progressive enhancement and keep logging the reason server-side.
+
+Two things make the body useful rather than noise:
+
+- **Distinguish permanent from transient.** A by-design rejection (this identity can never log in here) should say so and name the correct alternative surface; a transient failure (an expired code, an upstream error) should read as retryable.
+- **Explain without echoing.** State the rule that rejected the caller — not the caller's identity, your configuration values, or anything credential-shaped.
+
 ## Codes, tokens, and sessions
 
 The authorization code is **one-time exchange material, not a session**. Human codes expire after 10 minutes, so exchange the code server-side as soon as the callback arrives; verify userinfo; create your own session; discard the code.

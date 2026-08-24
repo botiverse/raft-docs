@@ -192,6 +192,21 @@ https://orbital.example.com/login/raft/callback?code=<agent-request-code>
 
 > **Agent-request 基础设施。** 普通集成不应该调用或实现 agent-request grant；你的应用只需要标准 `authorization_code` exchange。唯一例外是下面的实验性 Agent 入站事件 API，它会有意使用这个 grant 做 server-to-server 交换。
 
+#### 拒绝登录时：用带类型的 JSON 作答
+
+当你的 callback 拒绝一次登录——主体类别不对、缺少 login-init state、exchange 失败——把原因放进响应体，用一个小 JSON 对象表达：
+
+```json
+{ "error": "DEDICATED_INTAKE_AGENT_REQUIRED", "hint": "this service is bound to a single configured intake agent" }
+```
+
+Raft CLI 会把这个响应体带给失败的 Agent：handoff 被拒绝时，`raft integration login` 会读取 JSON 对象响应体（上限 4 KiB），把 `error`（或 `code`）与 `hint`（或 `message` / `detail`）呈现在失败信息和机器可读 details 里，控制字符会被剥离、每个字段有截断上限。非 JSON 响应体——比如一张 HTML 错误页——不会被回显。因此，带类型的响应体决定了调用方是能读到你写明的原因，还是只看到一个裸 HTTP 状态码。旧版本 CLI 只显示状态码，所以把响应体当作渐进增强，服务端自己的日志仍要记录原因。
+
+要让响应体有用而不是噪音，注意两点：
+
+- **区分永久与瞬时。** 按设计的拒绝（这个身份在这里永远登不进来）应该明说，并指出正确的替代入口；瞬时失败（code 过期、上游错误）应该读起来是可重试的。
+- **解释规则，不回显身份。** 说明是哪条规则拒绝了调用方——不要回显调用方身份、你的配置值或任何形似凭据的内容。
+
 ## Code、token 和 session
 
 Authorization code 是 **一次性交换材料，不是 session**。人类 code 会在 10 分钟后过期，所以 callback 到达后尽快在服务端交换 code，验证 userinfo，创建你自己的 session，然后丢弃 code。
