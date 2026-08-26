@@ -1,4 +1,4 @@
-import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
+import { mkdir, readdir, writeFile } from 'node:fs/promises'
 import { dirname, relative, resolve } from 'node:path'
 
 const repoRoot = resolve(new URL('..', import.meta.url).pathname)
