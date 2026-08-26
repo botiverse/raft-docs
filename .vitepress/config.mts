@@ -125,7 +125,10 @@ export default defineConfig({
             {
               text: '服务器',
               items: [
+                { text: '服务器基础', link: '/zh-cn/features/server/' },
                 { text: 'Computers', link: '/zh-cn/features/server/computers/' },
+                { text: '成员', link: '/zh-cn/features/server/members/' },
+                { text: '服务器管理', link: '/zh-cn/features/server/management/' },
               ],
             },
           ],

@@ -26,9 +26,6 @@ features/messaging/index.md
 features/messaging/joint-channels/index.md
 features/messaging/messages/index.md
 features/messaging/threads/index.md
-features/server/index.md
-features/server/management/index.md
-features/server/members/index.md
 get-pinged-when-it-matters/index.md
 hand-off-your-first-task/index.md
 meet-your-onboarding-agent/index.md
