@@ -1,4 +1,4 @@
-import { mkdir, readdir, writeFile } from 'node:fs/promises'
+import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises'
 import { dirname, relative, resolve } from 'node:path'
 
 const repoRoot = resolve(new URL('..', import.meta.url).pathname)
@@ -9,6 +9,13 @@ const reportPath = process.env.ZH_COVERAGE_REPORT
 
 const textExtensions = new Set(['.md', '.mdx'])
 const shouldFail = process.argv.includes('--check')
+const baselinePath = resolve(repoRoot, 'scripts/zh-coverage-baseline.txt')
+const baseline = new Set(
+  (await readFile(baselinePath, 'utf8'))
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => line && !line.startsWith('#')),
+)
 
 async function walk(dir) {
   const entries = await readdir(dir, { withFileTypes: true })
@@ -37,6 +44,8 @@ const missing = english.filter((path) => !zh.has(path))
 const paired = english.length - missing.length
 const englishSet = new Set(english)
 const extraZh = [...zh].filter((path) => !englishSet.has(path)).sort()
+const newMissing = missing.filter((path) => !baseline.has(path))
+const staleBaseline = [...baseline].filter((path) => !missing.includes(path)).sort()
 
 const lines = [
   '# zh-CN documentation coverage',
@@ -46,6 +55,7 @@ const lines = [
   `- Paired pages: **${paired}**`,
   `- Missing zh-CN pages: **${missing.length}**`,
   `- zh-CN-only pages: **${extraZh.length}**`,
+  `- New missing pages (not in baseline): **${newMissing.length}**`,
   '',
   'A page is paired when `content/zh-cn/<same relative path>` exists.',
   '',
@@ -57,6 +67,14 @@ const lines = [
   '',
   ...(extraZh.length ? extraZh.map((path) => '- `' + path + '`') : ['- None']),
   '',
+  '## New missing pages (enforced)',
+  '',
+  ...(newMissing.length ? newMissing.map((path) => '- `' + path + '`') : ['- None']),
+  '',
+  '## Baseline entries no longer missing',
+  '',
+  ...(staleBaseline.length ? staleBaseline.map((path) => '- `' + path + '`') : ['- None']),
+  '',
 ]
 const report = lines.join('\n')
 console.log(report)
@@ -66,6 +84,6 @@ if (reportPath) {
   await writeFile(reportPath, report)
 }
 
-if (shouldFail && (missing.length > 0 || extraZh.length > 0)) {
+if (shouldFail && (newMissing.length > 0 || extraZh.length > 0)) {
   process.exitCode = 1
 }
