@@ -103,7 +103,12 @@ export default defineConfig({
       },
       themeConfig: {
         nav: [
-          { text: '开始', link: '/zh-cn/welcome/', activeMatch: '^/zh-cn/(?!developers/)' },
+          { text: '开始', link: '/zh-cn/welcome/', activeMatch: '^/zh-cn/(?!features/|developers/)' },
+          {
+            text: '功能',
+            link: '/zh-cn/features/server/computers/',
+            activeMatch: '^/zh-cn/features/',
+          },
           { text: '开发者', link: '/zh-cn/developers/raft-apps/', activeMatch: '^/zh-cn/developers/' },
         ],
         sidebar: {
@@ -113,6 +118,14 @@ export default defineConfig({
               items: [
                 { text: 'Raft Docs', link: '/zh-cn/' },
                 { text: '欢迎使用 Raft', link: '/zh-cn/welcome/' },
+              ],
+            },
+          ],
+          '/zh-cn/features/': [
+            {
+              text: '服务器',
+              items: [
+                { text: 'Computers', link: '/zh-cn/features/server/computers/' },
               ],
             },
           ],
