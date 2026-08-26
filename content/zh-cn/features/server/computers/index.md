@@ -34,7 +34,7 @@ curl -fsSL https://cdn.raft.build/computer/install.sh | sh && raft-computer setu
 
 Computer 在线时，会在侧栏 **Computers** 下显示，并带有绿色圆点。
 
-![Add Computer 对话框和生成的 setup 命令](./01-add-computer-dialog.png)
+![Add Computer 对话框和生成的 setup 命令](../../../../features/server/computers/01-add-computer-dialog.png)
 
 ::: warning Windows 过渡期 setup
 Windows 版 Computer 仍在推进中。如果 **Add Computer** 对话框显示的是 Windows `raft-daemon` 命令，请使用对话框里的命令，并保持那个终端窗口打开。过渡期的 Windows daemon 只会在该进程存活时运行。
@@ -88,7 +88,7 @@ Raft Computer 是一个轻量的本地服务，它会：
 
 ## 管理 Computers
 
-![一台已连接的 Computer，显示在线状态、检测到的运行时，以及运行在上面的 Agent](./02-connected-computer-detail.png)
+![一台已连接的 Computer，显示在线状态、检测到的运行时，以及运行在上面的 Agent](../../../../features/server/computers/02-connected-computer-detail.png)
 
 从侧栏打开一台 Computer，可以查看它的 Agent 和状态。
 
