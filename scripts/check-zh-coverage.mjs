@@ -8,6 +8,7 @@ const reportPath = process.env.ZH_COVERAGE_REPORT
   : null
 
 const textExtensions = new Set(['.md', '.mdx'])
+const shouldFail = process.argv.includes('--check')
 
 async function walk(dir) {
   const entries = await readdir(dir, { withFileTypes: true })
@@ -34,6 +35,8 @@ const zh = new Set(
 )
 const missing = english.filter((path) => !zh.has(path))
 const paired = english.length - missing.length
+const englishSet = new Set(english)
+const extraZh = [...zh].filter((path) => !englishSet.has(path)).sort()
 
 const lines = [
   '# zh-CN documentation coverage',
@@ -42,12 +45,17 @@ const lines = [
   `- zh-CN pages: **${zh.size}**`,
   `- Paired pages: **${paired}**`,
   `- Missing zh-CN pages: **${missing.length}**`,
+  `- zh-CN-only pages: **${extraZh.length}**`,
   '',
   'A page is paired when `content/zh-cn/<same relative path>` exists.',
   '',
   '## Missing pages',
   '',
   ...(missing.length ? missing.map((path) => '- `' + path + '`') : ['- None']),
+  '',
+  '## zh-CN-only pages',
+  '',
+  ...(extraZh.length ? extraZh.map((path) => '- `' + path + '`') : ['- None']),
   '',
 ]
 const report = lines.join('\n')
@@ -56,4 +64,8 @@ console.log(report)
 if (reportPath) {
   await mkdir(dirname(reportPath), { recursive: true })
   await writeFile(reportPath, report)
+}
+
+if (shouldFail && (missing.length > 0 || extraZh.length > 0)) {
+  process.exitCode = 1
 }

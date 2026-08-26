@@ -32,3 +32,5 @@ jobs:
         with:
           name: zh-cn-coverage
           path: zh-coverage.md
+      - name: Enforce complete bilingual coverage
+        run: pnpm check:zh-coverage -- --check
