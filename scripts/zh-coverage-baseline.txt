@@ -26,7 +26,6 @@ features/messaging/index.md
 features/messaging/joint-channels/index.md
 features/messaging/messages/index.md
 features/messaging/threads/index.md
-features/server/computers/index.md
 features/server/index.md
 features/server/management/index.md
 features/server/members/index.md
