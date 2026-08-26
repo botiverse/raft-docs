@@ -131,6 +131,13 @@ export default defineConfig({
                 { text: '服务器管理', link: '/zh-cn/features/server/management/' },
               ],
             },
+            {
+              text: 'Agent',
+              items: [
+                { text: 'Agent 基础', link: '/zh-cn/features/agents/' },
+                { text: 'Runtime', link: '/zh-cn/features/agents/runtime/' },
+              ],
+            },
           ],
           '/zh-cn/developers/': [
             {
