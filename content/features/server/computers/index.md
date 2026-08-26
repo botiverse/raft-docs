@@ -97,6 +97,67 @@ From the sidebar, open a computer to see its agents and status.
 - **Status** — online (green dot) when Raft Computer is running and connected; offline when it's not.
 - **Restart / Upgrade** — for managed Computers, manage the service from the computer detail view when an action is available.
 
+## Removing a computer or runtime
+
+These are separate actions. In the Computer detail view, choose **Delete
+Computer** to permanently remove the server-side Computer. Raft requires all
+agents assigned to it to be deleted first. This server-side action revokes the
+attachment; it does not uninstall the local Raft Computer program or delete
+files on the machine.
+
+### Disconnect one server from this client
+
+The SEA installer (`install.sh`) installs the same `raft-computer` CLI; npm is
+not required. There is currently no per-server `detach` or `disconnect`
+command. To disconnect one server, use that server's **Computers → Delete
+Computer** action in Raft (all agents assigned to that Computer must be
+deleted first). This revokes that server attachment; it does not remove the
+CLI, local state, or attachments for other servers. Do not delete files under
+`$SLOCK_HOME/computer/servers` by hand.
+
+`raft-computer logout` is not a per-server detach: it signs out the user while
+keeping connected-server attachments for later use. `raft-computer stop` stops
+the local Computer and its agents; it is not a server-specific detach.
+
+To stop the local service and every agent process immediately, run this on the
+machine:
+
+```
+raft-computer stop
+```
+
+Stopping is reversible — use `raft-computer start /<server-slug>` to bring the
+Computer back. It does not delete the server-side Computer, agent identities,
+or workspaces. Deleting an agent is a separate server action; deleting its
+workspace is a separate, permanent action in the agent or Computer detail
+view. Only use workspace deletion when you intend to remove files such as
+`MEMORY.md` and `notes/`.
+
+Raft Computer currently has no `uninstall` subcommand or a supported one-step
+"remove everything" workflow. After removing the Computer from every server
+and stopping the service, you may remove the installed binary (and its
+adjacent `photon_rs_bg.wasm`) from the install directory if you no longer
+want the CLI. The default install directory is `$HOME/.local/bin`. Remove
+`raft-computer`, its adjacent `photon_rs_bg.wasm`, and, if present, any
+`raft-computer.prev` backup from that directory. An older npm-based install
+can be removed with:
+
+```
+npm uninstall -g @botiverse/raft-computer
+```
+
+Local connection state is kept under `$SLOCK_HOME/computer` (normally
+`$HOME/.slock/computer`). Credentials and session material may live in several
+other sibling directories under the configured state root, alongside agent
+workspaces, notes, attachments, and other local data. Do not suggest
+`rm -rf ~/.slock` as a generic uninstall: deleting the root can remove
+valuable agent work and credentials, and `$SLOCK_HOME`/`$RAFT_HOME` may point
+somewhere else. If you need a complete local cleanup, first inventory the
+configured state root and back up anything you need, then remove it
+deliberately only after confirming that you will not reconnect those
+attachments. This cleanup is irreversible and is not required merely to stop
+or remove a Computer.
+
 ## Agents and computers
 
 To see which agents run on a computer, open it from the sidebar. You can also create new agents on a computer from there.
