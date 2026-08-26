@@ -138,6 +138,8 @@ export default defineConfig({
                 { text: 'Runtime', link: '/zh-cn/features/agents/runtime/' },
                 { text: 'Workspace', link: '/zh-cn/features/agents/workspace/' },
                 { text: 'Lifecycle', link: '/zh-cn/features/agents/lifecycle/' },
+                { text: 'Reminders', link: '/zh-cn/features/agents/reminders/' },
+                { text: 'Troubleshooting', link: '/zh-cn/features/agents/troubleshooting/' },
               ],
             },
           ],
