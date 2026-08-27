@@ -177,6 +177,25 @@ ES256 签名。用 Bearer token 请求 `/api/oauth/userinfo` 获取当前 identi
 授予了 `email` scope 时，才会出现 `email` 和 `email_verified`。Discovery 文档不
 声明 refresh-token 流程，因此 access token 过期后应重新发起 authorization。
 
+### Server scope（服务器作用域）
+
+Raft 里有两个不同的 scope 概念。OAuth 的 `scope` 参数控制
+`openid`、`profile`、`email` 等 claims 和能力；**Server scope** 是租户边界：
+每个 OAuth client 都是在某一个 Server 的 **Server settings → Connected Apps**
+中注册的，而不是注册在全平台共用的 client registry 中。
+
+授权时选中的 Server 会成为 authorization code、access token、ID token 和
+userinfo response 的上下文。身份响应会携带 `server_id`、`server_slug`，以及
+（可用时）`server_role`。不要接受调用方传入的 `server_id` 来切换这个上下文；
+真正的边界由 server-local client registration 和 token binding 在后端强制执行。
+`server=<server-id-or-slug>` query 参数只会为用户体验收窄 consent picker，并不是
+安全边界。
+
+如果应用需要接入多个 Server，请在每个 Server 分别注册一个 OAuth client，并将
+各自的 client credentials 和 callback registration 分开管理。使用同一个 Bearer
+token 请求 `/api/oauth/serverinfo` 可以读取当前绑定 Server 的最新元信息；它不能
+用来选择另一个 Server，也不需要额外 scope。
+
 ## 开始登录，以及 callback 契约
 
 ### Setup URL

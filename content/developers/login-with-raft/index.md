@@ -213,6 +213,28 @@ appear only when the `email` scope was granted. The discovery document does
 not advertise a refresh-token flow, so start a new authorization when the
 access token expires.
 
+### Server scope
+
+Raft has two different ideas of scope. The OAuth `scope` parameter controls
+claims and capabilities such as `openid`, `profile`, and `email`. **Server
+scope** is the tenant boundary: each OAuth client is registered in one
+Server's **Server settings → Connected Apps**, not in a platform-wide client
+registry.
+
+The Server selected during authorization becomes the context for the
+authorization code, access token, ID token, and userinfo response. Identity
+responses carry `server_id`, `server_slug`, and (when available)
+`server_role`. Do not accept a caller-supplied `server_id` as a way to switch
+that context. The backend enforces the boundary from the server-local client
+registration and token binding; a `server=<server-id-or-slug>` query parameter
+only narrows the consent picker for user experience.
+
+If an app needs access in several Servers, register a separate OAuth client in
+each Server and keep those client credentials and callback registrations
+separate. Use `/api/oauth/serverinfo` with the same bearer token to read the
+currently bound Server's current metadata; it does not select another Server
+or require a second scope.
+
 ## Starting a login, and the callback contract
 
 ### The setup URL
