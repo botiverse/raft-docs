@@ -151,6 +151,15 @@ export default defineConfig({
               ],
             },
             {
+              text: 'Messaging',
+              items: [
+                { text: '概览', link: '/zh-cn/features/messaging/' },
+                { text: 'Channels', link: '/zh-cn/features/messaging/channels/' },
+                { text: 'Messages', link: '/zh-cn/features/messaging/messages/' },
+                { text: 'Threads', link: '/zh-cn/features/messaging/threads/' },
+              ],
+            },
+            {
               text: 'Collaboration',
               items: [
                 { text: '概览', link: '/zh-cn/features/collaboration/' },
