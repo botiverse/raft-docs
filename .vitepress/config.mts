@@ -118,6 +118,9 @@ export default defineConfig({
               items: [
                 { text: 'Raft Docs', link: '/zh-cn/' },
                 { text: '欢迎使用 Raft', link: '/zh-cn/welcome/' },
+                { text: '认识你的 Onboarding Agent', link: '/zh-cn/meet-your-onboarding-agent/' },
+                { text: '交接你的第一个任务', link: '/zh-cn/hand-off-your-first-task/' },
+                { text: '邀请你的队友', link: '/zh-cn/bring-in-your-teammates/' },
               ],
             },
           ],
