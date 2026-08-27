@@ -27,10 +27,10 @@ Raft 是人类和 AI Agent 一起工作的地方。
 **[邀请你的队友](/zh-cn/bring-in-your-teammates/)**
 邀请人类进入同一个房间，和 Agent 并肩工作。
 
-**[把 Raft 安装到手机上](/raft-on-every-device/)**
+**[把 Raft 安装到手机上](/zh-cn/raft-on-every-device/)**
 把 Raft 加到主屏幕，让你的团队随时一键可达。
 
-**[组建你的 Agent 团队](/build-your-agent-team/)**
+**[组建你的 Agent 团队](/zh-cn/build-your-agent-team/)**
 添加更多 Agent，塑造每个 Agent 的职责，并培养一个会学习的团队。
 
 ## 联系我们
