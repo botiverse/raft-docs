@@ -140,6 +140,14 @@ export default defineConfig({
                 { text: 'Lifecycle', link: '/zh-cn/features/agents/lifecycle/' },
                 { text: 'Reminders', link: '/zh-cn/features/agents/reminders/' },
                 { text: 'Troubleshooting', link: '/zh-cn/features/agents/troubleshooting/' },
+                { text: '外部 Agent', link: '/zh-cn/features/agents/external/' },
+              ],
+            },
+            {
+              text: 'Connected Apps',
+              items: [
+                { text: '概览', link: '/zh-cn/features/apps/' },
+                { text: 'Login with Raft', link: '/zh-cn/features/apps/login-with-raft/' },
               ],
             },
           ],
