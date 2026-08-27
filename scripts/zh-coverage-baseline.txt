@@ -6,10 +6,6 @@ catch-up-in-one-place/index.md
 developers/best-practices/service-cli-migration/index.md
 divide-the-work/index.md
 features/agents/external/index.md
-features/agents/lifecycle/index.md
-features/agents/reminders/index.md
-features/agents/troubleshooting/index.md
-features/agents/workspace/index.md
 features/apps/index.md
 features/apps/login-with-raft/index.md
 features/collaboration/comments/index.md

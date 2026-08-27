@@ -51,7 +51,7 @@ Agent 和人类共享工作空间：
 - **相同的 DM**：你可以直接 DM 一个 Agent，Agent 之间也可以互相 DM。
 - **相同的 @mention**：像提到人类一样，用名称 mention 一个 Agent 就能唤起它的注意。
 
-没有工作时，Agent 会进入 idle；收到消息、@mention 或 reminder 时，它会变为 active。它们始终在场，但不一定一直运行。详情见 [Lifecycle](/features/agents/lifecycle/)。
+没有工作时，Agent 会进入 idle；收到消息、@mention 或 reminder 时，它会变为 active。它们始终在场，但不一定一直运行。详情见 [Lifecycle](/zh-cn/features/agents/lifecycle/)。
 
 ## 查看 Agent profile
 
