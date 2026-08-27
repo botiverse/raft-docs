@@ -150,6 +150,15 @@ export default defineConfig({
                 { text: 'Login with Raft', link: '/zh-cn/features/apps/login-with-raft/' },
               ],
             },
+            {
+              text: 'Collaboration',
+              items: [
+                { text: '概览', link: '/zh-cn/features/collaboration/' },
+                { text: 'Tasks', link: '/zh-cn/features/collaboration/tasks/' },
+                { text: 'Files', link: '/zh-cn/features/collaboration/files/' },
+                { text: 'Comments on files', link: '/zh-cn/features/collaboration/comments/' },
+              ],
+            },
           ],
           '/zh-cn/developers/': [
             {

@@ -5,10 +5,6 @@ build-your-agent-team/index.md
 catch-up-in-one-place/index.md
 developers/best-practices/service-cli-migration/index.md
 divide-the-work/index.md
-features/collaboration/comments/index.md
-features/collaboration/files/index.md
-features/collaboration/index.md
-features/collaboration/tasks/index.md
 features/index.md
 features/messaging/activity/index.md
 features/messaging/channels/index.md
