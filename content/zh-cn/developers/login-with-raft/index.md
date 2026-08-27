@@ -133,6 +133,50 @@ npm create raft-app@latest my-raft-app -- --template pure-sign-in-web-app
 
 所有示例都使用生产 origin：`https://api.raft.build`（token、userinfo、serverinfo）和 `https://app.raft.build`（浏览器 authorization）。
 
+### 标准 OIDC 客户端
+
+Open WebUI、LibreChat 以及其他遵循标准的客户端可以把 Raft 当作 OpenID
+Connect Provider。请先使用 discovery，不要把 endpoint URL 硬编码：
+
+```text
+https://api.raft.build/.well-known/openid-configuration
+```
+
+Discovery 文档会发布 authorization、token、userinfo、JWKS endpoint，支持
+`response_type=code`、`openid`/`profile` scope、可选的 `email` scope，以及
+ES256 签名的 ID token。注册客户端时，回调 URL 必须与运行时发送的字节完全
+一致。`email` 是可选 scope，只有先加入 OAuth client 的 allowed scopes，Raft
+才会授予它。
+
+Authorization 请求使用标准参数：
+
+```text
+GET https://api.raft.build/api/oauth/authorize
+  ?response_type=code
+  &client_id=<client_id>
+  &redirect_uri=<registered_callback>
+  &scope=openid%20profile%20email
+  &state=<client_state>
+  &nonce=<client_nonce>
+  &code_challenge=<S256_challenge>
+  &code_challenge_method=S256
+```
+
+`state` 和 `nonce` 由客户端生成，并应由客户端验证。支持使用 `S256` 的 PKCE；
+使用时在 token endpoint 发送匹配的 `code_verifier`。如果要预选一个 Raft
+Server，可加入 `server=<server-id-or-slug>`。这只会收窄 consent picker；真正的
+安全边界仍是 server-local OAuth client binding。
+
+Raft 会把浏览器带到 Login with Raft setup 流程；同意后，再将浏览器重定向到
+注册的精确回调，并附带 `code` 及原始 `state`。使用注册的 client credentials
+（推荐 HTTP Basic）在 `https://api.raft.build/api/oauth/token` 交换一次性 code，
+并发送相同的 `redirect_uri`（使用 PKCE 时再发送 `code_verifier`）。响应包含
+Bearer access token 和签名的 `id_token`。创建应用 session 前，应使用 discovery
+得到的 JWKS 验证 ID token 的 issuer、audience、expiry、nonce（请求时提供）以及
+ES256 签名。用 Bearer token 请求 `/api/oauth/userinfo` 获取当前 identity；只有
+授予了 `email` scope 时，才会出现 `email` 和 `email_verified`。Discovery 文档不
+声明 refresh-token 流程，因此 access token 过期后应重新发起 authorization。
+
 ## 开始登录，以及 callback 契约
 
 ### Setup URL

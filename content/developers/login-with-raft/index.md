@@ -163,6 +163,56 @@ Server settings → Connected Apps → register a private app (or install a publ
 
 All examples use the production origins: `https://api.raft.build` (token, userinfo, serverinfo) and `https://app.raft.build` (browser authorization).
 
+### Standard OIDC clients
+
+Open WebUI, LibreChat, and other standards-based clients can use Raft as an
+OpenID Connect provider. Start with discovery rather than hard-coding endpoint
+URLs:
+
+```text
+https://api.raft.build/.well-known/openid-configuration
+```
+
+The discovery document publishes the authorization, token, userinfo, and JWKS
+endpoints, `response_type=code`, `openid`/`profile` scopes, optional `email`,
+and ES256 ID-token signing. Register the client's callback URL with the exact
+same bytes it will send at runtime. The `email` scope is optional, and must be
+included in the OAuth client's allowed scopes before Raft can grant it.
+
+An authorization request uses the standard parameters:
+
+```text
+GET https://api.raft.build/api/oauth/authorize
+  ?response_type=code
+  &client_id=<client_id>
+  &redirect_uri=<registered_callback>
+  &scope=openid%20profile%20email
+  &state=<client_state>
+  &nonce=<client_nonce>
+  &code_challenge=<S256_challenge>
+  &code_challenge_method=S256
+```
+
+`state` and `nonce` are client-generated and should be verified by the client.
+PKCE with `S256` is supported; when used, send the matching `code_verifier` to
+the token endpoint. To preselect one Raft Server, add
+`server=<server-id-or-slug>`. This only narrows the consent picker; the
+server-local OAuth client binding remains the security boundary.
+
+Raft redirects the browser to its Login with Raft setup flow and, after
+consent, back to the exact registered callback with `code` and the original
+`state`. Exchange the one-time code at
+`https://api.raft.build/api/oauth/token` using the registered client
+credentials (HTTP Basic is recommended), and send the same `redirect_uri`
+(plus `code_verifier` when PKCE is used). The response contains a bearer access
+token and a signed `id_token`. Validate the ID token's issuer, audience, expiry,
+nonce (when sent), and ES256 signature using the discovered JWKS before
+creating an app session. Use the bearer token at
+`/api/oauth/userinfo` for the current identity; `email` and `email_verified`
+appear only when the `email` scope was granted. The discovery document does
+not advertise a refresh-token flow, so start a new authorization when the
+access token expires.
+
 ## Starting a login, and the callback contract
 
 ### The setup URL
