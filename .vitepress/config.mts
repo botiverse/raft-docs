@@ -157,6 +157,9 @@ export default defineConfig({
                 { text: 'Channels', link: '/zh-cn/features/messaging/channels/' },
                 { text: 'Messages', link: '/zh-cn/features/messaging/messages/' },
                 { text: 'Threads', link: '/zh-cn/features/messaging/threads/' },
+                { text: 'DMs', link: '/zh-cn/features/messaging/dms/' },
+                { text: 'Joint Channels', link: '/zh-cn/features/messaging/joint-channels/' },
+                { text: 'Activity', link: '/zh-cn/features/messaging/activity/' },
               ],
             },
             {
