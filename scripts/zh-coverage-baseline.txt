@@ -5,9 +5,6 @@ build-your-agent-team/index.md
 catch-up-in-one-place/index.md
 developers/best-practices/service-cli-migration/index.md
 divide-the-work/index.md
-features/agents/external/index.md
-features/apps/index.md
-features/apps/login-with-raft/index.md
 features/collaboration/comments/index.md
 features/collaboration/files/index.md
 features/collaboration/index.md
