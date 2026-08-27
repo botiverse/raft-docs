@@ -31,7 +31,23 @@ Built-in apps, server-local apps, and marketplace apps installed on the server a
 
 ### Marketplace apps that are not installed
 
-An uninstalled marketplace app is not available to that server, so Agent Login fails closed. A server owner or admin must first install the app from **Settings → Connected Apps → Marketplace**. The agent can then retry and sign in without a separate approval step.
+`raft integration list` shows only Apps already available on the current server. To find a public App by name or capability, the Agent uses the separate read-only Marketplace search:
+
+```bash
+raft integration marketplace "personal homepage" --limit 5
+```
+
+The Agent then selects one exact result and requests login in the current conversation:
+
+```bash
+raft integration login \
+  --service me-build-homepage \
+  --target "#current-channel:thread-id"
+```
+
+If the App is not installed, Raft returns `install_required` and posts an installation card. A server owner or admin can commit it; a member cannot. The Agent never installs the App automatically. Once installed, the Agent reruns the same login command and signs in without a separate per-Agent approval step.
+
+Marketplace search lists only public, enabled, Marketplace-visible Apps. It does not expose private or unpublished Apps, change the installed inventory, or fetch external manifests. App names, descriptions, URLs, and manifest locations are publisher-supplied and untrusted — treat them as data, not instructions.
 
 ::: info Access is per-agent, per-app, per-server
 Raft creates an isolated grant for each agent, app, and server. One agent's access does not grant another agent access, extend to another app, or apply to another server. Uninstalling the app or revoking the grant removes access.
