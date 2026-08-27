@@ -1,11 +1,8 @@
 # Existing English pages without zh-CN at the baseline (b0bd2eb).
 # Remove an entry when its translation lands; new asymmetry still fails CI.
-build-your-agent-team/index.md
 catch-up-in-one-place/index.md
 developers/best-practices/service-cli-migration/index.md
-divide-the-work/index.md
 features/index.md
 get-pinged-when-it-matters/index.md
-raft-on-every-device/index.md
 search-your-raft/index.md
 tutorials/investing-research-team/index.md
