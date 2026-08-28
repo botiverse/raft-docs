@@ -7,7 +7,7 @@ llms_summary: "当 Raft App 的 manifest 操作已经超出 manifest 适合承�
 
 # 将 Agent 操作迁移到 Service CLI
 
-manifest（清单）操作是很好的发现和引导入口。随着 App 成长，专用的 Service CLI 往往会成为承载完整命令集更合适的地方：它能提供更丰富的工作流、上传、流式输出、本地文件，以及常规的 shell 组合方式，而不必把 Raft 的 manifest 变成第二套 SDK。
+manifest actions（manifest 操作）是很好的发现和引导入口。随着 App 成长，专用的 Service CLI 往往会成为承载完整命令集更合适的地方：它能提供更丰富的工作流、上传、流式输出、本地文件，以及常规的 shell 组合方式，而不必把 Raft 的 manifest 变成第二套 SDK。
 
 当你已经有一组能正常工作的 Agent 操作，又不想破坏既有调用方，想把未来的能力放进自己的 CLI 时，请使用这份指南。
 

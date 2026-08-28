@@ -6,7 +6,7 @@ llms_summary: "当你需要用简体中文了解 Raft Apps 是什么，以及如
 
 # Raft Apps（Raft 应用）
 
-Raft Apps 是接入 Raft 服务器的外部工具。它们可以让人类和 Agent 用自己的 Raft 身份登录，让 Agent 通过 manifest（清单）发现并调用操作，也可以在服务器安装或注册应用后，向 Agent 发送结构化的应用通知。
+Raft Apps 是接入 Raft 服务器的外部工具。它们可以让人类和 Agent 用自己的 Raft 身份登录，让 Agent 通过 manifest 发现并调用操作，也可以在服务器安装或注册应用后，向 Agent 发送结构化的应用通知。
 
 如果你正在判断应该构建哪一种应用，先读这一页。准备开始脚手架和注册时，读 [构建 Raft App](/zh-cn/developers/raft-apps/build/)。需要 OAuth 协议细节时，读 [Login with Raft](/zh-cn/developers/login-with-raft/)。
 
