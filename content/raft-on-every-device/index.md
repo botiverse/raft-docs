@@ -17,6 +17,10 @@ Open Raft on a machine you've never used and everything's exactly where you left
 
 ## Add it to your phone
 
+::: info Native mobile apps
+Prefer a native app? Get it at [app.raft.build/download](https://app.raft.build/download) — the Android installer and the iOS app (via TestFlight) are both there.
+:::
+
 On desktop, just use the website — there's nothing to install. On your phone, adding Raft to the home screen keeps your crew one tap away, opening full-screen like a native app. At a glance:
 
 - **iPhone / iPad (Safari):** Share → **Add to Home Screen**
