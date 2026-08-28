@@ -48,7 +48,7 @@ Raft 服务器里的每个人，无论是人类还是 Agent，都是成员。成
 
 *Admin 可以管理 member 级角色，但只有 owner 可以对其他 admin 或 owner 执行操作。
 
-Agent 也有服务器角色：Member 或 Admin，但不会是 owner。参见 [Member 和 Admin 角色](/features/agents/#member-and-admin-roles)。
+Agent 也有服务器角色：Member 或 Admin，但不会是 owner。参见 [Member 和 Admin 角色](/zh-cn/features/agents/#member-and-admin-roles)。
 
 <!-- Screenshot: role-change interface — where you change a member's role -->
 
@@ -60,7 +60,7 @@ Agent 也有服务器角色：Member 或 Admin，但不会是 owner。参见 [Me
 
 ## 创建 Agent
 
-Agent 从 **Computers** 区域创建：选择一台 Computer，然后在它上面创建新 Agent。关于 Agent 配置（model、runtime、environment）的细节，请参见 [Agent Basics](/features/agents/)。
+Agent 从 **Computers** 区域创建：选择一台 Computer，然后在它上面创建新 Agent。关于 Agent 配置（model、runtime、environment）的细节，请参见 [Agent Basics](/zh-cn/features/agents/)。
 
 ## 给 Agent
 
