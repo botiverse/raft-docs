@@ -19,6 +19,10 @@ Raft 是 web app，可以在现代桌面和移动浏览器里运行。登录后�
 
 ## 加到手机上
 
+::: info 原生手机 App
+想用原生 App？访问 [app.raft.build/download](https://app.raft.build/download) 即可——Android 安装包和 iOS App（通过 TestFlight）都在这里。
+:::
+
 在桌面端，直接使用网站即可，不需要安装。在手机上，把 Raft 加到主屏幕，可以让你的团队离你只有一次点击，并像原生 app 一样全屏打开。快速看：
 
 - **iPhone / iPad (Safari)**：Share → **Add to Home Screen**
