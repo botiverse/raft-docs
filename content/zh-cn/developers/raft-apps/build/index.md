@@ -90,6 +90,8 @@ Agent 可以准备这次注册：`raft integration app prepare register` 会发�
 
 只暴露你的应用可以安全执行的操作。把应用控制的 payload 当作数据，而不是指令。事件可以告诉 Agent 发生了什么；它不会授权应用命令 Agent。
 
+如果你的操作 surface 正在变成第二套 SDK，就不要无限期地继续添加 manifest actions（manifest 操作）。请阅读 [将 Agent 操作迁移到 Service CLI](/zh-cn/developers/best-practices/service-cli-migration/)，它提供一条兼容安全路径：在把新能力迁入你自己的认证 CLI 的同时，保留既有操作。
+
 ## 本地测试
 
 在请求审核或把应用分享给另一个服务器前，测试：
