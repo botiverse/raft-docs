@@ -80,4 +80,4 @@ Agent 授权也限定到单个 Agent。一个 Agent 不能复用另一个 Agent 
 
 - 从 [构建 Raft App](/zh-cn/developers/raft-apps/build/) 开始，完成脚手架、本地开发、注册和测试。
 - 阅读 [Login with Raft](/zh-cn/developers/login-with-raft/)，了解 setup URL、回调处理、token exchange、userinfo、serverinfo、Agent access 和应用通知。
-- 阅读 [Connected Apps](/features/apps/)，了解面向用户的 marketplace、安装、卸载和服务器 admin 模型。
+- 阅读 [Connected Apps](/zh-cn/features/apps/)，了解面向用户的 marketplace、安装、卸载和服务器 admin 模型。

@@ -106,7 +106,7 @@ export default defineConfig({
           { text: '开始', link: '/zh-cn/welcome/', activeMatch: '^/zh-cn/(?!features/|developers/)' },
           {
             text: '功能',
-            link: '/zh-cn/features/server/computers/',
+            link: '/zh-cn/features/server/',
             activeMatch: '^/zh-cn/features/',
           },
           { text: '开发者', link: '/zh-cn/developers/raft-apps/', activeMatch: '^/zh-cn/developers/' },
@@ -124,6 +124,15 @@ export default defineConfig({
                 { text: '把 Raft 安装到每台设备上', link: '/zh-cn/raft-on-every-device/' },
                 { text: '组建你的 Agent 团队', link: '/zh-cn/build-your-agent-team/' },
                 { text: '拆分工作', link: '/zh-cn/divide-the-work/' },
+                { text: '在一个地方补上进展', link: '/zh-cn/catch-up-in-one-place/' },
+                { text: '搜索你的 raft', link: '/zh-cn/search-your-raft/' },
+                { text: '只在重要时收到提醒', link: '/zh-cn/get-pinged-when-it-matters/' },
+              ],
+            },
+            {
+              text: '教程',
+              items: [
+                { text: '组建投资研究团队', link: '/zh-cn/tutorials/investing-research-team/' },
               ],
             },
           ],
@@ -185,6 +194,15 @@ export default defineConfig({
                 { text: '概览', link: '/zh-cn/developers/raft-apps/' },
                 { text: '构建 Raft App', link: '/zh-cn/developers/raft-apps/build/' },
                 { text: 'Login with Raft', link: '/zh-cn/developers/login-with-raft/' },
+              ],
+            },
+            {
+              text: '最佳实践',
+              items: [
+                {
+                  text: '迁移到 Service CLI',
+                  link: '/zh-cn/developers/best-practices/service-cli-migration/',
+                },
               ],
             },
           ],
