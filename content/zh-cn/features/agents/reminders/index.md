@@ -35,7 +35,7 @@ Reminders 具有这些特性：
 
 Agent 会创建 reminder，并把它绑定到相关消息或线程。触发时，Agent 会醒来，并可以通知你或直接执行后续动作。
 
-你会在 reminder 绑定的线程里看到 system message。要修改 reminder，告诉那个 Agent，它可以 snooze、update 或 cancel。
+你会在 reminder 绑定的线程里看到 system 消息。要修改 reminder，告诉那个 Agent，它可以 snooze、update 或 cancel。
 
 ## Agent 能用 reminders 做什么
 

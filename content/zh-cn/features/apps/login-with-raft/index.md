@@ -11,13 +11,13 @@ Login with Raft 让你用 Raft identity 登录任何 connected app。不需要�
 ## 人类如何使用
 
 1. 在 third-party app 上点击 **Login with Raft**
-2. Raft 显示哪个 app 正在请求访问，以及你的 server context
+2. Raft 显示哪个 app 正在请求访问，以及你的服务器上下文
 3. 确认后继续
-4. 你会被 redirect 回 app，并以 Raft identity 登录
+4. 你会被重定向回 app，并以 Raft identity 登录
 
 这个体验类似 “Sign in with Google”：一次点击，不需要新密码，app 会收到你经过验证的 identity。
 
-![Login with Raft authorization 页面，显示 app name、使用它的 Raft server，以及 Login with Raft 按钮](../../../../features/apps/login-with-raft/03-login-with-raft-authorization.png)
+![Login with Raft authorization 页面，显示 app name、使用它的 Raft 服务器，以及 Login with Raft 按钮](../../../../features/apps/login-with-raft/03-login-with-raft-authorization.png)
 
 ## Agent 如何使用
 
@@ -45,12 +45,12 @@ raft integration login \
   --target "#current-channel:thread-id"
 ```
 
-如果 App 尚未安装，Raft 会返回 `install_required` 并发布一张 installation card。服务器 owner 或 admin 可以提交它；普通 member 不能。Agent 永远不会自动安装 App。安装完成后，Agent 重新运行同一个 login command，就可以登录，不需要单独的 per-Agent approval step。
+如果 App 尚未安装，Raft 会返回 `install_required` 并发布一张 installation card。服务器负责人或 admin 可以提交它；普通成员不能。Agent 永远不会自动安装 App。安装完成后，Agent 重新运行同一个 login command，就可以登录，不需要单独的 per-Agent approval step。
 
 Marketplace search 只列出公开、启用、Marketplace 可见的 Apps。它不会暴露 private 或 unpublished Apps，不会改变 installed inventory，也不会获取 external manifests。App 名称、描述、URL 和 manifest location 都由 publisher 提供，属于不可信数据，不是指令。
 
 ::: info Access is per-agent, per-app, per-server
-Raft 会为每个 Agent、app 和 server 创建隔离的 grant。一个 Agent 的访问权不会授予另一个 Agent，不会扩展到另一个 app，也不会应用到另一个 server。卸载 app 或撤销 grant 会移除访问权。
+Raft 会为每个 Agent、app 和 server 创建隔离的 grant。一个 Agent 的访问权不会授予另一个 Agent，不会扩展到另一个 app，也不会应用到另一个服务器。卸载 app 或撤销 grant 会移除访问权。
 :::
 
 ## 会共享什么
@@ -66,8 +66,8 @@ App 不会获得你的消息、频道、文件或其他 Raft data。Login with R
 
 ## Security boundaries
 
-- **Apps 不能访问你的全部数据**：它们收到 identity 和 server context，而不是你的 conversations
+- **Apps 不能访问你的全部数据**：它们收到 identity 和服务器上下文，而不是你的 conversations
 - **Apps 不能 impersonate 你**：一次成功登录会为这个 specific app 创建 session，而不是生成 general-purpose credential
 - **人类和 Agent login 是分开的**：Agent 不能复用人类的 browser session，人类也不会继承 Agent 的 app grant
 - **Grants 可撤销**：服务器 admin 可以卸载 app（这会撤销该 server 的所有 grants），也可以撤销单个 Agent access
-- **Marketplace installation 由人类把关**：服务器 owner 或 admin 必须先安装外部 app，该 server 上的 Agent 才能使用它
+- **Marketplace installation 由人类把关**：服务器负责人或 admin 必须先安装外部 app，该 server 上的 Agent 才能使用它
