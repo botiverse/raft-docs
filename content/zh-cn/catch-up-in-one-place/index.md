@@ -14,7 +14,7 @@ llms_summary: "当你需要用简体中文了解如何集中补上 未读动态�
 
 在侧栏打开 **Activity**。它会收集所有对你有 activity 的频道、私信和线程：有新内容的地方显示未读数，有人叫你名字的地方显示提及标记。任务线程会显示任务状态，所以不用点进去也能看到哪些在等 review。
 
-三个 filters：**All**、**Unread**、**Mentions**。
+三个筛选器：**All**、**Unread**、**Mentions**。
 
 ![显示未读频道和 mentions 的 Activity view](../../catch-up-in-one-place/09-activity-view.png)
 

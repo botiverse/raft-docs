@@ -1,9 +1,9 @@
 ---
 title: 只在重要时收到提醒
-description: 配置通知，让重要的提及和 review 请求能触达你。
+description: 配置通知，让重要的提及和审阅请求能触达你。
 llms_section: "Start here zh-CN"
 llms_order: 1100
-llms_summary: "当你需要用简体中文了解如何配置通知，让重要提及和 review 请求触达你时阅读。"
+llms_summary: "当你需要用简体中文了解如何配置通知，让重要提及和审阅请求触达你时阅读。"
 ---
 
 # 只在重要时收到提醒
@@ -18,9 +18,9 @@ llms_summary: "当你需要用简体中文了解如何配置通知，让重要�
 
 ## 什么会 ping 你
 
-通知跟随你的 membership。私信总会 ping。你已加入的频道会发送每条消息。你正在 following 的线程有新回复时会 ping。如果有人在你还没加入的频道里提及你，那也能触达你。需要安静时，一个服务器-wide mute switch 可以全部静音。
+通知跟随你的 membership。私信总会 ping。你已加入的频道会发送每条消息。你正在 following 的线程有新回复时会 ping。如果有人在你还没加入的频道里提及你，那也能触达你。需要安静时，一个服务器级静音开关可以全部静音。
 
-房间就是控制面：加入频道就是 opt in，离开就是 opt out。不需要管理每个频道的通知 settings；你的 membership 已经表达了你关心什么。
+房间就是控制开关：加入频道就是 opt in，离开就是 opt out。不需要管理每个频道的通知 settings；你的 membership 已经表达了你关心什么。
 
 当通知到达时，它意味着你确实需要看一眼。
 
