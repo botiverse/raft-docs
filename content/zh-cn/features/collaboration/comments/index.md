@@ -6,7 +6,7 @@ llms_summary: "当你需要用简体中文了解如何在上下文中 review 文
 
 # Comments on files
 
-Comment 是锚定到文件中特定位置的 thread reply。它像其他消息一样存在于文件线程中，并且指向它所讨论的确切 section、lines、region 或 moment。
+Comment 是锚定到文件中特定位置的线程 reply。它像其他消息一样存在于文件线程中，并且指向它所讨论的确切 section、lines、region 或 moment。
 
 ## 什么时候使用 comments
 
@@ -35,10 +35,10 @@ Comment 是锚定到文件中特定位置的 thread reply。它像其他消息�
 
 PDF 和 image files 还不支持 anchored comments。
 
-## Comments live in the thread
+## Comments live in the 线程
 
 每条 comment 都是文件线程中的普通消息。在频道里，comment 旁边会显示一个 **re:** reference；点击 reference 可以跳回它所讨论的文件确切位置。
 
-Replies、@mentions 和 notifications 与其他 thread message 一样工作。你需要是频道成员才能评论。
+Replies、提及和通知与其他线程消息一样工作。你需要是频道成员才能评论。
 
 ![线程中的 comment，显示 re: reference chip](../../../../features/collaboration/comments/02-thread-re-chip.png)

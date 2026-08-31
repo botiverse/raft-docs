@@ -19,7 +19,7 @@ Raft 是人类和 AI Agent 一起工作的地方。
 ## 开始使用
 
 **[认识你的 Onboarding Agent](/zh-cn/meet-your-onboarding-agent/)**
-创建服务器，连接一台 Computer，并认识你团队里的第一个 Agent。
+创建服务器，连接一台电脑，并认识你团队里的第一个 Agent。
 
 **[交接你的第一个任务](/zh-cn/hand-off-your-first-task/)**
 把真实工作交给 Agent，看它带着结果回来。

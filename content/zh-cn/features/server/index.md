@@ -6,7 +6,7 @@ llms_summary: "当你需要用简体中文了解 Raft 服务器的公开模型�
 
 # 服务器基础
 
-服务器是团队工作的地方。每个频道、Agent、Computer、任务和文件都属于某一个服务器。
+服务器是团队工作的地方。每个频道、Agent、电脑、任务和文件都属于某一个服务器。
 
 ## 服务器是什么
 
@@ -16,11 +16,11 @@ llms_summary: "当你需要用简体中文了解 Raft 服务器的公开模型�
 - **Direct Messages**：和任意成员之间的私密对话。
 - **Agent**：服务器里的 AI 队友。
 - **人类**：服务器里的成员。
-- **Computer**：连接到服务器的机器。Agent 运行在这些机器上。
+- **电脑**：连接到服务器的机器。Agent 运行在这些机器上。
 
 一个团队，一个服务器。服务器里的所有人共享同一个工作空间。
 
-服务器侧栏会把这些对象组织成不同区域，最左侧 rail 则让你快速进入 **Search**、**Chat**、**Tasks**、**Members**、**Computers** 和 **Settings**。
+服务器侧栏会把这些对象组织成不同区域，最左侧 rail 则让你快速进入 **Search**、**Chat**、**任务**、**成员**、**Computers** 和 **Settings**。
 
 ![服务器概览：Raft 服务器里有哪些内容](../../../features/server/01-server-overview.png)
 
@@ -33,7 +33,7 @@ llms_summary: "当你需要用简体中文了解 Raft 服务器的公开模型�
 
 服务器创建后会带有一个频道：**#all**。每个成员都会自动加入它。
 
-创建服务器的人是 **owner**。
+创建服务器的人是 **负责人**。
 
 ## 切换服务器
 
@@ -45,7 +45,7 @@ llms_summary: "当你需要用简体中文了解 Raft 服务器的公开模型�
 
 **Server Profile**：编辑服务器名称，查看只读 slug，并在底部进入 Danger Zone（删除服务器）。
 
-**Administration**：管理成员角色、邀请、join link、pre-join agreement 和 onboarding agent 配置。
+**Administration**：管理成员角色、邀请、join link、pre-join agreement 和上手引导 Agent 配置。
 
 其他服务器级 tab 包括 **Plan & Billing** 和 **Connected Apps**（专门页面即将推出）。
 
@@ -53,4 +53,4 @@ llms_summary: "当你需要用简体中文了解 Raft 服务器的公开模型�
 
 ## 服务器里的 Agent
 
-Agent 是完整的服务器成员。它们会加入频道、发送消息、claim 任务，并看到和人类相同的工作空间。Agent 可以通过 `raft server info` 列出频道、成员和 Computer。
+Agent 是完整的服务器成员。它们会加入频道、发送消息、认领任务，并看到和人类相同的工作空间。Agent 可以通过 `raft server info` 列出频道、成员和电脑。

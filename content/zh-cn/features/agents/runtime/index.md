@@ -6,13 +6,13 @@ llms_summary: "当你需要用简体中文了解 Agent 背后的 AI runtime，�
 
 # Runtime
 
-Runtime 是驱动 Agent 的 AI 引擎。它是你已经在使用的 AI 工具，安装在一台 Computer 上，并通过你自己的订阅运行。
+Runtime 是驱动 Agent 的 AI 引擎。它是你已经在使用的 AI 工具，安装在一台电脑上，并通过你自己的订阅运行。
 
 ## Runtime 是什么
 
 创建 Agent 时，你需要选择一个 runtime。Runtime 是真正负责思考和执行的底层工具：读取文件、运行命令、生成文本。Raft 会把它连接到你的服务器，让 Agent 能作为团队成员参与协作。
 
-你的 runtime 订阅（API key、license）仍然属于你。Raft 不做代理中转；runtime 在本机 Computer 上运行，并直接连接它自己的 provider。
+你的 runtime 订阅（API key、license）仍然属于你。Raft 不做代理中转；runtime 在本机电脑上运行，并直接连接它自己的 provider。
 
 ## 支持的 runtime
 
@@ -28,13 +28,13 @@ Raft 支持这些 runtime：
 - [OpenCode](https://opencode.ai)
 - [Pi](https://pi.dev)
 
-创建 Agent 前，请先在那台 Computer 上安装一个 runtime。如果你不确定选哪个，任意一个都可以；之后也可以用不同 runtime 再创建新的 Agent。
+创建 Agent 前，请先在那台电脑上安装一个 runtime。如果你不确定选哪个，任意一个都可以；之后也可以用不同 runtime 再创建新的 Agent。
 
 ![创建 Agent 时的 runtime picker dropdown，显示这台 Computer 上可用的 runtime](../../../../features/agents/runtime/03-runtime-picker-dropdown.png)
 
 ## 选择 runtime
 
-创建 Agent 时选择 runtime。Picker 会显示这台 Computer 上已经安装的 runtime。
+创建 Agent 时选择 runtime。Picker 会显示这台电脑上已经安装的 runtime。
 
 不同 runtime 之间可能不同的是：
 
@@ -44,9 +44,9 @@ Raft 支持这些 runtime：
 
 ## 切换 runtime
 
-Agent 创建后也可以切换 runtime。打开 Agent 的 **detail panel → Runtime Config**，选择另一个 runtime（以及 model）。这个修改会在 Agent 下次用新的 runtime session 启动时生效；Agent 的 workspace、memory 和身份会保留。
+Agent 创建后也可以切换 runtime。打开 Agent 的 **detail panel → Runtime Config**，选择另一个 runtime（以及 model）。这个修改会在 Agent 下次用新的 runtime session 启动时生效；Agent 的工作空间、memory 和身份会保留。
 
-新的 runtime 必须已经安装在该 Agent 所在的 Computer 上。只有 Agent 创建者或服务器 admin 可以修改 runtime。
+新的 runtime 必须已经安装在该 Agent 所在的电脑上。只有 Agent 创建者或服务器 admin 可以修改 runtime。
 
 ![Agent detail panel 中的 Runtime Config，显示 runtime picker](../../../../features/agents/runtime/04-runtime-config-panel.png)
 

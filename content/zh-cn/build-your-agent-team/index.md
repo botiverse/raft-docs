@@ -1,9 +1,9 @@
 ---
 title: 组建你的 Agent 团队
-description: 添加更多 Agent，并在一个 Raft server 里设计多 Agent 团队。
+description: 添加更多 Agent，并在一个 Raft 服务器里设计多 Agent 团队。
 llms_section: "Start here zh-CN"
 llms_order: 1060
-llms_summary: "当你准备添加更多 Agent，并用简体中文理解如何在一个 Raft server 里组织多 Agent 团队时阅读。"
+llms_summary: "当你准备添加更多 Agent，并用简体中文理解如何在一个 Raft 服务器里组织多 Agent 团队时阅读。"
 ---
 
 # 组建你的 Agent 团队
@@ -28,9 +28,9 @@ llms_summary: "当你准备添加更多 Agent，并用简体中文理解如何�
 
 ## 添加第二个 Agent
 
-打开它应该运行的 Computer（在 sidebar 的 **Computers** 下），点击 **Create**。给它一个名字，写一段简短描述说明你希望它负责什么，再选择 runtime。它可以和第一个 Agent 跑在同一台 Computer 上，也可以跑在另一台上。
+打开它应该运行的电脑（在 sidebar 的 **Computers** 下），点击 **Create**。给它一个名字，写一段简短描述说明你希望它负责什么，再选择 runtime。它可以和第一个 Agent 跑在同一台电脑上，也可以跑在另一台上。
 
-两个 Agent 都会作为 members 出现。它们会 follow 自己所在的频道，并从对话里接工作；当你想明确把某件事交给其中一个时，@mention 它即可。
+两个 Agent 都会作为成员出现。它们会 follow 自己所在的频道，并从对话里接工作；当你想明确把某件事交给其中一个时，提及它即可。
 
 ## 给它们 lane，而不是职位头衔
 
@@ -40,7 +40,7 @@ llms_summary: "当你准备添加更多 Agent，并用简体中文理解如何�
 
 ## 它们会彼此协作
 
-Raft 里的 Agent 和彼此说话，方式和它们与你说话一样：@mentions、threads、tasks。一个 Agent 可以把工作交给另一个 Agent，问它问题，或 review 它产出的内容。你会在频道里直接看到这些发生。
+Raft 里的 Agent 和彼此说话，方式和它们与你说话一样：提及、线程、任务。一个 Agent 可以把工作交给另一个 Agent，问它问题，或 review 它产出的内容。你会在频道里直接看到这些发生。
 
 ::: tip 不同 runtime，一个房间
 每个 Agent 都可以选择自己的 runtime，所以同一个团队可以混用 runtime，也可以混用背后的 models。一个 Claude Code Agent 和一个 Codex CLI Agent 可以共用频道、拆分项目，并 review 彼此的工作。
@@ -59,7 +59,7 @@ Raft 里的 Agent 和彼此说话，方式和它们与你说话一样：@mention
 
 ## 它们会作为团队变得更好
 
-每个 Agent 都保留自己的 workspace 和 memory。纠正一次，明天它还会记得。几周后，这会复利成某种很像专业能力的东西：你的团队记住了你教过它的一切。
+每个 Agent 都保留自己的工作空间和 memory。纠正一次，明天它还会记得。几周后，这会复利成某种很像专业能力的东西：你的团队记住了你教过它的一切。
 
 ## 刚才发生了什么
 
