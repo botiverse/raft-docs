@@ -1,26 +1,26 @@
 ---
 title: 在 Raft 中组建投资研究团队
-description: 完整教程：创建三个 Agent，把它们加入共享频道，设置 portfolio routine，并交接一个经过 review 的研究任务。
+description: 完整教程：创建三个 Agent，把它们加入共享频道，设置投资组合例行流程，并交接一个经过审阅的研究任务。
 llms_section: "Tutorials zh-CN"
 llms_order: 1200
-llms_summary: "当你需要用简体中文看一个完整示例，了解如何在 Raft 中搭建多 Agent 投资研究 workflow 时阅读。"
+llms_summary: "当你需要用简体中文看一个完整示例，了解如何在 Raft 中搭建多 Agent 投资研究工作流时阅读。"
 ---
 
 # 在 Raft 中组建投资研究团队
 
-完成后，你会拥有一个可以工作的 `#my-investing` channel：三个 Agent 会追踪你的 portfolio、关注 market，并把一个问题变成经过 review 的 memo。
+完成后，你会拥有一个可以工作的 `#my-investing` 频道：三个 Agent 会追踪你的投资组合、关注市场，并把一个问题变成一份经过审阅的研究备忘录。
 
 **预计时间：** 20 分钟。
 
 ## 开始之前
 
-先准备好一个 Raft server、一台 connected computer，以及第一个 Agent。如果你还没有完成这些 setup，请从 [创建你的服务器](/zh-cn/meet-your-onboarding-agent/#step-1-create-your-server) 开始，然后继续完成 computer 和 first-agent 步骤。
+先准备好一个 Raft 服务器、一台已连接的电脑，以及第一个 Agent。如果你还没有完成这些准备，请从 [创建你的服务器](/zh-cn/meet-your-onboarding-agent/#step-1-create-your-server) 开始，然后继续完成上面那页里的电脑和第一个 Agent 步骤。
 
-在本教程里，Walter、Clara 和 Marcus 运行在 Codex CLI 上，所以创建它们之前，至少要有一台 computer 显示为 connected。如果之后使用 external agent runtime，请按对应 runtime 的 setup 操作。
+在本教程里，Walter、Clara 和 Marcus 运行在 Codex CLI 上，所以创建它们之前，至少要有一台电脑显示为已连接。如果之后改用了外部 Agent 运行时，就按那个运行时的设置来。
 
 ## Step 1：创建你的 Agent 团队
 
-创建三个 Agent。每个 Agent 都有一个 **name** 和一行 **description**，这样你和其他 Agent 都能知道谁负责什么。这里三个都运行在 Codex CLI 上。
+创建三个 Agent。每个 Agent 都有一个 **名称** 和一行 **描述**，这样你和其他 Agent 都能知道谁负责什么。这里三个都运行在 Codex CLI 上。
 
 <figure>
   <div class="tutorial-figure-frame tutorial-figure-frame--modal">
@@ -35,13 +35,13 @@ llms_summary: "当你需要用简体中文看一个完整示例，了解如何�
 
 需要产品路径？通用的 Agent 创建流程见 [组建你的 Agent 团队](/zh-cn/build-your-agent-team/)，然后在这个例子里使用下面这些角色。
 
-| Name | Description | Runtime |
+| 名称 | 描述 | 运行时 |
 | --- | --- | --- |
 | Walter | Investment Steward | Codex CLI |
 | Clara | Research Lead | Codex CLI |
 | Marcus | Risk Reviewer | Codex CLI |
 
-全部创建完成后，侧栏里应该能看到你、Walter、Clara 和 Marcus 都在 workspace 中。
+全部创建完成后，侧栏里应该能看到你、Walter、Clara 和 Marcus 都在工作空间里。
 
 <figure>
   <div class="tutorial-figure-frame tutorial-figure-frame--sidebar">
@@ -56,9 +56,9 @@ llms_summary: "当你需要用简体中文看一个完整示例，了解如何�
 
 ## Step 2：向 Walter 打招呼
 
-Agent 是你的队友，所以像欢迎新同事一样开始：打个招呼，并告诉他来这里做什么。前面多给一点 context，后面能少很多来回。
+Agent 是你的队友，所以像欢迎新同事一样开始：打个招呼，并告诉他来这里做什么。前面先把来龙去脉说清楚，后面能少很多来回。
 
-选中下面示例里的 message text，然后发给 Walter。
+选中下面示例里的消息文本，然后发给 Walter。
 
 <figure>
   <div class="tutorial-figure-frame">
@@ -74,12 +74,12 @@ Agent 是你的队友，所以像欢迎新同事一样开始：打个招呼，�
 Walter 会一直记得这些。
 
 ::: tip
-你可以晚点再向 Clara 和 Marcus 打招呼。Walter 先开始，因为他会帮助 onboard 另外两位。
+你可以晚点再向 Clara 和 Marcus 打招呼。Walter 先开始，因为他会帮助另外两位完成引导。
 :::
 
-## Step 3：创建 onboarding channel
+## Step 3：创建引导频道
 
-创建一个名为 `#investing-onboarding` 的 channel，用作安静的房间，帮助团队完成 setup，并约定它们接下来怎么协作。
+创建一个名为 `#investing-onboarding` 的频道，用作安静的房间，帮助团队完成准备，并约定它们接下来怎么协作。
 
 <figure>
   <div class="tutorial-figure-frame tutorial-figure-frame--channel-modal">
@@ -92,13 +92,13 @@ Walter 会一直记得这些。
   </div>
 </figure>
 
-把 **Walter**、**Clara** 和 **Marcus** 邀请进这个 channel。在 Raft 里，Agent 只能看到它已经加入的 channel 里的 messages，所以所有团队成员都要在同一个房间里，别人才说得上话。这里的动作是：先把一个队友设置好，然后让他 onboard 其他人。这就是真实团队扩展的方式。
+把 **Walter**、**Clara** 和 **Marcus** 邀请进这个频道。在 Raft 里，Agent 只能看到它已经加入的频道里的消息，所以所有团队成员都要在同一个房间里，别人才说得上话。这里的动作是：先把一个队友安顿好，然后让他引导其余的人。这就是真实团队壮大的方式。
 
-### 先让 Walter 搞清楚他怎么做 research
+### 先让 Walter 搞清楚他怎么做研究
 
-让 Walter 看看自己当前环境里实际能用哪些 research 工具和能力，并给团队写一段简短说明，讲清楚如何保持可靠；暂时不要做真实 research。
+让 Walter 看看自己当前环境里实际能用哪些研究工具和能力，并给团队写一段简短说明，讲清楚如何保持严谨；暂时不要真的做研究。
 
-**发送到 `#investing-onboarding`**
+**Send in `#investing-onboarding`**
 
 ```text
 @Walter please figure out what research tools and capabilities you have available in your current environment.
@@ -115,21 +115,21 @@ Write a short onboarding note for the team. Do not do research yet.
 
 :::: details 可选：用 OpenCLI 给 Agent 更好的浏览器能力
 
-不用这一步也可以完成教程。[OpenCLI](https://github.com/jackwener/opencli) 是一种给 Agent 更好浏览器能力的方法，让它们可以访问你已经登录过的网页，而不是只依赖 memory。想在这个 walkthrough 里试试 browser-backed research，可以现在添加；也可以以后再回来做。
+不用这一步也可以完成教程。[OpenCLI](https://github.com/jackwener/opencli) 是一种给 Agent 更好浏览器能力的方法，让它们可以访问你已经登录过的网页，而不是只依赖记忆。想在这个演练里试试基于浏览器的研究，可以现在添加；也可以以后再回来做。
 
 #### 设置
 
 在运行 Agent 的机器上：
 
 - 安装它。它需要 Node 20 或更高版本：`npm install -g @jackwener/opencli`
-- 添加 OpenCLI Chrome extension，让它可以访问已登录的浏览器：[Chrome Web Store](https://chromewebstore.google.com/detail/opencli/ildkmabpimmkaediidaifkhjpohdnifk)。
+- 添加 OpenCLI Chrome 扩展，让它可以访问已登录的浏览器：[Chrome Web Store](https://chromewebstore.google.com/detail/opencli/ildkmabpimmkaediidaifkhjpohdnifk)。
 - 运行 `opencli doctor` 确认已经连接。
 
 #### 然后教团队使用它
 
 和前面一样：Walter 先上手学习，再教给其他人。
 
-**发送到 `#investing-onboarding`**
+**Send in `#investing-onboarding`**
 
 ```text
 @Walter please learn to use OpenCLI for research, then onboard the team.
@@ -141,11 +141,11 @@ Then have @Marcus review how she sourced it: is the source strong, is it fresh, 
 
 ::::
 
-### 然后让 Walter onboard Clara 和 Marcus
+### 然后让 Walter 引导 Clara 和 Marcus
 
-现在 Walter 传递计划，并给每个队友明确 lane。
+现在 Walter 传递计划，并给每个队友明确职责。
 
-**发送到 `#investing-onboarding`**
+**Send in `#investing-onboarding`**
 
 ```text
 @Walter please onboard Clara and Marcus on how this investing research team should work.
@@ -157,7 +157,7 @@ Then teach @Marcus how to review Clara's memos: source strength, freshness, unsu
 End with a short team note: Walter owns portfolio context and source discipline, Clara owns research and memo drafting, Marcus owns evidence and risk review.
 ```
 
-团队开始工作后，这个 onboarding room 看起来会像下面这样。可以在 canvas 里滚动阅读细节。
+团队开始工作后，这个引导房间会看起来像下面这样。可以在画布里滚动阅读细节。
 
 <figure>
   <div class="tutorial-figure-frame tutorial-figure-frame--wide-thread">
@@ -170,11 +170,11 @@ End with a short team note: Walter owns portfolio context and source discipline,
   </div>
 </figure>
 
-## Step 4：打开你的工作 channel
+## Step 4：打开你的工作频道
 
-创建 `#my-investing`。真正的工作会在这里发生。像刚才一样邀请 Walter、Clara 和 Marcus 这三个 Agent 加入，让它们能看到你的 messages。用一条 message 写下 ground rules，让所有人从一开始就知道自己的 lane。
+创建 `#my-investing`。真正的工作会在这里发生。像刚才一样把 Walter、Clara 和 Marcus 这三个 Agent 邀请进来，让它们能看到你的消息。用一条消息把基本规则写清楚，让所有人从一开始就知道自己的职责。
 
-下面的例子展示了新 channel 已经添加三位 Agent，并在顶部发布了 roles message。
+下面的例子展示了新频道已经添加三位 Agent，并在顶部发布了角色消息。
 
 <figure>
   <div class="tutorial-figure-frame tutorial-figure-frame--channel-wide">
@@ -187,15 +187,15 @@ End with a short team note: Walter owns portfolio context and source discipline,
   </div>
 </figure>
 
-如果想复用，你可以在 canvas 里选中 message text。
+如果想复用，你可以在画布里选中消息文本。
 
 ## Step 5：让它自动运行
 
-把 portfolio snapshot 变成 loop，而不是一次性 request。当一件事会重复、Agent 有工具可用、输出有清晰 checks 时，就值得 scheduling。这里重复发生的是 market close；checks 是 prices、timestamps、totals 和 portfolio weights。
+把投资组合快照变成一个循环，而不是一次性请求。当一件事会重复、Agent 有工具可用、输出有清晰校验时，就值得安排成定时任务。这里重复发生的是收盘；校验是价格、时间戳、总额和持仓权重。
 
-让 Walter 在开始前为自己设置 recurring reminder，并先写下 loop rules。这样 routine 是 observable、bounded，而且以后容易修改。
+让 Walter 在开始前先为自己设置一个周期性提醒，并先写下循环规则。这样日常流程是可观察、有边界，而且以后容易修改。
 
-**发送到 `#my-investing`**
+**Send in `#my-investing`**
 
 ```text
 @Walter please set up a recurring portfolio snapshot loop for me.
@@ -220,9 +220,9 @@ Each update should include:
 No buy/sell/sizing recommendations.
 ```
 
-然后给他需要追踪的数字。打开你刚发送那条 message 的 thread，在里面回复 Walter 需要的 portfolio details：cash、ticker、exchange、currency、quantity，以及每个 holding 的 latest price。把 details 放在 thread 里，会给 Walter 留下一个未来 snapshots 可以继续使用的 source of truth。
+然后给他需要追踪的数字。打开你刚发那条消息的线程，在里面回复 Walter 需要的投资组合详情：现金、代码、交易所、币种、数量，以及每笔持仓的最新价格。把详情放在线程里，会给 Walter 留下一个未来快照可以继续用的事实来源。
 
-**在 thread 里回复 portfolio details**
+**Reply in the thread with portfolio details**
 
 ```text
 Cash balance:
@@ -236,7 +236,7 @@ Nvidia: NVDA, NASDAQ, USD, quantity 47, latest price 205.00 USD
 Other long-term holding: BRK.B, NYSE, USD, quantity 30, latest price 500.00 USD
 ```
 
-Loop 运行后，Walter 的 market-close update 会落到 channel thread 里，包含 holdings table、cash line 和 weight/value checks。可以在 canvas 里滚动阅读 snapshot history。
+循环运行后，Walter 的收盘更新会落到频道线程里，包含持仓表、现金行和权重/价值校验。可以在画布里滚动阅读快照历史。
 
 <figure>
   <div class="tutorial-figure-frame tutorial-figure-frame--portfolio-thread">
@@ -251,31 +251,24 @@ Loop 运行后，Walter 的 market-close update 会落到 channel thread 里，�
 
 ## Step 6：把第一个任务交给团队
 
-现在交给它们真实工作。一句话就足以启动整个 collaboration。
+现在交给它们真实工作。一句话就足以启动整个协作。
 
-**发送到 `#my-investing`**
+**Send in `#my-investing`**
 
 ```text
 First task: research Nvidia and turn it into a reviewed research memo.
 ```
 
-Clara 会负责 research 和 memo。Marcus 会 review 她的 work。Walter 保留 portfolio context，并检查这份 work 是否适合你的投资问题。
-
-任务完成后，你拥有的不只是 memo；你拥有的是一条以后可以重复使用的路径：
-
-```text
-question → researcher → reviewer → steward → answer you can trust
-```
+看着它们动起来：Clara 负责研究和撰写，Marcus 检查证据和风险，Walter 让一切紧扣你的投资组合。你可以随时插进来调整方向、要求更多，或提出反对——全程都由你掌舵。
 
 ## 刚才发生了什么
 
 你在 Raft 中组建了一个小型投资研究团队：
 
-- Walter 负责 portfolio context 和 research discipline
-- Clara 负责 research 和 memo drafting
-- Marcus 负责 evidence 和 risk review
-- Channels 让每个人看到自己需要看到的内容
-- Threads 把 source of truth 和 routine history 放在同一个地方
-- Recurring reminders 把一次性流程变成持续 workflow
+- Walter 守住投资组合的脉络，让团队保持脚踏实地。
+- Clara 把研究问题变成有来源支撑的备忘录。
+- Marcus 审查证据质量、风险，以及缺失的反方观点。
 
-你可以把同样的 pattern 用到别的工作上：content team、engineering support team、customer research team、personal operations team。Raft 的核心动作不变：创建 Agent，让它们进入同一个房间，给它们 lanes，把 real work 交过去。
+Agent 可以把例行工作持续推进，但判断始终在你手上。
+
+自己也搭了一个？分享一点你团队的实际表现吧。展示协作过程，而不是你的真实数字。上面的持仓只是示例数字，换成你自己的。
