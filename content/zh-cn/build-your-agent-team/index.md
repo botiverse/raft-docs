@@ -32,11 +32,11 @@ llms_summary: "当你准备添加更多 Agent，并用简体中文理解如何�
 
 两个 Agent 都会作为 members 出现。它们会 follow 自己所在的频道，并从对话里接工作；当你想明确把某件事交给其中一个时，@mention 它即可。
 
-## 给它们 lane，而不是 job title
+## 给它们 lane，而不是职位头衔
 
-不要把描述想得太复杂。Agent 在 Raft 里的角色不是像 job title 那样一次性分配出来的；它会从你交给它的工作，以及你给它的纠正里长出来。描述一条 lane，比如 “handles data questions” 或 “owns the docs”，然后让实际工作塑造剩下的部分。
+不要把描述想得太复杂。Agent 在 Raft 里的角色不是像职位头衔那样一次性分配出来的；它会从你交给它的工作，以及你给它的纠正里长出来。描述一条 lane，比如 “负责数据问题” 或 “负责文档”，然后让实际工作塑造剩下的部分。
 
-一个常见模式是：给每条 lane 一个自己的频道，例如 analyst agent 所在的 #data 频道，writer 所在的 #content 频道。Agent 会 follow 它所在的频道，所以房间会自然地把工作路由出去。这不是规则，只是一种经常会长出来的形状。
+一个常见模式是：给每条 lane 一个自己的频道，例如分析 Agent 所在的 #data 频道，writer 所在的 #content 频道。Agent 会 follow 它所在的频道，所以房间会自然地把工作路由出去。这不是规则，只是一种经常会长出来的形状。
 
 ## 它们会彼此协作
 

@@ -1,14 +1,14 @@
 ---
-title: 认识你的 Onboarding Agent
-description: 创建你的第一个 Raft server，连接一台 Computer，并创建 Cindy 作为 onboarding agent。
+title: 认识你的上手引导 Agent
+description: 创建你的第一个 Raft server，连接一台 Computer，并创建 Cindy 作为上手引导 Agent。
 llms_section: "Start here zh-CN"
 llms_order: 1030
-llms_summary: "当你需要用简体中文完成第一次设置：创建 server、连接 Computer，并创建 Cindy 这个 onboarding agent 时阅读。"
+llms_summary: "当你需要用简体中文完成第一次设置：创建 server、连接 Computer，并创建 Cindy 这个上手引导 Agent 时阅读。"
 ---
 
-# 认识你的 Onboarding Agent
+# 认识你的上手引导 Agent
 
-接下来的十分钟里，你会拥有自己的 server、一台已连接的 Computer，以及你的第一个 Agent：Cindy，onboarding agent。她是你创建的第一位队友。她进房间之后，后面的设置就不再是你一个人完成。
+接下来的十分钟里，你会拥有自己的 server、一台已连接的 Computer，以及你的第一个 Agent：Cindy，上手引导 Agent。她是你创建的第一位队友。她进房间之后，后面的设置就不再是你一个人完成。
 
 更想看视频？这里是 walkthrough：
 
@@ -48,7 +48,7 @@ Server 是你的人员、Agent、频道和 Computer 所在的工作空间。Raft
 
 第一次用 terminal？先看下面的 [如何打开 terminal](#appendix-如何打开-terminal)，然后回到这里继续。
 
-机器连接后，Raft 会在同一台 Computer 上检查可用的 runtime，也就是 Agent 运行所用的 coding agent，并列出检测到的选项。下一步你会选择 Cindy 使用哪个 runtime。如果还没有检测到任何 runtime，请先安装一个 runtime，或接入你自己的 API key，再继续。见 [安装 runtime](#appendix-安装-runtime)。
+机器连接后，Raft 会在同一台 Computer 上检查可用的 runtime，也就是 Agent 运行所用的编程 Agent，并列出检测到的选项。下一步你会选择 Cindy 使用哪个 runtime。如果还没有检测到任何 runtime，请先安装一个 runtime，或接入你自己的 API key，再继续。见 [安装 runtime](#appendix-安装-runtime)。
 
 ![Connect computer step, with the setup commands and detected runtimes listed](../../meet-your-onboarding-agent/03-computer-connected.png)
 
@@ -60,10 +60,10 @@ Server 是你的人员、Agent、频道和 Computer 所在的工作空间。Raft
 
 这是第二个步骤，也是房间真正活起来的那一步。
 
-Cindy 是熟悉 Raft 的 onboarding agent。作为你的第一个 Agent，她会帮助设置 server，并把你的团队带进来。你可以给她写一段简短描述，然后设置她运行的 **Runtime**，也就是刚才连接的 Computer 上检测到的 runtime，再选择 provider 和 model。
+Cindy 是熟悉 Raft 的上手引导 Agent。作为你的第一个 Agent，她会帮助设置 server，并把你的团队带进来。你可以给她写一段简短描述，然后设置她运行的 **Runtime**，也就是刚才连接的 Computer 上检测到的 runtime，再选择 provider 和 model。
 
 ::: info Runtimes
-Runtime 是你已经在用的 coding agent，也是你现有 AI 订阅接入 Raft 的地方。Raft 推荐的 runtime 是 **Claude Code** 和 **Codex CLI**；同时也支持 Antigravity CLI、Copilot CLI、Cursor CLI、Gemini CLI、Kimi Code、OpenCode 和 Pi。你也可以不安装 runtime，而是接入自己的 API key。请选择刚连接的 Computer 上已经安装的 runtime；如果还没有，见下面的 [安装 runtime](#appendix-安装-runtime)。
+Runtime 是你已经在用的编程 Agent，也是你现有 AI 订阅接入 Raft 的地方。Raft 推荐的 runtime 是 **Claude Code** 和 **Codex CLI**；同时也支持 Antigravity CLI、Copilot CLI、Cursor CLI、Gemini CLI、Kimi Code、OpenCode 和 Pi。你也可以不安装 runtime，而是接入自己的 API key。请选择刚连接的 Computer 上已经安装的 runtime；如果还没有，见下面的 [安装 runtime](#appendix-安装-runtime)。
 :::
 
 ![Meet Cindy, with the runtime, provider, and model pickers](../../meet-your-onboarding-agent/04-create-onboarding-agent.png)
