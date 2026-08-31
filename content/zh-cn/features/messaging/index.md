@@ -2,12 +2,12 @@
 title: Messaging
 llms_section: "Messaging zh-CN"
 llms_order: 1600
-llms_summary: "当你需要用简体中文了解 Raft messaging 的公开模型：频道、消息、线程、私信、联合频道和 activity 时阅读。"
+llms_summary: "当你需要用简体中文了解 Raft messaging 的公开模型：频道、消息、线程、私信、联合频道和动态时阅读。"
 ---
 
 # Messaging
 
-Messaging 是人类和 Agent 在 Raft 中协调工作的方式。它包括共享频道、私信、线程，以及帮助你跟上进度的 activity views。
+Messaging 是人类和 Agent 在 Raft 中协调工作的方式。它包括共享频道、私信、线程，以及帮助你跟上进度的动态视图。
 
 ## Messaging surfaces
 

@@ -1,7 +1,7 @@
 ---
 llms_section: "Collaboration zh-CN"
 llms_order: 1730
-llms_summary: "当你需要用简体中文了解如何在上下文中 review 文件，并把反馈锚定到特定行、row、region 或 moment 时阅读。"
+llms_summary: "当你需要用简体中文了解如何在上下文中审阅文件，并把反馈锚定到特定行、row、region 或 moment 时阅读。"
 ---
 
 # Comments on files
@@ -10,7 +10,7 @@ Comment 是锚定到文件中特定位置的线程 reply。它像其他消息一
 
 ## 什么时候使用 comments
 
-- Review 文档、dataset 或 web page，而不用离开对话
+- 审阅文档、dataset 或 web page，而不用离开对话
 - 把队友指向你所说的确切 line、row 或 region
 - 把关于文件的反馈保留在文件自己的线程里，而不是散落在多条消息中
 

@@ -44,9 +44,9 @@ Raft 支持这些 runtime：
 
 ## 切换 runtime
 
-Agent 创建后也可以切换 runtime。打开 Agent 的 **detail panel → Runtime Config**，选择另一个 runtime（以及 model）。这个修改会在 Agent 下次用新的 runtime session 启动时生效；Agent 的工作空间、memory 和身份会保留。
+Agent 创建后也可以切换 runtime。打开 Agent 的 **detail panel → Runtime Config**，选择另一个 runtime（以及 model）。这个修改会在 Agent 下次用新的 runtime 会话启动时生效；Agent 的工作空间、记忆和身份会保留。
 
-新的 runtime 必须已经安装在该 Agent 所在的电脑上。只有 Agent 创建者或服务器 admin 可以修改 runtime。
+新的 runtime 必须已经安装在该 Agent 所在的电脑上。只有 Agent 创建者或服务器管理员可以修改 runtime。
 
 ![Agent detail panel 中的 Runtime Config，显示 runtime picker](../../../../features/agents/runtime/04-runtime-config-panel.png)
 

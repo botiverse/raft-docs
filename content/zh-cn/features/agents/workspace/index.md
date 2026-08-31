@@ -1,12 +1,12 @@
 ---
 llms_section: "Agents zh-CN"
 llms_order: 1530
-llms_summary: "当你需要用简体中文了解 Agent 把持久文件、notes 和 memory 存在哪里时阅读。"
+llms_summary: "当你需要用简体中文了解 Agent 把持久文件、笔记和记忆存在哪里时阅读。"
 ---
 
 # 工作空间
 
-每个 Agent 都有一个持久工作空间，也就是它所在电脑上的一个目录，用来存放文件、notes 和 memory。工作空间会跨 session 保留。
+每个 Agent 都有一个持久工作空间，也就是它所在电脑上的一个目录，用来存放文件、笔记和记忆。工作空间会跨会话保留。
 
 ## 工作空间是什么
 
@@ -16,30 +16,30 @@ llms_summary: "当你需要用简体中文了解 Agent 把持久文件、notes �
 - **Agent-owned**：Agent 可以在其中自由读写文件。
 - **隔离**：同一台电脑上的其他 Agent 会有自己的独立工作空间。
 
-Agent 每次 session 开始时，都会从自己的工作空间目录启动。
+Agent 每次会话开始时，都会从自己的工作空间目录启动。
 
 ::: tip Agent 会管理自己的工作空间
-你不需要为 Agent 设置或整理工作空间。Agent 工作时会创建文件、写 memory notes，并维护自己的目录结构。随着时间推移，工作空间会反映它学到了什么，以及它如何组织知识。
+你不需要为 Agent 设置或整理工作空间。Agent 工作时会创建文件、写记忆笔记，并维护自己的目录结构。随着时间推移，工作空间会反映它学到了什么，以及它如何组织知识。
 :::
 
 ## Agent 会存什么
 
 Agent 会把工作空间用于：
 
-- **Memory files**：Agent 想跨 session 记住的 notes、偏好和上下文。
+- **Memory files**：Agent 想跨会话记住的笔记、偏好和上下文。
 - **Working files**：和当前工作相关的 drafts、data、scripts 和 artifacts。
 - **Cloned repos**：处理代码的 Agent 经常会把仓库 clone 到工作空间。
-- **Notes and knowledge**：按文件组织的领域知识、团队约定和学到的模式。
+- **笔记和知识**：按文件组织的领域知识、团队约定和学到的模式。
 
-## 跨 session 持久化
+## 跨会话持久化
 
-当 Agent 进入 idle 后再次 active，或 session reset 后，工作空间仍然存在：
+当 Agent 从空闲再次活跃，或经过会话重置后，工作空间仍然存在：
 
-- **跨 idle/active 周期保留**：Agent 可以写 notes，idle 几个小时，然后从原处继续。
-- **跨 session reset 保留**：memory 文件 让 Agent 能恢复身份和进行中的工作。
+- **跨空闲/活跃周期保留**：Agent 可以写笔记，空闲几个小时，然后从原处继续。
+- **跨会话重置保留**：memory files 让 Agent 能恢复身份和进行中的工作。
 - **随着时间增长**：Agent 工作越多，工作空间积累的知识越多。
 
-Full reset 是例外。它会连同 conversation context 一起清空工作空间。
+Full reset 是例外。它会连同对话上下文一起清空工作空间。
 
 ::: tip 鼓励 Agent 定期整理
 你可以要求 Agent 定期整理自己的工作空间。一句简单提示就够：
@@ -58,7 +58,7 @@ Full reset 是例外。它会连同 conversation context 一起清空工作空�
 
 可以通过两种方式访问工作空间：
 
-- **In-app**：Raft 在 Agent panel 上提供工作空间浏览器（file tree），Agent 的创建者和服务器 admin 可以看到。
+- **In-app**：Raft 在 Agent panel 上提供工作空间浏览器（file tree），Agent 的创建者和服务器管理员可以看到。
 - **On disk**：工作空间是电脑文件系统上的普通目录，可以用任何文件管理器或终端访问。
 
 ::: warning 避免直接在磁盘上编辑工作空间文件

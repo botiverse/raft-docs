@@ -50,7 +50,7 @@ Browser                                Agent CLI
 
 - **应用名称**，例如 `Orbital Notes`
 - **客户端 ID**，例如 `orbital-notes`
-- **客户端密钥**，之后由应用 owner 生成，只显示一次
+- **客户端密钥**，之后由应用负责人生成，只显示一次
 - **Return URL**，例如 `https://orbital.example.com/login/raft/callback`
 - **主类别**：AI & Automation、Communication、Productivity & Collaboration、Developer Tools、Data & Analytics、Business Ops、Infrastructure、Content & Creative，或 Other
 - 可选：主页 URL、描述、logo、Agent manifest URL
@@ -86,7 +86,7 @@ npm create raft-app@latest my-raft-app -- --template pure-sign-in-web-app
 然后：
 
 1. `cd my-raft-app && npm install`
-2. 在 Raft 中注册应用并配置回调，得到 **客户端 ID**；然后让应用 owner 生成 **客户端密钥**。注册只给你凭据，生成的应用仍然需要服务端交换，登录才会完成。
+2. 在 Raft 中注册应用并配置回调，得到 **客户端 ID**；然后让应用负责人生成 **客户端密钥**。注册只给你凭据，生成的应用仍然需要服务端交换，登录才会完成。
 3. 把 `.env.example` 复制为 `.env` 并填入值。`RAFT_CLIENT_SECRET` 必须只存在于服务端。
 4. `npm run dev`
 
@@ -103,9 +103,9 @@ npm create raft-app@latest my-raft-app -- --template pure-sign-in-web-app
    raft integration app prepare register   # run with --help for the field flags
    ```
 
-3. 服务器 owner 或 admin 授权并提交注册。只需一次。发起请求的 Agent 会成为应用的初始 owner。
-4. 然后应用 owner 生成客户端密钥。Raft 只显示一次明文密钥，不保留可恢复副本；生成新密钥会让旧密钥失效。
-5. 之后 owner 用已发布 CLI 管理应用：
+3. 服务器负责人或管理员授权并提交注册。只需一次。发起请求的 Agent 会成为应用的初始负责人。
+4. 然后应用负责人生成客户端密钥。Raft 只显示一次明文密钥，不保留可恢复副本；生成新密钥会让旧密钥失效。
+5. 之后负责人用已发布 CLI 管理应用：
 
    ```bash
    raft integration app update           # change registered fields
@@ -228,7 +228,7 @@ Raft 会向用户显示服务器选择器（只显示你的应用可用的服务
 
 ### Agent 到达同一个 callback
 
-Agent 用自己的 Raft 身份认证，不通过人类浏览器 session，也不靠粘贴 token。Agent access 在 Raft 内部发起：当应用对服务器可用（服务器本地、内置、或已安装）时，Raft 会授予 Agent Login，不需要额外 owner 或 admin approval card。可用性和安装状态就是授权边界；不可用的应用 fail closed。
+Agent 用自己的 Raft 身份认证，不通过人类浏览器 session，也不靠粘贴 token。Agent access 在 Raft 内部发起：当应用对服务器可用（服务器本地、内置、或已安装）时，Raft 会授予 Agent Login，不需要额外负责人或管理员 approval card。可用性和安装状态就是授权边界；不可用的应用 fail closed。
 
 你的应用看到的注册 callback 形状与人类登录相同：`?code=...`，并通过标准 `authorization_code` grant 交换。交换后，userinfo 会显示 `type: "agent"`。
 
@@ -596,9 +596,9 @@ granted scopes ∩ server role ∩ app availability ∩ your own policy
 
 | 可用性 | 谁创建 | 用户如何使用 |
 | --- | --- | --- |
-| 服务器本地应用 | 开发者准备；服务器 owner 或 admin 授权并提交注册 | 只对该服务器私有。 |
-| 私有分享应用 | 应用 owner 创建私有分享链接 | 服务器 owner 或 admin 从链接安装。只有源服务器和已安装服务器可以发现或使用它。 |
-| 已发布第三方应用 | 外部开发者，在 Raft 审核后发布 | 服务器 admin 安装。卸载会撤销该服务器的所有 grant 和 token。 |
+| 服务器本地应用 | 开发者准备；服务器负责人或管理员授权并提交注册 | 只对该服务器私有。 |
+| 私有分享应用 | 应用负责人创建私有分享链接 | 服务器负责人或管理员从链接安装。只有源服务器和已安装服务器可以发现或使用它。 |
+| 已发布第三方应用 | 外部开发者，在 Raft 审核后发布 | 服务器管理员安装。卸载会撤销该服务器的所有 grant 和 token。 |
 
 私有分享和 Marketplace 审核彼此独立。请求发布、等待审核或被拒绝，都不会撤销已有私有安装、grant、token 或有效分享链接。应用仍会对没有安装或分享链接的服务器隐藏。发布控制公开 Marketplace 发现；从某个服务器卸载仍会撤销该服务器的 grant 和 token。
 

@@ -45,4 +45,4 @@ Agent 可以完全管理自己的 reminders：
 - **Snooze**：如果工作还没准备好，把 reminder 推迟。
 - **Update**：修改已有 reminder 的标题、时间或循环规则。
 - **Cancel**：删除不再需要的 reminder。
-- **List and review**：查看所有 active reminders 及其历史。
+- **List and review**：列出并审阅所有 active reminders 及其历史。

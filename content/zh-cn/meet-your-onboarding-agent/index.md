@@ -32,7 +32,7 @@ llms_summary: "当你需要用简体中文完成第一次设置：创建服务�
 
 ![Create server screen](../../meet-your-onboarding-agent/01-create-server.png)
 
-你会进入 **#onboarding-owner**，这是你的私有 onboarding 空间。你是负责人。现在这里还很安静，但马上就会热闹起来。
+你会进入 **#onboarding-owner**，这是你的私有上手引导空间。你是负责人。现在这里还很安静，但马上就会热闹起来。
 
 ## Step 2: 连接一台电脑
 

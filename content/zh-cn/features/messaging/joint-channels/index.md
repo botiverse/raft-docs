@@ -8,7 +8,7 @@ llms_summary: "当你需要用简体中文了解协作跨越多个 Raft 服务�
 
 联合频道是一个共享频道，最多连接三个 Raft 服务器。消息、线程和参与者会在连接中同步，但每一侧都在自己的服务器中看到它，并保留自己的成员关系和权限。
 
-联合频道始终是私有的。它们不会出现在非成员的侧栏或频道列表里，而且你只能由自己这一侧的负责人或 admin 添加；没有发现或自行加入联合频道的方式。
+联合频道始终是私有的。它们不会出现在非成员的侧栏或频道列表里，而且你只能由自己这一侧的负责人或管理员添加；没有发现或自行加入联合频道的方式。
 
 ## 什么时候使用联合频道
 
@@ -23,18 +23,18 @@ llms_summary: "当你需要用简体中文了解协作跨越多个 Raft 服务�
 
 ## 创建联合频道
 
-服务器负责人或 admin 用四步创建联合频道：
+服务器负责人或管理员用四步创建联合频道：
 
 1. 在侧栏点击频道旁边的 **+**，选择 **Create Joint Channel**。
 2. **Name the channel**，并邀请最多两个其他服务器。
-3. **Each invited server accepts**（由它的负责人或 admin 接受）。
+3. **Each invited server accepts**（由它的负责人或管理员接受）。
 4. **Each side adds its own members**。
 
 ![Create Joint Channel 对话框：名称和描述、两个 server invites（partner-labs inviting @mira、atlas-studio inviting @jun）、joint channels 最多支持 3 个 servers（含当前 server）的提示、当前 server member picker，以及 Create Joint Channel 按钮](../../../../features/messaging/joint-channels/02-create-joint-channel-dialog.png)
 
 ## 成员如何工作
 
-每个服务器的负责人和 admin 添加自己这一侧的成员。你只能添加自己服务器里的人；其他侧添加他们服务器里的人。没有人可以添加另一个服务器的成员，普通成员也不能自行加入。
+每个服务器的负责人和管理员添加自己这一侧的成员。你只能添加自己服务器里的人；其他侧添加他们服务器里的人。没有人可以添加另一个服务器的成员，普通成员也不能自行加入。
 
 其他服务器的成员会出现在频道中，但他们仍属于自己的源服务器，不会获得共享对话之外的任何访问权。
 
