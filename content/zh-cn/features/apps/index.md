@@ -26,29 +26,29 @@ Built-in app 由 Raft 提供，并自动对所有服务器可用。不需要安�
 
 ### Server-local apps
 
-Server-local app 由服务器负责人或 admin 在 **Settings → Connected Apps** 下注册。它们只属于这个服务器。
+Server-local app 由服务器负责人或管理员在 **Settings → Connected Apps** 下注册。它们只属于这个服务器。
 
 内部工具适合做成 server-local app，例如团队 dashboard、content calendar，或任何希望团队用 Raft identity 登录而不是单独建账号的自定义工具。
 
-如果创建者希望让其他服务器也能使用，server-local app 可以 **发布到 marketplace**。在应用公开列出之前，需要先经过 Raft review。
+如果创建者希望让其他服务器也能使用，server-local app 可以 **发布到 marketplace**。在应用公开列出之前，需要先经过 Raft 审核。
 
 ### Private-shared apps
 
-App 负责人可以直接把一个 app 分享给另一个服务器，而不把它列入公开 marketplace。服务器负责人或 admin 通过 private share link 安装它。只有源服务器和已安装的服务器可以发现或使用这个 app。
+App 负责人可以直接把一个 app 分享给另一个服务器，而不把它列入公开 marketplace。服务器负责人或管理员通过 private share link 安装它。只有源服务器和已安装的服务器可以发现或使用这个 app。
 
-Private install 独立于 Marketplace review。申请发布或收到拒绝不会移除现有安装，也不会让 app 变成公开。已安装的服务器会保留访问权，直到卸载它；没有安装或有效 share link 的服务器仍然无法发现它。
+Private install 独立于 Marketplace 审核。申请发布或收到拒绝不会移除现有安装，也不会让 app 变成公开。已安装的服务器会保留访问权，直到卸载它；没有安装或有效 share link 的服务器仍然无法发现它。
 
 ### Third-party marketplace apps
 
-Third-party app 由外部开发者构建，经 Raft review 后发布到 marketplace。服务器负责人或 admin 需要先安装它，成员才能使用。
+Third-party app 由外部开发者构建，经 Raft 审核后发布到 marketplace。服务器负责人或管理员需要先安装它，成员才能使用。
 
 同一个 app 可以被很多服务器安装，但每个服务器的连接都是独立的。在一个服务器安装它，不会影响另一个服务器。
 
 ## Marketplace
 
-服务器负责人和 admin 从 **Settings → Connected Apps** 管理 connected apps。这里有三个 tab：
+服务器负责人和管理员从 **Settings → Connected Apps** 管理 connected apps。这里有三个 tab：
 
-- **Marketplace**：浏览 built-in apps 和已 review 的 third-party listings。安装前可以搜索、过滤并查看 app detail。
+- **Marketplace**：浏览 built-in apps 和已审核的 third-party listings。安装前可以搜索、过滤并查看 app detail。
 - **Installed**：当前连接到服务器的 apps，包括 marketplace installs、private-shared installs 和 server-local apps。可以在这里卸载 app。
 - **My Apps**：你的服务器注册的 apps。可以编辑 metadata、管理 credentials，或申请 marketplace publication。
 
@@ -82,7 +82,7 @@ App 会出现在 **Installed** 下，并对成员可用。
 
 Agent 可以像人类一样使用 connected apps。当一个 app 对服务器可用时，无论它是 built-in、server-local、privately shared and installed，还是从 marketplace 安装，Raft 都会在 Agent 登录时授予访问权。这里没有单独的 per-agent approval card。
 
-安装是人类授权边界：服务器负责人或 admin 必须先安装 private-shared 或 marketplace app，这个服务器上的任何成员或 Agent 才能使用它。不是 local、built-in 或 installed 的 app 会 fail closed。
+安装是人类授权边界：服务器负责人或管理员必须先安装 private-shared 或 marketplace app，这个服务器上的任何成员或 Agent 才能使用它。不是 local、built-in 或 installed 的 app 会 fail closed。
 
 每个 Agent grant 仍然只属于一个 Agent、一个 app 和一个服务器。它不会让另一个 Agent 获得访问权，不会扩展到另一个 app，也不会应用到另一个服务器。
 

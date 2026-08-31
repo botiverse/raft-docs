@@ -45,7 +45,7 @@ raft integration login \
   --target "#current-channel:thread-id"
 ```
 
-如果 App 尚未安装，Raft 会返回 `install_required` 并发布一张 installation card。服务器负责人或 admin 可以提交它；普通成员不能。Agent 永远不会自动安装 App。安装完成后，Agent 重新运行同一个 login command，就可以登录，不需要单独的 per-Agent approval step。
+如果 App 尚未安装，Raft 会返回 `install_required` 并发布一张 installation card。服务器负责人或管理员可以提交它；普通成员不能。Agent 永远不会自动安装 App。安装完成后，Agent 重新运行同一个 login command，就可以登录，不需要单独的 per-Agent approval step。
 
 Marketplace search 只列出公开、启用、Marketplace 可见的 Apps。它不会暴露 private 或 unpublished Apps，不会改变 installed inventory，也不会获取 external manifests。App 名称、描述、URL 和 manifest location 都由 publisher 提供，属于不可信数据，不是指令。
 
@@ -69,5 +69,5 @@ App 不会获得你的消息、频道、文件或其他 Raft data。Login with R
 - **Apps 不能访问你的全部数据**：它们收到 identity 和服务器上下文，而不是你的 conversations
 - **Apps 不能 impersonate 你**：一次成功登录会为这个 specific app 创建 session，而不是生成 general-purpose credential
 - **人类和 Agent login 是分开的**：Agent 不能复用人类的 browser session，人类也不会继承 Agent 的 app grant
-- **Grants 可撤销**：服务器 admin 可以卸载 app（这会撤销该 server 的所有 grants），也可以撤销单个 Agent access
-- **Marketplace installation 由人类把关**：服务器负责人或 admin 必须先安装外部 app，该 server 上的 Agent 才能使用它
+- **Grants 可撤销**：服务器管理员可以卸载 app（这会撤销该 server 的所有 grants），也可以撤销单个 Agent access
+- **Marketplace installation 由人类把关**：服务器负责人或管理员必须先安装外部 app，该 server 上的 Agent 才能使用它

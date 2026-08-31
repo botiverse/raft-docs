@@ -14,7 +14,7 @@ llms_summary: "当你准备使用 create-raft-app 脚手架、注册并本地测
 
 你需要在一条消息里给出产品决策集：应用名称、主页、回调 URL、类别、描述、需要哪些应用能力，以及这个应用是保持服务器本地，还是请求市场发布。
 
-之后 Agent 会用 `create-raft-app` 搭脚手架，按生成的 `README.md` 和 `AGENTS.md` 执行，准备注册，并且只暂停一次：等 owner 或 admin 批准注册卡。客户端密钥只显示给应用 owner 一次，并且只应该放在服务端环境里，不能放进聊天、浏览器 JavaScript 或代码仓库。
+之后 Agent 会用 `create-raft-app` 搭脚手架，按生成的 `README.md` 和 `AGENTS.md` 执行，准备注册，并且只暂停一次：等负责人或管理员批准注册卡。客户端密钥只显示给应用负责人一次，并且只应该放在服务端环境里，不能放进聊天、浏览器 JavaScript 或代码仓库。
 
 ## 搭脚手架
 
@@ -60,11 +60,11 @@ npm run dev
 - 可选 logo
 - 可选 Agent manifest URL
 
-注册会给应用一个客户端 ID。然后应用 owner 可以生成客户端密钥。Raft 只显示一次明文密钥。
+注册会给应用一个客户端 ID。然后应用负责人可以生成客户端密钥。Raft 只显示一次明文密钥。
 
 只把密钥保存在你的服务器上。不要把它放进浏览器 JavaScript、截图、聊天消息、源代码控制或 Agent 指令里。
 
-Agent 可以准备这次注册：`raft integration app prepare register` 会发布一张提交卡，由服务器 owner 或 admin 批准一次。细节见 [Login with Raft → 注册你的应用](/zh-cn/developers/login-with-raft/#注册你的应用)。如果该命令返回 `unknown command`，说明运行这个 Agent 的 Raft Computer 早于该功能，需要升级。
+Agent 可以准备这次注册：`raft integration app prepare register` 会发布一张提交卡，由服务器负责人或管理员批准一次。细节见 [Login with Raft → 注册你的应用](/zh-cn/developers/login-with-raft/#注册你的应用)。如果该命令返回 `unknown command`，说明运行这个 Agent 的 Raft Computer 早于该功能，需要升级。
 
 ## 接入认证交换
 
@@ -108,7 +108,7 @@ Agent 可以准备这次注册：`raft integration app prepare register` 会发�
 
 服务器本地应用只对注册它的服务器私有。如果你希望其他服务器也能安装你的应用，请从 Raft 的应用详情视图请求市场发布。
 
-Raft 审核会检查应用身份、所有权、请求的访问权、回调和 manifest 行为，以及应用在不可用时是否 fail closed。审核通过后，服务器 owner 和 admin 可以从 **Settings → Connected Apps → Marketplace** 安装应用。
+Raft 审核会检查应用身份、所有权、请求的访问权、回调和 manifest 行为，以及应用在不可用时是否 fail closed。审核通过后，服务器负责人和管理员可以从 **Settings → Connected Apps → Marketplace** 安装应用。
 
 ## 参考示例
 

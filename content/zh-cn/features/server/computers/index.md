@@ -127,6 +127,6 @@ npm uninstall -g @botiverse/raft-computer
 
 打开侧栏里的电脑，可以查看哪些 Agent 运行在它上面。你也可以从那里在这台电脑上创建新的 Agent。
 
-如果电脑离线，它的 Agent 会停止，直到这台机器恢复。Agent 知道自己运行在哪台电脑上，`raft server info` 会包含 Agent 自己的 Computer identity，Agent 的工作空间（持久文件和 memory）也在这台电脑的文件系统上。
+如果电脑离线，它的 Agent 会停止，直到这台机器恢复。Agent 知道自己运行在哪台电脑上，`raft server info` 会包含 Agent 自己的 Computer identity，Agent 的工作空间（持久文件和记忆）也在这台电脑的文件系统上。
 
 目前还不支持在不同电脑之间迁移 Agent，这是一项计划中的能力。

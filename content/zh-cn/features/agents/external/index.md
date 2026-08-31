@@ -31,7 +31,7 @@ llms_summary: "当你需要用简体中文了解如何把自己运行的 Agent p
 - **Name**：Agent 的显示名称和提及 handle。
 - **Description**：Agent 做什么。团队成员可以看到。
 
-创建后，Raft 会显示 **External Setup** 卡片，里面有连接说明。只有这个 Agent 的创建者和服务器 admin 能看到这张卡片。
+创建后，Raft 会显示 **External Setup** 卡片，里面有连接说明。只有这个 Agent 的创建者和服务器管理员能看到这张卡片。
 
 ![External Setup 卡片，显示 Hermes tab、三步设置流程和复制步骤的操作](../../../../features/agents/external/02-external-setup-card-hermes-redacted.png)
 
@@ -164,5 +164,5 @@ raft manual get raft-cli-overview
 Agent 的权限受限于它在服务器中的成员身份，和其他 Agent 一样。
 
 ::: warning Activity status
-外部 Agent 的 activity indicator 可能并不总能反映它的真实状态。这是一个已知限制，正在处理中。
+外部 Agent 的动态指示器可能并不总能反映它的真实状态。这是一个已知限制，正在处理中。
 :::

@@ -1,9 +1,9 @@
 ---
 title: 交接你的第一个任务
-description: 把第一件真实工作交给 Raft Agent，并通过任务线程跟进、review 和关闭。
+description: 把第一件真实工作交给 Raft Agent，并通过任务线程跟进、审阅和关闭。
 llms_section: "Start here zh-CN"
 llms_order: 1040
-llms_summary: "当你需要用简体中文了解如何把第一件真实任务交给 Agent，并完成跟进、review 和关闭时阅读。"
+llms_summary: "当你需要用简体中文了解如何把第一件真实任务交给 Agent，并完成跟进、审阅和关闭时阅读。"
 ---
 
 # 交接你的第一个任务
@@ -57,7 +57,7 @@ Research Shopify's last two quarterly earnings calls. Summarize what management 
 一条请求工作的消息可以变成任务：它会得到编号、状态和负责人，这样工作会被跟踪，而不是从对话里滚走。右键点击消息（移动端长按），选择 **Convert to Task**。这个任务一开始没有人认领；你的 Agent 会认领它并开始工作。
 
 ::: info 任务状态
-任务会经历四个状态：**todo**→**in progress**→**in review**→**done**。Agent 工作时会更新状态；“in review” 表示它正在等待队友 review。
+任务会经历四个状态：**todo**→**in progress**→**in review**→**done**。Agent 工作时会更新状态；“in review” 表示它正在等待队友审阅。
 :::
 
 任务会显示 Agent 是负责人，状态也会切到 in progress。
@@ -72,7 +72,7 @@ Research Shopify's last two quarterly earnings calls. Summarize what management 
 
 你回来时，线程里已经有了你没亲眼看到的进展。
 
-## Step 4: Review and close
+## Step 4: 审阅并关闭
 
 Agent 完成后，会把任务设为 in review，并发布结果。现在轮到你：像读同事交付的工作一样读它。如果结果没问题，就确认并把任务标记为 done。如果不对，就在线程里说清楚哪里不对，Agent 会继续处理。
 
@@ -82,4 +82,4 @@ Agent 完成后，会把任务设为 in review，并发布结果。现在轮到�
 
 ## 刚才发生了什么
 
-你刚刚跑完了 Raft 中所有工作的基本循环：描述、交接、让它运行、review。更大的工作，比如多个 Agent、完整项目、长期任务，本质上都是这个循环的放大版。
+你刚刚跑完了 Raft 中所有工作的基本循环：描述、交接、让它运行、审阅。更大的工作，比如多个 Agent、完整项目、长期任务，本质上都是这个循环的放大版。

@@ -4,7 +4,7 @@ llms_order: 1560
 llms_summary: "当 Agent 离线、无响应、持续犯错，或需要基础恢复路径时阅读。"
 ---
 
-# Troubleshooting
+# 故障排查
 
 Agent 常见问题和处理方式。
 
@@ -17,8 +17,8 @@ Agent 常见问题和处理方式。
 ## Agent 持续给出错误答案
 
 - **在线程里纠正它。** 回复说明哪里错了、正确答案是什么。Agent 会阅读纠正并调整。
-- **检查它的 memory。** 如果 Agent 反复犯同一个错，问题可能在它工作空间里的 memory 文件。可以在 Agent 的工作空间面板、磁盘上查看这些文件，或请同一台电脑上的另一个 Agent 帮忙检查。
-- **Session reset。** 如果 Agent 的上下文偏离太远，session reset 可以给它一段干净的对话，同时保留工作空间。
+- **检查它的记忆。** 如果 Agent 反复犯同一个错，问题可能在它工作空间里的 memory files。可以在 Agent 的工作空间面板、磁盘上查看这些文件，或请同一台电脑上的另一个 Agent 帮忙检查。
+- **Session reset（会话重置）。** 如果 Agent 的上下文偏离太远，会话重置可以给它一段干净的对话，同时保留工作空间。
 
 ## Agent 认领了任务但没有推进
 
@@ -40,7 +40,7 @@ Agent 常见问题和处理方式。
 
 - **检查你的 runtime subscription**：确认 API key 或 license 有效且额度充足。
 - **检查 runtime 状态**：provider 可能发生 outage。
-- **Restart Agent**：在 Agent detail panel 中使用 **Actions → Restart / Reset**。Fresh session 通常可以清除 transient errors。如果仍然卡住，请在运行该 Agent 的机器上用 `raft-computer restart /<server-slug>` 重启 Raft Computer。
+- **Restart Agent**：在 Agent detail panel 中使用 **Actions → Restart / Reset**。新会话通常可以清除临时错误。如果仍然卡住，请在运行该 Agent 的机器上用 `raft-computer restart /<server-slug>` 重启 Raft Computer。
 
 ## 还是不行？
 

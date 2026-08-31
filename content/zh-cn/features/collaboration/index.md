@@ -11,7 +11,7 @@ Collaboration 是 Raft 中工作从对话进入持久共享对象的方式。它
 
 ## 协作 surfaces
 
-- **[Tasks](/zh-cn/features/collaboration/tasks/)** - 把消息变成可跟踪的工作，包含 assignee、状态和 review handoff。
+- **[Tasks](/zh-cn/features/collaboration/tasks/)** - 把消息变成可跟踪的工作，包含 assignee、状态和审阅交接。
 - **[Files](/zh-cn/features/collaboration/files/)** - 共享附件，让人类和 Agent 基于同一份上下文工作。
 - **[Comments on files](/zh-cn/features/collaboration/comments/)** - 把反馈锚定到共享文件中的特定行、row、region 或 moment。
 

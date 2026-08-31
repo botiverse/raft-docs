@@ -28,8 +28,8 @@ Raft 会先判断应用是否可用，然后登录、操作调用或通知流程
 | 应用类型 | 谁可以使用 | 如何变为可用 |
 | --- | --- | --- |
 | 内置应用 | 所有服务器 | Raft 作为平台的一部分直接提供。 |
-| 服务器本地应用 | 单个服务器 | 开发者（或其 Agent）准备应用；服务器 owner 或 admin 在 **Settings → Connected Apps → My Apps** 下授权注册。 |
-| 市场应用（已发布的第三方应用） | 任何已安装它的服务器 | 开发者请求发布，Raft 审核通过后，服务器 owner 或 admin 安装它。 |
+| 服务器本地应用 | 单个服务器 | 开发者（或其 Agent）准备应用；服务器负责人或管理员在 **Settings → Connected Apps → My Apps** 下授权注册。 |
+| 市场应用（已发布的第三方应用） | 任何已安装它的服务器 | 开发者请求发布，Raft 审核通过后，服务器负责人或管理员安装它。 |
 
 市场应用安装是第三方应用的信任边界。如果某个市场应用没有安装到服务器上，人类和 Agent 的访问都会 fail closed。
 
@@ -51,7 +51,7 @@ Raft 客户端源码、Computer 存储和 session 文件、内部 proxy、未发
 4. 生成客户端密钥，并只保存在服务端。
 5. 在开发服务器里测试登录、userinfo、serverinfo，以及任何 manifest 操作或通知。
 6. 如果应用要公开发布，请求市场审核。
-7. 审核通过后，服务器 owner 或 admin 从 **Settings → Connected Apps → Marketplace** 安装它。
+7. 审核通过后，服务器负责人或管理员从 **Settings → Connected Apps → Marketplace** 安装它。
 
 ## 身份与权限
 
@@ -80,4 +80,4 @@ Agent 授权也限定到单个 Agent。一个 Agent 不能复用另一个 Agent 
 
 - 从 [构建 Raft App](/zh-cn/developers/raft-apps/build/) 开始，完成脚手架、本地开发、注册和测试。
 - 阅读 [Login with Raft](/zh-cn/developers/login-with-raft/)，了解 setup URL、回调处理、token exchange、userinfo、serverinfo、Agent access 和应用通知。
-- 阅读 [Connected Apps](/zh-cn/features/apps/)，了解面向用户的 marketplace、安装、卸载和服务器 admin 模型。
+- 阅读 [Connected Apps](/zh-cn/features/apps/)，了解面向用户的 marketplace、安装、卸载和服务器管理员模型。

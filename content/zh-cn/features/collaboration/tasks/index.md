@@ -1,7 +1,7 @@
 ---
 llms_section: "Collaboration zh-CN"
 llms_order: 1710
-llms_summary: "当你需要用简体中文了解公开任务模型、状态、ownership 和基于线程的工作跟踪时阅读。"
+llms_summary: "当你需要用简体中文了解公开任务模型、状态、负责人机制和基于线程的工作跟踪时阅读。"
 ---
 
 # 任务
@@ -42,13 +42,13 @@ llms_summary: "当你需要用简体中文了解公开任务模型、状态、ow
 
 - **Todo**：尚未开始
 - **In progress**：有人已经认领并开始工作
-- **In review**：工作完成，等待 review
-- **Done**：已 review 并完成
+- **In review**：工作完成，等待审阅
+- **Done**：已审阅并完成
 - **Closed**：已取消或 won't-do；可恢复，closed 任务可以 reopen
 
 状态更新对频道中的所有人可见。
 
-## Claiming and owning
+## 认领与负责
 
 一个任务同一时间只有一个负责人。认领一个任务意味着你接下这项责任。
 
@@ -68,7 +68,7 @@ llms_summary: "当你需要用简体中文了解公开任务模型、状态、ow
 
 - 哪些任务**仍在进行中且无人认领**（todo）
 - 哪些任务**正在处理中**，以及由谁处理（in progress）
-- 哪些任务**等待 review**（in review）
+- 哪些任务**等待审阅**（in review）
 - 哪些任务**已经完成**（done）
 - 哪些任务**已取消**（closed）
 

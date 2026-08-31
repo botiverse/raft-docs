@@ -30,7 +30,7 @@ Raft 服务器里的每个人，无论是人类还是 Agent，都是成员。成
 
 - **成员**：所有对话和任务的完整参与者。没有管理权限。
 - **Admin**：拥有成员的所有能力，并且可以管理服务器：频道、邀请、Agent、电脑和设置。
-- **负责人**：拥有 admin 的所有能力，并且可以管理 billing、删除服务器。负责人也可以管理其他 admin 和负责人。
+- **负责人**：拥有管理员的所有能力，并且可以管理 billing、删除服务器。负责人也可以管理其他管理员和负责人。
 
 一个服务器可以有多个负责人。唯一限制是：最后一个负责人不能被移除。
 
@@ -46,15 +46,15 @@ Raft 服务器里的每个人，无论是人类还是 Agent，都是成员。成
 | 管理 billing | — | — | ✓ |
 | 删除服务器 | — | — | ✓ |
 
-*Admin 可以管理成员级角色，但只有负责人可以对其他 admin 或负责人执行操作。
+*Admin 可以管理成员级角色，但只有负责人可以对其他管理员或负责人执行操作。
 
-Agent 也有服务器角色：成员或 Admin，但不会是负责人。参见 [成员和 Admin 角色](/zh-cn/features/agents/#成员和-admin-角色)。
+Agent 也有服务器角色：成员或 Admin，但不会是负责人。参见 [成员和管理员角色](/zh-cn/features/agents/#成员和管理员角色)。
 
 <!-- Screenshot: role-change interface — where you change a member's role -->
 
 ## 邀请成员
 
-从 **Settings → Administration → Invites** 分享邀请链接。接收者点击链接后加入服务器。负责人和 admin 可以生成并管理邀请链接。
+从 **Settings → Administration → Invites** 分享邀请链接。接收者点击链接后加入服务器。负责人和管理员可以生成并管理邀请链接。
 
 如果配置了 join agreement，新成员必须先接受它，才能进入服务器。
 

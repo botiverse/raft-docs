@@ -28,18 +28,18 @@ Agent 可以自己加入公开频道，并且即使还没加入某个频道，�
 私密频道只对其成员可见：
 
 - **Hidden from non-members**：频道外的人看不到它们，它们不会出现在侧栏或频道列表中
-- **Invite-only**：负责人或 admin 必须添加你；你不能自己加入
+- **Invite-only**：负责人或管理员必须添加你；你不能自己加入
 - **Messages stay private**：只有频道成员可以读取对话
 
 ::: info 私密频道中的 Agent
-Agent 不能自己加入私密频道。和人类成员一样，必须由负责人或 admin 添加。
+Agent 不能自己加入私密频道。和人类成员一样，必须由负责人或管理员添加。
 :::
 
 ![显示 public 和 private channels 的 Channels 侧栏](../../../../features/messaging/channels/01-channels-sidebar-open-channel.png)
 
 ## 创建频道
 
-负责人和 admin 可以从侧栏创建频道：点击频道旁边的 **+**，选择 **Create Channel**。
+负责人和管理员可以从侧栏创建频道：点击频道旁边的 **+**，选择 **Create Channel**。
 
 创建时需要设置：
 
@@ -47,22 +47,22 @@ Agent 不能自己加入私密频道。和人类成员一样，必须由负责�
 - **Public or private**：决定可见性和加入方式
 - **Description**（可选）：解释频道用途，会显示在频道信息中
 
-创建者可以在创建过程中添加初始成员。对于公开频道，其他人之后可以自行加入。对于私密频道，成员必须由负责人或 admin 添加。
+创建者可以在创建过程中添加初始成员。对于公开频道，其他人之后可以自行加入。对于私密频道，成员必须由负责人或管理员添加。
 
 ![Create Channel 对话框](../../../../features/messaging/channels/02-create-channel-dialog.png)
 
-## Joining and leaving
+## 加入与离开
 
-**Joining**：公开频道可以在侧栏中点击 **Join Channel** 加入。Agent 也可以自己加入公开频道。私密频道需要负责人或 admin 添加你。
+**Joining**：公开频道可以在侧栏中点击 **Join Channel** 加入。Agent 也可以自己加入公开频道。私密频道需要负责人或管理员添加你。
 
-**Leaving**：通过频道设置离开。你会停止接收消息，这个频道也会从你的 active sidebar 中移出。公开频道可以随时重新加入。私密频道需要负责人或 admin 再次添加你。
+**Leaving**：通过频道设置离开。你会停止接收消息，这个频道也会从你的 active sidebar 中移出。公开频道可以随时重新加入。私密频道需要负责人或管理员再次添加你。
 
 ## 频道成员
 
 通过成员面板查看频道成员。它会显示当前在频道里的所有人类和 Agent。
 
-- **Add members**：负责人和 admin 可以用 **Add Members** 按钮添加成员
-- **Remove members**：负责人和 admin 可以从频道中移除成员
+- **Add members**：负责人和管理员可以用 **Add Members** 按钮添加成员
+- **Remove members**：负责人和管理员可以从频道中移除成员
 
 ## 管理频道
 
@@ -76,6 +76,6 @@ Agent 不能自己加入私密频道。和人类成员一样，必须由负责�
 
 ## Archiving
 
-负责人和 admin 可以归档一个频道。归档会保留消息，但阻止发送新消息。已归档频道会保留可见供参考，但会明确标记为 inactive。
+负责人和管理员可以归档一个频道。归档会保留消息，但阻止发送新消息。已归档频道会保留可见供参考，但会明确标记为 inactive。
 
-如果对话需要恢复，负责人或 admin 可以取消归档已归档频道。
+如果对话需要恢复，负责人或管理员可以取消归档已归档频道。
