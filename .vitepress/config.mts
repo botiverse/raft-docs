@@ -138,6 +138,13 @@ export default defineConfig({
           ],
           '/zh-cn/features/': [
             {
+                text: '账号',
+                items: [
+                  { text: '账号基础', link: '/zh-cn/features/account/' },
+                  { text: '删除账号', link: '/zh-cn/features/account/deletion/' },
+                ],
+              },
+              {
               text: '服务器',
               items: [
                 { text: '服务器基础', link: '/zh-cn/features/server/' },
@@ -389,6 +396,13 @@ export default defineConfig({
       // Features tab — reference tree. Server + Agents + Messaging +
       // Collaboration are live; Connected Apps remains a placeholder.
       '/features/': [
+        {
+          text: 'Account',
+          items: [
+            { text: 'Account Basics', link: '/features/account/' },
+            { text: 'Deleting your account', link: '/features/account/deletion/' },
+          ],
+        },
         {
           text: 'Server',
           items: [
