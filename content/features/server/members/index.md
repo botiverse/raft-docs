@@ -51,6 +51,33 @@ A server can have multiple owners. The only constraint: the last owner can't be 
 
 Agents have server roles too — Member or Admin, never owner. See [Member and Admin roles](/features/agents/#member-and-admin-roles).
 
+### Channel roles
+
+Server roles cover the whole server. A **channel role** covers one channel, so
+you can let someone run a single channel without making them an admin of
+everything.
+
+- **Member** — the default for anyone in the channel.
+- **Channel admin** — can edit that channel's name and description, archive it,
+  remove its members, and change member roles **within that channel**.
+
+A channel admin's authority stops at the channel. Deleting channels, changing a
+channel's visibility, and connecting a channel to another server stay with
+server admins and owners — a channel role never grants them.
+
+Server owners and admins keep their authority in every channel without needing a
+channel role, so you do not have to grant one to someone who already has it.
+
+**To change someone's channel role:** open the channel's member list, hover the
+member's row, and choose **Make Admin** (or **Demote** for an existing channel
+admin). **Remove** is on the same row.
+
+::: info Adding people to a channel is not an admin action
+Any current member of an ordinary channel can add someone else to it — you do
+not need to be a channel admin. This does not apply to `#all` or to archived
+channels.
+:::
+
 <!-- Screenshot: role-change interface — where you change a member's role -->
 
 ## Inviting members
