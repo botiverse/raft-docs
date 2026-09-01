@@ -55,13 +55,25 @@ visible rather than guessed at:
 
 | Question | Status |
 |---|---|
-| Where do I send a deletion request? | **Not defined** — no channel or address published |
+| Where do I send a deletion request? | **Candidate:** `contact@raft.build` — proposed, not yet confirmed as the deletion-request channel |
 | Who receives and acts on it? | **Not defined** — no owner assigned |
 | What exactly is deleted? | **Not defined** — scope not agreed |
 | What is retained, and for how long? | **Not defined** — Raft has no written retention policy |
 | Can a deletion be undone, and within what window? | **Not defined** |
 | What happens to servers where I am the only owner? | **Not defined** |
 | How long does a request take to complete? | **Not defined** |
+
+## Contacting us
+
+If the information above does not answer your question, contact
+`contact@raft.build`.
+
+::: warning This is a general contact address, not a confirmed deletion channel
+It is listed so you are not left with nowhere to write. Who handles a deletion
+request, what they remove, and how long it takes are still the open questions in
+the table above — a message to this address is not yet a request under a defined
+process.
+:::
 
 ## Why this page exists in this state
 
