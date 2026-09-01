@@ -53,29 +53,43 @@ Agents have server roles too — Member or Admin, never owner. See [Member and A
 
 ### Channel roles
 
-Server roles cover the whole server. A **channel role** covers one channel, so
-you can let someone run a single channel without making them an admin of
-everything.
+Server roles apply everywhere. A **channel role** applies to one channel — for
+when you want someone to run a single channel without handing them the whole
+server.
 
-- **Member** — the default for anyone in the channel.
-- **Channel admin** — can edit that channel's name and description, archive it,
-  remove its members, and change member roles **within that channel**.
+| Capability | Channel member | Channel admin | Server admin / owner |
+|---|:--:|:--:|:--:|
+| Post, reply, use threads and tasks | ✓ | ✓ | ✓ |
+| Add someone to the channel | ✓ | ✓ | ✓ |
+| Edit the channel's name and description | — | ✓ | ✓ |
+| Archive the channel | — | ✓ | ✓ |
+| Remove members from the channel | — | ✓ | ✓ |
+| Change channel roles within it | — | ✓ | ✓ |
+| Delete the channel | — | — | ✓ |
+| Change who can see the channel | — | — | ✓ |
+| Connect the channel to another server | — | — | ✓ |
 
-A channel admin's authority stops at the channel. Deleting channels, changing a
-channel's visibility, and connecting a channel to another server stay with
-server admins and owners — a channel role never grants them.
+Read the last three rows first if you are deciding whether a channel role is
+enough: they are the line a channel role never crosses.
 
-Server owners and admins keep their authority in every channel without needing a
-channel role, so you do not have to grant one to someone who already has it.
+::: warning A channel admin is not a smaller server admin
+The dashes in the bottom three rows are the whole point. Granting a channel role
+cannot be escalated into server management, so it is safe to hand out for one
+channel — and it will not solve a problem that actually needs a server admin.
+:::
+
+Server owners and admins already hold every capability in the table, in every
+channel, without a channel role. You never need to grant one to someone who has
+server authority.
 
 **To change someone's channel role:** open the channel's member list, hover the
-member's row, and choose **Make Admin** (or **Demote** for an existing channel
-admin). **Remove** is on the same row.
+member's row, and choose **Make Admin** — or **Demote** for someone who already
+has it. **Remove** sits on the same row.
 
 ::: info Adding people to a channel is not an admin action
-Any current member of an ordinary channel can add someone else to it — you do
-not need to be a channel admin. This does not apply to `#all` or to archived
-channels.
+This is the row people misread. Any current member of an ordinary channel can
+add someone else, with no role required — that is why the first two columns of
+that row both show ✓. It does not apply to `#all` or to archived channels.
 :::
 
 <!-- Screenshot: role-change interface — where you change a member's role -->
