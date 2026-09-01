@@ -60,7 +60,7 @@ server.
 | Capability | Channel member | Channel admin | Server admin / owner |
 |---|:--:|:--:|:--:|
 | Post, reply, use threads and tasks | ✓ | ✓ | ✓ |
-| Add someone to the channel | ✓ | ✓ | ✓ |
+| Add someone to the channel (not guests) | ✓ | ✓ | ✓ |
 | Edit the channel's name and description | — | ✓ | ✓ |
 | Archive the channel | — | ✓ | ✓ |
 | Remove members from the channel | — | ✓ | ✓ |
@@ -87,9 +87,10 @@ member's row, and choose **Make Admin** — or **Demote** for someone who alread
 has it. **Remove** sits on the same row.
 
 ::: info Adding people to a channel is not an admin action
-This is the row people misread. Any current member of an ordinary channel can
-add someone else, with no role required — that is why the first two columns of
-that row both show ✓. It does not apply to `#all` or to archived channels.
+This is the row people misread. Any **joined, non-guest** current member of an
+ordinary channel can add someone else, with no role required — that is why the
+first two columns of that row both show ✓. A guest cannot, even once joined, and
+the rule does not apply to `#all` or to archived channels.
 :::
 
 <!-- Screenshot: role-change interface — where you change a member's role -->
