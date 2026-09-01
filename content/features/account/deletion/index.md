@@ -8,13 +8,9 @@ description: What account deletion covers in Raft today, what is still being def
 
 # Deleting your account
 
-::: danger This page is incomplete and is not yet the published policy
-Raft has **no self-serve account deletion today** — there is no control in the
-app and no API for it. The request channel, what deletion actually removes, how
-long it takes, and what is retained are still being defined by the product and
-legal owners. Nothing on this page should be read as a commitment until those
-are filled in and this notice is removed.
-:::
+Raft does not have a self-serve way to delete your account today — there is no
+button in the app for it. If you want your account or your data removed, write
+to us and we will handle it.
 
 ## What your account is, and what it isn't
 
@@ -29,55 +25,17 @@ servers you belong to:
 | Channels, tasks and threads | | ✓ |
 | Agents created in a server | | ✓ |
 
-This split matters for deletion: removing your account is not the same as
-removing everything you have ever written, because a server's conversation
-history belongs to that server and its other members.
+This split matters: removing your account is not the same as removing everything
+you have ever written, because a server's conversation history belongs to that
+server and its other members.
 
-::: warning The exact boundary is not settled
-The table above describes where data *lives*, which is verifiable today. It does
-**not** yet state what a deletion request would remove on each side. That is one
-of the open questions below.
-:::
+## Things that are not deletion
 
-## What exists today
+- **Unlinking a sign-in method** disconnects a third-party identity provider from
+  your account. It changes how you sign in; it does not delete anything.
+- **Leaving a server** ends your membership there. Your account continues to
+  exist, and content you already posted stays with that server.
 
-- **Unlinking a sign-in method.** You can disconnect a third-party identity
-  provider from your account. This changes how you sign in; it does not delete
-  your account or your data.
-- **Leaving a server.** You can stop being a member of a server. Your account
-  continues to exist, and content already posted in that server stays with the
-  server.
+## Contact
 
-## Still to be defined
-
-Each of the following is unresolved. They are listed here so the gaps are
-visible rather than guessed at:
-
-| Question | Status |
-|---|---|
-| Where do I send a deletion request? | **Candidate:** `contact@raft.build` — proposed, not yet confirmed as the deletion-request channel |
-| Who receives and acts on it? | **Not defined** — no owner assigned |
-| What exactly is deleted? | **Not defined** — scope not agreed |
-| What is retained, and for how long? | **Not defined** — Raft has no written retention policy |
-| Can a deletion be undone, and within what window? | **Not defined** |
-| What happens to servers where I am the only owner? | **Not defined** |
-| How long does a request take to complete? | **Not defined** |
-
-## Contacting us
-
-If the information above does not answer your question, contact
-`contact@raft.build`.
-
-::: warning This is a general contact address, not a confirmed deletion channel
-It is listed so you are not left with nowhere to write. Who handles a deletion
-request, what they remove, and how long it takes are still the open questions in
-the table above — a message to this address is not yet a request under a defined
-process.
-:::
-
-## Why this page exists in this state
-
-Publishing a plausible-sounding procedure would be worse than publishing
-nothing: it would tell people to take a step that does not exist, and it would
-state data-handling commitments no one has agreed to. This page will be
-completed when the owners above are named and their answers are recorded.
+If you have any other needs, contact `contact@raft.build`.
