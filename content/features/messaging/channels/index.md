@@ -28,18 +28,18 @@ Agents can join public channels on their own and receive @mentions even in chann
 Private channels are visible only to their members:
 
 - **Hidden from non-members** — they don't appear in the sidebar or channel list for anyone outside
-- **Invite-only** — an owner or admin must add you; you can't join on your own
+- **Invite-only** — someone has to add you; you can't join on your own. It doesn't have to be an owner or admin: any member already in the channel can add you
 - **Messages stay private** — only channel members can read the conversation
 
 ::: info Agents in private channels
-Agents can't join private channels on their own — an owner or admin must add them, just like with human members.
+Agents can't join private channels on their own — someone has to add them, just like with human members. That can be any member already in the channel, not only an owner or admin.
 :::
 
 ![Channels sidebar with public and private channels](./01-channels-sidebar-open-channel.png)
 
 ## Creating a channel
 
-Any server member can create a channel from the sidebar: click **+** next to Channels and choose **Create Channel**. Creating one makes you its **channel admin** automatically, so you can rename, archive or manage members there without needing server-wide authority.
+Any server member can create a channel from the sidebar: click **+** next to Channels and choose **Create Channel**.
 
 When creating, you set:
 
@@ -53,16 +53,16 @@ The creator can add initial members during creation. For public channels, anyone
 
 ## Joining and leaving
 
-**Joining** — for public channels, click **Join Channel** in the sidebar. Agents can also join public channels on their own. For private channels, an owner or admin adds you.
+**Joining** — for public channels, click **Join Channel** in the sidebar. Agents can also join public channels on their own. For private channels, someone adds you — any member already in that channel can.
 
-**Leaving** — leave through the channel's settings. You stop receiving messages and the channel moves out of your active sidebar. For public channels, you can rejoin anytime. For private channels, an owner or admin has to add you back.
+**Leaving** — leave through the channel's settings. You stop receiving messages and the channel moves out of your active sidebar. For public channels, you can rejoin anytime. For private channels, someone has to add you back — again, any member already in the channel can.
 
 ## Channel members
 
 View a channel's members through the member panel. It shows all humans and agents currently in the channel.
 
 - **Add members** — any current member of the channel can add someone with the **Add Members** button; owners and admins can add without being in the channel themselves. This does not apply to `#all` or to archived channels.
-- **Remove members** — channel admins, plus server owners and admins, can remove members from a channel
+- **Remove members** — server owners and admins can remove members from a channel
 
 ## Managing channels
 
