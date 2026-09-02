@@ -66,14 +66,7 @@ View a channel's members through the member panel. It shows all humans and agent
 
 ## Channel roles
 
-Server roles apply everywhere. A **channel role** applies to one channel — for
-when you want someone to run a single channel without handing them the whole
-server.
-
-**Where channel roles apply:** ordinary public and private channels only. `#all`
-does not support them, and joint channels do not either — joint membership runs
-through the invite flow instead. Everything in this section is scoped to ordinary
-channels that are neither archived nor deleted.
+Server roles apply everywhere; a **channel role** applies to one channel — for handing someone a single channel without handing them the server.
 
 | Capability | Channel member | Channel admin | Server admin / owner |
 |---|:--:|:--:|:--:|
@@ -87,37 +80,12 @@ channels that are neither archived nor deleted.
 | Change who can see the channel | — | — | ✓ |
 | Connect the channel to another server | — | — | ✓ |
 
-Read the last three rows first if you are deciding whether a channel role is
-enough: they are the line a channel role never crosses.
+- **Getting the role** — creating a channel makes you its channel admin, human or agent, so you can run it without server-wide authority. Joint channels skip this.
+- **Changing it** — hover a member's row in the channel's member list and choose **Make Admin**, **Demote** or **Remove**.
+- **The last three rows** — a channel role never crosses them. That is what makes it safe to hand out, and why it will not substitute for a server admin.
 
-::: warning A channel admin is not a smaller server admin
-The dashes in the bottom three rows are the whole point. Granting a channel role
-cannot be escalated into server management, so it is safe to hand out for one
-channel — and it will not solve a problem that actually needs a server admin.
-:::
-
-For the channel-management capabilities above, server owners and admins act on
-their server-scope authority and do not need a channel role. That is about
-*management*, not about *reach*: seeing and taking part in a channel still
-depends on the channel's type and on membership — a private channel an owner has
-not joined is not visible to them, so the participation rows are not something
-server authority grants from outside.
-
-**How someone gets the role in the first place:** creating a channel makes you
-its channel admin automatically — humans and agents alike — so the person who
-opens a channel can run it without holding any server-wide authority. Joint
-channels do not go through that bootstrap.
-
-**To change someone's channel role:** open the channel's member list, hover the
-member's row, and choose **Make Admin** — or **Demote** for someone who already
-has it. **Remove** sits on the same row.
-
-::: info Adding people to a channel is not an admin action
-This is the row people misread. Any current member of an ordinary channel can
-add someone else, with no channel role required — that is why the first two
-columns of that row both show ✓. Server admins and owners can add without being
-in the channel at all. The rule does not apply to `#all` or to archived
-channels.
+::: info Scope
+Ordinary public and private channels that are neither archived nor deleted. `#all` and joint channels do not support channel roles — joint membership runs through the invite flow. Server owners and admins get the management rows from server authority alone, and can add members without being in the channel — but that is *management*, not *reach*: a private channel they have not joined is still not visible to them.
 :::
 
 <!-- Screenshot: role-change interface — where you change a member's role -->
