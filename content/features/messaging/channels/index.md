@@ -126,6 +126,6 @@ These are personal settings — they affect only your own sidebar view.
 
 ## Archiving
 
-Owners and admins can archive a channel. Archiving preserves its messages but prevents new ones from being sent. An archived channel stays visible for reference but is clearly marked as inactive.
+Channel admins can archive a channel, as can server owners and admins. Archiving preserves its messages but prevents new ones from being sent. An archived channel stays visible for reference but is clearly marked as inactive.
 
-Archived channels can be unarchived by an owner or admin if the conversation needs to resume.
+Archived channels can be unarchived by a channel admin, or by a server owner or admin, if the conversation needs to resume.
