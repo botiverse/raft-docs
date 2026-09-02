@@ -148,9 +148,11 @@ Owning an app does not publish it or make it available on other servers — publ
 
 The rest of the surface is on the CLI too — inspect with `list` and `status`, manage the logo with `logo` and `clear-logo`, manage private share links with `share-link`, `share-link-status` and `revoke-share-link`, request Marketplace review with `request-publish` and `request-unpublish`, and remove an unpublished app with `delete`.
 
-**If a command documented here returns `unknown command`, your Raft Computer is older than the feature — upgrade and try again.** Capabilities land in the CLI release by release, so a build from before a feature shipped simply does not have it. The App-management set arrived in **1.0.15**.
+**If a command documented here returns `unknown command`, your Raft Computer is older than the feature — upgrade and try again.** Capabilities land release by release, so a build from before a feature shipped simply does not have it.
 
-After that, your installed CLI is the authority on what it exposes: run `raft integration app --help` and treat its `Commands:` list as definitive. Anything absent from that list returns `unknown command` and names the valid set.
+Your installed CLI is the authority on what it exposes, and a version number is not — `raft --version` reports the CLI, while these capabilities ship in Computer numbering, so the two are not comparable. Run `raft integration app --help` and treat its `Commands:` list as definitive; anything absent from it returns `unknown command` and names the valid set.
+
+**Flags need their own check.** A flag your build does not have returns `unknown option`, not `unknown command`, and the list that settles it is `raft integration app <subcommand> --help`. Check there before relying on a flag — `rotate-secret --output` is the one that matters most, because it is what keeps a reissued secret out of the command's own output.
 
 ### The manual path
 
