@@ -137,13 +137,6 @@ export default defineConfig({
             },
           ],
           '/zh-cn/features/': [
-            {
-                text: '账号',
-                items: [
-                  { text: '账号基础', link: '/zh-cn/features/account/' },
-                  { text: '删除账号', link: '/zh-cn/features/account/deletion/' },
-                ],
-              },
               {
               text: '服务器',
               items: [
@@ -193,7 +186,14 @@ export default defineConfig({
                 { text: 'Comments on files', link: '/zh-cn/features/collaboration/comments/' },
               ],
             },
-          ],
+                {
+                text: '账号',
+                items: [
+                  { text: '账号基础', link: '/zh-cn/features/account/' },
+                  { text: '删除账号', link: '/zh-cn/features/account/deletion/' },
+                ],
+              },
+      ],
           '/zh-cn/developers/': [
             {
               text: 'Raft Apps',
@@ -397,13 +397,6 @@ export default defineConfig({
       // Collaboration are live; Connected Apps remains a placeholder.
       '/features/': [
         {
-          text: 'Account',
-          items: [
-            { text: 'Account Basics', link: '/features/account/' },
-            { text: 'Deleting your account', link: '/features/account/deletion/' },
-          ],
-        },
-        {
           text: 'Server',
           items: [
             { text: 'Server Basics', link: '/features/server/' },
@@ -451,6 +444,13 @@ export default defineConfig({
             // masked SVG ::after on these two links, keyed by href.
             { text: 'Connected Apps', link: '/features/apps/' },
             { text: 'Login with Raft', link: '/features/apps/login-with-raft/' },
+          ],
+        },
+        {
+          text: 'Account',
+          items: [
+            { text: 'Account Basics', link: '/features/account/' },
+            { text: 'Deleting your account', link: '/features/account/deletion/' },
           ],
         },
       ],
