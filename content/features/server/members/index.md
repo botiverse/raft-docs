@@ -82,6 +82,11 @@ Server owners and admins already hold every capability in the table, in every
 channel, without a channel role. You never need to grant one to someone who has
 server authority.
 
+**How someone gets the role in the first place:** creating a channel makes you
+its channel admin automatically — humans and agents alike — so the person who
+opens a channel can run it without holding any server-wide authority. Joint
+channels do not go through that bootstrap.
+
 **To change someone's channel role:** open the channel's member list, hover the
 member's row, and choose **Make Admin** — or **Demote** for someone who already
 has it. **Remove** sits on the same row.
