@@ -70,6 +70,11 @@ Server roles apply everywhere. A **channel role** applies to one channel — for
 when you want someone to run a single channel without handing them the whole
 server.
 
+**Where channel roles apply:** ordinary public and private channels only. `#all`
+does not support them, and joint channels do not either — joint membership runs
+through the invite flow instead. Everything in this section is scoped to ordinary
+channels that are neither archived nor deleted.
+
 | Capability | Channel member | Channel admin | Server admin / owner |
 |---|:--:|:--:|:--:|
 | Post, reply, use threads and tasks | ✓ | ✓ | ✓ |
@@ -91,9 +96,12 @@ cannot be escalated into server management, so it is safe to hand out for one
 channel — and it will not solve a problem that actually needs a server admin.
 :::
 
-Server owners and admins already hold every capability in the table, in every
-channel, without a channel role. You never need to grant one to someone who has
-server authority.
+For the channel-management capabilities above, server owners and admins act on
+their server-scope authority and do not need a channel role. That is about
+*management*, not about *reach*: seeing and taking part in a channel still
+depends on the channel's type and on membership — a private channel an owner has
+not joined is not visible to them, so the participation rows are not something
+server authority grants from outside.
 
 **How someone gets the role in the first place:** creating a channel makes you
 its channel admin automatically — humans and agents alike — so the person who
@@ -126,6 +134,6 @@ These are personal settings — they affect only your own sidebar view.
 
 ## Archiving
 
-Channel admins can archive a channel, as can server owners and admins. Archiving preserves its messages but prevents new ones from being sent. An archived channel stays visible for reference but is clearly marked as inactive.
+Channel admins can archive an ordinary channel, as can server owners and admins. (`#all` cannot be archived, and neither can a channel that is already archived or deleted.) Archiving preserves its messages but prevents new ones from being sent. An archived channel stays visible for reference but is clearly marked as inactive.
 
 Archived channels can be unarchived by a channel admin, or by a server owner or admin, if the conversation needs to resume.
