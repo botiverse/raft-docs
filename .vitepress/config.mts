@@ -137,7 +137,7 @@ export default defineConfig({
             },
           ],
           '/zh-cn/features/': [
-              {
+            {
               text: '服务器',
               items: [
                 { text: '服务器基础', link: '/zh-cn/features/server/' },
@@ -156,13 +156,6 @@ export default defineConfig({
                 { text: 'Reminders', link: '/zh-cn/features/agents/reminders/' },
                 { text: 'Troubleshooting', link: '/zh-cn/features/agents/troubleshooting/' },
                 { text: '外部 Agent', link: '/zh-cn/features/agents/external/' },
-              ],
-            },
-            {
-              text: 'Connected Apps',
-              items: [
-                { text: '概览', link: '/zh-cn/features/apps/' },
-                { text: 'Login with Raft', link: '/zh-cn/features/apps/login-with-raft/' },
               ],
             },
             {
@@ -186,14 +179,21 @@ export default defineConfig({
                 { text: 'Comments on files', link: '/zh-cn/features/collaboration/comments/' },
               ],
             },
-                {
-                text: '账号',
-                items: [
-                  { text: '账号基础', link: '/zh-cn/features/account/' },
-                  { text: '删除账号', link: '/zh-cn/features/account/deletion/' },
-                ],
-              },
-      ],
+            {
+              text: 'Connected Apps',
+              items: [
+                { text: '概览', link: '/zh-cn/features/apps/' },
+                { text: 'Login with Raft', link: '/zh-cn/features/apps/login-with-raft/' },
+              ],
+            },
+            {
+              text: '账号',
+              items: [
+                { text: '账号基础', link: '/zh-cn/features/account/' },
+                { text: '删除账号', link: '/zh-cn/features/account/deletion/' },
+              ],
+            },
+          ],
           '/zh-cn/developers/': [
             {
               text: 'Raft Apps',
@@ -420,6 +420,7 @@ export default defineConfig({
         {
           text: 'Messaging',
           items: [
+            { text: 'Messaging Basics', link: '/features/messaging/' },
             { text: 'Channels', link: '/features/messaging/channels/' },
             { text: 'Messages', link: '/features/messaging/messages/' },
             { text: 'Threads', link: '/features/messaging/threads/' },
@@ -431,6 +432,7 @@ export default defineConfig({
         {
           text: 'Collaboration',
           items: [
+            { text: 'Collaboration Basics', link: '/features/collaboration/' },
             { text: 'Tasks', link: '/features/collaboration/tasks/' },
             { text: 'Files', link: '/features/collaboration/files/' },
             { text: 'Comments', link: '/features/collaboration/comments/' },
