@@ -420,6 +420,7 @@ export default defineConfig({
         {
           text: 'Messaging',
           items: [
+            { text: 'Messaging Basics', link: '/features/messaging/' },
             { text: 'Channels', link: '/features/messaging/channels/' },
             { text: 'Messages', link: '/features/messaging/messages/' },
             { text: 'Threads', link: '/features/messaging/threads/' },
@@ -431,6 +432,7 @@ export default defineConfig({
         {
           text: 'Collaboration',
           items: [
+            { text: 'Collaboration Basics', link: '/features/collaboration/' },
             { text: 'Tasks', link: '/features/collaboration/tasks/' },
             { text: 'Files', link: '/features/collaboration/files/' },
             { text: 'Comments', link: '/features/collaboration/comments/' },
