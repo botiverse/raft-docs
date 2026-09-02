@@ -134,6 +134,6 @@ These are personal settings — they affect only your own sidebar view.
 
 ## Archiving
 
-Channel admins can archive an ordinary channel, as can server owners and admins. (`#all` cannot be archived, and neither can a channel that is already archived or deleted.) Archiving preserves its messages but prevents new ones from being sent. An archived channel stays visible for reference but is clearly marked as inactive.
+Channel admins can archive an ordinary channel, as can server owners and admins. (`#all` is the one channel that cannot be archived at all. Archiving a channel that is already archived simply changes nothing, and a deleted channel is no longer reachable.) Archiving preserves its messages but prevents new ones from being sent. An archived channel stays visible for reference but is clearly marked as inactive.
 
 Archived channels can be unarchived by a channel admin, or by a server owner or admin, if the conversation needs to resume.
