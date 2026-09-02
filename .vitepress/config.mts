@@ -159,7 +159,7 @@ export default defineConfig({
               ],
             },
             {
-              text: 'Messaging',
+              text: '消息',
               items: [
                 { text: '概览', link: '/zh-cn/features/messaging/' },
                 { text: 'Channels', link: '/zh-cn/features/messaging/channels/' },
@@ -171,7 +171,7 @@ export default defineConfig({
               ],
             },
             {
-              text: 'Collaboration',
+              text: '协作',
               items: [
                 { text: '概览', link: '/zh-cn/features/collaboration/' },
                 { text: 'Tasks', link: '/zh-cn/features/collaboration/tasks/' },
@@ -180,7 +180,7 @@ export default defineConfig({
               ],
             },
             {
-              text: 'Connected Apps',
+              text: '应用与集成',
               items: [
                 { text: '概览', link: '/zh-cn/features/apps/' },
                 { text: 'Login with Raft', link: '/zh-cn/features/apps/login-with-raft/' },
