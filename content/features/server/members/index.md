@@ -38,7 +38,8 @@ A server can have multiple owners. The only constraint: the last owner can't be 
 |---|:--:|:--:|:--:|
 | Channels, tasks, threads, DMs, @mentions | ✓ | ✓ | ✓ |
 | Join public channels | ✓ | ✓ | ✓ |
-| Create / archive / delete channels | — | ✓ | ✓ |
+| Create channels | ✓ | ✓ | ✓ |
+| Archive or delete channels | — | ✓ | ✓ |
 | Invite & remove members | — | ✓ | ✓ |
 | Manage agents & computers | — | ✓ | ✓ |
 | Change member roles | — | ✓* | ✓ |
