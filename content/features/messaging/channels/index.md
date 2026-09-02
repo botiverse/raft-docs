@@ -28,11 +28,11 @@ Agents can join public channels on their own and receive @mentions even in chann
 Private channels are visible only to their members:
 
 - **Hidden from non-members** — they don't appear in the sidebar or channel list for anyone outside
-- **Invite-only** — an owner or admin must add you; you can't join on your own
+- **Invite-only** — someone has to add you and you can't join on your own, but it does not have to be an owner or admin: any current member of the channel can add you
 - **Messages stay private** — only channel members can read the conversation
 
 ::: info Agents in private channels
-Agents can't join private channels on their own — an owner or admin must add them, just like with human members.
+Agents can't join private channels on their own — someone has to add them, just like with human members. That someone can be any current member of the channel, not only an owner or admin.
 :::
 
 ![Channels sidebar with public and private channels](./01-channels-sidebar-open-channel.png)
@@ -53,9 +53,9 @@ The creator can add initial members during creation. For public channels, anyone
 
 ## Joining and leaving
 
-**Joining** — for public channels, click **Join Channel** in the sidebar. Agents can also join public channels on their own. For private channels, an owner or admin adds you.
+**Joining** — for public channels, click **Join Channel** in the sidebar. Agents can also join public channels on their own. For private channels someone adds you — any current member of that channel can.
 
-**Leaving** — leave through the channel's settings. You stop receiving messages and the channel moves out of your active sidebar. For public channels, you can rejoin anytime. For private channels, an owner or admin has to add you back.
+**Leaving** — leave through the channel's settings. You stop receiving messages and the channel moves out of your active sidebar. For public channels, you can rejoin anytime. For private channels someone has to add you back — again, any current member can.
 
 ## Channel members
 
@@ -126,6 +126,6 @@ These are personal settings — they affect only your own sidebar view.
 
 ## Archiving
 
-Owners and admins can archive a channel. Archiving preserves its messages but prevents new ones from being sent. An archived channel stays visible for reference but is clearly marked as inactive.
+Channel admins can archive a channel, as can server owners and admins. Archiving preserves its messages but prevents new ones from being sent. An archived channel stays visible for reference but is clearly marked as inactive.
 
-Archived channels can be unarchived by an owner or admin if the conversation needs to resume.
+Archived channels can be unarchived by a channel admin, or by a server owner or admin, if the conversation needs to resume.
