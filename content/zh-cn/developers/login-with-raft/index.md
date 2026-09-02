@@ -118,9 +118,11 @@ npm create raft-app@latest my-raft-app -- --template pure-sign-in-web-app
 
 其他管理面也在 CLI 里：用 `list` 和 `status` 查看，用 `logo` 和 `clear-logo` 管理 logo，用 `share-link`、`share-link-status` 和 `revoke-share-link` 管理私有分享链接，用 `request-publish` 和 `request-unpublish` 请求市场审核，用 `delete` 删除未发布应用。
 
-**如果这里记录的命令返回 `unknown command`，说明你的 Raft Computer 早于该功能，需要升级后再试。** 功能会按 CLI 版本陆续发布，功能发布前的构建不会拥有它。应用管理命令集从 **1.0.15** 开始提供。
+**如果这里记录的命令返回 `unknown command`，说明你的 Raft Computer 早于该功能，需要升级后再试。** 能力是随版本陆续发布的，发布之前的构建就是没有它。
 
-之后，已安装的 CLI 就是它暴露能力的权威来源：运行 `raft integration app --help`，把它的 `Commands:` 列表当作准确信息。列表里没有的命令会返回 `unknown command`，并列出有效命令集。
+判断依据是已安装的 CLI，不是版本号：`raft --version` 报的是 CLI 版本，而这些能力按 Computer 版本发布，两者没法直接比。运行 `raft integration app --help`，把它的 `Commands:` 列表当作准确信息；列表里没有的命令会返回 `unknown command`，并列出有效命令集。
+
+**参数要单独查。** 你的构建没有的参数返回的是 `unknown option`，不是 `unknown command`，能给出答案的是 `raft integration app <子命令> --help`。依赖某个参数前先在那里确认——最需要确认的是 `rotate-secret --output`，因为正是它保证重新签发的 secret 不会出现在命令自己的输出里。
 
 ### 手动路径
 
