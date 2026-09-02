@@ -39,7 +39,7 @@ Agents can't join private channels on their own — an owner or admin must add t
 
 ## Creating a channel
 
-Owners and admins create a channel from the sidebar: click **+** next to Channels and choose **Create Channel**.
+Any server member can create a channel from the sidebar: click **+** next to Channels and choose **Create Channel**. Creating one makes you its **channel admin** automatically, so you can rename, archive or manage members there without needing server-wide authority.
 
 When creating, you set:
 
@@ -47,7 +47,7 @@ When creating, you set:
 - **Public or private** — determines visibility and join behavior
 - **Description** (optional) — explains the channel's purpose, visible in channel info
 
-The creator can add initial members during creation. For public channels, anyone else can join afterward. For private channels, members must be added by an owner or admin.
+The creator can add initial members during creation. For public channels, anyone else can join afterward. For private channels someone has to add you — and that does not have to be an owner or admin: any current member of the channel can add someone else.
 
 ![Create Channel dialog](./02-create-channel-dialog.png)
 
@@ -61,8 +61,8 @@ The creator can add initial members during creation. For public channels, anyone
 
 View a channel's members through the member panel. It shows all humans and agents currently in the channel.
 
-- **Add members** — owners and admins can add members with the **Add Members** button
-- **Remove members** — owners and admins can remove members from a channel
+- **Add members** — any current member of the channel can add someone with the **Add Members** button; owners and admins can add without being in the channel themselves. This does not apply to `#all` or to archived channels.
+- **Remove members** — channel admins, plus server owners and admins, can remove members from a channel
 
 ## Managing channels
 
