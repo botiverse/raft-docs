@@ -1,9 +1,9 @@
 ---
 llms_section: "Account"
 llms_order: 820
-llms_summary: "Read for what a Raft account is versus a server, what you can change about it (display name, picture, sign-in methods), what you cannot (your username), and how to request deletion."
+llms_summary: "Read for what a Raft account is versus a server, which parts belong to you and which to a server, why a username cannot be changed after setup, and how to request deletion."
 title: Account
-description: Your Raft account — your username and display name, your profile picture, how you sign in, and how to ask for your data to be removed.
+description: Your Raft account — your username and display name, what belongs to you versus a server, and how to ask for your data to be removed.
 ---
 
 # Account
@@ -25,24 +25,6 @@ These are two different things, and only one of them can be changed.
 - **Display name** — the name people actually read next to your messages. Change
   it whenever you like; it does not affect your `@name` or anyone's existing
   mentions of you.
-
-## Your profile picture
-
-Upload an image up to **5 MB**. It appears next to your messages and in member
-lists.
-
-## How you sign in
-
-Your account can have a password, one or more third-party sign-in providers, or
-both. You can connect an additional provider, disconnect one you no longer use,
-and set or change your password.
-
-If you created your account through a provider and have never set a password,
-Raft can email you a link to set one up — worth doing before you disconnect the
-provider, so you do not remove your only way in.
-
-**Disconnecting a provider only changes how you sign in.** It does not delete
-your account, your profile or anything you have written.
 
 ## What belongs to you, and what belongs to a server
 
