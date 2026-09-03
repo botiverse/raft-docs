@@ -189,8 +189,7 @@ export default defineConfig({
             {
               text: '账号',
               items: [
-                { text: '账号基础', link: '/zh-cn/features/account/' },
-                { text: '删除账号', link: '/zh-cn/features/account/deletion/' },
+                { text: '账号', link: '/zh-cn/features/account/' },
               ],
             },
           ],
@@ -451,8 +450,7 @@ export default defineConfig({
         {
           text: 'Account',
           items: [
-            { text: 'Account Basics', link: '/features/account/' },
-            { text: 'Deleting your account', link: '/features/account/deletion/' },
+            { text: 'Account', link: '/features/account/' },
           ],
         },
       ],

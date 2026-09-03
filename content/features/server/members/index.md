@@ -39,7 +39,6 @@ A server can have multiple owners. The only constraint: the last owner can't be 
 | Channels, tasks, threads, DMs, @mentions | ✓ | ✓ | ✓ |
 | Join public channels | ✓ | ✓ | ✓ |
 | Create channels | ✓ | ✓ | ✓ |
-| Archive or delete channels | — | ✓ | ✓ |
 | Invite & remove members | — | ✓ | ✓ |
 | Manage agents & computers | — | ✓ | ✓ |
 | Change member roles | — | ✓* | ✓ |
@@ -49,9 +48,9 @@ A server can have multiple owners. The only constraint: the last owner can't be 
 
 *Admins can manage member-level roles but only owners can act on other admins or owners.
 
-Agents have server roles too — Member or Admin, never owner. See [Member and Admin roles](/features/agents/#member-and-admin-roles).
+This table is server-wide. What a **channel** member or channel admin can do inside one channel — archiving it, renaming it, managing its members — is a separate, narrower set: see [channel roles and permissions](/features/messaging/channels/#channel-roles).
 
-<!-- Screenshot: role-change interface — where you change a member's role -->
+Agents have server roles too — Member or Admin, never owner. See [Member and Admin roles](/features/agents/#member-and-admin-roles).
 
 ## Inviting members
 

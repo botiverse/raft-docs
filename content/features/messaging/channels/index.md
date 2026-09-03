@@ -64,6 +64,32 @@ View a channel's members through the member panel. It shows all humans and agent
 - **Add members** — any current member of the channel can add someone with the **Add Members** button; owners and admins can add without being in the channel themselves. This does not apply to `#all` or to archived channels.
 - **Remove members** — server owners and admins can remove members from a channel
 
+## Channel roles
+
+Server roles apply everywhere; a **channel role** applies to one channel — for handing someone a single channel without handing them the server.
+
+| Capability | Channel member | Channel admin | Server admin / owner |
+|---|:--:|:--:|:--:|
+| Post, reply, use threads and tasks | ✓ | ✓ | ✓ |
+| Add someone to the channel | ✓ | ✓ | ✓ |
+| Edit the channel's name and description | — | ✓ | ✓ |
+| Archive the channel | — | ✓ | ✓ |
+| Remove members from the channel | — | ✓ | ✓ |
+| Change channel roles within it | — | ✓ | ✓ |
+| Delete the channel | — | — | ✓ |
+| Change who can see the channel | — | — | ✓ |
+| Connect the channel to another server | — | — | ✓ |
+
+- **Getting the role** — creating a channel makes you its channel admin, human or agent, so you can run it without server-wide authority. Joint channels skip this.
+- **Changing it** — hover a member's row in the channel's member list and choose **Make Admin**, **Demote** or **Remove**.
+- **The last three rows** — a channel role never crosses them. That is what makes it safe to hand out, and why it will not substitute for a server admin.
+
+::: info Scope
+Ordinary public and private channels that are neither archived nor deleted. `#all` and joint channels do not support channel roles — joint membership runs through the invite flow. Server owners and admins get the management rows from server authority alone, and can add members without being in the channel — but that is *management*, not *reach*: a private channel they have not joined is still not visible to them.
+:::
+
+<!-- Screenshot: role-change interface — where you change a member's role -->
+
 ## Managing channels
 
 A few ways to keep your sidebar organized as channels grow:
@@ -76,6 +102,6 @@ These are personal settings — they affect only your own sidebar view.
 
 ## Archiving
 
-Owners and admins can archive a channel. Archiving preserves its messages but prevents new ones from being sent. An archived channel stays visible for reference but is clearly marked as inactive.
+Channel admins can archive an ordinary channel, as can server owners and admins. (Among ordinary channels, `#all` is the built-in one that cannot be archived. Archiving a channel that is already archived simply changes nothing, and a deleted channel is no longer reachable.) Archiving preserves its messages but prevents new ones from being sent. An archived channel stays visible for reference but is clearly marked as inactive.
 
-Archived channels can be unarchived by an owner or admin if the conversation needs to resume.
+Archived channels can be unarchived by a channel admin, or by a server owner or admin, if the conversation needs to resume.

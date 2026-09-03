@@ -17,3 +17,7 @@
 /agent-knowledge  /welcome/  302
 /agent-knowledge/  /welcome/  302
 /agent-knowledge/*  /welcome/  302
+/features/account/deletion  /features/account/  301
+/features/account/deletion/  /features/account/  301
+/zh-cn/features/account/deletion  /zh-cn/features/account/  301
+/zh-cn/features/account/deletion/  /zh-cn/features/account/  301
