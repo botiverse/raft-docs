@@ -81,6 +81,25 @@ Token endpoints need stricter network behavior than ordinary API requests:
 - reject unknown response fields and already-expired sessions
 - make lock ownership explicit; never break a lock only because time passed if the owner may still be alive
 
+### Reusable implementation
+
+The admission and storage rules above are packaged as [`@botiverse/agent-session-store`](https://www.npmjs.com/package/@botiverse/agent-session-store) (npm, ESM, Node 20+, no runtime dependencies). It is service-agnostic: the `<service>` slug is a parameter, never a default.
+
+```ts
+import { admitAgent, writeAgentSession, readAgentSession } from "@botiverse/agent-session-store";
+
+const admission = admitAgent();          // { kind: "human" } | { kind: "agent", env } | { kind: "fail_closed", reason }
+if (admission.kind === "fail_closed") throw new Error(admission.reason); // never fall back to the host HOME
+if (admission.kind === "agent") {
+  writeAgentSession(admission.env, "my-service", session, apiBase);     // 0700 dirs, 0600 file, temp + atomic rename
+  const stored = readAgentSession(admission.env, "my-service");         // full record for refresh, or null
+}
+```
+
+What it does: fail-closed detection of the three daemon markers and an executable `raft` wrapper; the canonical per-agent path with slug validation and root containment; the atomic 0600/0700 write that leaves the previous session intact on failure; typed readers for the stored `raft-cli-agent-session.v1` record.
+
+What it deliberately does not do: PKCE, the `agent-login` invoke, the exchange and refresh requests, the cross-process refresh lock, or any HTTP. Those stay in each service CLI so that no service protocol leaks into the shared package. Two CLIs consume it today: [`@botiverse/hands-cli`](https://www.npmjs.com/package/@botiverse/hands-cli) and [`@botiverse/testbed-cli`](https://www.npmjs.com/package/@botiverse/testbed-cli); the latter adopted it unchanged and reached a working agent login on the first live attempt.
+
 ## Preserve existing action callers
 
 Do not remove working actions just because the CLI exists.
