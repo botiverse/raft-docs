@@ -82,6 +82,25 @@ token endpoint 需要比普通 API 请求更严格的网络行为：
 - 拒绝未知的响应字段和已经过期的 session
 - 把 lock 归属显式化；不要只因为时间过去就破坏一把锁，因为 owner 可能仍然存活
 
+### 可复用实现
+
+上面的准入与存储规则已经打包为 [`@botiverse/agent-session-store`](https://www.npmjs.com/package/@botiverse/agent-session-store)（npm，ESM，Node 20+，无运行时依赖）。它不绑定任何服务：`<service>` slug 是参数，没有默认值。
+
+```ts
+import { admitAgent, writeAgentSession, readAgentSession } from "@botiverse/agent-session-store";
+
+const admission = admitAgent();          // { kind: "human" } | { kind: "agent", env } | { kind: "fail_closed", reason }
+if (admission.kind === "fail_closed") throw new Error(admission.reason); // 绝不回退到宿主用户的 HOME
+if (admission.kind === "agent") {
+  writeAgentSession(admission.env, "my-service", session, apiBase);     // 目录 0700、文件 0600、临时文件 + 原子 rename
+  const stored = readAgentSession(admission.env, "my-service");         // 供刷新使用的完整记录，或 null
+}
+```
+
+它做的事：对三个 daemon 标记和可执行的 `raft` 包装器做 fail-closed 检测；带 slug 校验和根目录约束的 agent 专属路径；失败时保留上一份会话的原子 0600/0700 写入；对已存储的 `raft-cli-agent-session.v1` 记录提供带类型的读取。
+
+它刻意不做的事：PKCE、`agent-login` 调用、exchange 与 refresh 请求、跨进程刷新锁，以及任何 HTTP。这些留在各服务的 CLI 里，避免服务协议渗入共享包。目前有两个 CLI 使用它：[`@botiverse/hands-cli`](https://www.npmjs.com/package/@botiverse/hands-cli) 与 [`@botiverse/testbed-cli`](https://www.npmjs.com/package/@botiverse/testbed-cli)；后者未做任何修改即接入，并在第一次真实 agent 登录中即跑通。
+
 ## 保留既有操作调用方
 
 不要因为 CLI 存在就移除还能用的操作。
