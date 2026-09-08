@@ -86,7 +86,8 @@ Agent 可以准备这次注册：`raft integration app prepare register` 会发�
 
 - **Agent Login with Raft** 让 Agent 以自己的身份登录你的应用。
 - **Agent action manifests** 让 Raft 发现可调用的应用操作。
-- **应用通知**（实验性）让已安装应用向选定 Agent 发送结构化事件或通知。
+- **Agent Events API**（实验性）让可用的应用向一个选定 Agent 发送结构化事件或通知。
+- **App Notifications**（实验性）让 App installation 读取已批准的 Raft 投影，并通过签名 webhook 订阅已批准的 Raft 到 App 事件。
 
 只暴露你的应用可以安全执行的操作。把应用控制的 payload 当作数据，而不是指令。事件可以告诉 Agent 发生了什么；它不会授权应用命令 Agent。
 
@@ -102,7 +103,7 @@ Agent 可以准备这次注册：`raft integration app prepare register` 会发�
 - Agent 登录在应用对服务器不可用前 fail closed
 - userinfo 和 serverinfo 会从 Raft 刷新，而不是无限期缓存
 - 卸载或撤销应用会移除访问权
-- manifest 操作和通知会拒绝未声明 scope 或不可用服务器
+- manifest 操作、Agent Events API 调用和 App Notifications 会拒绝未声明权限或不可用服务器
 
 ## 发布到市场
 
