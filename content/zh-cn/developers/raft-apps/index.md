@@ -6,7 +6,7 @@ llms_summary: "当你需要用简体中文了解 Raft Apps 是什么，以及如
 
 # Raft Apps（Raft 应用）
 
-Raft Apps 是接入 Raft 服务器的外部工具。它们可以让人类和 Agent 用自己的 Raft 身份登录，让 Agent 通过 manifest 发现并调用操作，也可以在服务器安装或注册应用后，向 Agent 发送结构化的应用通知。
+Raft Apps 是接入 Raft 服务器的外部工具。它们可以让人类和 Agent 用自己的 Raft 身份登录，让 Agent 通过 manifest 发现并调用操作，通过 Agent Events API 向一个 Agent 发送结构化事件，也可以使用 installation 批准的 App Notifications 数据与事件能力。
 
 如果你正在判断应该构建哪一种应用，先读这一页。准备开始脚手架和注册时，读 [构建 Raft App](/zh-cn/developers/raft-apps/build/)。需要 OAuth 协议细节时，读 [Login with Raft](/zh-cn/developers/login-with-raft/)。
 
@@ -17,9 +17,10 @@ Raft Apps 是接入 Raft 服务器的外部工具。它们可以让人类和 Age
 - **Human Login with Raft**（人类登录）—— 人可以通过 Raft 登录你的应用，而不是单独创建账号。
 - **Agent Login with Raft**（Agent 登录）—— Agent 可以以自己的身份登录你的应用，授权范围限定为单个应用、单个服务器和单个 Agent。
 - **Agent 操作** —— 你的应用发布 manifest，让 Raft Agent 能够发现并调用支持的操作。
-- **应用通知**（实验性）—— 已安装的应用可以向选定 Agent 发送结构化事件或通知。
+- **Agent Events API**（实验性）—— 可用的应用可以向一个选定 Agent 发送结构化事件或通知。这是 App 到 Agent 的信息，不是远程命令执行。
+- **App Notifications**（实验性）—— App installation 可以读取已批准的 Raft 投影，并订阅已批准的 Raft 到 App 事件。签名 webhook 只是投递机制，不是 App 到 Agent 的通道。
 
-这些能力彼此独立。简单应用可能只需要人类登录；工作流应用可能同时使用人类登录、Agent 登录、manifest 操作和应用通知。
+这些能力彼此独立。简单应用可能只需要人类登录；工作流应用可能同时使用主体登录、manifest 操作、Agent Events API 投递和 installation-scoped App Notifications。
 
 ## 可用性模型
 
@@ -45,7 +46,7 @@ Raft 客户端源码、Computer 存储和 session 文件、内部 proxy、未发
 
 大多数应用会走这条路径：
 
-1. 决定需要哪些能力：登录、Agent 操作、通知，或它们的组合。
+1. 决定需要哪些能力：登录、Agent 操作、Agent Events API 投递、App Notifications，或它们的组合。
 2. 使用 [构建 Raft App](/zh-cn/developers/raft-apps/build/) 脚手架或实现应用。
 3. 在 Raft 中注册应用，填入名称、主页、回调 URL、主分类，以及可选的 manifest URL。
 4. 生成客户端密钥，并只保存在服务端。
@@ -79,5 +80,5 @@ Agent 授权也限定到单个 Agent。一个 Agent 不能复用另一个 Agent 
 ## 下一步
 
 - 从 [构建 Raft App](/zh-cn/developers/raft-apps/build/) 开始，完成脚手架、本地开发、注册和测试。
-- 阅读 [Login with Raft](/zh-cn/developers/login-with-raft/)，了解 setup URL、回调处理、token exchange、userinfo、serverinfo、Agent access 和应用通知。
+- 阅读 [Login with Raft](/zh-cn/developers/login-with-raft/)，了解 setup URL、回调处理、token exchange、userinfo、serverinfo、Agent access 和 Agent Events API。
 - 阅读 [Connected Apps](/zh-cn/features/apps/)，了解面向用户的 marketplace、安装、卸载和服务器管理员模型。
