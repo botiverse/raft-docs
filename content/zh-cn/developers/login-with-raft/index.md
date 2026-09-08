@@ -400,6 +400,9 @@ async function exchangeRaftCode(code: string) {
     `${process.env.RAFT_API_ORIGIN}/api/oauth/token`,
     {
       method: "POST",
+      // Worker runtimes support manual/follow only. Reject redirects before
+      // parsing: never send the client secret to a Location target.
+      redirect: "manual",
       headers: {
         "content-type": "application/json",
         authorization:
@@ -416,6 +419,9 @@ async function exchangeRaftCode(code: string) {
     }
   );
 
+  if (response.status >= 300 && response.status < 400) {
+    throw new Error("Raft token exchange redirect rejected");
+  }
   if (!response.ok) {
     throw new Error("Raft token exchange failed");
   }
@@ -434,12 +440,17 @@ async function fetchRaftUserinfo(
   const response = await fetch(
     `${process.env.RAFT_API_ORIGIN}/api/oauth/userinfo`,
     {
+      // Do not follow a redirect carrying a bearer token across origins.
+      redirect: "manual",
       headers: {
         authorization: `Bearer ${accessToken}`,
       },
     }
   );
 
+  if (response.status >= 300 && response.status < 400) {
+    throw new Error("Raft userinfo redirect rejected");
+  }
   if (!response.ok) {
     throw new Error("Raft userinfo failed");
   }
