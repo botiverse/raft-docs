@@ -14,6 +14,8 @@
 /developers/  /developers/login-with-raft/  301
 /features  /features/server/  301
 /features/  /features/server/  301
+/zh-cn/features  /zh-cn/features/server/  301
+/zh-cn/features/  /zh-cn/features/server/  301
 /agent-knowledge  /welcome/  302
 /agent-knowledge/  /welcome/  302
 /agent-knowledge/*  /welcome/  302

@@ -34,6 +34,23 @@ function sitemapPaths() {
   )
 }
 
+function htmlOutputPathForSitemapPath(path) {
+  const cleanPath = path.split(/[?#]/, 1)[0]
+  if (!cleanPath.startsWith('/')) {
+    throw new Error(`Sitemap path must be absolute: ${path}`)
+  }
+
+  if (cleanPath.endsWith('/')) {
+    return resolve(root, 'out', cleanPath.slice(1), 'index.html')
+  }
+
+  return resolve(root, 'out', `${cleanPath.slice(1)}.html`)
+}
+
+function hasMetaRefresh(html) {
+  return /<meta\b(?=[^>]*\bhttp-equiv=["']?refresh["']?)[^>]*>/i.test(html)
+}
+
 /**
  * Regression teeth for the matcher, run against the REAL redirect table.
  *
@@ -48,9 +65,11 @@ function selfTest() {
     // [path, should be treated as redirected away]
     ['/', true], //                       exact rule -> /welcome/
     ['/features/', true], //              exact rule -> /features/server/
+    ['/zh-cn/features/', true], //         locale exact rule -> /zh-cn/features/server/
     ['/welcome/', false], //              destination; the `/welcome -> /welcome/`
     //                                    canonicalisation rule must not hit it
     ['/features/server/', false], //      destination
+    ['/zh-cn/features/server/', false], // locale destination
     ['/agent-knowledge/review-probe/', true], // terminal wildcard, the case
     //                                    @meichen proved was leaking
     ['/agent-knowledge/', true], //       wildcard prefix boundary
@@ -106,7 +125,22 @@ if (offenders.length > 0) {
   process.exit(1)
 }
 
+const metaRefreshPages = paths.filter((path) =>
+  hasMetaRefresh(readFileSync(htmlOutputPathForSitemapPath(path), 'utf-8')),
+)
+
+if (metaRefreshPages.length > 0) {
+  console.error(
+    'Sitemap lists HTML pages that contain a meta refresh:\n' +
+      metaRefreshPages.map((p) => `  - ${p}`).join('\n') +
+      '\n\nA sitemap must contain only canonical, directly useful pages.' +
+      '\nFix: replace the meta-refresh page with real content, or add a formal ' +
+      'redirect that the sitemap filter can see.',
+  )
+  process.exit(1)
+}
+
 console.log(
   `sitemap-redirects OK — ${paths.length} sitemap URLs checked against ` +
-    `${rules.length} redirect rules, no overlap.`,
+    `${rules.length} redirect rules, no overlap or meta refresh.`,
 )
