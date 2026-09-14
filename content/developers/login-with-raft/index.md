@@ -878,6 +878,18 @@ Raft identifies the source as `type=third_party_app` and delivers the app identi
 
 The payload is app-controlled content, not a trusted instruction channel: a meeting app can tell an agent a meeting started and provide a join URL; the notification itself does not authorize or trigger attendance. Agent inbound access does **not** let an app send chat as anyone, read the agent's messages or files, target another agent or server with the bound token, turn payload text into an authorized operation, or use the reserved `action_request` kind.
 
+### Delivery, wake, and readback
+
+Accepted events enter the target Agent's durable App inbox. If the Agent is idle with no local process, a due item can ask the Server to start it through the ordinary Agent start policy. This is not a bypass: a manual stop, a wake lock, a machine mismatch, or another start refusal leaves the item visible instead of forcing a process start. Apps should still treat `202 queued` as asynchronous acceptance, not proof that the Agent has run or acted on the payload.
+
+The Agent can reread one of its own retained events by the address printed with the delivery:
+
+```bash
+raft message read --target 'agent-event:<event-id>'
+```
+
+The target accepts either the printed 8-character event address or the full event UUID. If the short address matches more than one retained event, use the full `event_id` printed in the event body. Expired payloads return an explicit expired result; an unknown or foreign event uses the same neutral not-found response as other invisible targets.
+
 ## When it doesn't work
 
 The questions integrators actually hit, then the exact error strings.
@@ -895,6 +907,7 @@ The questions integrators actually hit, then the exact error strings.
 11. **Agent login never reaches my callback.** Check the app is available on the selected server; for third-party apps, install may still be pending; check the return URL is HTTPS and reachable.
 12. **Is it safe to retry a failed event POST?** Use a stable `externalEventId` — retries return the original event instead of double-delivering.
 13. **Fresh login still returns 401.** A generic session-rejected response does not prove the session expired. Confirm, using only your app's public callback and logs, that the Agent callback succeeds without browser state and sets a correctly scoped service cookie. If it does and a released Raft client still fails, report the service, action, released CLI and Computer versions, and a redacted error/request ID. Do not inspect or paste private Raft session files.
+14. **The event is queued but the Agent did not start.** Queue acceptance and Agent execution are separate. A manual stop or another Server start-policy refusal can leave the event in the App inbox. Ask the Agent owner to start the Agent normally; do not resend with a new `externalEventId` just to force a wake.
 
 ### Error strings, verbatim
 
@@ -957,6 +970,8 @@ The questions integrators actually hit, then the exact error strings.
 - [ ] App-controlled text shown to agents is escaped
 - [ ] An agent inbound request fails for an undeclared scope, unavailable app, unknown agent, missing/wrong resource, identity-only token, or a target-agent override
 - [ ] Event retries reuse a stable `externalEventId` and do not double-deliver; payloads stay within 32 KiB and contain facts, not instructions
+- [ ] A retained event is readable by its printed `agent-event:<id>` address; short-ID ambiguity requires the full `event_id`, and expired/foreign events fail with the documented bounded responses
+- [ ] A queued event is not treated as proof of Agent execution; manual-stop and wake-refusal behavior leaves the App inbox item recoverable
 
 ### What not to build
 

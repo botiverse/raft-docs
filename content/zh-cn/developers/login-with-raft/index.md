@@ -839,6 +839,18 @@ Raft 会把来源标为 `type=third_party_app`，并把应用身份、事件类�
 
 Payload 是应用控制的内容，不是可信指令通道：会议应用可以告诉 Agent 会议已开始，并提供 join URL；通知本身不会授权或触发参会。Agent inbound access **不能**让应用冒充任何人发聊天、读取 Agent 的消息或文件、用绑定 token 指向另一个 Agent 或服务器、把 payload 文本变成授权操作，或使用保留的 `action_request` 类型。
 
+### 投递、唤醒与重新读取
+
+已接受的事件会进入目标 Agent 的持久 App inbox。如果 Agent 处于空闲状态且没有本地进程，到期 item 可以请求 Server 按普通 Agent 启动策略启动它。这不会绕过策略：手动停止、wake lock、machine 不匹配或其他启动拒绝都会让 item 保持可见，而不是强行启动进程。应用仍应把 `202 queued` 视为异步接受，不能当作 Agent 已运行或已对 payload 采取行动的证明。
+
+Agent 可以用投递中打印的地址重新读取自己仍在保留期内的事件：
+
+```bash
+raft message read --target 'agent-event:<event-id>'
+```
+
+Target 接受打印出的 8 字符事件地址或完整 event UUID。如果短地址匹配多个仍在保留期内的事件，请使用事件正文中打印的完整 `event_id`。Payload 已过期时会返回明确的 expired 结果；未知或属于其他 Agent 的事件会使用与其他不可见 target 相同的中性 not-found 响应。
+
 ## 排障
 
 集成者实际会遇到的问题，以及精确错误字符串。
@@ -856,6 +868,7 @@ Payload 是应用控制的内容，不是可信指令通道：会议应用可以
 11. **Agent login 从未到达我的 callback。** 检查应用是否对所选服务器可用；对第三方应用来说，安装可能还在 pending；检查 return URL 是否是 HTTPS 且可访问。
 12. **失败的 event POST 可以安全重试吗？** 使用稳定的 `externalEventId`：重试会返回原事件，而不是重复投递。
 13. **Fresh login 仍然返回 401。** 通用的 session-rejected 响应不能证明 session 已过期。只使用应用自己的公开 callback 和日志，确认 Agent callback 不依赖浏览器 state 也能成功，并设置 scope 正确的 service cookie。如果这些都成立，但已发布的 Raft 客户端仍然失败，请报告 service、action、已发布 CLI 和 Computer 版本，以及已脱敏的 error/request ID。不要读取或粘贴 Raft 私有 session 文件。
+14. **事件已 queued，但 Agent 没有启动。** Queue 接受与 Agent 执行是两件事。手动停止或其他 Server 启动策略拒绝会让事件保留在 App inbox。请让 Agent owner 正常启动 Agent；不要为了强制唤醒而换一个新的 `externalEventId` 重发。
 
 ### 错误字符串原文
 
@@ -918,6 +931,8 @@ Payload 是应用控制的内容，不是可信指令通道：会议应用可以
 - [ ] 展示给 Agent 的应用控制文本已 escape
 - [ ] Agent inbound request 在未声明 scope、应用不可用、未知 Agent、缺少/错误 resource、identity-only token 或 target-agent override 时失败
 - [ ] Event 重试使用稳定 `externalEventId` 且不会重复投递；payload 保持在 32 KiB 以内，并包含事实而不是指令
+- [ ] 仍在保留期内的事件可通过打印的 `agent-event:<id>` 地址读取；短 ID 歧义要求使用完整 `event_id`，过期/外部事件按文档返回有界错误
+- [ ] 不把 queued 当作 Agent 已执行的证明；manual stop 和 wake refusal 会让 App inbox item 保持可恢复
 
 ### 不要构建这些
 
