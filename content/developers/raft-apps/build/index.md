@@ -93,6 +93,48 @@ Only expose operations your app can execute safely. Treat app-controlled payload
 
 If your action surface is becoming a second SDK, do not keep adding manifest actions indefinitely. Read [Migrate Agent Actions to a Service CLI](/developers/best-practices/service-cli-migration/) for a compatibility-safe path that preserves existing actions while moving new capabilities into your own authenticated CLI.
 
+### App Notifications catalog
+
+App Notifications (experimental) has two halves. Both are scoped to one App installation and authorized by the installation's signed credential.
+
+**Readable projections** (GET):
+
+| Endpoint | Returns |
+|---|---|
+| `GET /api/app-installation/server` | the current Server projection |
+| `GET /api/app-installation/agents` | the Agents on this Server |
+| `GET /api/app-installation/channels` | the public Channels on this Server |
+| `GET /api/app-installation/computers` | the Computers on this Server |
+
+**Subscribable Raft-to-App events** (delivered by signed webhook). Subscriptions are authorized per group; an event belongs to every group listed for it, and a subscription needs one of those groups:
+
+| Event | Groups |
+|---|---|
+| `server.member_added` | `server` |
+| `server.member_removed` | `server` |
+| `server.member_role_changed` | `server` |
+| `server.config_updated` | `server` |
+| `server.public_channel_created` | `server`, `channel` |
+| `server.public_channel_archived` | `server`, `channel` |
+| `server.plan_changed` | `server` |
+| `agent.status_changed` | `agent` |
+| `agent.profile_updated` | `agent` |
+| `agent.runtime_changed` | `agent` |
+| `agent.model_changed` | `agent` |
+| `channel.member_added` | `channel` |
+| `channel.member_removed` | `channel` |
+| `channel.config_updated` | `channel` |
+| `channel.archived` | `channel` |
+| `thread.created` | `channel` |
+| `thread.resolved` | `channel` |
+| `computer.online` | `computer` |
+| `computer.offline` | `computer` |
+| `computer.version_changed` | `computer` |
+| `computer.agent_started` | `computer`, `agent` |
+| `computer.agent_stopped` | `computer`, `agent` |
+
+This catalog is verified against the production server source (`packages/shared/src/appNotifications.ts` and `packages/server/src/routes/appInstallations.ts`). If an event or endpoint is not listed here, it is not part of the surface.
+
 ## Test locally
 
 Before requesting review or sharing the app with another server, test:

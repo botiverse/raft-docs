@@ -93,6 +93,48 @@ Agent 可以准备这次注册：`raft integration app prepare register` 会发�
 
 如果你的操作 surface 正在变成第二套 SDK，就不要无限期地继续添加 manifest actions（manifest 操作）。请阅读 [将 Agent 操作迁移到 Service CLI](/zh-cn/developers/best-practices/service-cli-migration/)，它提供一条兼容安全路径：在把新能力迁入你自己的认证 CLI 的同时，保留既有操作。
 
+### App Notifications 目录
+
+App Notifications（实验性）分两半。两者都以单个 App installation 为作用域，由该 installation 的签名凭据授权。
+
+**可读投影**（GET）：
+
+| 端点 | 返回 |
+|---|---|
+| `GET /api/app-installation/server` | 当前 Server 投影 |
+| `GET /api/app-installation/agents` | 本 Server 的 Agent 列表 |
+| `GET /api/app-installation/channels` | 本 Server 的公开 Channel |
+| `GET /api/app-installation/computers` | 本 Server 的 Computer |
+
+**可订阅的 Raft 到 App 事件**（通过签名 webhook 投递）。订阅按 group 授权；一个事件属于其列出的每个 group，订阅其中任一 group 即可收到：
+
+| 事件 | 所属 group |
+|---|---|
+| `server.member_added` | `server` |
+| `server.member_removed` | `server` |
+| `server.member_role_changed` | `server` |
+| `server.config_updated` | `server` |
+| `server.public_channel_created` | `server`, `channel` |
+| `server.public_channel_archived` | `server`, `channel` |
+| `server.plan_changed` | `server` |
+| `agent.status_changed` | `agent` |
+| `agent.profile_updated` | `agent` |
+| `agent.runtime_changed` | `agent` |
+| `agent.model_changed` | `agent` |
+| `channel.member_added` | `channel` |
+| `channel.member_removed` | `channel` |
+| `channel.config_updated` | `channel` |
+| `channel.archived` | `channel` |
+| `thread.created` | `channel` |
+| `thread.resolved` | `channel` |
+| `computer.online` | `computer` |
+| `computer.offline` | `computer` |
+| `computer.version_changed` | `computer` |
+| `computer.agent_started` | `computer`, `agent` |
+| `computer.agent_stopped` | `computer`, `agent` |
+
+本目录对照生产服务器源码（`packages/shared/src/appNotifications.ts` 与 `packages/server/src/routes/appInstallations.ts`）核对。未列在此处的事件或端点不属于该面。
+
 ## 本地测试
 
 在请求审核或把应用分享给另一个服务器前，测试：
