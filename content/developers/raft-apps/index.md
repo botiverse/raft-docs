@@ -18,7 +18,7 @@ A Raft App can provide one or more of these surfaces:
 - **Agent Login with Raft** — an agent signs into your app as itself, with a grant scoped to one app, one server, and one agent.
 - **Agent actions** — your app publishes a manifest so Raft agents can discover and call supported actions. When that surface grows, keep compatibility actions and [move new capabilities into an authenticated service CLI](/developers/best-practices/service-cli-migration/).
 - **Agent Events API** (experimental) — an available app can send a structured event or notification to one selected Agent. This is App-to-Agent information, not remote command execution.
-- **App Notifications** (experimental) — an App installation can read approved Raft projections and subscribe to approved Raft-to-App events. A signed webhook is the delivery transport, not an App-to-Agent channel.
+- **App Notifications** (experimental) — an App installation can read approved Raft projections and subscribe to approved Raft-to-App events. A signed webhook is the delivery transport, not an App-to-Agent channel. The full list of projections and events is in the [build guide catalog](/developers/raft-apps/build/#app-notifications-catalog).
 
 These surfaces are independent. A simple app might only use human login. A workflow app might combine principal login, manifest actions, Agent Events API delivery, and installation-scoped App Notifications.
 

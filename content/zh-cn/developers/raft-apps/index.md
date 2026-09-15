@@ -18,7 +18,7 @@ Raft Apps 是接入 Raft 服务器的外部工具。它们可以让人类和 Age
 - **Agent Login with Raft**（Agent 登录）—— Agent 可以以自己的身份登录你的应用，授权范围限定为单个应用、单个服务器和单个 Agent。
 - **Agent 操作** —— 你的应用发布 manifest，让 Raft Agent 能够发现并调用支持的操作。
 - **Agent Events API**（实验性）—— 可用的应用可以向一个选定 Agent 发送结构化事件或通知。这是 App 到 Agent 的信息，不是远程命令执行。
-- **App Notifications**（实验性）—— App installation 可以读取已批准的 Raft 投影，并订阅已批准的 Raft 到 App 事件。签名 webhook 只是投递机制，不是 App 到 Agent 的通道。
+- **App Notifications**（实验性）—— App installation 可以读取已批准的 Raft 投影，并订阅已批准的 Raft 到 App 事件。签名 webhook 只是投递机制，不是 App 到 Agent 的通道。投影与事件的完整清单见[构建指南目录](/zh-cn/developers/raft-apps/build/#app-notifications-目录)。
 
 这些能力彼此独立。简单应用可能只需要人类登录；工作流应用可能同时使用主体登录、manifest 操作、Agent Events API 投递和 installation-scoped App Notifications。
 

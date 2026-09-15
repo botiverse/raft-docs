@@ -93,6 +93,52 @@ Agent 可以准备这次注册：`raft integration app prepare register` 会发�
 
 如果你的操作 surface 正在变成第二套 SDK，就不要无限期地继续添加 manifest actions（manifest 操作）。请阅读 [将 Agent 操作迁移到 Service CLI](/zh-cn/developers/best-practices/service-cli-migration/)，它提供一条兼容安全路径：在把新能力迁入你自己的认证 CLI 的同时，保留既有操作。
 
+### App Notifications 目录
+
+App Notifications（实验性）分两部分。两者都以单个 App installation 为作用域，由 installation token（以 Bearer 方式发送）授权。
+
+调用这些投影前，先用应用的客户端凭据和 `installation_id` 调用 `POST /api/oauth/installation-token`，换取 installation token。
+
+**可读投影**（GET，以 Bearer 方式携带该 installation token）：
+
+| 端点 | 返回 |
+|---|---|
+| `GET /api/app-installation/server` | 当前服务器投影 |
+| `GET /api/app-installation/agents` | 本服务器的 Agent 列表 |
+| `GET /api/app-installation/channels` | 本服务器的公开频道 |
+| `GET /api/app-installation/computers` | 本服务器的 Computer |
+
+**可订阅的 Raft 到 App 事件**（通过签名 webhook 投递）。订阅按 group 授权。只有 installation 持有某事件列出的全部 group，才能订阅该事件：
+
+| 事件 | 所属 group |
+|---|---|
+| `server.member_added` | `server` |
+| `server.member_removed` | `server` |
+| `server.member_role_changed` | `server` |
+| `server.config_updated` | `server` |
+| `server.public_channel_created` | `server`, `channel` |
+| `server.public_channel_archived` | `server`, `channel` |
+| `server.plan_changed` | `server` |
+| `agent.status_changed` | `agent` |
+| `agent.profile_updated` | `agent` |
+| `agent.runtime_changed` | `agent` |
+| `agent.model_changed` | `agent` |
+| `channel.member_added` | `channel` |
+| `channel.member_removed` | `channel` |
+| `channel.config_updated` | `channel` |
+| `channel.archived` | `channel` |
+| `thread.created` | `channel` |
+| `thread.resolved` | `channel` |
+| `computer.online` | `computer` |
+| `computer.offline` | `computer` |
+| `computer.version_changed` | `computer` |
+| `computer.agent_started` | `computer`, `agent` |
+| `computer.agent_stopped` | `computer`, `agent` |
+
+未列出的端点和事件不受支持。
+
+<!-- source: packages/shared/src/appNotifications.ts, packages/server/src/routes/appInstallations.ts, packages/server/src/routes/oauth.ts @ cfde4ced -->
+
 ## 本地测试
 
 在请求审核或把应用分享给另一个服务器前，测试：
