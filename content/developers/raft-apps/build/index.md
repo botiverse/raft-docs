@@ -71,7 +71,7 @@ Attributes are reactive: changing one re-renders the chip.
 
 Attempt list: `src`, then initial. The initial is always painted and the picture only becomes visible after it loads, so a blocked or failed URL degrades silently with no broken-image glyph. The pixel tier is reserved and empty: Raft's generated pixel SVGs are served with `cross-origin-resource-policy: same-origin` and cannot be embedded cross-origin.
 
-Version source: [`shared/raft-avatar/raft-avatar.js`](https://github.com/botiverse/create-raft-app/blob/dd4748b9f503545ddcfea681ced13ee59f14afea/shared/raft-avatar/raft-avatar.js) in `botiverse/create-raft-app` at commit `dd4748b9`, tag `raft-avatar-v1.1.0` (component version 1.1.0, sha256 `93c4ac2c75cf6b53ef3c9f143e30b045680760bec7e1bc2bce1d3b166612f66f`). Copy the file into your app and pin it; the component README in the same directory is its contract.
+Version source: [`shared/raft-avatar/raft-avatar.js`](https://github.com/botiverse/create-raft-app/blob/dd4748b9f503545ddcfea681ced13ee59f14afea/shared/raft-avatar/raft-avatar.js) in `botiverse/create-raft-app` at commit `dd4748b9`, tag `raft-avatar-v1.1.0` (component version 1.1.0, sha256 `93c4ac2c75cf6b53ef3c9f143e30b045680760bec7e1bc2bce1d3b166612f66f`). Copy the file into your app and pin it; the [component README](https://github.com/botiverse/create-raft-app/blob/673fe535ab9a226a735f0e9207bae5c02c8ced20/shared/raft-avatar/README.md) (at commit `673fe535`, which corrected two wording lines after the tag) is its contract.
 
 <!-- source: botiverse/create-raft-app shared/raft-avatar/raft-avatar.js @ dd4748b9 (tag raft-avatar-v1.1.0); README.md @ 673fe535 -->
 
