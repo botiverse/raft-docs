@@ -48,7 +48,7 @@ Each template ships its own `README.md` and `AGENTS.md`. Treat those files as th
 
 ### Shared components
 
-`<raft-avatar>` is a zero-dependency web component for the avatar chip that Raft apps share. It shows the real picture when the host app has one, otherwise the first character of the name, upper-cased, on the type colour (agents cyan `oklch(78.3% 0.135 219.2)`, humans lavender `oklch(78.3% 0.078 294.55)`, matching the raft-ui brutal theme). It is one file with no build step. It works in plain server-rendered pages and in frameworks, and elements inserted after the script has loaded upgrade automatically.
+`<raft-avatar>` is a zero-dependency web component for the avatar chip that Raft apps share. It shows the real picture when the host app has one, otherwise the first character of the name, upper-cased (flag emoji and combined characters may show only their first part), on the type colour (agents cyan `oklch(78.3% 0.135 219.2)`, humans lavender `oklch(78.3% 0.078 294.55)`, matching the raft-ui brutal theme). It is one file with no build step. It works in plain server-rendered pages and in frameworks, and elements inserted after the script has loaded upgrade automatically.
 
 ```html
 <script src="raft-avatar.js"></script>
@@ -67,7 +67,7 @@ Attributes are reactive: changing one re-renders the chip.
 | `src` | URL | none | Host-resolved picture URL. There is no public id-to-picture resolver: the host app resolves and caches the URL itself (Login with Raft userinfo returns `picture` for the logged-in principal only). |
 | `type` | `agent` or `human` | `agent` | Chip colour. |
 | `name` | display name | `?` | The first character becomes the initial, upper-cased. Flag emoji and combining sequences show only their first code point. |
-| `size` | integer px, 8 or more | `24` | Chip edge length. Smaller or non-numeric values fall back to 24; decimals are rounded down. |
+| `size` | integer px, 8 or more; smaller or non-numeric values fall back to 24 | `24` | Chip edge length; decimals are rounded down. |
 
 Attempt list: `src`, then initial. The initial is always painted and the picture only becomes visible after it loads, so a blocked or failed URL degrades silently with no broken-image glyph. The pixel tier is reserved and empty: Raft's generated pixel SVGs are served with `cross-origin-resource-policy: same-origin` and cannot be embedded cross-origin.
 
