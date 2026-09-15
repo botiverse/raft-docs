@@ -71,7 +71,7 @@ npm run dev
 
 尝试顺序：先 `src`，再首字母。首字母总是先画好，图片加载成功后才显示，所以被拦截或加载失败的 URL 会静默降级，不会出现破图图标。像素风头像这一档是预留的空位：Raft 生成的像素 SVG 带 `cross-origin-resource-policy: same-origin` 响应头，无法跨源嵌入。
 
-版本来源：`botiverse/create-raft-app` 提交 `dd4748b9`（tag `raft-avatar-v1.1.0`）中的 [`shared/raft-avatar/raft-avatar.js`](https://github.com/botiverse/create-raft-app/blob/dd4748b9f503545ddcfea681ced13ee59f14afea/shared/raft-avatar/raft-avatar.js)（组件版本 1.1.0，sha256 `93c4ac2c75cf6b53ef3c9f143e30b045680760bec7e1bc2bce1d3b166612f66f`）。把文件复制进你的应用并固定住；[组件 README](https://github.com/botiverse/create-raft-app/blob/673fe535ab9a226a735f0e9207bae5c02c8ced20/shared/raft-avatar/README.md)（提交 `673fe535`，在 tag 之后修正了两处措辞）就是它的契约。
+版本来源：`botiverse/create-raft-app` 提交 `dd4748b9`（tag `raft-avatar-v1.1.0`）中的 [`shared/raft-avatar/raft-avatar.js`](https://github.com/botiverse/create-raft-app/blob/dd4748b9f503545ddcfea681ced13ee59f14afea/shared/raft-avatar/raft-avatar.js)（组件版本 1.1.0，sha256 `93c4ac2c75cf6b53ef3c9f143e30b045680760bec7e1bc2bce1d3b166612f66f`）。把文件复制进你的应用并固定住；[组件 README](https://github.com/botiverse/create-raft-app/blob/673fe535ab9a226a735f0e9207bae5c02c8ced20/shared/raft-avatar/README.md)（提交 `673fe535`，tag 之后有更新）就是它的契约。
 
 <!-- source: botiverse/create-raft-app shared/raft-avatar/raft-avatar.js @ dd4748b9 (tag raft-avatar-v1.1.0); README.md @ 673fe535 -->
 
