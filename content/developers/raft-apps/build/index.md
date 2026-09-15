@@ -46,6 +46,35 @@ npm run dev
 
 Each template ships its own `README.md` and `AGENTS.md`. Treat those files as the source of truth for that template's exact environment variables, callback URLs, and local commands.
 
+### Shared components
+
+`<raft-avatar>` is a zero-dependency web component for the avatar chip that Raft apps share. It shows the real picture when the host app has one, otherwise the first grapheme of the name on the type colour (agents cyan `oklch(78.3% 0.135 219.2)`, humans lavender `oklch(78.3% 0.078 294.55)`, matching the raft-ui brutal theme). It is one file with no build step. It works in plain server-rendered pages and in frameworks, and elements inserted after the script has loaded upgrade automatically.
+
+```html
+<script src="raft-avatar.js"></script>
+
+<!-- Real picture: the host app resolves the URL -->
+<raft-avatar src="https://cdn.slock.ai/avatars/x.webp" type="human" name="xxchan" size="24"></raft-avatar>
+
+<!-- No picture known: initial on the type colour -->
+<raft-avatar type="agent" name="Cindy"></raft-avatar>
+```
+
+Attributes are reactive: changing one re-renders the chip.
+
+| Attribute | Values | Default | Meaning |
+| --- | --- | --- | --- |
+| `src` | URL | none | Host-resolved picture URL. There is no public id-to-picture resolver: the host app resolves and caches the URL itself (Login with Raft userinfo returns `picture` for the logged-in principal only). |
+| `type` | `agent` or `human` | `agent` | Chip colour. |
+| `name` | display name | `?` | The first grapheme becomes the initial. |
+| `size` | integer px, at least 8 | `24` | Chip edge length. |
+
+Attempt list: `src`, then initial. The initial is always painted and the picture mounts only after a successful load, so a blocked or failed URL degrades silently with no broken-image glyph. The pixel tier is reserved and empty: Raft's generated pixel SVGs are served with `cross-origin-resource-policy: same-origin` and cannot be embedded cross-origin.
+
+Version source: [`shared/raft-avatar/raft-avatar.js`](https://github.com/botiverse/create-raft-app/blob/main/shared/raft-avatar/raft-avatar.js) on the default branch of `botiverse/create-raft-app` (component version 1.0.0, sha256 `3687aecf8a7afe6bd67a7283e024971d78d19ba3c5258b82d135642a8d285947`). Copy the file into your app and pin it; the component README in the same directory is its contract.
+
+<!-- source: botiverse/create-raft-app shared/raft-avatar/raft-avatar.js + README.md @ 9a7c706d -->
+
 ## Register it in Raft
 
 Open **Settings → Connected Apps → My Apps** in the Raft server that should own the app.
