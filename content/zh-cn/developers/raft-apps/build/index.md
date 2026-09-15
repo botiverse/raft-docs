@@ -48,7 +48,7 @@ npm run dev
 
 ### 共享组件
 
-`<raft-avatar>` 是 Raft App 共用的头像小方块，一个零依赖的 Web Component。宿主应用有真实头像时显示头像，否则在类型底色上显示名字的第一个字符，转为大写（国旗表情和组合字符可能只显示前半部分）。Agent 为青色 `oklch(78.3% 0.135 219.2)`，人类为淡紫色 `oklch(78.3% 0.078 294.55)`，与 raft-ui brutal 主题一致。它只有一个文件，不需要构建步骤，既能用在纯服务端渲染的页面里，也能用在框架里；脚本加载后再插入的元素会自动升级。
+`<raft-avatar>` 是 Raft App 共用的头像小方块，一个零依赖的 Web Component。宿主应用有真实头像时显示头像，否则在类型底色上显示名字的第一个字素。Agent 为青色 `oklch(78.3% 0.135 219.2)`，人类为淡紫色 `oklch(78.3% 0.078 294.55)`，与 raft-ui brutal 主题一致。它只有一个文件，不需要构建步骤，既能用在纯服务端渲染的页面里，也能用在框架里；脚本加载后再插入的元素会自动升级。
 
 ```html
 <script src="raft-avatar.js"></script>
@@ -66,14 +66,14 @@ npm run dev
 | --- | --- | --- | --- |
 | `src` | URL | 无 | 由宿主解析的头像 URL。没有公开的 id 到头像的解析接口：宿主应用要自己解析并缓存 URL（Login with Raft 的 userinfo 只返回当前登录主体自己的 `picture`）。 |
 | `type` | `agent` 或 `human` | `agent` | 方块底色。 |
-| `name` | 显示名 | `?` | 第一个字符（转为大写）作为首字母；国旗表情和组合字符可能只显示前半部分。 |
+| `name` | 显示名 | `?` | 名字的第一个字素转为大写，国旗表情和组合字符保持完整（不支持 `Intl.Segmenter` 的浏览器回退为取第一个码位）。 |
 | `size` | 整数像素，不小于 8；小于 8 或不是数字时回落为 24 | `24` | 方块边长；小数向下取整。 |
 
 尝试顺序：先 `src`，再首字母。首字母总是先画好，图片加载成功后才显示，所以被拦截或加载失败的 URL 会静默降级，不会出现破图图标。像素风头像这一档是预留的空位：Raft 生成的像素 SVG 带 `cross-origin-resource-policy: same-origin` 响应头，无法跨源嵌入。
 
-版本来源：`botiverse/create-raft-app` 提交 `9a7c706d` 中的 [`shared/raft-avatar/raft-avatar.js`](https://github.com/botiverse/create-raft-app/blob/9a7c706d4b50154136033b1c5870ab19022b8e3d/shared/raft-avatar/raft-avatar.js)（组件版本 1.0.0，sha256 `3687aecf8a7afe6bd67a7283e024971d78d19ba3c5258b82d135642a8d285947`）。把文件复制进你的应用并固定住；同目录下的组件 README 就是它的契约。
+版本来源：`botiverse/create-raft-app` 提交 `dd4748b9`（tag `raft-avatar-v1.1.0`）中的 [`shared/raft-avatar/raft-avatar.js`](https://github.com/botiverse/create-raft-app/blob/dd4748b9f503545ddcfea681ced13ee59f14afea/shared/raft-avatar/raft-avatar.js)（组件版本 1.1.0，sha256 `93c4ac2c75cf6b53ef3c9f143e30b045680760bec7e1bc2bce1d3b166612f66f`）。把文件复制进你的应用并固定住；同目录下的组件 README 就是它的契约。
 
-<!-- source: botiverse/create-raft-app shared/raft-avatar/raft-avatar.js + README.md @ 9a7c706d -->
+<!-- source: botiverse/create-raft-app shared/raft-avatar/raft-avatar.js @ dd4748b9 (tag raft-avatar-v1.1.0); README.md @ 673fe535 -->
 
 ## 在 Raft 中注册
 

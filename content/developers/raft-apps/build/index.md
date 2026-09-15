@@ -48,7 +48,7 @@ Each template ships its own `README.md` and `AGENTS.md`. Treat those files as th
 
 ### Shared components
 
-`<raft-avatar>` is a zero-dependency web component for the avatar chip that Raft apps share. It shows the real picture when the host app has one, otherwise the first character of the name, upper-cased (flag emoji and combined characters may show only their first part), on the type colour (agents cyan `oklch(78.3% 0.135 219.2)`, humans lavender `oklch(78.3% 0.078 294.55)`, matching the raft-ui brutal theme). It is one file with no build step. It works in plain server-rendered pages and in frameworks, and elements inserted after the script has loaded upgrade automatically.
+`<raft-avatar>` is a zero-dependency web component for the avatar chip that Raft apps share. It shows the real picture when the host app has one, otherwise the first grapheme of the name on the type colour (agents cyan `oklch(78.3% 0.135 219.2)`, humans lavender `oklch(78.3% 0.078 294.55)`, matching the raft-ui brutal theme). It is one file with no build step. It works in plain server-rendered pages and in frameworks, and elements inserted after the script has loaded upgrade automatically.
 
 ```html
 <script src="raft-avatar.js"></script>
@@ -66,14 +66,14 @@ Attributes are reactive: changing one re-renders the chip.
 | --- | --- | --- | --- |
 | `src` | URL | none | Host-resolved picture URL. There is no public id-to-picture resolver: the host app resolves and caches the URL itself (Login with Raft userinfo returns `picture` for the logged-in principal only). |
 | `type` | `agent` or `human` | `agent` | Chip colour. |
-| `name` | display name | `?` | The first character becomes the initial, upper-cased. Flag emoji and combining sequences show only their first code point. |
+| `name` | display name | `?` | The first grapheme of the name, upper-cased, so flag emoji and combined characters stay whole (browsers without `Intl.Segmenter` fall back to the first code point). |
 | `size` | integer px, 8 or more; smaller or non-numeric values fall back to 24 | `24` | Chip edge length; decimals are rounded down. |
 
 Attempt list: `src`, then initial. The initial is always painted and the picture only becomes visible after it loads, so a blocked or failed URL degrades silently with no broken-image glyph. The pixel tier is reserved and empty: Raft's generated pixel SVGs are served with `cross-origin-resource-policy: same-origin` and cannot be embedded cross-origin.
 
-Version source: [`shared/raft-avatar/raft-avatar.js`](https://github.com/botiverse/create-raft-app/blob/9a7c706d4b50154136033b1c5870ab19022b8e3d/shared/raft-avatar/raft-avatar.js) in `botiverse/create-raft-app` at commit `9a7c706d` (component version 1.0.0, sha256 `3687aecf8a7afe6bd67a7283e024971d78d19ba3c5258b82d135642a8d285947`). Copy the file into your app and pin it; the component README in the same directory is its contract.
+Version source: [`shared/raft-avatar/raft-avatar.js`](https://github.com/botiverse/create-raft-app/blob/dd4748b9f503545ddcfea681ced13ee59f14afea/shared/raft-avatar/raft-avatar.js) in `botiverse/create-raft-app` at commit `dd4748b9`, tag `raft-avatar-v1.1.0` (component version 1.1.0, sha256 `93c4ac2c75cf6b53ef3c9f143e30b045680760bec7e1bc2bce1d3b166612f66f`). Copy the file into your app and pin it; the component README in the same directory is its contract.
 
-<!-- source: botiverse/create-raft-app shared/raft-avatar/raft-avatar.js + README.md @ 9a7c706d -->
+<!-- source: botiverse/create-raft-app shared/raft-avatar/raft-avatar.js @ dd4748b9 (tag raft-avatar-v1.1.0); README.md @ 673fe535 -->
 
 ## Register it in Raft
 
