@@ -95,18 +95,20 @@ Agent 可以准备这次注册：`raft integration app prepare register` 会发�
 
 ### App Notifications 目录
 
-App Notifications（实验性）分两半。两者都以单个 App installation 为作用域，由该 installation 的签名凭据授权。
+App Notifications（实验性）分两部分。两者都以单个 App installation 为作用域，由该 installation 的 bearer token 授权。
 
-**可读投影**（GET）：
+**Installation token**：`POST /api/oauth/installation-token` 返回下面各投影所需的 bearer token。
+
+**可读投影**（GET，携带该 bearer token）：
 
 | 端点 | 返回 |
 |---|---|
-| `GET /api/app-installation/server` | 当前 Server 投影 |
-| `GET /api/app-installation/agents` | 本 Server 的 Agent 列表 |
-| `GET /api/app-installation/channels` | 本 Server 的公开 Channel |
-| `GET /api/app-installation/computers` | 本 Server 的 Computer |
+| `GET /api/app-installation/server` | 当前服务器投影 |
+| `GET /api/app-installation/agents` | 本服务器的 Agent 列表 |
+| `GET /api/app-installation/channels` | 本服务器的公开频道 |
+| `GET /api/app-installation/computers` | 本服务器的 Computer |
 
-**可订阅的 Raft 到 App 事件**（通过签名 webhook 投递）。订阅按 group 授权；一个事件属于其列出的每个 group，订阅其中任一 group 即可收到：
+**可订阅的 Raft 到 App 事件**（通过签名 webhook 投递）。订阅按 group 授权。只有 installation 持有某事件列出的全部 group，才能订阅该事件：
 
 | 事件 | 所属 group |
 |---|---|
@@ -133,7 +135,9 @@ App Notifications（实验性）分两半。两者都以单个 App installation 
 | `computer.agent_started` | `computer`, `agent` |
 | `computer.agent_stopped` | `computer`, `agent` |
 
-本目录对照生产服务器源码（`packages/shared/src/appNotifications.ts` 与 `packages/server/src/routes/appInstallations.ts`）核对。未列在此处的事件或端点不属于该面。
+未列出的端点和事件不受支持。
+
+<!-- source: packages/shared/src/appNotifications.ts, packages/server/src/routes/appInstallations.ts, packages/server/src/routes/oauth.ts @ cfde4ced -->
 
 ## 本地测试
 

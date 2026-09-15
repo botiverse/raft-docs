@@ -95,9 +95,11 @@ If your action surface is becoming a second SDK, do not keep adding manifest act
 
 ### App Notifications catalog
 
-App Notifications (experimental) has two halves. Both are scoped to one App installation and authorized by the installation's signed credential.
+App Notifications (experimental) has two parts. Both are scoped to one App installation and authorized by an installation bearer token.
 
-**Readable projections** (GET):
+**Installation token**: `POST /api/oauth/installation-token` returns the bearer token the projections below require.
+
+**Readable projections** (GET, with that bearer token):
 
 | Endpoint | Returns |
 |---|---|
@@ -106,7 +108,7 @@ App Notifications (experimental) has two halves. Both are scoped to one App inst
 | `GET /api/app-installation/channels` | the public Channels on this Server |
 | `GET /api/app-installation/computers` | the Computers on this Server |
 
-**Subscribable Raft-to-App events** (delivered by signed webhook). Subscriptions are authorized per group; an event belongs to every group listed for it, and a subscription needs one of those groups:
+**Subscribable Raft-to-App events** (delivered by signed webhook). Subscriptions are authorized per group. An installation can subscribe to an event only when it holds every group listed for that event:
 
 | Event | Groups |
 |---|---|
@@ -133,7 +135,9 @@ App Notifications (experimental) has two halves. Both are scoped to one App inst
 | `computer.agent_started` | `computer`, `agent` |
 | `computer.agent_stopped` | `computer`, `agent` |
 
-This catalog is verified against the production server source (`packages/shared/src/appNotifications.ts` and `packages/server/src/routes/appInstallations.ts`). If an event or endpoint is not listed here, it is not part of the surface.
+Endpoints and events not listed here are not supported.
+
+<!-- source: packages/shared/src/appNotifications.ts, packages/server/src/routes/appInstallations.ts, packages/server/src/routes/oauth.ts @ cfde4ced -->
 
 ## Test locally
 
