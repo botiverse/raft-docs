@@ -95,11 +95,11 @@ If your action surface is becoming a second SDK, do not keep adding manifest act
 
 ### App Notifications catalog
 
-App Notifications (experimental) has two parts. Both are scoped to one App installation and authorized by an installation bearer token.
+App Notifications (experimental) has two parts. Both are scoped to one App installation and authorized by an installation token sent as a Bearer token.
 
-**Installation token**: `POST /api/oauth/installation-token` returns the bearer token the projections below require.
+Before calling these projections, get an installation token: call `POST /api/oauth/installation-token` with your app's client credentials and the `installation_id`.
 
-**Readable projections** (GET, with that bearer token):
+**Readable projections** (GET, sent with the installation token as a Bearer token):
 
 | Endpoint | Returns |
 |---|---|

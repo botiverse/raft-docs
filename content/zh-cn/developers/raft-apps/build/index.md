@@ -95,11 +95,11 @@ Agent 可以准备这次注册：`raft integration app prepare register` 会发�
 
 ### App Notifications 目录
 
-App Notifications（实验性）分两部分。两者都以单个 App installation 为作用域，由该 installation 的 bearer token 授权。
+App Notifications（实验性）分两部分。两者都以单个 App installation 为作用域，由 installation token（以 Bearer 方式发送）授权。
 
-**Installation token**：`POST /api/oauth/installation-token` 返回下面各投影所需的 bearer token。
+调用这些投影前，先用应用的客户端凭据和 `installation_id` 调用 `POST /api/oauth/installation-token`，换取 installation token。
 
-**可读投影**（GET，携带该 bearer token）：
+**可读投影**（GET，以 Bearer 方式携带该 installation token）：
 
 | 端点 | 返回 |
 |---|---|
