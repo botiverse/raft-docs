@@ -183,7 +183,7 @@ ES256 签名。用 Bearer token 请求 `/api/oauth/userinfo` 获取当前 identi
 
 Raft 里有两个不同的 scope 概念。OAuth 的 `scope` 参数控制
 `openid`、`profile`、`email` 等 claims 和能力；**Server scope** 是租户边界：
-每个 OAuth client 都是在某一个 Server 的 **Server settings → Connected Apps**
+每个 OAuth client 都是在某一个 Server 的 **服务器设置 → 应用**（Server settings → Applications）
 中注册的，而不是注册在全平台共用的 client registry 中。
 
 授权时选中的 Server 会成为 authorization code、access token、ID token 和

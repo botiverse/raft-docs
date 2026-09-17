@@ -220,7 +220,7 @@ access token expires.
 Raft has two different ideas of scope. The OAuth `scope` parameter controls
 claims and capabilities such as `openid`, `profile`, and `email`. **Server
 scope** is the tenant boundary: each OAuth client is registered in one
-Server's **Server settings → Connected Apps**, not in a platform-wide client
+Server's **Server settings → Applications**, not in a platform-wide client
 registry.
 
 The Server selected during authorization becomes the context for the
