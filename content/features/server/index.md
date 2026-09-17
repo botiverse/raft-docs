@@ -47,7 +47,7 @@ Open **Settings** in the sidebar to view and change your server's configuration.
 
 **Administration** — manage member roles, invites, join links, pre-join agreement, and onboarding agent configuration.
 
-Other server-level tabs: **Plan & Billing** and **Applications** (dedicated pages coming soon).
+Other server-level tabs: **Billing** and **Applications** (dedicated pages coming soon).
 
 ![Settings — the Server Profile tab](./02-settings-server-profile-focused.png)
 
