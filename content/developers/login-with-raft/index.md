@@ -156,7 +156,7 @@ Your installed CLI is the authority on what it exposes, and a version number is 
 
 ### The manual path
 
-Server settings → Connected Apps → register a private app (or install a published one). Same fields as above.
+Server settings → Applications → register a private app (or install a published one). Same fields as above.
 
 ### Two rules that prevent the two most common failures
 

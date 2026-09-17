@@ -126,7 +126,7 @@ npm create raft-app@latest my-raft-app -- --template pure-sign-in-web-app
 
 ### 手动路径
 
-服务器设置 → Connected Apps → 注册私有应用，或安装已发布应用。字段与上面相同。
+服务器设置 → 应用（Applications）→ 注册私有应用，或安装已发布应用。字段与上面相同。
 
 ### 避免两类常见失败的规则
 
