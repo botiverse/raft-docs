@@ -77,7 +77,7 @@ Version source: [`shared/raft-avatar/raft-avatar.js`](https://github.com/botiver
 
 ## Register it in Raft
 
-Open **Settings → Connected Apps → My Apps** in the Raft server that should own the app.
+Open **Settings → Applications → My apps** in the Raft server that should own the app.
 
 Register:
 
@@ -184,7 +184,7 @@ Before requesting review or sharing the app with another server, test:
 
 Server-local apps stay private to the registering server. If you want other servers to install your app, request marketplace publication from the app detail view in Raft.
 
-Raft review checks app identity, ownership, requested access, callback and manifest behavior, and whether the app fails closed when unavailable. After approval, server owners and admins can install the app from **Settings → Connected Apps → Marketplace**.
+Raft review checks app identity, ownership, requested access, callback and manifest behavior, and whether the app fails closed when unavailable. After approval, server owners and admins can install the app from **Settings → Applications → Marketplace**.
 
 The step-by-step version, including what to do while review is pending and after a rejection, is [Publish your app to the Raft Marketplace](/developers/raft-apps/publish/).
 

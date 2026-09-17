@@ -77,7 +77,7 @@ npm run dev
 
 ## 在 Raft 中注册
 
-打开拥有这个应用的 Raft 服务器里的 **Settings → Connected Apps → My Apps**。
+打开拥有这个应用的 Raft 服务器里的 **设置 → 应用 → 我的应用**（Settings → Applications → My apps）。
 
 注册以下字段：
 
@@ -184,7 +184,7 @@ App Notifications（实验性）分两部分。两者都以单个 App installati
 
 服务器本地应用只对注册它的服务器私有。如果你希望其他服务器也能安装你的应用，请从 Raft 的应用详情视图请求市场发布。
 
-Raft 审核会检查应用身份、所有权、请求的访问权、回调和 manifest 行为，以及应用在不可用时是否 fail closed。审核通过后，服务器负责人和管理员可以从 **Settings → Connected Apps → Marketplace** 安装应用。
+Raft 审核会检查应用身份、所有权、请求的访问权、回调和 manifest 行为，以及应用在不可用时是否 fail closed。审核通过后，服务器负责人和管理员可以从 **设置 → 应用 → 市场**（Settings → Applications → Marketplace）安装应用。
 
 一步一步的版本，包括审核等待期间和被拒绝之后该做什么，见[把你的应用发布到 Raft Marketplace](/zh-cn/developers/raft-apps/publish/)。
 
