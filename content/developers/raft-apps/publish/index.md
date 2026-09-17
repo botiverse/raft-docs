@@ -55,7 +55,7 @@ The receipt reads `Marketplace review requested (publish_requested) for <app nam
 
 ## Step 3: Wait for review
 
-Review is done by Raft, not by your server's admins. It checks app identity, ownership, requested access, callback and manifest behavior, and whether the app fails closed when it is unavailable.
+Review is done by Raft, not by your server's admins. It checks app identity, ownership, requested access, callback and manifest behavior, and whether the app fails closed when it is unavailable. Review usually takes up to seven working days.
 
 While the request is pending:
 
