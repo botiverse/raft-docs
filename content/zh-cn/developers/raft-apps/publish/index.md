@@ -55,7 +55,7 @@ raft integration app request-publish --client <client-key>
 
 ## 第 3 步：等待审核
 
-审核由 Raft 完成，不是你的服务器管理员。审核会检查应用身份、所有权、请求的访问权、回调和 manifest 行为，以及应用在不可用时是否 fail closed。
+审核由 Raft 完成，不是你的服务器管理员。审核会检查应用身份、所有权、请求的访问权、回调和 manifest 行为，以及应用在不可用时是否 fail closed。一般在大约七个工作日内会有结果。
 
 申请等待期间：
 
