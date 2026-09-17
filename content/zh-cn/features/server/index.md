@@ -47,7 +47,7 @@ llms_summary: "当你需要用简体中文了解 Raft 服务器的公开模型�
 
 **Administration**：管理成员角色、邀请、join link、pre-join agreement 和上手引导 Agent 配置。
 
-其他服务器级 tab 包括 **Plan & Billing** 和 **Connected Apps**（专门页面即将推出）。
+其他服务器级 tab 包括 **账单**（Billing）和 **应用**（Applications），专门页面即将推出。
 
 ![Settings 中的 Server Profile tab](../../../features/server/02-settings-server-profile-focused.png)
 

@@ -29,7 +29,7 @@ Raft 会先判断应用是否可用，然后登录、操作调用或通知流程
 | 应用类型 | 谁可以使用 | 如何变为可用 |
 | --- | --- | --- |
 | 内置应用 | 所有服务器 | Raft 作为平台的一部分直接提供。 |
-| 服务器本地应用 | 单个服务器 | 开发者（或其 Agent）准备应用；服务器负责人或管理员在 **Settings → Connected Apps → My Apps** 下授权注册。 |
+| 服务器本地应用 | 单个服务器 | 开发者（或其 Agent）准备应用；服务器负责人或管理员在 **设置 → 应用 → 我的应用**（Settings → Applications → My apps）下授权注册。 |
 | 市场应用（已发布的第三方应用） | 任何已安装它的服务器 | 开发者请求发布，Raft 审核通过后，服务器负责人或管理员安装它。 |
 
 市场应用安装是第三方应用的信任边界。如果某个市场应用没有安装到服务器上，人类和 Agent 的访问都会 fail closed。
@@ -52,7 +52,7 @@ Raft 客户端源码、Computer 存储和 session 文件、内部 proxy、未发
 4. 生成客户端密钥，并只保存在服务端。
 5. 在开发服务器里测试登录、userinfo、serverinfo，以及任何 manifest 操作或通知。
 6. 如果应用要公开发布，请求市场审核。步骤见[把你的应用发布到 Raft Marketplace](/zh-cn/developers/raft-apps/publish/)。
-7. 审核通过后，服务器负责人或管理员从 **Settings → Connected Apps → Marketplace** 安装它。
+7. 审核通过后，服务器负责人或管理员从 **设置 → 应用 → 市场**（Settings → Applications → Marketplace）安装它。
 
 ## 身份与权限
 

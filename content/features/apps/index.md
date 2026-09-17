@@ -26,7 +26,7 @@ Built-in apps are made by Raft and available to all servers automatically. No in
 
 ### Server-local apps
 
-Server-local apps are registered by a server's owner or admin under **Settings → Connected Apps**. They're private to that server.
+Server-local apps are registered by a server's owner or admin under **Settings → Applications**. They're private to that server.
 
 Use server-local apps for internal tools — a team dashboard, a content calendar, or any custom tool where your team should log in with their Raft identity instead of separate accounts.
 
@@ -46,17 +46,17 @@ The same app can be installed by many servers, but each server's connection is i
 
 ## The marketplace
 
-Server owners and admins manage connected apps from **Settings → Connected Apps**, which has three tabs:
+Server owners and admins manage connected apps from **Settings → Applications**, which has three tabs:
 
 - **Marketplace** — browse built-in apps and reviewed third-party listings. Search, filter, and view app details before installing.
 - **Installed** — apps currently connected to your server, including marketplace installs, private-shared installs, and server-local apps. Uninstall apps here.
-- **My Apps** — apps registered by your server. Edit metadata, manage credentials, or request marketplace publication.
+- **My apps** — apps registered by your server. Edit metadata, manage credentials, or request marketplace publication.
 
 ![Connected Apps settings — the Marketplace tab, with the built-in band and reviewed third-party listings](./01-connected-apps-marketplace.png)
 
 ### Installing a third-party app
 
-1. Open **Settings → Connected Apps → Marketplace**
+1. Open **Settings → Applications → Marketplace**
 2. Find the app and open its detail view
 3. Review the publisher, homepage, and requested data access
 4. Click **Install to this server**
@@ -69,8 +69,8 @@ Uninstalling an app revokes all active grants and tokens for that app on your se
 
 ## Creating a server-local app
 
-1. Go to **Settings → Connected Apps → My Apps**
-2. Click **Register App**
+1. Go to **Settings → Applications → My apps**
+2. Click **Register app**
 3. Enter the app name, homepage URL, callback URL, description, and primary category
 4. Save — Raft creates a client ID and shows the client secret once
 

@@ -26,7 +26,7 @@ Built-in app 由 Raft 提供，并自动对所有服务器可用。不需要安�
 
 ### Server-local apps
 
-Server-local app 由服务器负责人或管理员在 **Settings → Connected Apps** 下注册。它们只属于这个服务器。
+Server-local app 由服务器负责人或管理员在 **设置 → 应用**（Settings → Applications）下注册。它们只属于这个服务器。
 
 内部工具适合做成 server-local app，例如团队 dashboard、content calendar，或任何希望团队用 Raft identity 登录而不是单独建账号的自定义工具。
 
@@ -46,17 +46,17 @@ Third-party app 由外部开发者构建，经 Raft 审核后发布到 marketpla
 
 ## Marketplace
 
-服务器负责人和管理员从 **Settings → Connected Apps** 管理 connected apps。这里有三个 tab：
+服务器负责人和管理员从 **设置 → 应用**（Settings → Applications）管理 connected apps。这里有三个 tab：
 
-- **Marketplace**：浏览 built-in apps 和已审核的 third-party listings。安装前可以搜索、过滤并查看 app detail。
-- **Installed**：当前连接到服务器的 apps，包括 marketplace installs、private-shared installs 和 server-local apps。可以在这里卸载 app。
-- **My Apps**：你的服务器注册的 apps。可以编辑 metadata、管理 credentials，或申请 marketplace publication。
+- **市场**（Marketplace）：浏览 built-in apps 和已审核的 third-party listings。安装前可以搜索、过滤并查看 app detail。
+- **已安装**（Installed）：当前连接到服务器的 apps，包括 marketplace installs、private-shared installs 和 server-local apps。可以在这里卸载 app。
+- **我的应用**（My apps）：你的服务器注册的 apps。可以编辑 metadata、管理 credentials，或申请 marketplace publication。
 
 ![Connected Apps 设置页，Marketplace tab 显示 built-in band 和已 review 的 third-party listings](../../../features/apps/01-connected-apps-marketplace.png)
 
 ### 安装 third-party app
 
-1. 打开 **Settings → Connected Apps → Marketplace**
+1. 打开 **设置 → 应用 → 市场**（Settings → Applications → Marketplace）
 2. 找到 app 并打开 detail view
 3. 查看 publisher、homepage 和请求的数据访问权
 4. 点击 **Install to this server**
@@ -69,8 +69,8 @@ App 会出现在 **Installed** 下，并对成员可用。
 
 ## 创建 server-local app
 
-1. 前往 **Settings → Connected Apps → My Apps**
-2. 点击 **Register App**
+1. 前往 **设置 → 应用 → 我的应用**（Settings → Applications → My apps）
+2. 点击 **注册应用**（Register app）
 3. 输入 app name、homepage URL、callback URL、description 和 primary category
 4. 保存，Raft 会创建 client ID，并只显示一次 client secret
 

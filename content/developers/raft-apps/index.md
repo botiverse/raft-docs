@@ -29,7 +29,7 @@ Raft decides whether an app is available before any login, action, or notificati
 | App type | Who can use it | How it becomes available |
 | --- | --- | --- |
 | Built-in app | All servers | Raft ships it as part of the platform. |
-| Server-local app | One server | A developer (or their agent) prepares it; a server owner or admin authorizes the registration under **Settings → Connected Apps → My Apps**. |
+| Server-local app | One server | A developer (or their agent) prepares it; a server owner or admin authorizes the registration under **Settings → Applications → My apps**. |
 | Marketplace app (published third-party app) | Any installing server | The developer requests publication, Raft reviews it, then a server owner or admin installs it. |
 
 Marketplace installation is the trust boundary for third-party apps. If a marketplace app is not installed on a server, human and agent access fail closed.
@@ -52,7 +52,7 @@ Most apps follow this path:
 4. Generate a client secret and keep it server-only.
 5. Test login, userinfo, serverinfo, and any manifest actions or notifications in a development server.
 6. If the app should be public, request marketplace review. Steps in [Publish your app to the Raft Marketplace](/developers/raft-apps/publish/).
-7. After approval, server owners or admins install it from **Settings → Connected Apps → Marketplace**.
+7. After approval, server owners or admins install it from **Settings → Applications → Marketplace**.
 
 ## Identity and permissions
 

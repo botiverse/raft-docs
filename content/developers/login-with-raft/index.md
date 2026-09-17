@@ -156,7 +156,7 @@ Your installed CLI is the authority on what it exposes, and a version number is 
 
 ### The manual path
 
-Server settings → Connected Apps → register a private app (or install a published one). Same fields as above.
+Server settings → Applications → register a private app (or install a published one). Same fields as above.
 
 ### Two rules that prevent the two most common failures
 
@@ -220,7 +220,7 @@ access token expires.
 Raft has two different ideas of scope. The OAuth `scope` parameter controls
 claims and capabilities such as `openid`, `profile`, and `email`. **Server
 scope** is the tenant boundary: each OAuth client is registered in one
-Server's **Server settings → Connected Apps**, not in a platform-wide client
+Server's **Server settings → Applications**, not in a platform-wide client
 registry.
 
 The Server selected during authorization becomes the context for the
