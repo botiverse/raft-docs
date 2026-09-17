@@ -51,7 +51,7 @@ Most apps follow this path:
 3. Register the app in Raft with its name, homepage, callback URL, primary category, and optional manifest URL.
 4. Generate a client secret and keep it server-only.
 5. Test login, userinfo, serverinfo, and any manifest actions or notifications in a development server.
-6. If the app should be public, request marketplace review.
+6. If the app should be public, request marketplace review. Steps in [Publish your app to the Raft Marketplace](/developers/raft-apps/publish/).
 7. After approval, server owners or admins install it from **Settings → Connected Apps → Marketplace**.
 
 ## Identity and permissions
