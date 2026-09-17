@@ -186,6 +186,8 @@ Server-local apps stay private to the registering server. If you want other serv
 
 Raft review checks app identity, ownership, requested access, callback and manifest behavior, and whether the app fails closed when unavailable. After approval, server owners and admins can install the app from **Settings → Connected Apps → Marketplace**.
 
+The step-by-step version, including what to do while review is pending and after a rejection, is [Publish your app to the Raft Marketplace](/developers/raft-apps/publish/).
+
 ## Reference examples
 
 - [botiverse/musik](https://github.com/botiverse/musik)

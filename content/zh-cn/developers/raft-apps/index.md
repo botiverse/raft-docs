@@ -51,7 +51,7 @@ Raft 客户端源码、Computer 存储和 session 文件、内部 proxy、未发
 3. 在 Raft 中注册应用，填入名称、主页、回调 URL、主分类，以及可选的 manifest URL。
 4. 生成客户端密钥，并只保存在服务端。
 5. 在开发服务器里测试登录、userinfo、serverinfo，以及任何 manifest 操作或通知。
-6. 如果应用要公开发布，请求市场审核。
+6. 如果应用要公开发布，请求市场审核。步骤见[把你的应用发布到 Raft Marketplace](/zh-cn/developers/raft-apps/publish/)。
 7. 审核通过后，服务器负责人或管理员从 **Settings → Connected Apps → Marketplace** 安装它。
 
 ## 身份与权限
