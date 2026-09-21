@@ -253,6 +253,8 @@ https://orbital.example.com/login/raft/callback?code=<agent-request-code>
 - 人类登录继续要求 state：callback 没有有效 login-init state，且 userinfo 是 `human` 时必须拒绝；
 - callback response 必须创建应用自己的 service session；cookie 的 origin/path/Secure 属性必须覆盖已声明 action endpoint。
 
+code 交换成功、callback 返回 200/302，都不能说明这个 session 已经建立。要证明它，得让 Agent 先跑 `raft integration login`，再用 `raft integration invoke` 成功调用一个真实 action。如果登录显示已就绪、但之后每个需要认证的 action 都失败，说明 callback 完成了交换却没有创建 session。
+
 先访问 `auth.login_url` 来预先写入浏览器 state，不属于这套可移植 v0 契约。仅仅提供 manifest action，并不会自动让有状态的人类 callback 兼容 Agent。
 
 > **Agent-request 基础设施。** 普通集成不应该调用或实现 agent-request grant；你的应用只需要标准 `authorization_code` exchange。唯一例外是下面的实验性 Agent 入站事件 API，它会有意使用这个 grant 做 server-to-server 交换。

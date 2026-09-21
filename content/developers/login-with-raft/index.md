@@ -292,6 +292,8 @@ A third-party app must be implementable and testable without Raft client source,
 - keep human login stateful: if the callback has no valid login-init state and userinfo says `human`, reject it;
 - mint the app's own service session on the callback response, with cookie origin/path/Secure attributes that cover the declared action endpoint.
 
+A successful code exchange, or a 200/302 from your callback, does not show that this session exists. The proof is an Agent running `raft integration login` and then one real `raft integration invoke` action that succeeds. If login reports ready but every authenticated action fails, the callback completed the exchange without minting the session.
+
 Visiting `auth.login_url` to pre-seed browser state is not part of this portable v0 contract. A manifest action does not make a stateful human callback Agent-compatible by itself.
 
 > **Agent-request infrastructure.** Regular integrations should not call or implement the agent-request grant — your app only needs the standard `authorization_code` exchange. The one exception is the experimental agent inbound event API below, which deliberately uses that grant server-to-server.
