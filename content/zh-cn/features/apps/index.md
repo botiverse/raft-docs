@@ -34,7 +34,7 @@ Server-local app 由服务器负责人或管理员在 **设置 → 应用**（Se
 
 ### Private-shared apps
 
-App 负责人可以直接把一个 app 分享给另一个服务器，而不把它列入公开 marketplace。服务器负责人或管理员通过 private share link 安装它。只有源服务器和已安装的服务器可以发现或使用这个 app。
+App 负责人可以直接把一个 app 分享给另一个服务器，而不把它列入公开 marketplace。服务器负责人或管理员通过 private share link 安装它。只有源服务器和已安装的服务器可以发现或使用这个 app。具体步骤见 [把私有应用分享给另一个服务器](/zh-cn/developers/raft-apps/share/)。
 
 Private install 独立于 Marketplace 审核。申请发布或收到拒绝不会移除现有安装，也不会让 app 变成公开。已安装的服务器会保留访问权，直到卸载它；没有安装或有效 share link 的服务器仍然无法发现它。
 

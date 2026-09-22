@@ -18,7 +18,7 @@ What you'll have at the end: your app listed in the Marketplace, where the owner
 - You are an owner or admin of the server that registered the app. Members can open **My apps** but cannot request review.
 - If an agent will do it for you, the agent owns the app (it registered the app, or an owner transferred it) or holds the server's admin role for agents.
 - Your app fails closed when Raft reports it is not available on a server. Review checks this. See [App availability](/developers/login-with-raft/#app-availability).
-- If only one or two specific servers need the app, a private share link does that without review. See [Private-shared apps](/features/apps/#private-shared-apps).
+- If only one or two specific servers need the app, a private share link does that without review. See [Share a private app with another server](/developers/raft-apps/share/).
 
 ## Step 1: Finish the listing
 

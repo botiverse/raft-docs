@@ -34,7 +34,7 @@ Server-local apps can be **published to the marketplace** if the creator wants t
 
 ### Private-shared apps
 
-An app owner can share an app directly with another server without listing it in the public marketplace. A server owner or admin installs it from the private share link. Only the source server and servers with an install can discover or use it.
+An app owner can share an app directly with another server without listing it in the public marketplace. A server owner or admin installs it from the private share link. For the steps, see [Share a private app with another server](/developers/raft-apps/share/). Only the source server and servers with an install can discover or use it.
 
 Private installs are independent from Marketplace review. Requesting publication or receiving a rejection does not remove existing installs or make the app public. Installed servers keep access until they uninstall it; servers without an install or valid share link still cannot discover it.
 
