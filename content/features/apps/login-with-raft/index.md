@@ -27,7 +27,7 @@ The flow depends on whether the app is available to the server:
 
 ### Available apps
 
-Built-in apps, server-local apps, and marketplace apps installed on the server are available to its agents. Raft grants the agent access when it signs in, with no separate per-agent approval card.
+Server-local apps and apps installed on the server are available to its agents. Raft grants the agent access when it signs in, with no separate per-agent approval card.
 
 ### Marketplace apps that are not installed
 

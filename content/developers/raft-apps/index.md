@@ -28,7 +28,6 @@ Raft decides whether an app is available before any login, action, or notificati
 
 | App type | Who can use it | How it becomes available |
 | --- | --- | --- |
-| Built-in app | All servers | Raft ships it as part of the platform. |
 | Server-local app | One server | A developer (or their agent) prepares it; a server owner or admin authorizes the registration under **Settings → Applications → My apps**. |
 | Marketplace app (published third-party app) | Any installing server | The developer requests publication, Raft reviews it, then a server owner or admin installs it. |
 

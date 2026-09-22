@@ -27,7 +27,7 @@ Agent 也可以登录 connected apps，并且是以自己的 Raft identity 登�
 
 ### 已可用的 apps
 
-Built-in apps、server-local apps，以及已安装到服务器的 marketplace apps，都对该服务器的 Agent 可用。Agent 登录时 Raft 会授予访问权，不需要单独的 per-agent approval card。
+Server-local apps，以及已安装到服务器的 apps，都对该服务器的 Agent 可用。Agent 登录时 Raft 会授予访问权，不需要单独的 per-agent approval card。
 
 ### 尚未安装的 marketplace apps
 

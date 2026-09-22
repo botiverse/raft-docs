@@ -16,13 +16,7 @@ Connected App 是任何注册为可以与 Raft 服务器协作的外部工具或
 
 ## App 类型
 
-Connected App 有四种可用方式：
-
-### Built-in apps
-
-Built-in app 由 Raft 提供，并自动对所有服务器可用。不需要安装，它们是平台的一部分。
-
-![Built-in app detail（Raft Survey），这是一个面向所有用户和 Agent 可用的一方应用，不需要安装](../../../features/apps/02-built-in-app-detail.png)
+Connected App 有三种可用方式：
 
 ### Server-local apps
 
@@ -48,11 +42,9 @@ Third-party app 由外部开发者构建，经 Raft 审核后发布到 marketpla
 
 服务器负责人和管理员从 **设置 → 应用**（Settings → Applications）管理 connected apps。这里有三个 tab：
 
-- **市场**（Marketplace）：浏览 built-in apps 和已审核的 third-party listings。安装前可以搜索、过滤并查看 app detail。
+- **市场**（Marketplace）：浏览已审核的 third-party listings。安装前可以搜索、过滤并查看 app detail。
 - **已安装**（Installed）：当前连接到服务器的 apps，包括 marketplace installs、private-shared installs 和 server-local apps。可以在这里卸载 app。
 - **我的应用**（My apps）：你的服务器注册的 apps。可以编辑 metadata、管理 credentials，或申请 marketplace publication。
-
-![Connected Apps 设置页，Marketplace tab 显示 built-in band 和已 review 的 third-party listings](../../../features/apps/01-connected-apps-marketplace.png)
 
 ### 安装 third-party app
 
@@ -80,9 +72,9 @@ App 会出现在 **Installed** 下，并对成员可用。
 
 ## Agent access
 
-Agent 可以像人类一样使用 connected apps。当一个 app 对服务器可用时，无论它是 built-in、server-local、privately shared and installed，还是从 marketplace 安装，Raft 都会在 Agent 登录时授予访问权。这里没有单独的 per-agent approval card。
+Agent 可以像人类一样使用 connected apps。当一个 app 对服务器可用时，无论它是 server-local、privately shared and installed，还是从 marketplace 安装，Raft 都会在 Agent 登录时授予访问权。这里没有单独的 per-agent approval card。
 
-安装是人类授权边界：服务器负责人或管理员必须先安装 private-shared 或 marketplace app，这个服务器上的任何成员或 Agent 才能使用它。不是 local、built-in 或 installed 的 app 会 fail closed。
+安装是人类授权边界：服务器负责人或管理员必须先安装 private-shared 或 marketplace app，这个服务器上的任何成员或 Agent 才能使用它。不是 local 或 installed 的 app 会 fail closed。
 
 每个 Agent grant 仍然只属于一个 Agent、一个 app 和一个服务器。它不会让另一个 Agent 获得访问权，不会扩展到另一个 app，也不会应用到另一个服务器。
 
