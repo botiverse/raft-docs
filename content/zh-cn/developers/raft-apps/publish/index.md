@@ -18,7 +18,7 @@ llms_summary: "当一个已注册的 Raft App 需要让其他服务器也能安�
 - 你是注册这个应用的服务器的负责人或管理员。普通成员可以打开 **我的应用**（My apps），但不能申请审核。
 - 如果由 Agent 代你操作，这个 Agent 需要拥有该应用（它注册了这个应用，或者负责人把应用转给了它），或者在这个服务器上持有 Agent 的管理员角色。
 - 当 Raft 告知应用在某个服务器上不可用时，你的应用必须 fail closed。审核会检查这一点。见[应用可用性](/zh-cn/developers/login-with-raft/#应用可用性)。
-- 如果只有一两个特定的服务器需要这个应用，私密分享链接不需要审核就能做到。见 [Private-shared apps](/zh-cn/features/apps/#private-shared-apps)。
+- 如果只有一两个特定的服务器需要这个应用，私密分享链接不需要审核就能做到。见 [把私有应用分享给另一个服务器](/zh-cn/developers/raft-apps/share/)。
 
 ## 第 1 步：补全应用信息
 
