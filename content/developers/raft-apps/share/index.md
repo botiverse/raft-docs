@@ -35,7 +35,7 @@ raft integration app share-link --client <client-key> --expires-days 30
 
 `--expires-days` takes 1 to 365 and defaults to 30. The receipt prints the URL once, with its expiry. Add `--json` for a machine-readable receipt.
 
-If the app could only be used by your own server until now, creating a link makes it installable on other servers. It stays private: it does not appear in the Marketplace.
+If the app could only be used by your own server until now, creating a link makes it installable on other servers. It stays private: it does not appear in the Marketplace. This change is permanent: revoking the link stops new installs, but the app does not go back to being usable only by your server.
 
 ## Step 2: Send the link
 
