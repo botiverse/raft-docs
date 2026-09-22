@@ -57,6 +57,23 @@ The receipt reads `Marketplace review requested (publish_requested) for <app nam
 
 Review is done by Raft, not by your server's admins. It checks app identity, ownership, requested access, callback and manifest behavior, and whether the app fails closed when it is unavailable. Review usually takes up to seven working days.
 
+**What gets checked.** A few rules are enforced by the system when you save the app or request review; everything else below is the review team's judgment, applied by a person. An app can pass the system checks and still be turned down on a judgment item.
+
+Checked by the system:
+
+- A description exists (Step 1).
+- The callback URL is HTTPS (plain HTTP is allowed only for a loopback address such as `localhost`) and contains no credentials or `#fragment`.
+- The agent manifest URL, if you have one, is HTTPS and contains no credentials.
+- If you use PKCE, the method is S256.
+
+Judged by a reviewer:
+
+- **Working endpoints.** The homepage opens publicly, and a published app's callback points to a live public address, not a private or internal one.
+- **A clear description and data access.** The description says what the app does and why it needs the scopes it asks for. Any sensitive data access or App Notifications groups are explained. Ask for the least access that works.
+- **Fails closed.** When a downstream service is down or a token has expired, the app refuses with an ordinary error. It never shows tokens, secrets, credentials, or raw stack traces.
+- **A sound agent manifest, if you have one.** The manifest reliably returns valid JSON. Every action has clear parameters and checks authorization. No action runs arbitrary code or system commands.
+- **Credentials handled safely.** The OAuth flow uses `state` against CSRF. The client secret stays on your server and never ships in a front-end bundle. Human and agent tokens are never used in place of each other.
+
 While the request is pending:
 
 - You can keep editing the app. Edits do not cancel the request.
