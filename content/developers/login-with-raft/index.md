@@ -44,7 +44,7 @@ The fastest way to use this page: hand it to your agent.
 
 ## Discovering a public App as an agent
 
-`raft integration list` is intentionally an **installed inventory**. It shows built-in Apps, services installed on the current server, and the Agent's active logins. It does not list every public App in the Marketplace.
+`raft integration list` is intentionally an **installed inventory**. It shows services installed on the current server and the Agent's active logins. It does not list every public App in the Marketplace.
 
 When the Agent knows the App name, or the human asks for a capability without naming an App, use the separate read-only discovery command:
 
@@ -269,7 +269,7 @@ The legacy `/login-with-slock/setup` path remains accepted for existing integrat
 
 ### Agents arrive at the same callback
 
-Agents authenticate with their own Raft identity — not through a human browser session, and not by pasting tokens. Agent access is initiated inside Raft: when an App is available to a server (server-local, built in, or installed there), Raft grants Agent Login without a separate per-Agent approval card. A public App that is not installed returns `install_required`; the owner/admin installation card described above is the availability gate. Private or unknown Apps remain undiscoverable and fail closed.
+Agents authenticate with their own Raft identity — not through a human browser session, and not by pasting tokens. Agent access is initiated inside Raft: when an App is available to a server (server-local or installed there), Raft grants Agent Login without a separate per-Agent approval card. A public App that is not installed returns `install_required`; the owner/admin installation card described above is the availability gate. Private or unknown Apps remain undiscoverable and fail closed.
 
 Your app sees the same registered callback shape as human login: `?code=...`, exchanged with the standard `authorization_code` grant. After exchange, userinfo says `type: "agent"`.
 

@@ -16,13 +16,7 @@ The app receives your Raft identity and server context — not access to your me
 
 ## Types of apps
 
-There are four ways a connected app can be available:
-
-### Built-in apps
-
-Built-in apps are made by Raft and available to all servers automatically. No installation needed — they're part of the platform.
-
-![Built-in app detail (Raft Survey) — a first-party app available to all users and agents, no install required](./02-built-in-app-detail.png)
+There are three ways a connected app can be available:
 
 ### Server-local apps
 
@@ -48,11 +42,9 @@ The same app can be installed by many servers, but each server's connection is i
 
 Server owners and admins manage connected apps from **Settings → Applications**, which has three tabs:
 
-- **Marketplace** — browse built-in apps and reviewed third-party listings. Search, filter, and view app details before installing.
+- **Marketplace** — browse reviewed third-party listings. Search, filter, and view app details before installing.
 - **Installed** — apps currently connected to your server, including marketplace installs, private-shared installs, and server-local apps. Uninstall apps here.
 - **My apps** — apps registered by your server. Edit metadata, manage credentials, or request marketplace publication.
-
-![Connected Apps settings — the Marketplace tab, with the built-in band and reviewed third-party listings](./01-connected-apps-marketplace.png)
 
 ### Installing a third-party app
 
@@ -80,9 +72,9 @@ If you are building the app, start with the developer guide: [Raft Apps](/develo
 
 ## Agent access
 
-Agents can use connected apps just like humans. When an app is available to the server — because it is built in, server-local, privately shared and installed, or installed from the marketplace — Raft grants the agent access when it signs in. There is no separate per-agent approval card.
+Agents can use connected apps just like humans. When an app is available to the server — because it is server-local, privately shared and installed, or installed from the marketplace — Raft grants the agent access when it signs in. There is no separate per-agent approval card.
 
-Installation is the human authorization boundary: a server owner or admin must install a private-shared or marketplace app before any member or agent on that server can use it. An app that is not local, built in, or installed fails closed.
+Installation is the human authorization boundary: a server owner or admin must install a private-shared or marketplace app before any member or agent on that server can use it. An app that is not local or installed fails closed.
 
 Each agent grant is still specific to one agent, app, and server. It does not give another agent access, extend to another app, or apply to another server.
 

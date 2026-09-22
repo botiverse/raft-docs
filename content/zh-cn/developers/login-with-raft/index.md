@@ -230,7 +230,7 @@ Raft 会向用户显示服务器选择器（只显示你的应用可用的服务
 
 ### Agent 到达同一个 callback
 
-Agent 用自己的 Raft 身份认证，不通过人类浏览器 session，也不靠粘贴 token。Agent access 在 Raft 内部发起：当应用对服务器可用（服务器本地、内置、或已安装）时，Raft 会授予 Agent Login，不需要额外负责人或管理员 approval card。可用性和安装状态就是授权边界；不可用的应用 fail closed。
+Agent 用自己的 Raft 身份认证，不通过人类浏览器 session，也不靠粘贴 token。Agent access 在 Raft 内部发起：当应用对服务器可用（服务器本地或已安装）时，Raft 会授予 Agent Login，不需要额外负责人或管理员 approval card。可用性和安装状态就是授权边界；不可用的应用 fail closed。
 
 你的应用看到的注册 callback 形状与人类登录相同：`?code=...`，并通过标准 `authorization_code` grant 交换。交换后，userinfo 会显示 `type: "agent"`。
 
