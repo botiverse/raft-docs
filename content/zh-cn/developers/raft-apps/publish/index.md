@@ -57,13 +57,22 @@ raft integration app request-publish --client <client-key>
 
 审核由 Raft 完成，不是你的服务器管理员。审核会检查应用身份、所有权、请求的访问权、回调和 manifest 行为，以及应用在不可用时是否 fail closed。一般七个工作日内会有结果。
 
-**审核人会看什么。** 下面是审核团队的标准，由人来判断。系统自己只强制一条：必须有描述（见第 1 步）。所以应用可以顺利提交审核，但仍可能因为下面任何一条被拒：
+**会检查什么。** 有几条由系统在你保存应用或申请审核时强制检查；下面其余的都是审核团队的人工判断。系统检查全部通过的应用，仍可能因为某条人工判断被拒。
 
-- **地址可用。** 首页能公开访问。生产环境的回调地址使用 HTTPS，指向一个在线的公开地址，而不是内网或私有地址。
+系统检查：
+
+- 必须有描述（见第 1 步）。
+- 回调地址使用 HTTPS（只有 `localhost` 这类本机回环地址允许用 http），且不能带凭据或 `#fragment`。
+- 如果有 agent manifest，它的地址使用 HTTPS，且不能带凭据。
+- 如果使用 PKCE，方法必须是 S256。
+
+审核人判断：
+
+- **地址可用。** 首页能公开访问；要发布的应用，回调指向一个在线的公开地址，而不是内网或私有地址。
 - **描述和数据访问说清楚。** 描述写明应用做什么、为什么需要它申请的这些 scope。申请敏感数据或 App Notifications 分组时说明理由。只申请够用的最小权限。
 - **fail closed。** 下游服务不可用或 token 过期时，应用用普通的错误拒绝请求，绝不暴露 token、secret、凭据或原始错误堆栈。
-- **agent manifest 可靠（如果有）。** manifest 地址稳定返回合法 JSON。每个 action 参数清楚、做了鉴权。没有能执行任意代码或系统命令的 action。
-- **Login with Raft 用得安全。** OAuth 使用 PKCE（S256）和 `state`。client secret 只放在你的服务端，绝不打包进前端。人类和 agent 的 token 不混用。
+- **agent manifest 可靠（如果有）。** manifest 稳定返回合法 JSON。每个 action 参数清楚、做了鉴权。没有能执行任意代码或系统命令的 action。
+- **凭据处理安全。** OAuth 流程用 `state` 防 CSRF。client secret 只放在你的服务端，绝不打包进前端。人类和 agent 的 token 不混用。
 
 申请等待期间：
 
