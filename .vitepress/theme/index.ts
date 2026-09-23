@@ -131,6 +131,88 @@ const LocaleLinkRewriter = defineComponent({
   },
 })
 
+// The top nav tabs are separate pages, so VitePress draws the active underline
+// as a per-link ::after: on navigation the old bar disappears and a new one
+// appears, with nothing in between to animate. This measures the active link
+// and drives ONE shared bar on the menu container, so it travels instead.
+//
+// It also stamps data-text on each label, which custom.css uses to reserve the
+// bold width. Measured on production (Inter 14px): Introduction 80.9 -> 83.7,
+// Features 58.2 -> 59.8, Developers 75.9 -> 77.8. Each word needs a different
+// correction, which is why one letter-spacing value cannot fix the shift and a
+// hidden bold copy can.
+//
+// Progressive enhancement on purpose: the per-link bar stays in the stylesheet
+// and is only hidden once `rd-tabs-ready` is set, so if this never runs the
+// tabs look exactly as they do today rather than losing their underline.
+const NavTabIndicator = defineComponent({
+  setup() {
+    const { page } = useData()
+    let frame = 0
+    let observer: MutationObserver | null = null
+
+    function place() {
+      const menu = document.querySelector<HTMLElement>('.VPNavBar .VPNavBarMenu')
+      if (!menu) return
+
+      for (const label of menu.querySelectorAll<HTMLElement>('.VPNavBarMenuLink > span')) {
+        const text = label.textContent?.trim() ?? ''
+        if (label.dataset.text !== text) label.dataset.text = text
+      }
+
+      const active = menu.querySelector<HTMLElement>('.VPNavBarMenuLink.active')
+      if (!active) {
+        // No active tab on this route: fall back to no bar rather than leaving
+        // one parked under whichever tab was last active.
+        menu.classList.remove('rd-tabs-ready')
+        return
+      }
+
+      const menuBox = menu.getBoundingClientRect()
+      const activeBox = active.getBoundingClientRect()
+      if (activeBox.width === 0) return // not laid out yet; a later pass will catch it
+
+      // 8px each side matches the inset the per-link bar has always used, so
+      // the shared bar lands exactly where the old one did.
+      menu.style.setProperty('--rd-tab-x', `${Math.round(activeBox.left - menuBox.left + 8)}px`)
+      menu.style.setProperty('--rd-tab-w', `${Math.round(activeBox.width - 16)}px`)
+      menu.classList.add('rd-tabs-ready')
+    }
+
+    function schedule() {
+      window.cancelAnimationFrame(frame)
+      frame = window.requestAnimationFrame(() => {
+        void nextTick(place)
+      })
+    }
+
+    onMounted(() => {
+      schedule()
+      // VitePress toggles `.active` in place on client-side navigation, so the
+      // class change is the signal, not a remount.
+      const menu = document.querySelector('.VPNavBar .VPNavBarMenu')
+      if (menu) {
+        observer = new MutationObserver(schedule)
+        observer.observe(menu, { attributes: true, subtree: true, attributeFilter: ['class'] })
+      }
+      window.addEventListener('resize', schedule)
+      // Web fonts change text width after first paint; without this the bar is
+      // measured against the fallback face and sits slightly wrong.
+      void document.fonts?.ready.then(schedule)
+    })
+
+    onUnmounted(() => {
+      observer?.disconnect()
+      window.removeEventListener('resize', schedule)
+      window.cancelAnimationFrame(frame)
+    })
+
+    watch(() => page.value.relativePath, schedule)
+
+    return () => null
+  },
+})
+
 function MarkdownLink() {
   const { page, lang } = useData()
   const copy = uiCopy(lang.value)
@@ -165,7 +247,7 @@ export default {
     return h(DefaultTheme.Layout, null, {
       'doc-before': () => h(MarkdownLink),
       'nav-bar-content-after': () => h(OpenRaftCta),
-      'layout-bottom': () => h(LocaleLinkRewriter),
+      'layout-bottom': () => [h(LocaleLinkRewriter), h(NavTabIndicator)],
     })
   },
   enhanceApp({ app }: EnhanceAppContext) {
