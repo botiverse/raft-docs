@@ -269,6 +269,55 @@
   height: 3px;
   background: var(--rd-nav-active-bar);
 }
+/* Bold costs width, and it costs a DIFFERENT amount per word (measured on
+   production, Inter 14px: Introduction +2.8px, Features +1.7px, Developers
+   +1.9px), so no single letter-spacing value can hold the row still. Reserve
+   the bold width instead: a hidden bold copy of the label sits in the same
+   grid cell at zero height, so the box is always as wide as the bold form and
+   nothing moves when the active tab changes. `data-text` is stamped by
+   NavTabIndicator in theme/index.ts. */
+.VPNavBar .VPNavBarMenu .VPNavBarMenuLink > span {
+  display: inline-grid;
+}
+.VPNavBar .VPNavBarMenu .VPNavBarMenuLink > span::after {
+  content: attr(data-text);
+  grid-area: 1 / 1;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  font-weight: 700;
+  pointer-events: none;
+}
+
+/* One shared underline that travels between tabs. Each tab is its own page, so
+   a per-link bar can only blink out and back in; this one is a single element
+   that moves. Absolutely positioned, so it is not a flex item of the menu.
+   Until `rd-tabs-ready` is set (no JS, or before the first measurement) the
+   per-link bar above is what shows, so the tabs are never left with no
+   underline at all. */
+.VPNavBar .VPNavBarMenu {
+  position: relative;
+}
+.VPNavBar .VPNavBarMenu.rd-tabs-ready .VPNavBarMenuLink.active::after {
+  content: none;
+}
+.VPNavBar .VPNavBarMenu.rd-tabs-ready::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: var(--rd-tab-w, 0);
+  transform: translateX(var(--rd-tab-x, 0));
+  background: var(--rd-nav-active-bar);
+  transition: transform 240ms cubic-bezier(0.2, 0.7, 0.2, 1),
+              width 240ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .VPNavBar .VPNavBarMenu.rd-tabs-ready::after {
+    transition: none;
+  }
+}
 
 /* ──────────────────────────────────────────────────────────────
    Info boxes — three distinct semantic colors.
