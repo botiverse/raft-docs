@@ -83,9 +83,11 @@
    to protect its brand-anchor signal value.
    ────────────────────────────────────────────────────────────── */
 :root {
-  /* Wider sidebar so long page titles stay on one line (default 272px).
+  /* A little wider than VitePress's 272px so long page titles stay on one
+     line, but narrower than the 320px we ran before: at 320 the right-hand
+     gap read as slack rather than a column (Cindy, 2026-09-23).
      !important so it wins regardless of stylesheet order vs VitePress root. */
-  --vp-sidebar-width: 320px !important;
+  --vp-sidebar-width: 280px !important;
   --rd-sidebar-fg: #141111;
   --rd-sidebar-fg-muted: rgba(20, 17, 17, 0.55);
   --rd-sidebar-hover-bg: rgba(20, 17, 17, 0.04);
@@ -110,11 +112,56 @@
 
 /* ── Sidebar ─────────────────────────────────────────────────────
    Page title = the click target; section label = auxiliary divider. */
+/* The header rule under the wordmark and the nav divider to its right are
+   one line to the eye, and they did not meet: VitePress draws the sidebar
+   half as a border on the title column (which ends 32px short of the sidebar
+   edge and starts 68px in), and the nav `.divider` reserves the whole sidebar
+   width before painting. Measured at 1512px: the border ran x=68..324 while
+   the divider line began at x=356.
+
+   Fixed by letting the one element that already spans the viewport draw the
+   whole line, and clearing the partial border so nothing doubles up. */
+@media (min-width: 960px) {
+  .VPNavBar.has-sidebar .divider {
+    padding-left: 0 !important;
+  }
+  .VPNavBar.has-sidebar .title,
+  .VPNavBar.has-sidebar .VPNavBarTitle {
+    border-bottom-color: transparent !important;
+  }
+  /* Every line in the sidebar starts at x=48 (Cindy's number): the column
+     inset is 36px, the section label adds 12px, and a page link adds 10px of
+     padding over a 2px transparent active strap. The wordmark is set to the
+     same 48px on the outer column; the inner link is zeroed so the logo does
+     not pick the inset up twice. */
+  .VPNavBar.has-sidebar .title {
+    padding-left: 48px !important;
+  }
+  .VPNavBar.has-sidebar .VPNavBarTitle .title {
+    padding-left: 0 !important;
+  }
+}
+/* Horizontal padding. VitePress reserves 32px, then at the widest breakpoint
+   replaces it with a centring calc that grows with the viewport (68px at
+   1512), and every row adds its own 12px on top. The result reads as a wide
+   empty margin rather than a column. Fixed inset instead, so the text starts
+   at the same place at every width. */
+@media (min-width: 960px) {
+  .VPSidebar {
+    padding-left: 36px !important;
+    padding-right: 16px !important;
+  }
+}
+@media (min-width: 1440px) {
+  .VPSidebar {
+    padding-left: 36px !important;
+  }
+}
 /* Section label (level-0): color CONSTANT (!important beats VitePress's
    .has-active rule that otherwise darkens the active page's section). */
-/* Tighter group spacing (was the default 24px bottom gap). */
+/* Tighter group spacing (was the default 24px bottom gap, then 14px). */
 .VPSidebar .VPSidebarItem.level-0 {
-  padding-bottom: 14px;
+  padding-bottom: 8px;
 }
 /* Drop VitePress's default group divider lines (border-top between
    top-level sidebar groups). The uppercase section labels + spacing
@@ -130,7 +177,7 @@
   padding-top: 0 !important;
 }
 .VPSidebar .VPSidebarItem.level-0 > .item > .text {
-  padding: 12px 12px 4px;
+  padding: 8px 10px 4px 12px;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -144,7 +191,7 @@
 .VPSidebar .VPSidebarItem.level-1 .link {
   display: block;
   width: 100%;
-  padding: 4px 14px 4px 12px;
+  padding: 4px 12px 4px 10px;
   border-left: 2px solid transparent;
   border-radius: 0;
   color: var(--rd-sidebar-fg);
