@@ -278,6 +278,12 @@
    NavTabIndicator in theme/index.ts. */
 .VPNavBar .VPNavBarMenu .VPNavBarMenuLink > span {
   display: inline-grid;
+  /* Centre the visible label inside the reserved box. Without this the lighter
+     inactive text is start-aligned in a box sized for bold, so it sits ~1.7-1.9px
+     left of centre (measured: Features rightGap 1.66, Developers 1.89) and then
+     grows rightwards when it becomes active. That is the layout shift this block
+     removes, reappearing as an optical one inside the slot (Cindy, 2026-09-23). */
+  justify-items: center;
 }
 .VPNavBar .VPNavBarMenu .VPNavBarMenuLink > span::after {
   content: attr(data-text);
