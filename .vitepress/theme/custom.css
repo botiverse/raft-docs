@@ -130,6 +130,18 @@
    Fixed by letting the one element that already spans the viewport draw the
    whole line, and clearing the partial border so nothing doubles up. */
 @media (min-width: 960px) {
+  /* The header band over the sidebar column must be painted by the FIXED nav,
+     not by the sticky `.curtain` inside the scroller. The curtain is a separate
+     layer that the compositor moves to follow the scroll, so during a fast
+     wheel scroll it arrives a frame late and rows paint in the header band —
+     reproduced by dispatching real wheel events: a section label rendered
+     fully legible above the divider in five consecutive frames. Setting
+     scrollTop programmatically never shows it, because that path does not go
+     through the compositor, which is why two earlier readings missed it.
+     An opaque nav column cannot lag: it is not tracking anything. */
+  .VPNavBar.has-sidebar .title {
+    background-color: var(--vp-sidebar-bg-color) !important;
+  }
   .VPNavBar.has-sidebar .divider {
     padding-left: 0 !important;
   }
