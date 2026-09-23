@@ -88,6 +88,14 @@
      gap read as slack rather than a column (Cindy, 2026-09-23).
      !important so it wins regardless of stylesheet order vs VitePress root. */
   --vp-sidebar-width: 280px !important;
+  /* The sidebar's horizontal inset, declared once. VitePress hard-codes its
+     own 32px in two places that must agree: `.VPSidebar`'s padding and the
+     negative margins on `.curtain`, the sticky block that masks rows scrolling
+     under the header. Overriding only the padding left a 20px unmasked strip
+     down the left edge, and section labels bled through it (Cindy, 2026-09-23).
+     ⇒ Both sides read these, so they cannot drift apart again. */
+  --rd-sidebar-pad-left: 36px;
+  --rd-sidebar-pad-right: 16px;
   --rd-sidebar-fg: #141111;
   --rd-sidebar-fg-muted: rgba(20, 17, 17, 0.55);
   --rd-sidebar-hover-bg: rgba(20, 17, 17, 0.04);
@@ -148,13 +156,18 @@
    at the same place at every width. */
 @media (min-width: 960px) {
   .VPSidebar {
-    padding-left: 36px !important;
-    padding-right: 16px !important;
+    padding-left: var(--rd-sidebar-pad-left) !important;
+    padding-right: var(--rd-sidebar-pad-right) !important;
+  }
+  /* Mask the full column, not VitePress's assumed 32px inset. */
+  .VPSidebar .curtain {
+    margin-left: calc(var(--rd-sidebar-pad-left) * -1) !important;
+    margin-right: calc(var(--rd-sidebar-pad-right) * -1) !important;
   }
 }
 @media (min-width: 1440px) {
   .VPSidebar {
-    padding-left: 36px !important;
+    padding-left: var(--rd-sidebar-pad-left) !important;
   }
 }
 /* Section label (level-0): color CONSTANT (!important beats VitePress's
