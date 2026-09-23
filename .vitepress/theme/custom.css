@@ -83,9 +83,11 @@
    to protect its brand-anchor signal value.
    ────────────────────────────────────────────────────────────── */
 :root {
-  /* Wider sidebar so long page titles stay on one line (default 272px).
+  /* A little wider than VitePress's 272px so long page titles stay on one
+     line, but narrower than the 320px we ran before: at 320 the right-hand
+     gap read as slack rather than a column (Cindy, 2026-09-23).
      !important so it wins regardless of stylesheet order vs VitePress root. */
-  --vp-sidebar-width: 320px !important;
+  --vp-sidebar-width: 280px !important;
   --rd-sidebar-fg: #141111;
   --rd-sidebar-fg-muted: rgba(20, 17, 17, 0.55);
   --rd-sidebar-hover-bg: rgba(20, 17, 17, 0.04);
@@ -127,11 +129,13 @@
   .VPNavBar.has-sidebar .VPNavBarTitle {
     border-bottom-color: transparent !important;
   }
-  /* Wordmark aligned with the section labels below it (sidebar inset 20px +
-     the label's own 10px). The outer column keeps the inset; the inner link
-     is zeroed so the logo does not pick it up twice. */
+  /* Every line in the sidebar starts at x=48 (Cindy's number): the column
+     inset is 36px, the section label adds 12px, and a page link adds 10px of
+     padding over a 2px transparent active strap. The wordmark is set to the
+     same 48px on the outer column; the inner link is zeroed so the logo does
+     not pick the inset up twice. */
   .VPNavBar.has-sidebar .title {
-    padding-left: 30px !important;
+    padding-left: 48px !important;
   }
   .VPNavBar.has-sidebar .VPNavBarTitle .title {
     padding-left: 0 !important;
@@ -144,13 +148,13 @@
    at the same place at every width. */
 @media (min-width: 960px) {
   .VPSidebar {
-    padding-left: 20px !important;
+    padding-left: 36px !important;
     padding-right: 16px !important;
   }
 }
 @media (min-width: 1440px) {
   .VPSidebar {
-    padding-left: 20px !important;
+    padding-left: 36px !important;
   }
 }
 /* Section label (level-0): color CONSTANT (!important beats VitePress's
@@ -173,7 +177,7 @@
   padding-top: 0 !important;
 }
 .VPSidebar .VPSidebarItem.level-0 > .item > .text {
-  padding: 8px 10px 4px;
+  padding: 8px 10px 4px 12px;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.08em;
