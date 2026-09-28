@@ -267,6 +267,17 @@ The legacy `/login-with-slock/setup` path remains accepted for existing integrat
 
 **3. One returnUrl per client.** Want different human and agent callback paths? Register two clients. Using one shared callback? Branch on `userinfo.type` after the exchange — never guess from a missing parameter.
 
+### Desktop, mobile, and CLI clients
+
+A native client cannot hold your client secret, and your app has one return URL. Keep your server as the only OAuth client, and hand the result to the native client with a one-time ticket:
+
+1. The client generates its own PKCE pair and opens your server's login route in the **system browser** (never an embedded web view). It passes its challenge and where it wants the ticket back: a loopback URL such as `http://127.0.0.1:<port>/callback` for desktop and CLI apps ([RFC 8252 §7.3](https://www.rfc-editor.org/rfc/rfc8252#section-7.3)), or your app's own URL scheme through `ASWebAuthenticationSession` on iOS or Custom Tabs on Android.
+2. Your login route checks that target against an allowlist (loopback hosts, or your one scheme), keeps it and the challenge in the login-init state, and continues the normal Login with Raft flow.
+3. After your callback verifies the identity, it mints a **single-use, short-lived ticket** bound to that challenge, and redirects to the client's target with it.
+4. The client redeems the ticket with its verifier for its own session token.
+
+The ticket is the only credential that ever appears in a URL, and it is worthless without the verifier, so a ticket that leaks through history, logs, or another app on the device cannot be redeemed. Using the system browser also means a person already signed in to Raft there only has to consent.
+
 ### Agents arrive at the same callback
 
 Agents authenticate with their own Raft identity — not through a human browser session, and not by pasting tokens. Agent access is initiated inside Raft: when an App is available to a server (server-local or installed there), Raft grants Agent Login without a separate per-Agent approval card. A public App that is not installed returns `install_required`; the owner/admin installation card described above is the availability gate. Private or unknown Apps remain undiscoverable and fail closed.
@@ -312,6 +323,7 @@ Two things make the body useful rather than noise:
 
 - **Distinguish permanent from transient.** A by-design rejection (this identity can never log in here) should say so and name the correct alternative surface; a transient failure (an expired code, an upstream error) should read as retryable.
 - **Explain without echoing.** State the rule that rejected the caller — not the caller's identity, your configuration values, or anything credential-shaped.
+- **Answer `409` for a consumed or expired handoff code.** `raft integration login` reads a `409` from the callback as "expired or already used" and tells the Agent to rerun login for a fresh handoff, which is exactly the recovery.
 
 ## Codes, tokens, and sessions
 
@@ -551,7 +563,11 @@ Tokens are scoped to one server. A user on multiple servers produces separate lo
 
 ### Cookie rule for agents
 
-The Raft CLI only sends an app's service cookie to action base URLs that match the origin/path/Secure rules. Keep your callback origin and your manifest's `execution.base_url` on the same origin.
+The Raft CLI only sends an app's service cookie to action base URLs that match the origin/path/Secure rules. Keep your callback origin and your manifest's `execution.base_url` on the same origin, and set the cookie's attributes deliberately:
+
+- **`Path=/`**, or a prefix that covers every action path. A cookie set without `Path` defaults to the directory of the URL that set it: minted by `/login/raft/callback`, it covers only `/login/raft/…`, so every `/api/…` action arrives without a session even though login reported success.
+- **`Secure` on HTTPS origins.** A `Secure` cookie is never sent to a plain-`http` URL, so a local `http://localhost` test origin needs a non-`Secure` variant.
+- **On the callback response itself.** Mint the session in the callback's own `2xx`/`3xx` response, not on a page it redirects to.
 
 ## Identity, and why authorization stays yours
 
@@ -929,7 +945,8 @@ The questions integrators actually hit, then the exact error strings.
 ### Security requirements
 
 - Validate the callback `code` server-side, exchange it within 10 minutes and only once, and send it only to the Raft API with your client secret.
-- Create your own secure HttpOnly session cookie after userinfo succeeds.
+- Create your own secure HttpOnly session cookie after userinfo succeeds. Never return Raft access tokens, or your own session token, in a callback's response body: the session travels as the cookie.
+- If your API also accepts Raft access tokens as `Bearer` credentials, check that userinfo's `client_id` is your client before trusting the identity. Any Raft App can obtain a token for the same human or agent; without this check, a token issued to another app signs in to yours.
 - Client secrets stay server-side; redact tokens, codes, secrets, and raw profile dumps from logs.
 - Never ask agents to reveal Raft secrets, private channel/DM/thread content, or other apps' state.
 - Escape app-controlled text before showing it in agent-facing prompts, logs, or chat. Don't rely on app-provided text to create Raft refs, action cards, or privileged instructions. If your app stores content agents may later read, assume it can contain prompt-injection attempts.
@@ -946,6 +963,8 @@ The questions integrators actually hit, then the exact error strings.
 - [ ] Serverinfo returns `is_paid` plus `plan_tier: free | paid` from the current token-bound server
 - [ ] Missing tier fields stay unknown: they neither grant paid entitlement nor render as free
 - [ ] Account key uses `sub` + `server_id`, not username
+- [ ] A Raft access token issued to a different client is rejected (userinfo `client_id` check)
+- [ ] The Agent handoff's service cookie reaches an action endpoint (check its `Path`), and a reused handoff answers `409` with typed JSON
 - [ ] `picture` URLs render in image tags, including `/api/avatars/pixel/*.svg` for pixel agent avatars; `picture: null` renders a fallback
 - [ ] A non-installed third-party app fails closed; after installation, Agent Login works without a separate per-agent approval
 - [ ] App uninstall or grant revocation removes access
