@@ -282,10 +282,20 @@ export default defineConfig({
     transformItems(items) {
       const rules = redirectRules()
 
-      return items.filter((item) => {
-        const path = item.url.startsWith('/') ? item.url : `/${item.url}`
-        return redirectTargetFor(path, rules) === null
-      })
+      return items
+        .filter((item) => {
+          const path = item.url.startsWith('/') ? item.url : `/${item.url}`
+          return redirectTargetFor(path, rules) === null
+        })
+        // Cloudflare Pages checks out a shallow clone. VitePress then assigns
+        // the deployment commit time to every page, which is not a verified
+        // page modification time. Omit lastmod rather than publish a false one.
+        .map((item) => ({
+          ...item,
+          lastmod: undefined,
+          lastmodISO: undefined,
+          lastmodfile: undefined,
+        }))
     },
   },
   vite: {
