@@ -228,6 +228,17 @@ Raft 会向用户显示服务器选择器（只显示你的应用可用的服务
 
 **3. 一个 client 只有一个 returnUrl。** 想要不同的人类和 Agent callback path？注册两个 client。想用同一个 callback？交换后根据 `userinfo.type` 分支，不能从缺失参数猜。
 
+### 桌面、移动端和 CLI 客户端
+
+原生客户端不能持有你的客户端密钥，而你的应用只有一个 return URL。让你的服务器保持为唯一的 OAuth client，再用一次性 ticket 把结果交给原生客户端：
+
+1. 客户端生成自己的 PKCE 对，用**系统浏览器**（不要用内嵌 web view）打开你服务器的登录路由，带上它的 challenge 以及希望接收 ticket 的位置：桌面和 CLI 应用用 loopback URL，例如 `http://127.0.0.1:<port>/callback`（[RFC 8252 §7.3](https://www.rfc-editor.org/rfc/rfc8252#section-7.3)）；iOS 用 `ASWebAuthenticationSession`、Android 用 Custom Tabs，回到你应用自己的 URL scheme。
+2. 你的登录路由按 allowlist 检查这个目标（只允许 loopback host，或你唯一的 scheme），把它和 challenge 一起存进登录初始化 state，然后继续正常的 Login with Raft 流程。
+3. callback 验证身份后，签发一个与该 challenge 绑定的**一次性、短时效 ticket**，并带着它重定向到客户端的目标。
+4. 客户端用自己的 verifier 兑换 ticket，得到它自己的 session token。
+
+ticket 是唯一会出现在 URL 里的凭据，而没有 verifier 它毫无用处，所以即使 ticket 经由历史记录、日志或设备上的其他应用泄露，也无法被兑换。使用系统浏览器还意味着已经在浏览器里登录 Raft 的人只需确认授权。
+
 ### Agent 到达同一个 callback
 
 Agent 用自己的 Raft 身份认证，不通过人类浏览器 session，也不靠粘贴 token。Agent access 在 Raft 内部发起：当应用对服务器可用（服务器本地或已安装）时，Raft 会授予 Agent Login，不需要额外负责人或管理员 approval card。可用性和安装状态就是授权边界；不可用的应用 fail closed。
@@ -273,6 +284,7 @@ Raft CLI 会把这个响应体带给失败的 Agent：handoff 被拒绝时，`ra
 
 - **区分永久与瞬时。** 按设计的拒绝（这个身份在这里永远登不进来）应该明说，并指出正确的替代入口；瞬时失败（code 过期、上游错误）应该读起来是可重试的。
 - **解释规则，不回显身份。** 说明是哪条规则拒绝了调用方——不要回显调用方身份、你的配置值或任何形似凭据的内容。
+- **handoff code 已被消费或已过期时返回 `409`。** `raft integration login` 会把 callback 的 `409` 理解为“已过期或已被使用”，并提示 Agent 重新登录以获取新的 handoff——这正是正确的恢复方式。
 
 ## Code、token 和 session
 
@@ -512,7 +524,11 @@ Token 限定到一个服务器。同一个用户在多个服务器上会产生�
 
 ### Agent cookie 规则
 
-Raft CLI 只会把应用的 service cookie 发送到符合 origin/path/Secure 规则的 action base URL。请保持 callback origin 与 manifest 的 `execution.base_url` 在同一个 origin 上。
+Raft CLI 只会把应用的 service cookie 发送到符合 origin/path/Secure 规则的 action base URL。请保持 callback origin 与 manifest 的 `execution.base_url` 在同一个 origin 上，并有意识地设置 cookie 属性：
+
+- **`Path=/`**，或能覆盖所有 action path 的前缀。没有 `Path` 的 cookie 默认作用于设置它的 URL 所在目录：由 `/login/raft/callback` 设置时只覆盖 `/login/raft/…`，于是即使登录显示成功，每个 `/api/…` action 到达时都没有 session。
+- **HTTPS origin 上加 `Secure`。** `Secure` cookie 不会发给纯 `http` URL，所以本地 `http://localhost` 测试 origin 需要一个不带 `Secure` 的变体。
+- **设在 callback 自己的响应上。** 在 callback 本身的 `2xx`/`3xx` 响应里创建 session，而不是在它重定向到的页面上。
 
 ## 身份，以及为什么授权仍由你负责
 
@@ -890,7 +906,8 @@ Payload 是应用控制的内容，不是可信指令通道：会议应用可以
 ### 安全要求
 
 - 在服务端验证 callback `code`，在 10 分钟内且只交换一次，并且只把它和你的客户端密钥发送到 Raft API。
-- userinfo 成功后，创建你自己的安全 HttpOnly session cookie。
+- userinfo 成功后，创建你自己的安全 HttpOnly session cookie。不要在 callback 的响应体里返回 Raft access token 或你自己的 session token：session 通过 cookie 传递。
+- 如果你的 API 也接受 Raft access token 作为 `Bearer` 凭据，信任身份之前先检查 userinfo 的 `client_id` 是你的 client。任何 Raft 应用都能为同一个人类或 Agent 拿到 token；不做这项检查，签发给其他应用的 token 就能登录你的应用。
 - 客户端密钥留在服务端；从日志里 redact token、code、secret 和原始 profile dump。
 - 永远不要要求 Agent 泄露 Raft secret、私有频道/DM/thread 内容，或其他应用的状态。
 - 向 Agent-facing prompt、日志或聊天展示应用控制文本前，先 escape。不要依赖应用提供的文本创建 Raft ref、action card 或特权指令。如果你的应用存储了 Agent 以后可能读取的内容，假设它可能包含 prompt-injection 尝试。
@@ -907,6 +924,8 @@ Payload 是应用控制的内容，不是可信指令通道：会议应用可以
 - [ ] Serverinfo 从当前 token-bound server 返回 `is_paid` 和 `plan_tier: free | paid`
 - [ ] 缺失的 tier 字段保持 unknown：既不授予付费权益，也不展示为 free
 - [ ] 账号 key 使用 `sub` + `server_id`，而不是 username
+- [ ] 签发给其他 client 的 Raft access token 会被拒绝（检查 userinfo 的 `client_id`）
+- [ ] Agent handoff 设置的 service cookie 能到达 action endpoint（检查它的 `Path`），复用的 handoff 返回带类型 JSON 的 `409`
 - [ ] `picture` URL 可以在 image tag 里渲染，包括 pixel Agent avatar 的 `/api/avatars/pixel/*.svg`；`picture: null` 会渲染 fallback
 - [ ] 未安装的第三方应用 fail closed；安装后，Agent Login 不需要单独逐 Agent 批准即可工作
 - [ ] 应用卸载或 grant 撤销会移除访问权
