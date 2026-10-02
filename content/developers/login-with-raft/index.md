@@ -99,7 +99,7 @@ Keep the client secret on your server only. Never put it in browser JavaScript, 
 
 ### The scaffold path (fastest start)
 
-Instead of wiring an integration by hand, scaffold a working, contract-conformant app and fill in the auth exchange:
+Scaffold a starting point for your app, then follow the selected template’s authentication setup:
 
 ```bash
 npm create raft-app@latest my-raft-app
@@ -111,16 +111,25 @@ Pick a template when prompted, or pass one explicitly (`--list-templates` shows 
 npm create raft-app@latest my-raft-app -- --template pure-sign-in-web-app
 ```
 
-For a first app, start with **`pure-sign-in-web-app`** (human Login with Raft only) or **`hosted-http-action-service`** (manifest-declared agent actions). Each template ships its own `README.md` and `AGENTS.md` with its exact environment variables, callback URLs, and registration hints.
+For browser sign-in, start with **`pure-sign-in-web-app`**. For OAuth-backed Agent actions, use **`oauth-http-action-service`**. **`hosted-http-action-service`** demonstrates bearer-protected actions with a development token; it does not implement Login with Raft. Each template ships its own `README.md` and `AGENTS.md` with its environment variables, callback URLs, and registration hints.
 
 Then:
 
 1. `cd my-raft-app && npm install`
-2. Register the app in Raft and configure its callback to get a **client ID**, then have the app owner generate a **client secret**. Registration gives you credentials only — the generated app still needs the server-side exchange before login completes.
+2. For a Login with Raft template, register the app and its exact callback to get a **client ID**, then have the app owner generate a **client secret**. Configure the template’s server-side exchange with those credentials.
 3. Copy `.env.example` to `.env` and fill in the values. Keep `RAFT_CLIENT_SECRET` server-only.
-4. `npm run dev`
+4. Run the start command in the generated `package.json`: **`npm start`** for the `pure-sign-in-web-app` example above; **`npm run dev`** for `hono-react-cfworker`.
 
-> **The generated app fails closed until you wire the OAuth exchange.** A scaffolded app is a starting point, not a complete OAuth client. Its protected routes fail closed — the callback does not auto-complete login and `/api/auth/me` returns `501` — until you implement the real flow server-side: the authorization-code exchange plus an HttpOnly browser session (human templates), and agent-session / Bearer verification plus the declared manifest actions (action-service templates). Until then, clicking "Login with Raft" bounces back to the setup page. That is intended fail-closed behavior, not a bug. The template marks where to fill each step in.
+Authentication behavior is **template-specific**. In the published `create-raft-app@0.2.0` package:
+
+| Template | Authentication starting point |
+| --- | --- |
+| `pure-sign-in-web-app` | Includes a server-side authorization-code exchange, userinfo lookup, and an HttpOnly browser-session cookie. Supply the registered credentials and session configuration. |
+| `oauth-http-action-service` | Includes OAuth callback/exchange routes and protected action endpoints. Configure the callback and app credentials, then adapt its service authorization. |
+| `hosted-http-action-service` | Uses a fixture-local development bearer token. Replace that credential setup for deployment; this template has no Login with Raft flow. |
+| `hono-react-cfworker` | Contains unwired authentication placeholders, including a `501` response from `/api/auth/me`. Implement the callback/session resolver and protected-route authorization. |
+
+Do not expect every template to return `501`, or assume that generating a template completes your app’s authorization. Follow its emitted files and the security requirements below. Repository `main` can contain changes that are not yet in the npm release; for another package version, recheck the generated template’s `README.md` and scripts.
 
 ### The agent path (recommended)
 
