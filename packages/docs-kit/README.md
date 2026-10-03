@@ -32,7 +32,8 @@ Planned moves, in order (each one PR, behavior-preserving):
    sidebar/site data passed in.
 4. The theme (`theme/index.ts`, `custom.css`) generalized: derive translated
    paths from the content tree instead of a hand-maintained
-   `translatedZhPaths` list.
+   `translatedZhPaths` list, and ship the **language-switch flyout** as a kit
+   deliverable (the v3 spec: icon + chevron `<details>` menu, no JS).
 
 ## Content conventions (agreed with gzj, #proj-hands e1183d38)
 
@@ -53,9 +54,12 @@ Planned moves, in order (each one PR, behavior-preserving):
 
 ## Gates the kit owns
 
-- zh coverage (missing translations need explicit baseline entries).
-- sitemap ↔ `_redirects` consistency (no redirected URL in the sitemap).
-- Markdown twin completeness for every page.
+- zh coverage (missing translations need explicit baseline entries) —
+  `pnpm check:zh-coverage -- --check`.
+- sitemap ↔ `_redirects` consistency (no redirected URL in the sitemap) —
+  `pnpm check:sitemap-redirects`; matcher self-test:
+  `pnpm check:redirect-matcher` (`--self-test`, 10 cases).
+- Markdown twin completeness for every page (agent-artifacts check, planned).
 
 ## Ownership
 
