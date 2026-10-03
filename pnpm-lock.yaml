@@ -31,6 +31,8 @@ importers:
         specifier: ^3.5.35
         version: 3.5.35(typescript@5.9.3)
 
+  packages/docs-kit: {}
+
 packages:
 
   '@algolia/abtesting@1.19.0':

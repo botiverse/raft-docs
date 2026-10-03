@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 // @ts-expect-error -- plain .mjs helper shared with scripts/check-sitemap-redirects.mjs
-import { parseRedirectRules, redirectTargetFor } from '../scripts/redirect-rules.mjs'
+import { parseRedirectRules, redirectTargetFor } from '../packages/docs-kit/src/scripts/redirect-rules.mjs'
 import { defineConfig } from 'vitepress'
 import taskLists from 'markdown-it-task-lists'
 import { tabsMarkdownPlugin } from 'vitepress-plugin-tabs'
@@ -65,7 +65,7 @@ function humanUrlPath(relativePath: string): string {
 // A page can exist as real content (so VitePress emits it into the sitemap)
 // while `_redirects` sends it somewhere else, which puts 301/302 URLs in a file
 // that should only contain canonical, directly-200 ones. Parsing/matching lives
-// in scripts/redirect-rules.mjs so this filter and the build-time check cannot
+// in packages/docs-kit/src/scripts/redirect-rules.mjs so this filter and the build-time check cannot
 // drift apart -- when they were separate, both skipped wildcard rules and the
 // check still claimed full coverage.
 const REDIRECTS_FILE = resolve(__dirname, '../content/public/_redirects')

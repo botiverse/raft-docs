@@ -10,7 +10,7 @@
  *
  * The filter that prevents it lives in `.vitepress/config.mts`. This check
  * exists so that deleting the filter fails the build instead of silently
- * restoring the defect. Both share scripts/redirect-rules.mjs: the first
+ * restoring the defect. Both share packages/docs-kit/src/scripts/redirect-rules.mjs: the first
  * version of this pair had two separate implementations that each skipped
  * wildcard rules, so the check reported "no URL is redirected away" while
  * `/agent-knowledge/*` went unexamined -- a claim wider than its coverage.
@@ -21,7 +21,7 @@
 import { readFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { parseRedirectRules, redirectTargetFor } from './redirect-rules.mjs'
+import { parseRedirectRules, redirectTargetFor } from '../packages/docs-kit/src/scripts/redirect-rules.mjs'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const SITEMAP = resolve(root, 'out/sitemap.xml')
