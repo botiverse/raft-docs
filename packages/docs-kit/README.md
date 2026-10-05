@@ -71,7 +71,8 @@ H1. Both real shapes (raft-docs, Hands) are pinned in `src/config.test.mjs`.
 
 Planned moves, in order (each one PR, behavior-preserving):
 
-1. Theme + language flyout; scripts and raft-docs adopt `docs.config.mjs`.
+1. Theme + language flyout.
+2. Scripts and raft-docs adopt `docs.config.mjs` (`--config`).
 3. `defineDocsConfig()` — the generic half of raft-docs' `config.mts`
    (locales wiring, sitemap filter, search, theme registration) with nav/
    sidebar/site data passed in.

@@ -79,6 +79,10 @@ function normalizeTwins(twins, locales) {
     fail(`twins.page must be one of ${[...TWIN_PAGE_MODES].join(', ')}: ${page}`)
   }
 
+  // twins.index is deliberately .md-only: agent indexes in other formats
+  // (raft-docs' llms.txt / llms-full.txt) stay with the artifacts generator,
+  // which knows their interleaving rules. Extend here only if a site needs a
+  // non-Markdown index twin.
   let indexResolved
   if (index != null) {
     indexResolved = {}
