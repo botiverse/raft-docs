@@ -21,10 +21,10 @@ Moved so far:
 - `src/scripts/redirect-rules.mjs` — `_redirects` parser/matcher, the single
   source of truth shared by the sitemap filter (`.vitepress/config.mts`) and
   `scripts/check-sitemap-redirects.mjs`. Pure functions, no root assumptions.
-- `src/scripts/check-zh-coverage.mjs` — translation coverage gate, parameterized
+- `src/scripts/check-i18n-coverage.mjs` — translation coverage gate (per locale), parameterized
   by `--root` / `--content` / `--locale` / `--locale-label` / `--baseline`
   (defaults reproduce raft-docs' original invocation byte for byte; raft-docs
-  runs it via `pnpm check:zh-coverage -- --check`).
+  runs it via `pnpm check:i18n-coverage -- --check`).
 
 Planned moves, in order (each one PR, behavior-preserving):
 
@@ -57,8 +57,8 @@ Planned moves, in order (each one PR, behavior-preserving):
 
 ## Gates the kit owns
 
-- zh coverage (missing translations need explicit baseline entries) —
-  `pnpm check:zh-coverage -- --check`.
+- i18n coverage / translation coverage per locale (missing translations need explicit baseline entries) —
+  `pnpm check:i18n-coverage -- --check`.
 - sitemap ↔ `_redirects` consistency (no redirected URL in the sitemap) —
   `pnpm check:sitemap-redirects`; matcher self-test:
   `pnpm check:redirect-matcher` (`--self-test`, 10 cases).

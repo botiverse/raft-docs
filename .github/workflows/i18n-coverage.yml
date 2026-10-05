@@ -1,4 +1,4 @@
-name: zh-CN documentation coverage
+name: i18n coverage
 
 on:
   pull_request:
@@ -23,14 +23,14 @@ jobs:
           cache: pnpm
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      - name: Scan zh-CN coverage
-        run: pnpm check:zh-coverage > zh-coverage.md
+      - name: Scan translation coverage
+        run: pnpm check:i18n-coverage > i18n-coverage.md
       - name: Add report to job summary
-        run: cat zh-coverage.md >> "$GITHUB_STEP_SUMMARY"
+        run: cat i18n-coverage.md >> "$GITHUB_STEP_SUMMARY"
       - name: Upload report
         uses: actions/upload-artifact@v4
         with:
-          name: zh-cn-coverage
-          path: zh-coverage.md
+          name: i18n-coverage
+          path: i18n-coverage.md
       - name: Enforce complete bilingual coverage
-        run: pnpm check:zh-coverage -- --check
+        run: pnpm check:i18n-coverage -- --check

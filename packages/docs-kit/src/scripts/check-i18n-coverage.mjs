@@ -2,15 +2,15 @@ import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises'
 import { dirname, relative, resolve } from 'node:path'
 
 // Parameterized for reuse by any docs-kit site. Defaults reproduce raft-docs'
-// historical invocation (`node scripts/check-zh-coverage.mjs` from the repo
-// root) byte for byte: content/, zh-cn/, scripts/zh-coverage-baseline.txt.
+// historical invocation (`node scripts/check-i18n-coverage.mjs` from the repo
+// root) byte for byte: content/, zh-cn/, scripts/i18n-coverage-baseline.txt.
 //
 //   --root <dir>        site root (default: cwd)
 //   --content <dir>     content directory relative to root (default: content)
 //   --locale <dir>      translation directory (default: zh-cn)
 //   --locale-label <s>  display label for the translation locale (default: zh-CN)
 //   --baseline <path>   exemption list relative to root
-//                       (default: scripts/zh-coverage-baseline.txt)
+//                       (default: scripts/i18n-coverage-baseline.txt)
 //   --check             exit non-zero when coverage regresses
 //
 // ZH_COVERAGE_REPORT env var: write the markdown report to this path (root-relative).
@@ -30,7 +30,7 @@ const reportPath = process.env.ZH_COVERAGE_REPORT
 
 const textExtensions = new Set(['.md', '.mdx'])
 const shouldFail = args.includes('--check')
-const baselinePath = resolve(repoRoot, option('baseline', 'scripts/zh-coverage-baseline.txt'))
+const baselinePath = resolve(repoRoot, option('baseline', 'scripts/i18n-coverage-baseline.txt'))
 const baseline = new Set(
   (await readFile(baselinePath, 'utf8'))
     .split(/\r?\n/)

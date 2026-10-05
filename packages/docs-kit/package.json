@@ -6,6 +6,6 @@
   "type": "module",
   "exports": {
     "./scripts/redirect-rules": "./src/scripts/redirect-rules.mjs",
-    "./scripts/zh-coverage": "./src/scripts/check-zh-coverage.mjs"
+    "./scripts/i18n-coverage": "./src/scripts/check-i18n-coverage.mjs"
   }
 }
