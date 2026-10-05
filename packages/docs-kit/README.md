@@ -71,15 +71,16 @@ H1. Both real shapes (raft-docs, Hands) are pinned in `src/config.test.mjs`.
 
 Planned moves, in order (each one PR, behavior-preserving):
 
-1. Theme + language flyout.
-2. Scripts and raft-docs adopt `docs.config.mjs` (`--config`).
-3. `defineDocsConfig()` — the generic half of raft-docs' `config.mts`
-   (locales wiring, sitemap filter, search, theme registration) with nav/
-   sidebar/site data passed in.
-4. The theme (`theme/index.ts`, `custom.css`) generalized: derive translated
-   paths from the content tree instead of a hand-maintained
-   `translatedZhPaths` list, and ship the **language-switch flyout** as a kit
-   deliverable (the v3 spec: icon + chevron `<details>` menu, no JS).
+1. The theme (`theme/index.ts`, `custom.css`) generalized into the kit:
+   derive translated paths from the content tree instead of a hand-maintained
+   `translatedZhPaths` list, register from `defineDocsConfig()`, and ship the
+   **language-switch flyout** (the v3 spec: icon + chevron `<details>` menu,
+   per-page same-page switching, no JS).
+2. Scripts and raft-docs adopt `docs.config.mjs` (`--config`), replacing
+   per-script flags with one declaration.
+3. Hands migration: flatten its 16-page generator onto the kit, preserving
+   the 8 URL contracts (`/docs/<slug>/`, `.md` twins, `/docs/zh/…`,
+   `/docs.md`, `/docs/zh.md`).
 
 ## Content conventions (agreed with gzj, #proj-hands e1183d38)
 
