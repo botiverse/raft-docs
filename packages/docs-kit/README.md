@@ -21,11 +21,14 @@ Moved so far:
 - `src/scripts/redirect-rules.mjs` — `_redirects` parser/matcher, the single
   source of truth shared by the sitemap filter (`.vitepress/config.mts`) and
   `scripts/check-sitemap-redirects.mjs`. Pure functions, no root assumptions.
+- `src/scripts/check-zh-coverage.mjs` — translation coverage gate, parameterized
+  by `--root` / `--content` / `--locale` / `--locale-label` / `--baseline`
+  (defaults reproduce raft-docs' original invocation byte for byte; raft-docs
+  runs it via `pnpm check:zh-coverage -- --check`).
 
 Planned moves, in order (each one PR, behavior-preserving):
 
-1. `check-zh-coverage` — parameterized by `--root` / locale dir / baseline path.
-2. `check-sitemap-redirects` + `generate-agent-artifacts` (`llms.txt` and
+1. `check-sitemap-redirects` + `generate-agent-artifacts` (`llms.txt` and
    per-page `.md` twins).
 3. `defineDocsConfig()` — the generic half of raft-docs' `config.mts`
    (locales wiring, sitemap filter, search, theme registration) with nav/

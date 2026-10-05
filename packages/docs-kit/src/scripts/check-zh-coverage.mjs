@@ -1,15 +1,36 @@
 import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises'
 import { dirname, relative, resolve } from 'node:path'
 
-const repoRoot = resolve(new URL('..', import.meta.url).pathname)
-const contentRoot = resolve(repoRoot, 'content')
+// Parameterized for reuse by any docs-kit site. Defaults reproduce raft-docs'
+// historical invocation (`node scripts/check-zh-coverage.mjs` from the repo
+// root) byte for byte: content/, zh-cn/, scripts/zh-coverage-baseline.txt.
+//
+//   --root <dir>        site root (default: cwd)
+//   --content <dir>     content directory relative to root (default: content)
+//   --locale <dir>      translation directory (default: zh-cn)
+//   --locale-label <s>  display label for the translation locale (default: zh-CN)
+//   --baseline <path>   exemption list relative to root
+//                       (default: scripts/zh-coverage-baseline.txt)
+//   --check             exit non-zero when coverage regresses
+//
+// ZH_COVERAGE_REPORT env var: write the markdown report to this path (root-relative).
+const args = process.argv.slice(2)
+const option = (name, fallback) => {
+  const index = args.indexOf(`--${name}`)
+  return index > -1 ? args[index + 1] : fallback
+}
+const repoRoot = resolve(option('root', process.cwd()))
+const contentRoot = resolve(repoRoot, option('content', 'content'))
+const localeDir = option('locale', 'zh-cn')
+const localeLabel = option('locale-label', 'zh-CN')
+const contentDirLabel = option('content', 'content')
 const reportPath = process.env.ZH_COVERAGE_REPORT
   ? resolve(repoRoot, process.env.ZH_COVERAGE_REPORT)
   : null
 
 const textExtensions = new Set(['.md', '.mdx'])
-const shouldFail = process.argv.includes('--check')
-const baselinePath = resolve(repoRoot, 'scripts/zh-coverage-baseline.txt')
+const shouldFail = args.includes('--check')
+const baselinePath = resolve(repoRoot, option('baseline', 'scripts/zh-coverage-baseline.txt'))
 const baseline = new Set(
   (await readFile(baselinePath, 'utf8'))
     .split(/\r?\n/)
@@ -32,13 +53,13 @@ async function walk(dir) {
 const allFiles = await walk(contentRoot)
 const english = allFiles
   .map((path) => relative(contentRoot, path).replaceAll('\\', '/'))
-  .filter((path) => !path.startsWith('zh-cn/'))
+  .filter((path) => !path.startsWith(`${localeDir}/`))
   .sort()
 const zh = new Set(
   allFiles
     .map((path) => relative(contentRoot, path).replaceAll('\\', '/'))
-    .filter((path) => path.startsWith('zh-cn/'))
-    .map((path) => path.slice('zh-cn/'.length)),
+    .filter((path) => path.startsWith(`${localeDir}/`))
+    .map((path) => path.slice(localeDir.length + 1)),
 )
 const missing = english.filter((path) => !zh.has(path))
 const paired = english.length - missing.length
@@ -48,22 +69,22 @@ const newMissing = missing.filter((path) => !baseline.has(path))
 const staleBaseline = [...baseline].filter((path) => !missing.includes(path)).sort()
 
 const lines = [
-  '# zh-CN documentation coverage',
+  `# ${localeLabel} documentation coverage`,
   '',
   `- English pages: **${english.length}**`,
-  `- zh-CN pages: **${zh.size}**`,
+  `- ${localeLabel} pages: **${zh.size}**`,
   `- Paired pages: **${paired}**`,
-  `- Missing zh-CN pages: **${missing.length}**`,
-  `- zh-CN-only pages: **${extraZh.length}**`,
+  `- Missing ${localeLabel} pages: **${missing.length}**`,
+  `- ${localeLabel}-only pages: **${extraZh.length}**`,
   `- New missing pages (not in baseline): **${newMissing.length}**`,
   '',
-  'A page is paired when `content/zh-cn/<same relative path>` exists.',
+  `A page is paired when \`${contentDirLabel}/${localeDir}/<same relative path>\` exists.`,
   '',
-  '## Missing pages',
+  `## Missing pages`,
   '',
   ...(missing.length ? missing.map((path) => '- `' + path + '`') : ['- None']),
   '',
-  '## zh-CN-only pages',
+  `## ${localeLabel}-only pages`,
   '',
   ...(extraZh.length ? extraZh.map((path) => '- `' + path + '`') : ['- None']),
   '',

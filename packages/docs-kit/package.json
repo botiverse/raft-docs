@@ -5,6 +5,7 @@
   "description": "Reusable documentation-site kit (VitePress config factory, theme, content conventions, build checks). Extracted from raft-docs; the Hands docs site is the pilot consumer.",
   "type": "module",
   "exports": {
-    "./scripts/redirect-rules": "./src/scripts/redirect-rules.mjs"
+    "./scripts/redirect-rules": "./src/scripts/redirect-rules.mjs",
+    "./scripts/zh-coverage": "./src/scripts/check-zh-coverage.mjs"
   }
 }
