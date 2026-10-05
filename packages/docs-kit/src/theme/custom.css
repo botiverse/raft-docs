@@ -7,7 +7,7 @@
      Kept distinct from brand yellow, which already means "current location"
      (active nav / selected sidebar). Canonical value from the landing/design
      tokens (--color-brutal-pink), confirmed by Wug. */
-  --raft-cta-pink: #fe7da8;
+  --docs-cta-pink: #fe7da8;
   --vp-c-bg: #ffffff;
   --vp-c-bg-alt: #fafafa;
   --vp-c-bg-soft: #f7f7f5;
@@ -42,7 +42,7 @@
   font-weight: 600;
 }
 
-.raft-markdown-link {
+.docs-markdown-link {
   margin: 0 0 1rem;
   font-size: 0.875rem;
 }
@@ -94,28 +94,28 @@
      under the header. Overriding only the padding left a 20px unmasked strip
      down the left edge, and section labels bled through it (Cindy, 2026-09-23).
      ⇒ Both sides read these, so they cannot drift apart again. */
-  --rd-sidebar-pad-left: 36px;
-  --rd-sidebar-pad-right: 16px;
-  --rd-sidebar-fg: #141111;
-  --rd-sidebar-fg-muted: rgba(20, 17, 17, 0.55);
-  --rd-sidebar-hover-bg: rgba(20, 17, 17, 0.04);
-  --rd-sidebar-active-fg: #141111;
-  --rd-sidebar-active-bg: #ffd440;
-  --rd-sidebar-active-bar: #141111;
-  --rd-nav-fg: #141111;
-  --rd-nav-fg-muted: rgba(20, 17, 17, 0.55);
-  --rd-nav-active-bar: #141111;
+  --docs-sidebar-pad-left: 36px;
+  --docs-sidebar-pad-right: 16px;
+  --docs-sidebar-fg: #141111;
+  --docs-sidebar-fg-muted: rgba(20, 17, 17, 0.55);
+  --docs-sidebar-hover-bg: rgba(20, 17, 17, 0.04);
+  --docs-sidebar-active-fg: #141111;
+  --docs-sidebar-active-bg: #ffd440;
+  --docs-sidebar-active-bar: #141111;
+  --docs-nav-fg: #141111;
+  --docs-nav-fg-muted: rgba(20, 17, 17, 0.55);
+  --docs-nav-active-bar: #141111;
 }
 .dark {
-  --rd-sidebar-fg: #fafafa;
-  --rd-sidebar-fg-muted: rgba(250, 250, 250, 0.55);
-  --rd-sidebar-hover-bg: rgba(250, 250, 250, 0.06);
-  --rd-sidebar-active-fg: #141111;
-  --rd-sidebar-active-bg: #ffd440;
-  --rd-sidebar-active-bar: #fafafa;
-  --rd-nav-fg: #fafafa;
-  --rd-nav-fg-muted: rgba(250, 250, 250, 0.55);
-  --rd-nav-active-bar: #ffd440;
+  --docs-sidebar-fg: #fafafa;
+  --docs-sidebar-fg-muted: rgba(250, 250, 250, 0.55);
+  --docs-sidebar-hover-bg: rgba(250, 250, 250, 0.06);
+  --docs-sidebar-active-fg: #141111;
+  --docs-sidebar-active-bg: #ffd440;
+  --docs-sidebar-active-bar: #fafafa;
+  --docs-nav-fg: #fafafa;
+  --docs-nav-fg-muted: rgba(250, 250, 250, 0.55);
+  --docs-nav-active-bar: #ffd440;
 }
 
 /* ── Sidebar ─────────────────────────────────────────────────────
@@ -168,18 +168,18 @@
    at the same place at every width. */
 @media (min-width: 960px) {
   .VPSidebar {
-    padding-left: var(--rd-sidebar-pad-left) !important;
-    padding-right: var(--rd-sidebar-pad-right) !important;
+    padding-left: var(--docs-sidebar-pad-left) !important;
+    padding-right: var(--docs-sidebar-pad-right) !important;
   }
   /* Mask the full column, not VitePress's assumed 32px inset. */
   .VPSidebar .curtain {
-    margin-left: calc(var(--rd-sidebar-pad-left) * -1) !important;
-    margin-right: calc(var(--rd-sidebar-pad-right) * -1) !important;
+    margin-left: calc(var(--docs-sidebar-pad-left) * -1) !important;
+    margin-right: calc(var(--docs-sidebar-pad-right) * -1) !important;
   }
 }
 @media (min-width: 1440px) {
   .VPSidebar {
-    padding-left: var(--rd-sidebar-pad-left) !important;
+    padding-left: var(--docs-sidebar-pad-left) !important;
   }
 }
 /* Section label (level-0): color CONSTANT (!important beats VitePress's
@@ -207,7 +207,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--rd-sidebar-fg-muted) !important;
+  color: var(--docs-sidebar-fg-muted) !important;
 }
 /* Page link (level-1): the real target. A 3px transparent left border is
    reserved on every link (padding trimmed to compensate) so the active
@@ -219,7 +219,7 @@
   padding: 4px 12px 4px 10px;
   border-left: 2px solid transparent;
   border-radius: 0;
-  color: var(--rd-sidebar-fg);
+  color: var(--docs-sidebar-fg);
   transition: background-color 80ms linear;
 }
 .VPSidebar .VPSidebarItem.level-1 .link > .text {
@@ -227,21 +227,21 @@
   font-weight: 500;
   line-height: 1.4;
   /* !important beats VitePress's scoped [data-v] text-color rules */
-  color: var(--rd-sidebar-fg) !important;
+  color: var(--docs-sidebar-fg) !important;
 }
 .VPSidebar .VPSidebarItem.level-1 .link:hover {
-  background: var(--rd-sidebar-hover-bg);
+  background: var(--docs-sidebar-hover-bg);
 }
 /* Active page: yellow plate + 3px ink left strap (border, not box-shadow,
    so it always paints). !important guards against VitePress scoped rules. */
 .VPSidebar .VPSidebarItem.level-1.is-active .link {
-  background: var(--rd-sidebar-active-bg) !important;
-  border-left-color: var(--rd-sidebar-active-bar) !important;
+  background: var(--docs-sidebar-active-bg) !important;
+  border-left-color: var(--docs-sidebar-active-bar) !important;
 }
 .VPSidebar .VPSidebarItem.level-1.is-active .link > .text {
   /* ink on yellow in BOTH themes — !important beats VitePress's
      .is-active .text rule that would force brand-1 (near-white on dark) */
-  color: var(--rd-sidebar-active-fg) !important;
+  color: var(--docs-sidebar-active-fg) !important;
   font-weight: 600;
   /* Slightly tighter tracking on the selected (bolder) label — heavier
      weight optically reads looser, so a small negative letter-spacing
@@ -255,7 +255,7 @@
    raise specificity above VitePress's scoped brand-1 rule. */
 .VPNavBar .VPNavBarMenu .VPNavBarMenuLink {
   position: relative;
-  color: var(--rd-nav-fg-muted);
+  color: var(--docs-nav-fg-muted);
   font-weight: 500;
 }
 /* Tighter spacing among the docs nav links (Intro / Features / Developers) so
@@ -266,10 +266,10 @@
   padding-right: 8px;
 }
 .VPNavBar .VPNavBarMenu .VPNavBarMenuLink:hover {
-  color: var(--rd-nav-fg);
+  color: var(--docs-nav-fg);
 }
 .VPNavBar .VPNavBarMenu .VPNavBarMenuLink.active {
-  color: var(--rd-nav-fg);
+  color: var(--docs-nav-fg);
   font-weight: 700;
 }
 .VPNavBar .VPNavBarMenu .VPNavBarMenuLink.active::after {
@@ -279,7 +279,7 @@
   right: 8px;
   bottom: 0;
   height: 3px;
-  background: var(--rd-nav-active-bar);
+  background: var(--docs-nav-active-bar);
 }
 /* Bold costs width, and it costs a DIFFERENT amount per word (measured on
    production, Inter 14px: Introduction +2.8px, Features +1.7px, Developers
@@ -310,29 +310,29 @@
 /* One shared underline that travels between tabs. Each tab is its own page, so
    a per-link bar can only blink out and back in; this one is a single element
    that moves. Absolutely positioned, so it is not a flex item of the menu.
-   Until `rd-tabs-ready` is set (no JS, or before the first measurement) the
+   Until `docs-tabs-ready` is set (no JS, or before the first measurement) the
    per-link bar above is what shows, so the tabs are never left with no
    underline at all. */
 .VPNavBar .VPNavBarMenu {
   position: relative;
 }
-.VPNavBar .VPNavBarMenu.rd-tabs-ready .VPNavBarMenuLink.active::after {
+.VPNavBar .VPNavBarMenu.docs-tabs-ready .VPNavBarMenuLink.active::after {
   content: none;
 }
-.VPNavBar .VPNavBarMenu.rd-tabs-ready::after {
+.VPNavBar .VPNavBarMenu.docs-tabs-ready::after {
   content: "";
   position: absolute;
   left: 0;
   bottom: 0;
   height: 3px;
-  width: var(--rd-tab-w, 0);
-  transform: translateX(var(--rd-tab-x, 0));
-  background: var(--rd-nav-active-bar);
+  width: var(--docs-tab-w, 0);
+  transform: translateX(var(--docs-tab-x, 0));
+  background: var(--docs-nav-active-bar);
   transition: transform 240ms cubic-bezier(0.2, 0.7, 0.2, 1),
               width 240ms cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 @media (prefers-reduced-motion: reduce) {
-  .VPNavBar .VPNavBarMenu.rd-tabs-ready::after {
+  .VPNavBar .VPNavBarMenu.docs-tabs-ready::after {
     transition: none;
   }
 }
@@ -448,7 +448,7 @@
 .VPSidebar .VPSidebarItem.level-1.is-active .link[href="/features/apps/login-with-raft/"] .text::after,
 .VPSidebar .VPSidebarItem.level-1.is-active .link[href="/features/messaging/joint-channels/"] .text::after,
 .VPSidebar .VPSidebarItem.level-1.is-active .link[href="/features/agents/external/"] .text::after {
-  background-color: var(--rd-sidebar-active-fg); /* ink #141111 */
+  background-color: var(--docs-sidebar-active-fg); /* ink #141111 */
   opacity: 1;
 }
 
@@ -504,7 +504,7 @@
    sits to the RIGHT of the appearance toggle = absolute rightmost.
    Pink = action (kept distinct from brand yellow = current location).
    ─────────────────────────────────────────────────────────────── */
-.VPNavBar .raft-open-cta {
+.VPNavBar .docs-open-cta {
   display: inline-flex;
   align-items: center;
   /* Wrap to content height — keep the CTA at its own button height even though
@@ -522,7 +522,7 @@
   margin-left: 24px;
   border: 2px solid #141111;
   border-radius: 0;
-  background: var(--raft-cta-pink);
+  background: var(--docs-cta-pink);
   color: #141111;
   font-size: 13px;
   font-weight: 700;
@@ -530,12 +530,12 @@
   box-shadow: 2px 2px 0 #141111;
   transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
-.VPNavBar .raft-open-cta:hover {
+.VPNavBar .docs-open-cta:hover {
   transform: translateY(-1px);
   box-shadow: 4px 4px 0 #141111; /* -sm hover = shadow-brutal */
   color: #141111;
 }
-.VPNavBar .raft-open-cta:active {
+.VPNavBar .docs-open-cta:active {
   transform: translate(1px, 1px);
   box-shadow: 1px 1px 0 #141111; /* press */
 }

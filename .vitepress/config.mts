@@ -2,6 +2,10 @@ import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 // @ts-expect-error -- plain .mjs helper shared with scripts/check-sitemap-redirects.mjs
 import { parseRedirectRules, redirectTargetFor } from '../packages/docs-kit/src/scripts/redirect-rules.mjs'
+// @ts-expect-error -- plain .mjs module in the docs-kit workspace package
+import { collectLocalePaths } from '../packages/docs-kit/src/content.mjs'
+// @ts-expect-error -- plain .mjs module in the docs-kit workspace package
+import docsConfig from '../docs.config.mjs'
 import { defineConfig } from 'vitepress'
 import taskLists from 'markdown-it-task-lists'
 import { tabsMarkdownPlugin } from 'vitepress-plugin-tabs'
@@ -73,6 +77,16 @@ const REDIRECTS_FILE = resolve(__dirname, '../content/public/_redirects')
 function redirectRules() {
   return parseRedirectRules(readFileSync(REDIRECTS_FILE, 'utf-8'))
 }
+
+// Derived from the content tree (docs-kit), replacing the hand-maintained
+// translatedZhPaths list: the language switcher only offers a counterpart
+// that exists, and a page added without its translation falls back to the
+// locale home instead of a dead same-path link.
+const translatedLocales = Object.fromEntries(
+  Object.entries(collectLocalePaths(docsConfig, { root: resolve(__dirname, '..') })).map(
+    ([key, paths]) => [key, [...paths].sort()],
+  ),
+)
 
 export default defineConfig({
   title: 'Raft Docs',
@@ -366,6 +380,11 @@ export default defineConfig({
     },
   },
   themeConfig: {
+    // Consumed by the docs-kit theme: per-locale route sets derived from the
+    // content tree (see translatedLocales above).
+    docsKit: {
+      translated: translatedLocales,
+    },
     // This pilot has one translated page. Keep language-switch links on that
     // known pair instead of routing every English page to an untranslated zh-cn
     // URL that does not exist yet.

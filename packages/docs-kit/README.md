@@ -31,6 +31,12 @@ Moved so far:
 - `src/scripts/generate-agent-artifacts.mjs` — `llms.txt` + per-page `.md`
   twins + `_headers` generation/check (`--root`, `--content`, `--out`,
   `--site-url`, `--prod`, `--prod-branch`, `--check`).
+- `src/content.mjs` — content-tree facts: `collectLocalePaths()` derives each
+  locale's route set from the Markdown tree (the language switcher consumes
+  it via `themeConfig.docsKit.translated`); `routeForMarkdownPath()`.
+- `src/theme/` — `createDocsTheme(config, options)`: the VitePress theme
+  (Markdown-twin link, header CTA, travelling nav-tab indicator, per-page
+  language hrefs that only offer existing counterparts), plus `custom.css`.
 
 ## `defineDocsConfig()`
 
@@ -71,14 +77,9 @@ H1. Both real shapes (raft-docs, Hands) are pinned in `src/config.test.mjs`.
 
 Planned moves, in order (each one PR, behavior-preserving):
 
-1. The theme (`theme/index.ts`, `custom.css`) generalized into the kit:
-   derive translated paths from the content tree instead of a hand-maintained
-   `translatedZhPaths` list, register from `defineDocsConfig()`, and ship the
-   **language-switch flyout** (the v3 spec: icon + chevron `<details>` menu,
-   per-page same-page switching, no JS).
-2. Scripts and raft-docs adopt `docs.config.mjs` (`--config`), replacing
+1. Scripts and raft-docs adopt `docs.config.mjs` (`--config`), replacing
    per-script flags with one declaration.
-3. Hands migration: flatten its 16-page generator onto the kit, preserving
+2. Hands migration: flatten its 16-page generator onto the kit, preserving
    the 8 URL contracts (`/docs/<slug>/`, `.md` twins, `/docs/zh/…`,
    `/docs.md`, `/docs/zh.md`).
 
