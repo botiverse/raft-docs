@@ -146,6 +146,11 @@ function normalizeBrand(brand) {
   })
 }
 
+function normalizeArtifacts(artifacts) {
+  const { llms = true, headers = true } = artifacts ?? {}
+  return Object.freeze({ llms: Boolean(llms), headers: Boolean(headers) })
+}
+
 function normalizeRedirects(redirects) {
   const { file = null, selfTest = false } = redirects ?? {}
   return Object.freeze({ file, selfTest: Boolean(selfTest) })
@@ -177,6 +182,7 @@ export function defineDocsConfig(options = {}) {
     search = false,
     coverage,
     redirects,
+    artifacts,
     output,
   } = options
 
@@ -196,6 +202,7 @@ export function defineDocsConfig(options = {}) {
   const normalizedBrand = normalizeBrand(brand)
   const normalizedCoverage = normalizeCoverage(coverage)
   const normalizedRedirects = normalizeRedirects(redirects)
+  const normalizedArtifacts = normalizeArtifacts(artifacts)
 
   const keys = {
     title: 'title',
@@ -221,6 +228,10 @@ export function defineDocsConfig(options = {}) {
     // `_redirects`-style table: `file` feeds the sitemap check's default,
     // `selfTest` opts the matcher teeth in for this site's real table.
     redirects: normalizedRedirects,
+    // Which agent artifacts the generator emits: llms.txt (`llms`) and
+    // `_headers` (`headers`); page twins and twins.index indexes are driven
+    // by `twins` instead.
+    artifacts: normalizedArtifacts,
     output: Object.freeze({
       contentDir: output?.contentDir ?? 'content',
       outDir: output?.outDir ?? 'out',

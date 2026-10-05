@@ -28,9 +28,13 @@ Moved so far:
 
 - `src/scripts/check-sitemap-redirects.mjs` — post-build sitemap/redirect
   overlap check (`--root`, `--out`, `--sitemap`, `--redirects`, `--self-test`).
-- `src/scripts/generate-agent-artifacts.mjs` — `llms.txt` + per-page `.md`
-  twins + `_headers` generation/check (`--root`, `--content`, `--out`,
-  `--site-url`, `--prod`, `--prod-branch`, `--check`).
+- `src/scripts/generate-agent-artifacts.mjs` — per-page `.md` twins, plus
+  config-driven artifacts: `llms.txt` (`artifacts.llms`, default on) and
+  index twins from `twins.index` (heading/note text per locale from
+  `chrome.markdownIndexTitle` / `markdownIndexNote`, items grouped by
+  frontmatter category + order, links built on `basePath`); `_headers`
+  (`artifacts.headers`, default on). Options: `--config`, `--root`,
+  `--content`, `--out`, `--site-url`, `--prod`, `--prod-branch`, `--check`.
 - `src/content.mjs` — content-tree facts: `collectLocalePaths()` derives each
   locale's route set from the Markdown tree (the language switcher consumes
   it via `themeConfig.docsKit.translated`); `routeForMarkdownPath()`.
