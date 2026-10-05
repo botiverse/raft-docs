@@ -131,3 +131,21 @@ runs everything through `--config docs.config.mjs` with byte-identical output.
 
 - Site engineering, build scripts, deploy wiring: @Kirby.
 - Content model, directory conventions, visual spec: @gzj.
+
+## Publishing
+
+The kit ships to public npm as `@botiverse/docs-kit` (precedents:
+`@botiverse/hands-cli`, `@botiverse/hands-feedback-react`), so other repos —
+the Hands docs site first — consume it with a pinned version. VitePress,
+vitepress-plugin-tabs and Vue are **peer dependencies**: each site installs
+them itself and controls the major version (VitePress themes are
+version-sensitive).
+
+Release flow (`.github/workflows/publish-docs-kit.yml`, trusted publishing,
+no long-lived token):
+
+1. Bump `version` in this package.json, merge to main.
+2. Tag `docs-kit-v<version>` (or `workflow_dispatch` with the version; the
+   workflow refuses a mismatch) — dispatch with `dry_run: true` first when in
+   doubt.
+3. Consumers pin the exact version (e.g. `"@botiverse/docs-kit": "0.1.0"`).
