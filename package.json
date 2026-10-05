@@ -8,9 +8,9 @@
     "build": "vitepress build && node scripts/generate-agent-artifacts.mjs && node scripts/check-sitemap-redirects.mjs",
     "check:agent-artifacts": "node scripts/generate-agent-artifacts.mjs --check",
     "check:sitemap-redirects": "node scripts/check-sitemap-redirects.mjs",
-    "check:zh-coverage": "node scripts/check-zh-coverage.mjs",
     "check:redirect-matcher": "node scripts/check-sitemap-redirects.mjs --self-test",
-    "preview": "vitepress preview --host 0.0.0.0"
+    "preview": "vitepress preview --host 0.0.0.0",
+    "check:i18n-coverage": "node packages/docs-kit/src/scripts/check-i18n-coverage.mjs --root ."
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
