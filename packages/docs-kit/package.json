@@ -1,6 +1,6 @@
 {
   "name": "@botiverse/docs-kit",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Reusable documentation-site kit (VitePress config factory, theme, content conventions, build checks). Extracted from raft-docs; the Hands docs site is the pilot consumer.",
   "type": "module",
   "exports": {
@@ -10,7 +10,8 @@
     "./scripts/sitemap-redirects": "./src/scripts/check-sitemap-redirects.mjs",
     "./config": "./src/config.mjs",
     "./content": "./src/content.mjs",
-    "./theme": "./src/theme/index.ts"
+    "./theme": "./src/theme/index.ts",
+    "./config/node": "./src/config-node.mjs"
   },
   "scripts": {
     "test": "node --test \"src/**/*.test.mjs\""

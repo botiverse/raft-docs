@@ -1,6 +1,6 @@
 import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises'
 import { dirname, relative, resolve } from 'node:path'
-import { loadDocsConfig } from '../config.mjs'
+import { loadDocsConfig } from '../config-node.mjs'
 
 // Translation coverage gate, parameterized for reuse by any docs-kit site.
 // Defaults reproduce raft-docs' historical invocation

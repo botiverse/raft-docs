@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
-import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
@@ -115,6 +115,45 @@ test('index twins: per-locale chrome, basePath links, correct placements', () =>
     const stale = run(root, ['--check'])
     assert.equal(stale.status, 1)
     assert.match(stale.stderr + stale.stdout, /docs\.md is stale/)
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
+})
+
+test('contentExclude skips draft trees; the home page stays out of index twins', () => {
+  const root = makeSite()
+  try {
+    const cfg = join(root, 'docs.config.mjs')
+    writeFileSync(
+      cfg,
+      readFileSync(cfg, 'utf8').replace(
+        "output: { contentDir: 'content', outDir: 'out' }",
+        "output: { contentDir: 'content', outDir: 'out', contentExclude: ['drafts'] }",
+      ),
+    )
+    // Home page: navigation metadata is optional for index.md.
+    writeFileSync(join(root, 'content', 'index.md'), '---\ntitle: "Home"\ndescription: "Home page"\n---\n\n# xdocs home\n')
+    // Draft tree: must be skipped entirely (no validation, no twins).
+    mkdirSync(join(root, 'content', 'drafts'), { recursive: true })
+    writeFileSync(join(root, 'content', 'drafts', 'wip.md'), '# Work in progress\n')
+    // Stub HTML for the home page (canonical + alternate required by the check).
+    writeFileSync(
+      join(root, 'out', 'index.html'),
+      '<!doctype html><html><head>' +
+        '<link rel="canonical" href="https://x.test/d/">' +
+        '<link rel="alternate" type="text/markdown" href="https://x.test/d/index.md">' +
+        '</head></html>',
+    )
+
+    const res = run(root)
+    assert.equal(res.status, 0, res.stderr)
+
+    const en = readFileSync(join(root, 'docs.md'), 'utf8')
+    assert.ok(!en.includes('Home'), 'home page must not be listed in the index twin')
+    assert.ok(en.includes('- [A](/d/a.md)'), 'regular pages still listed')
+    assert.ok(existsSync(join(root, 'out', 'index.md')), 'home page twin still written')
+    assert.ok(!existsSync(join(root, 'out', 'drafts', 'wip.md')), 'draft twins not written')
+    assert.equal(run(root, ['--check']).status, 0)
   } finally {
     rmSync(root, { recursive: true, force: true })
   }
