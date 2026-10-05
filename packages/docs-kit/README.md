@@ -79,6 +79,12 @@ index-twin placement is `out-root` or `out-parent` (never implicitly joined);
 navigation title/description/category/order come from frontmatter, not the
 H1. Both real shapes (raft-docs, Hands) are pinned in `src/config.test.mjs`.
 
+Frontmatter `order` is **unique per locale** (not per category): an EN page
+and its translation may share an order, two pages in the same locale may not
+— the generator rejects duplicates by name at build time. Index twins are
+generated after the site build (the artifact check reads the built HTML), so
+wire `vite build` before the generator.
+
 Planned moves, in order (each one PR, behavior-preserving):
 
 1. Hands migration: flatten its 16-page generator onto the kit, preserving
