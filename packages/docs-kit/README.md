@@ -70,9 +70,14 @@ export default defineDocsConfig({
   brand: { name: 'Hands', logo: '/favicon.svg', home: '/', headerNav: [] },
   search: true,
   coverage: { baseline: 'docs/i18n-coverage-baseline.txt', mode: 'report' },
-  output: { contentDir: 'docs/public', outDir: 'admin/public/docs' },
+  output: { contentDir: 'docs/public', outDir: 'admin/public/docs', contentExclude: ['drafts'] },
 })
 ```
+
+`output.contentExclude` lists top-level names the content walk skips (drafts
+kept beside the published tree); the site home (`index.md`) may omit
+navigation frontmatter and never appears in index twins — only its own page
+twin is written.
 
 Contracts kept explicit on purpose: locale `dir` doubles as the URL segment;
 index-twin placement is `out-root` or `out-parent` (never implicitly joined);

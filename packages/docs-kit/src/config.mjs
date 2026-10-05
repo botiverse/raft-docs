@@ -10,10 +10,11 @@
  *              locales en + zh, /docs base path, docs.md + zh.md index twins
  *              (the /docs.md index sits one level ABOVE the out dir).
  *
- * This module is pure: it validates and normalizes. `loadDocsConfig()` (below)
- * adds the one filesystem fact a factory call cannot know — the site root —
- * by locating the config file itself. It is public so any site can expose a
- * `docs.config.mjs` and any consumer can read it.
+ * This module is pure: it validates and normalizes, and never touches the
+ * filesystem, so browser bundles (the theme imports it) stay clean.
+ * `loadDocsConfig()` lives in ./config-node.mjs: it adds the one filesystem
+ * fact a factory call cannot know — the site root — by locating the config
+ * file itself.
  *
  * Design notes (agreed with the reviewers before implementation):
  * - Locale `dir` doubles as the URL segment: '' for the default locale, 'zh'
@@ -235,33 +236,11 @@ export function defineDocsConfig(options = {}) {
     output: Object.freeze({
       contentDir: output?.contentDir ?? 'content',
       outDir: output?.outDir ?? 'out',
+      // Top-level names (files or directories) the content walk skips: draft
+      // pages kept next to the published tree.
+      contentExclude: Object.freeze([...(output?.contentExclude ?? [])].map(String)),
     }),
   })
-}
-
-/**
- * Load the `docs.config.mjs` a site keeps at its root (or at `configPath`)
- * and return `{ config, root, configPath }` — `root` being the directory the
- * config file lives in, which every kit script can use as its `--root`.
- */
-export async function loadDocsConfig({ root, configPath } = {}) {
-  const { default: nodePath } = await import('node:path')
-  const { pathToFileURL } = await import('node:url')
-  const { accessSync } = await import('node:fs')
-
-  const siteRoot = root ?? process.cwd()
-  const file = configPath ?? nodePath.join(siteRoot, 'docs.config.mjs')
-  try {
-    accessSync(file)
-  } catch {
-    fail(`no config file found at ${file}`)
-  }
-  const module = await import(pathToFileURL(file).href)
-  const config = module.default
-  if (!config || typeof config !== 'object') {
-    fail(`${file} must default-export the result of defineDocsConfig()`)
-  }
-  return { config, root: siteRoot, configPath: file }
 }
 
 /**

@@ -1,6 +1,6 @@
 import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
-import { loadDocsConfig } from '../config.mjs'
+import { loadDocsConfig } from '../config-node.mjs'
 
 // Parameterized for reuse by any docs-kit site; defaults reproduce raft-docs'
 // historical run (`node scripts/generate-agent-artifacts.mjs` from the repo
@@ -94,9 +94,12 @@ const localeConfigs = [
 async function listMarkdownFiles(dir, prefix = '') {
   const entries = await readdir(dir, { withFileTypes: true })
   const files = []
+  const excluded = new Set(siteConfig?.output?.contentExclude ?? [])
 
   for (const entry of entries) {
     if (entry.name === 'public' || entry.name.startsWith('.')) continue
+    // Drafts kept next to the published tree (e.g. hands' agc-market-packages).
+    if (!prefix && excluded.has(entry.name)) continue
 
     const absolute = path.join(dir, entry.name)
     const relative = prefix ? `${prefix}/${entry.name}` : entry.name
@@ -340,7 +343,7 @@ async function loadPages(markdownFiles) {
 
     validatePageMetadata(page, failures, {
       llms: artifactsConfig.llms,
-      index: indexLocales.has(page.locale),
+      index: indexLocales.has(page.locale) && page.relativePath !== 'index.md',
     })
     pages.push(page)
   }
@@ -585,7 +588,9 @@ async function main() {
       outputPath,
       label: entry.placement === 'out-parent' ? `../${entry.name}` : entry.name,
       content: renderIndexTwin(
-        pages.filter((page) => page.locale === localeKey),
+        // The site home (index.md) is chrome, not a listed page; its HTML
+        // twin is still written with every other page below.
+        pages.filter((page) => page.locale === localeKey && page.relativePath !== 'index.md'),
         locale,
       ),
     })

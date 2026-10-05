@@ -21,7 +21,7 @@
 import { readFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { parseRedirectRules, redirectTargetFor } from './redirect-rules.mjs'
-import { loadDocsConfig } from '../config.mjs'
+import { loadDocsConfig } from '../config-node.mjs'
 
 // Parameterized for reuse; defaults reproduce raft-docs' historical run
 // (`node scripts/check-sitemap-redirects.mjs` from the repo root, after a
