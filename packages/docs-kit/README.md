@@ -32,10 +32,46 @@ Moved so far:
   twins + `_headers` generation/check (`--root`, `--content`, `--out`,
   `--site-url`, `--prod`, `--prod-branch`, `--check`).
 
+## `defineDocsConfig()`
+
+One declaration per docs site (`docs.config.mjs` at the site root); the kit's
+theme and scripts read from it instead of per-site wiring. Pure and validated;
+`loadDocsConfig({ root })` locates and loads the file.
+
+```js
+import { defineDocsConfig } from '@botiverse/docs-kit/config'
+
+export default defineDocsConfig({
+  siteUrl: 'https://hands.build',
+  basePath: '/docs/',
+  routing: 'flat', // slug = file name (Hands); 'directory' is raft-docs
+  locales: [
+    { key: 'en', dir: '', label: 'English' },
+    { key: 'zh', dir: 'zh', label: '中文', chrome: { language: '语言' } },
+  ],
+  twins: {
+    page: 'same-dir',
+    index: {
+      en: { name: 'docs.md', placement: 'out-parent' },
+      zh: { name: 'zh.md', placement: 'out-root' },
+    },
+  },
+  nav: { categories: ['Start here'], externals: [{ label: 'API explorer', href: '/api-docs' }] },
+  brand: { name: 'Hands', logo: '/favicon.svg', home: '/', headerNav: [] },
+  search: true,
+  coverage: { baseline: 'docs/i18n-coverage-baseline.txt', mode: 'report' },
+  output: { contentDir: 'docs/public', outDir: 'admin/public/docs' },
+})
+```
+
+Contracts kept explicit on purpose: locale `dir` doubles as the URL segment;
+index-twin placement is `out-root` or `out-parent` (never implicitly joined);
+navigation title/description/category/order come from frontmatter, not the
+H1. Both real shapes (raft-docs, Hands) are pinned in `src/config.test.mjs`.
+
 Planned moves, in order (each one PR, behavior-preserving):
 
-1. `defineDocsConfig()` — one config factory for site chrome, base path,
-   locales, routing and coverage, replacing per-site wiring.
+1. Theme + language flyout; scripts and raft-docs adopt `docs.config.mjs`.
 3. `defineDocsConfig()` — the generic half of raft-docs' `config.mts`
    (locales wiring, sitemap filter, search, theme registration) with nav/
    sidebar/site data passed in.
