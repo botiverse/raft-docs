@@ -1,11 +1,14 @@
 import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
+import { loadDocsConfig } from '../config.mjs'
 
 // Parameterized for reuse by any docs-kit site; defaults reproduce raft-docs'
 // historical run (`node scripts/generate-agent-artifacts.mjs` from the repo
 // root, after `vitepress build`).
 //
-//   --root <dir>       site root (default: cwd)
+//   --config <path>    site declaration (docs.config.mjs): supplies root,
+//                      content dir, out dir and site URL
+//   --root <dir>       site root (default: the config file's dir, else cwd)
 //   --content <dir>    content directory relative to root (default: content)
 //   --out <dir>        build output relative to root (default: out)
 //   --site-url <url>   public origin for canonical/alternate URLs
@@ -20,11 +23,21 @@ const option = (name, fallback) => {
   const index = args.indexOf(`--${name}`)
   return index > -1 ? args[index + 1] : fallback
 }
-const root = path.resolve(option('root', process.cwd()))
-const contentDir = path.resolve(root, option('content', 'content'))
-const outDir = path.resolve(root, option('out', 'out'))
+const configFlag = option('config', null)
+let siteConfig = null
+let configDir = null
+if (configFlag) {
+  const configPath = path.resolve(process.cwd(), configFlag)
+  const loaded = await loadDocsConfig({ root: path.dirname(configPath), configPath })
+  siteConfig = loaded.config
+  configDir = loaded.root
+}
+const root = path.resolve(option('root', configDir ?? process.cwd()))
+const contentDir = path.resolve(root, option('content', siteConfig?.output?.contentDir ?? 'content'))
+const outDir = path.resolve(root, option('out', siteConfig?.output?.outDir ?? 'out'))
 const siteUrl = (
-  option('site-url', process.env.RAFT_DOCS_SITE_URL) ?? 'https://docs.raft.build'
+  option('site-url', siteConfig?.siteUrl ?? process.env.RAFT_DOCS_SITE_URL) ??
+  'https://docs.raft.build'
 ).replace(/\/$/, '')
 const isProdDocsBuild =
   args.includes('--prod') ||

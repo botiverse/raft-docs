@@ -146,6 +146,8 @@ test('coverage and search defaults are safe', () => {
   })
   assert.equal(minimal.coverage.mode, 'enforce')
   assert.equal(minimal.coverage.baseline, null)
+  assert.equal(minimal.redirects.selfTest, false)
+  assert.equal(minimal.redirects.file, null)
   assert.equal(minimal.search, false)
   assert.equal(minimal.metadata, 'frontmatter')
   assert.equal(minimal.output.contentDir, 'content')

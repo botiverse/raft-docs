@@ -19,14 +19,17 @@
  * Matcher self-test:  node scripts/check-sitemap-redirects.mjs --self-test
  */
 import { readFileSync } from 'node:fs'
-import { resolve } from 'node:path'
+import { dirname, resolve } from 'node:path'
 import { parseRedirectRules, redirectTargetFor } from './redirect-rules.mjs'
+import { loadDocsConfig } from '../config.mjs'
 
 // Parameterized for reuse; defaults reproduce raft-docs' historical run
 // (`node scripts/check-sitemap-redirects.mjs` from the repo root, after a
 // build): out/sitemap.xml + content/public/_redirects.
 //
-//   --root <dir>       site root (default: cwd)
+//   --config <path>    site declaration (docs.config.mjs): supplies root and
+//                      out dir
+//   --root <dir>       site root (default: the config file's dir, else cwd)
 //   --out <dir>        build output relative to root (default: out)
 //   --redirects <path> redirect table relative to root
 //                      (default: content/public/_redirects)
@@ -36,10 +39,22 @@ const option = (name, fallback) => {
   const index = args.indexOf(`--${name}`)
   return index > -1 ? args[index + 1] : fallback
 }
-const root = resolve(option('root', process.cwd()))
-const outDir = option('out', 'out')
+const configFlag = option('config', null)
+let siteConfig = null
+let configDir = null
+if (configFlag) {
+  const configPath = resolve(process.cwd(), configFlag)
+  const loaded = await loadDocsConfig({ root: dirname(configPath), configPath })
+  siteConfig = loaded.config
+  configDir = loaded.root
+}
+const root = resolve(option('root', configDir ?? process.cwd()))
+const outDir = option('out', siteConfig?.output?.outDir ?? 'out')
 const SITEMAP = resolve(root, option('sitemap', `${outDir}/sitemap.xml`))
-const REDIRECTS = resolve(root, option('redirects', 'content/public/_redirects'))
+const REDIRECTS = resolve(
+  root,
+  option('redirects', siteConfig?.redirects?.file ?? 'content/public/_redirects'),
+)
 
 function sitemapPaths() {
   const xml = readFileSync(SITEMAP, 'utf-8')
@@ -109,9 +124,12 @@ function selfTest() {
   console.log(`redirect matcher self-test OK — ${cases.length} cases.`)
 }
 
-selfTest()
+// The teeth assert this table's real semantics, so they are site data:
+// opt in via --self-test or `redirects.selfTest` in the site declaration.
+const wantsSelfTest = process.argv.includes('--self-test')
+if (wantsSelfTest || siteConfig?.redirects?.selfTest) selfTest()
 
-if (process.argv.includes('--self-test')) process.exit(0)
+if (wantsSelfTest) process.exit(0)
 
 const rules = parseRedirectRules(readFileSync(REDIRECTS, 'utf-8'))
 const paths = sitemapPaths()

@@ -33,5 +33,6 @@ export default defineDocsConfig({
   },
   search: true,
   coverage: { baseline: 'scripts/i18n-coverage-baseline.txt', mode: 'enforce' },
+  redirects: { file: 'content/public/_redirects', selfTest: true },
   output: { contentDir: 'content', outDir: 'out' },
 })
