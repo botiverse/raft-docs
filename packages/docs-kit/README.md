@@ -142,10 +142,15 @@ them itself and controls the major version (VitePress themes are
 version-sensitive).
 
 Release flow (`.github/workflows/publish-docs-kit.yml`, trusted publishing,
-no long-lived token):
+no long-lived token; the job runs in the dedicated `npm-docs-kit`
+environment):
 
 1. Bump `version` in this package.json, merge to main.
 2. Tag `docs-kit-v<version>` (or `workflow_dispatch` with the version; the
    workflow refuses a mismatch) — dispatch with `dry_run: true` first when in
    doubt.
-3. Consumers pin the exact version (e.g. `"@botiverse/docs-kit": "0.1.0"`).
+3. The workflow uses **staged publishing** (`npm stage publish`): the version
+   lands in npm's staging area and goes live only after a maintainer confirms
+   it on npmjs.com. Until then the registry keeps showing the previous
+   version.
+4. Consumers pin the exact version (e.g. `"@botiverse/docs-kit": "0.1.0"`).
