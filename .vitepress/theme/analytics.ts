@@ -75,7 +75,7 @@ function sharedDocsProps(): { page_path: string; docs_section: string } {
 
 function isMarkdownSourceLink(anchor: HTMLAnchorElement, url: URL): boolean {
   if (
-    anchor.closest('.raft-markdown-link') !== null &&
+    anchor.closest('.docs-markdown-link') !== null &&
     url.origin === window.location.origin &&
     url.pathname.endsWith('.md')
   ) {
