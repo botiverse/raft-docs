@@ -8,6 +8,10 @@
     "./scripts/redirect-rules": "./src/scripts/redirect-rules.mjs",
     "./scripts/i18n-coverage": "./src/scripts/check-i18n-coverage.mjs",
     "./scripts/agent-artifacts": "./src/scripts/generate-agent-artifacts.mjs",
-    "./scripts/sitemap-redirects": "./src/scripts/check-sitemap-redirects.mjs"
+    "./scripts/sitemap-redirects": "./src/scripts/check-sitemap-redirects.mjs",
+    "./config": "./src/config.mjs"
+  },
+  "scripts": {
+    "test": "node --test \"src/**/*.test.mjs\""
   }
 }
