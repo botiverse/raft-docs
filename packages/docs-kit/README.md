@@ -28,9 +28,13 @@ Moved so far:
 
 - `src/scripts/check-sitemap-redirects.mjs` — post-build sitemap/redirect
   overlap check (`--root`, `--out`, `--sitemap`, `--redirects`, `--self-test`).
-- `src/scripts/generate-agent-artifacts.mjs` — `llms.txt` + per-page `.md`
-  twins + `_headers` generation/check (`--root`, `--content`, `--out`,
-  `--site-url`, `--prod`, `--prod-branch`, `--check`).
+- `src/scripts/generate-agent-artifacts.mjs` — per-page `.md` twins, plus
+  config-driven artifacts: `llms.txt` (`artifacts.llms`, default on) and
+  index twins from `twins.index` (heading/note text per locale from
+  `chrome.markdownIndexTitle` / `markdownIndexNote`, items grouped by
+  frontmatter category + order, links built on `basePath`); `_headers`
+  (`artifacts.headers`, default on). Options: `--config`, `--root`,
+  `--content`, `--out`, `--site-url`, `--prod`, `--prod-branch`, `--check`.
 - `src/content.mjs` — content-tree facts: `collectLocalePaths()` derives each
   locale's route set from the Markdown tree (the language switcher consumes
   it via `themeConfig.docsKit.translated`); `routeForMarkdownPath()`.
@@ -74,6 +78,12 @@ Contracts kept explicit on purpose: locale `dir` doubles as the URL segment;
 index-twin placement is `out-root` or `out-parent` (never implicitly joined);
 navigation title/description/category/order come from frontmatter, not the
 H1. Both real shapes (raft-docs, Hands) are pinned in `src/config.test.mjs`.
+
+Frontmatter `order` is **unique per locale** (not per category): an EN page
+and its translation may share an order, two pages in the same locale may not
+— the generator rejects duplicates by name at build time. Index twins are
+generated after the site build (the artifact check reads the built HTML), so
+wire `vite build` before the generator.
 
 Planned moves, in order (each one PR, behavior-preserving):
 

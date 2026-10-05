@@ -18,6 +18,16 @@ import { loadDocsConfig } from '../config.mjs'
 //                      --prod-branch.
 //   --prod-branch <b>  branch treated as production (default: main)
 //   --check            verify existing artifacts match; write nothing
+//
+// Artifacts emitted for a site:
+// - per-page .md twins (always);
+// - llms.txt per localeConfigs (default; a site can turn it off with
+//   artifacts.llms=false in docs.config.mjs — ties to the Raft docs shape);
+// - index twins driven by `twins.index` in docs.config.mjs: one machine
+//   index per declared locale, built from frontmatter title/description/
+//   category/order, with chrome.markdownIndexTitle / markdownIndexNote /
+//   categories supplying the locale's text (Hands: /docs.md + /docs/zh.md);
+// - _headers (default; artifacts.headers=false skips it).
 const args = process.argv.slice(2)
 const option = (name, fallback) => {
   const index = args.indexOf(`--${name}`)
@@ -39,10 +49,22 @@ const siteUrl = (
   option('site-url', siteConfig?.siteUrl ?? process.env.RAFT_DOCS_SITE_URL) ??
   'https://docs.raft.build'
 ).replace(/\/$/, '')
+const basePath = siteConfig?.basePath ?? '/'
+const withBasePath = (urlPath) => `${basePath}${urlPath}`.replace(/\/{2,}/g, '/')
 const isProdDocsBuild =
   args.includes('--prod') ||
   process.env.CF_PAGES_BRANCH === option('prod-branch', 'main')
 const checkOnly = args.includes('--check')
+const artifactsConfig = {
+  llms: siteConfig?.artifacts?.llms ?? true,
+  headers: siteConfig?.artifacts?.headers ?? true,
+}
+const frontmatterKeys = siteConfig?.frontmatterKeys ?? {
+  title: 'title',
+  description: 'description',
+  category: 'category',
+  order: 'order',
+}
 const previewMarkerPatterns = [
   /^\*\*\[Screenshot:[^\]]*\]\*\*$/,
   /^\[\[preview\]\].*$/,
@@ -179,6 +201,13 @@ function parseLlmsOrder(value) {
 }
 
 function localeForPath(relativePath) {
+  if (siteConfig) {
+    for (const locale of siteConfig.locales) {
+      if (locale.dir && relativePath.startsWith(`${locale.dir}/`)) return locale.key
+    }
+    return siteConfig.defaultLocale.key
+  }
+  // Historical raft-docs shape when run without a site declaration.
   if (relativePath.startsWith('zh-cn/')) return 'zh-cn'
   return 'root'
 }
@@ -214,48 +243,73 @@ function stripPreviewMarkers(markdown) {
   return filtered.join('\n')
 }
 
-function validatePageMetadata(page, failures) {
+function validatePageMetadata(page, failures, requirements) {
   if (!page.title) {
     failures.push(`${page.relativePath}: missing readable title`)
   }
 
-  if (!page.summary) {
-    failures.push(`${page.relativePath}: missing required llms_summary frontmatter`)
+  if (requirements.llms) {
+    if (!page.summary) {
+      failures.push(`${page.relativePath}: missing required llms_summary frontmatter`)
+    }
+
+    if (page.summary && page.summary.length > 220) {
+      failures.push(`${page.relativePath}: llms_summary should stay under 220 characters`)
+    }
+
+    if (page.summary && privateKnowledgeSummaryPattern.test(page.summary)) {
+      failures.push(
+        `${page.relativePath}: llms_summary must stay public discovery metadata, not internal Manual content`,
+      )
+    }
+
+    if (!page.section) {
+      failures.push(`${page.relativePath}: missing required llms_section frontmatter`)
+    }
   }
 
-  if (page.summary && page.summary.length > 220) {
-    failures.push(`${page.relativePath}: llms_summary should stay under 220 characters`)
+  if (requirements.index) {
+    // Index twins are built from frontmatter — navigation metadata is never
+    // derived from the H1, which carries prose ("Getting started: connect …")
+    // rather than the sidebar label ("Getting Started").
+    if (!page.description) {
+      failures.push(
+        `${page.relativePath}: missing required ${frontmatterKeys.description} frontmatter (index twin)`,
+      )
+    }
+
+    if (!page.category) {
+      failures.push(
+        `${page.relativePath}: missing required ${frontmatterKeys.category} frontmatter (index twin)`,
+      )
+    }
   }
 
-  if (page.summary && privateKnowledgeSummaryPattern.test(page.summary)) {
+  if ((requirements.llms || requirements.index) && !Number.isFinite(page.order)) {
     failures.push(
-      `${page.relativePath}: llms_summary must stay public discovery metadata, not internal Manual content`,
+      `${page.relativePath}: missing numeric ${frontmatterKeys.order} frontmatter`,
     )
-  }
-
-  if (!page.section) {
-    failures.push(`${page.relativePath}: missing required llms_section frontmatter`)
-  }
-
-  if (!Number.isFinite(page.order)) {
-    failures.push(`${page.relativePath}: missing numeric llms_order frontmatter`)
   }
 }
 
 function validatePageCollection(pages, failures) {
+  // Per locale: an EN page and its translation may share an order (each index
+  // sorts within its own locale); two pages in the SAME locale may not.
   const pagesByOrder = new Map()
 
   for (const page of pages) {
     if (!Number.isFinite(page.order)) continue
 
-    const existing = pagesByOrder.get(page.order) ?? []
+    const key = `${page.locale}\u0000${page.order}`
+    const existing = pagesByOrder.get(key) ?? []
     existing.push(page.relativePath)
-    pagesByOrder.set(page.order, existing)
+    pagesByOrder.set(key, existing)
   }
 
-  for (const [order, paths] of pagesByOrder) {
+  for (const [key, paths] of pagesByOrder) {
     if (paths.length > 1) {
-      failures.push(`llms_order ${order} is duplicated by ${paths.join(', ')}`)
+      const [locale, order] = key.split('\u0000')
+      failures.push(`order ${order} is duplicated within locale '${locale}' by ${paths.join(', ')}`)
     }
   }
 }
@@ -263,6 +317,7 @@ function validatePageCollection(pages, failures) {
 async function loadPages(markdownFiles) {
   const pages = []
   const failures = []
+  const indexLocales = new Set(Object.keys(siteConfig?.twins?.index ?? {}))
 
   for (const relativePath of markdownFiles) {
     const markdown = await readFile(path.join(contentDir, relativePath), 'utf8')
@@ -273,15 +328,20 @@ async function loadPages(markdownFiles) {
       title: extractTitle(relativePath, markdown, frontmatter),
       summary: cleanInlineMarkdown(frontmatter.llms_summary ?? ''),
       section: cleanInlineMarkdown(frontmatter.llms_section ?? ''),
-      order: parseLlmsOrder(frontmatter.llms_order),
-      humanUrl: `${siteUrl}${humanUrlPath(relativePath)}`,
-      markdownUrl: `${siteUrl}${rawUrlPath(relativePath)}`,
+      description: cleanInlineMarkdown(frontmatter[frontmatterKeys.description] ?? ''),
+      category: cleanInlineMarkdown(frontmatter[frontmatterKeys.category] ?? ''),
+      order: parseLlmsOrder(frontmatter[frontmatterKeys.order] ?? frontmatter.llms_order),
+      humanUrl: `${siteUrl}${withBasePath(humanUrlPath(relativePath))}`,
+      markdownUrl: `${siteUrl}${withBasePath(rawUrlPath(relativePath))}`,
       rawOutputRelative: rawOutputPath(relativePath),
       htmlOutputRelative: htmlOutputPath(relativePath),
       artifactMarkdown: isProdDocsBuild ? stripPreviewMarkers(markdown) : markdown,
     }
 
-    validatePageMetadata(page, failures)
+    validatePageMetadata(page, failures, {
+      llms: artifactsConfig.llms,
+      index: indexLocales.has(page.locale),
+    })
     pages.push(page)
   }
 
@@ -346,9 +406,11 @@ function renderLlmsTxt(pages, config) {
   return `${lines.join('\n')}\n`
 }
 
-function renderRawArtifactHeaders(pages) {
-  const llmsPaths = localeConfigs.map((config) => `/${config.llmsPath}`)
-  const paths = [...llmsPaths, ...pages.map((page) => rawUrlPath(page.relativePath))]
+function renderRawArtifactHeaders(pages, llmsPaths) {
+  const paths = [
+    ...llmsPaths.map(withBasePath),
+    ...pages.map((page) => withBasePath(rawUrlPath(page.relativePath))),
+  ]
   const uniquePaths = [...new Set(paths)].sort()
   const lines = [
     '# Generated by packages/docs-kit/src/scripts/generate-agent-artifacts.mjs. Do not edit manually.',
@@ -362,7 +424,54 @@ function renderRawArtifactHeaders(pages) {
   return `${lines.join('\n')}\n`
 }
 
-async function writeArtifacts(pages, llmsArtifacts, headers) {
+/**
+ * A locale's machine index twin (Hands' /docs.md + /docs/zh.md): heading and
+ * note text come from the locale's chrome verbatim; items are grouped by
+ * frontmatter category, ordered by frontmatter order, and link to each
+ * page's raw twin.
+ */
+function renderIndexTwin(pages, locale) {
+  const chrome = locale?.chrome ?? {}
+  const heading = chrome.markdownIndexTitle
+  const note = chrome.markdownIndexNote
+  if (!locale) {
+    throw new Error('docs.config: twins.index names a locale that does not exist')
+  }
+  if (!heading || !note) {
+    throw new Error(
+      `docs.config: locale '${locale.key}' declares an index twin; ` +
+        'chrome.markdownIndexTitle and chrome.markdownIndexNote are required',
+    )
+  }
+
+  const lines = [heading, '', note, '']
+  const groups = new Map()
+  for (const page of pages) {
+    const category = page.category || 'Other'
+    if (!groups.has(category)) groups.set(category, [])
+    groups.get(category).push(page)
+  }
+
+  const configured = siteConfig?.nav?.categories ?? []
+  const ordered = [
+    ...configured.filter((category) => groups.has(category)),
+    ...[...groups.keys()].filter((category) => !configured.includes(category)).sort(),
+  ]
+
+  for (const category of ordered) {
+    const label = chrome.categories?.[category] ?? category
+    lines.push(`## ${label}`, '')
+    for (const page of [...groups.get(category)].sort(sortPages)) {
+      const link = `${siteConfig?.basePath ?? '/'}${page.rawOutputRelative}`.replace(/\/{2,}/g, '/')
+      lines.push(`- [${page.title}](${link}) — ${page.description}`)
+    }
+    lines.push('')
+  }
+
+  return `${lines.join('\n').trimEnd()}\n`
+}
+
+async function writeArtifacts(pages, agentArtifacts, headers) {
   await Promise.all(
     pages.map(async (page) => {
       const output = path.join(outDir, page.rawOutputRelative)
@@ -373,41 +482,43 @@ async function writeArtifacts(pages, llmsArtifacts, headers) {
   )
 
   await Promise.all(
-    llmsArtifacts.map(async (artifact) => {
-      const output = path.join(outDir, artifact.relativePath)
-
-      await mkdir(path.dirname(output), { recursive: true })
-      await writeFile(output, artifact.content)
+    agentArtifacts.map(async (artifact) => {
+      await mkdir(path.dirname(artifact.outputPath), { recursive: true })
+      await writeFile(artifact.outputPath, artifact.content)
     }),
   )
-  await writeFile(path.join(outDir, '_headers'), headers)
+  if (headers != null) {
+    await writeFile(path.join(outDir, '_headers'), headers)
+  }
 }
 
 async function readOutputFile(relativePath) {
   return readFile(path.join(outDir, relativePath), 'utf8')
 }
 
-async function checkArtifacts(pages, llmsArtifacts, headers) {
+async function checkArtifacts(pages, agentArtifacts, headers) {
   const failures = []
 
-  for (const artifact of llmsArtifacts) {
+  for (const artifact of agentArtifacts) {
     try {
-      const actualLlmsTxt = await readOutputFile(artifact.relativePath)
-      if (actualLlmsTxt !== artifact.content) {
-        failures.push(`out/${artifact.relativePath} is stale; regenerate agent artifacts`)
+      const actual = await readFile(artifact.outputPath, 'utf8')
+      if (actual !== artifact.content) {
+        failures.push(`${artifact.label} is stale; regenerate agent artifacts`)
       }
     } catch (error) {
-      failures.push(`out/${artifact.relativePath} is missing or unreadable: ${error.message}`)
+      failures.push(`${artifact.label} is missing or unreadable: ${error.message}`)
     }
   }
 
-  try {
-    const actualHeaders = await readOutputFile('_headers')
-    if (actualHeaders !== headers) {
-      failures.push('out/_headers is stale; regenerate agent artifacts')
+  if (headers != null) {
+    try {
+      const actualHeaders = await readOutputFile('_headers')
+      if (actualHeaders !== headers) {
+        failures.push('out/_headers is stale; regenerate agent artifacts')
+      }
+    } catch (error) {
+      failures.push(`out/_headers is missing or unreadable: ${error.message}`)
     }
-  } catch (error) {
-    failures.push(`out/_headers is missing or unreadable: ${error.message}`)
   }
 
   for (const page of pages) {
@@ -450,17 +561,43 @@ async function checkArtifacts(pages, llmsArtifacts, headers) {
 async function main() {
   const markdownFiles = await listMarkdownFiles(contentDir)
   const pages = await loadPages(markdownFiles)
-  const llmsArtifacts = localeConfigs.map((config) => ({
-    relativePath: config.llmsPath,
-    content: renderLlmsTxt(pages.filter(config.includePage), config),
-  }))
-  const headers = renderRawArtifactHeaders(pages)
 
-  if (!checkOnly) {
-    await writeArtifacts(pages, llmsArtifacts, headers)
+  const agentArtifacts = []
+  const llmsPaths = []
+  if (artifactsConfig.llms) {
+    for (const config of localeConfigs) {
+      llmsPaths.push(`/${config.llmsPath}`)
+      agentArtifacts.push({
+        outputPath: path.join(outDir, config.llmsPath),
+        label: config.llmsPath,
+        content: renderLlmsTxt(pages.filter(config.includePage), config),
+      })
+    }
   }
 
-  await checkArtifacts(pages, llmsArtifacts, headers)
+  for (const [localeKey, entry] of Object.entries(siteConfig?.twins?.index ?? {})) {
+    const locale = siteConfig.locales.find((candidate) => candidate.key === localeKey)
+    const outputPath =
+      entry.placement === 'out-parent'
+        ? path.resolve(outDir, '..', entry.name)
+        : path.join(outDir, entry.name)
+    agentArtifacts.push({
+      outputPath,
+      label: entry.placement === 'out-parent' ? `../${entry.name}` : entry.name,
+      content: renderIndexTwin(
+        pages.filter((page) => page.locale === localeKey),
+        locale,
+      ),
+    })
+  }
+
+  const headers = artifactsConfig.headers ? renderRawArtifactHeaders(pages, llmsPaths) : null
+
+  if (!checkOnly) {
+    await writeArtifacts(pages, agentArtifacts, headers)
+  }
+
+  await checkArtifacts(pages, agentArtifacts, headers)
 }
 
 main().catch((error) => {
