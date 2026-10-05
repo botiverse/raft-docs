@@ -77,11 +77,19 @@ H1. Both real shapes (raft-docs, Hands) are pinned in `src/config.test.mjs`.
 
 Planned moves, in order (each one PR, behavior-preserving):
 
-1. Scripts and raft-docs adopt `docs.config.mjs` (`--config`), replacing
-   per-script flags with one declaration.
-2. Hands migration: flatten its 16-page generator onto the kit, preserving
+1. Hands migration: flatten its 16-page generator onto the kit, preserving
    the 8 URL contracts (`/docs/<slug>/`, `.md` twins, `/docs/zh/…`,
    `/docs.md`, `/docs/zh.md`).
+
+## `--config` adoption
+
+Every script accepts `--config <path>` (a site's `docs.config.mjs`) and takes
+its defaults from the declaration: root (the config file's dir), content/out
+dirs, site URL, coverage baseline + mode, the locale list, and the
+`_redirects` table (`redirects.file`, with the matcher teeth opted in per site
+via `redirects.selfTest`). Explicit flags still win over the config; raft-docs
+runs everything through `--config docs.config.mjs` with byte-identical output.
+`coverage.mode: 'report'` lists regressions without failing the build.
 
 ## Content conventions (agreed with gzj, #proj-hands e1183d38)
 

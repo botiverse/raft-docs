@@ -146,6 +146,11 @@ function normalizeBrand(brand) {
   })
 }
 
+function normalizeRedirects(redirects) {
+  const { file = null, selfTest = false } = redirects ?? {}
+  return Object.freeze({ file, selfTest: Boolean(selfTest) })
+}
+
 function normalizeCoverage(coverage) {
   const { baseline = null, mode = 'enforce' } = coverage ?? {}
   if (!COVERAGE_MODES.has(mode)) {
@@ -171,6 +176,7 @@ export function defineDocsConfig(options = {}) {
     frontmatterKeys,
     search = false,
     coverage,
+    redirects,
     output,
   } = options
 
@@ -189,6 +195,7 @@ export function defineDocsConfig(options = {}) {
   const normalizedNav = normalizeNav(nav)
   const normalizedBrand = normalizeBrand(brand)
   const normalizedCoverage = normalizeCoverage(coverage)
+  const normalizedRedirects = normalizeRedirects(redirects)
 
   const keys = {
     title: 'title',
@@ -211,6 +218,9 @@ export function defineDocsConfig(options = {}) {
     frontmatterKeys: Object.freeze(keys),
     search: Boolean(search),
     coverage: normalizedCoverage,
+    // `_redirects`-style table: `file` feeds the sitemap check's default,
+    // `selfTest` opts the matcher teeth in for this site's real table.
+    redirects: normalizedRedirects,
     output: Object.freeze({
       contentDir: output?.contentDir ?? 'content',
       outDir: output?.outDir ?? 'out',

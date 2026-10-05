@@ -5,12 +5,12 @@
   "description": "Raft public documentation site (VitePress, deployed at docs.raft.build)",
   "scripts": {
     "dev": "vitepress dev --host 0.0.0.0",
-    "build": "vitepress build && node packages/docs-kit/src/scripts/generate-agent-artifacts.mjs --root . && node packages/docs-kit/src/scripts/check-sitemap-redirects.mjs --root .",
-    "check:agent-artifacts": "node packages/docs-kit/src/scripts/generate-agent-artifacts.mjs --root . --check",
-    "check:sitemap-redirects": "node packages/docs-kit/src/scripts/check-sitemap-redirects.mjs --root .",
-    "check:redirect-matcher": "node packages/docs-kit/src/scripts/check-sitemap-redirects.mjs --root . --self-test",
+    "build": "vitepress build && node packages/docs-kit/src/scripts/generate-agent-artifacts.mjs --config docs.config.mjs && node packages/docs-kit/src/scripts/check-sitemap-redirects.mjs --config docs.config.mjs",
+    "check:agent-artifacts": "node packages/docs-kit/src/scripts/generate-agent-artifacts.mjs --config docs.config.mjs --check",
+    "check:sitemap-redirects": "node packages/docs-kit/src/scripts/check-sitemap-redirects.mjs --config docs.config.mjs",
+    "check:redirect-matcher": "node packages/docs-kit/src/scripts/check-sitemap-redirects.mjs --config docs.config.mjs --self-test",
     "preview": "vitepress preview --host 0.0.0.0",
-    "check:i18n-coverage": "node packages/docs-kit/src/scripts/check-i18n-coverage.mjs --root ."
+    "check:i18n-coverage": "node packages/docs-kit/src/scripts/check-i18n-coverage.mjs --config docs.config.mjs"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
