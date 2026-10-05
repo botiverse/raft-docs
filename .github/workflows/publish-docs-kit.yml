@@ -22,6 +22,9 @@ permissions:
 
 jobs:
   publish:
+    # Dedicated environment so the docs-kit publisher stays separate from
+    # regular CI, and npm's trusted-publisher entry can bind to it by name.
+    environment: npm-docs-kit
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
@@ -36,9 +39,11 @@ jobs:
           cache: "pnpm"
           registry-url: "https://registry.npmjs.org"
 
-      - name: Use npm with trusted publishing support
+      - name: Use npm with staged-publishing support
         run: |
-          npm install -g npm@^11.5.1
+          # `npm stage publish` (staged publishing, maintainer confirms the
+          # version on npmjs.com before it goes live) requires npm 12.
+          npm install -g npm@^12
           npm --version
 
       - name: Install dependencies
@@ -72,17 +77,17 @@ jobs:
         working-directory: packages/docs-kit
         run: npm pack --dry-run
 
-      - name: Publish dry run
+      - name: Stage dry run
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
         working-directory: packages/docs-kit
-        run: npm publish --access public --dry-run
+        run: npm stage publish --access public --dry-run
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Publish to npm
+      - name: Stage for publishing
         if: ${{ github.event_name != 'workflow_dispatch' || !inputs.dry_run }}
         working-directory: packages/docs-kit
-        run: npm publish --access public
+        run: npm stage publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
