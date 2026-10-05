@@ -6,6 +6,8 @@
   "type": "module",
   "exports": {
     "./scripts/redirect-rules": "./src/scripts/redirect-rules.mjs",
-    "./scripts/i18n-coverage": "./src/scripts/check-i18n-coverage.mjs"
+    "./scripts/i18n-coverage": "./src/scripts/check-i18n-coverage.mjs",
+    "./scripts/agent-artifacts": "./src/scripts/generate-agent-artifacts.mjs",
+    "./scripts/sitemap-redirects": "./src/scripts/check-sitemap-redirects.mjs"
   }
 }

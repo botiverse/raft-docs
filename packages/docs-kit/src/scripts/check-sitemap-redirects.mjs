@@ -19,13 +19,27 @@
  * Matcher self-test:  node scripts/check-sitemap-redirects.mjs --self-test
  */
 import { readFileSync } from 'node:fs'
-import { dirname, resolve } from 'node:path'
-import { fileURLToPath } from 'node:url'
-import { parseRedirectRules, redirectTargetFor } from '../packages/docs-kit/src/scripts/redirect-rules.mjs'
+import { resolve } from 'node:path'
+import { parseRedirectRules, redirectTargetFor } from './redirect-rules.mjs'
 
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-const SITEMAP = resolve(root, 'out/sitemap.xml')
-const REDIRECTS = resolve(root, 'content/public/_redirects')
+// Parameterized for reuse; defaults reproduce raft-docs' historical run
+// (`node scripts/check-sitemap-redirects.mjs` from the repo root, after a
+// build): out/sitemap.xml + content/public/_redirects.
+//
+//   --root <dir>       site root (default: cwd)
+//   --out <dir>        build output relative to root (default: out)
+//   --redirects <path> redirect table relative to root
+//                      (default: content/public/_redirects)
+//   --self-test        run the matcher regression teeth only
+const args = process.argv.slice(2)
+const option = (name, fallback) => {
+  const index = args.indexOf(`--${name}`)
+  return index > -1 ? args[index + 1] : fallback
+}
+const root = resolve(option('root', process.cwd()))
+const outDir = option('out', 'out')
+const SITEMAP = resolve(root, option('sitemap', `${outDir}/sitemap.xml`))
+const REDIRECTS = resolve(root, option('redirects', 'content/public/_redirects'))
 
 function sitemapPaths() {
   const xml = readFileSync(SITEMAP, 'utf-8')
@@ -41,10 +55,10 @@ function htmlOutputPathForSitemapPath(path) {
   }
 
   if (cleanPath.endsWith('/')) {
-    return resolve(root, 'out', cleanPath.slice(1), 'index.html')
+    return resolve(root, outDir, cleanPath.slice(1), 'index.html')
   }
 
-  return resolve(root, 'out', `${cleanPath.slice(1)}.html`)
+  return resolve(root, outDir, `${cleanPath.slice(1)}.html`)
 }
 
 function hasMetaRefresh(html) {

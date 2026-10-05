@@ -26,10 +26,16 @@ Moved so far:
   (defaults reproduce raft-docs' original invocation byte for byte; raft-docs
   runs it via `pnpm check:i18n-coverage -- --check`).
 
+- `src/scripts/check-sitemap-redirects.mjs` — post-build sitemap/redirect
+  overlap check (`--root`, `--out`, `--sitemap`, `--redirects`, `--self-test`).
+- `src/scripts/generate-agent-artifacts.mjs` — `llms.txt` + per-page `.md`
+  twins + `_headers` generation/check (`--root`, `--content`, `--out`,
+  `--site-url`, `--prod`, `--prod-branch`, `--check`).
+
 Planned moves, in order (each one PR, behavior-preserving):
 
-1. `check-sitemap-redirects` + `generate-agent-artifacts` (`llms.txt` and
-   per-page `.md` twins).
+1. `defineDocsConfig()` — one config factory for site chrome, base path,
+   locales, routing and coverage, replacing per-site wiring.
 3. `defineDocsConfig()` — the generic half of raft-docs' `config.mts`
    (locales wiring, sitemap filter, search, theme registration) with nav/
    sidebar/site data passed in.
