@@ -34,6 +34,11 @@ function sitemapPaths() {
   )
 }
 
+function sitemapLastModifiedValues() {
+  const xml = readFileSync(SITEMAP, 'utf-8')
+  return [...xml.matchAll(/<lastmod>(.*?)<\/lastmod>/g)].map((m) => m[1])
+}
+
 function htmlOutputPathForSitemapPath(path) {
   const cleanPath = path.split(/[?#]/, 1)[0]
   if (!cleanPath.startsWith('/')) {
@@ -101,6 +106,7 @@ if (process.argv.includes('--self-test')) process.exit(0)
 
 const rules = parseRedirectRules(readFileSync(REDIRECTS, 'utf-8'))
 const paths = sitemapPaths()
+const lastModifiedValues = sitemapLastModifiedValues()
 
 // Both inputs must be non-empty. A zero on either side would make this check
 // pass for the same reason a broken parser does, and a check that cannot fail
@@ -108,6 +114,17 @@ const paths = sitemapPaths()
 // throws on an empty table, so only the sitemap side needs asserting here.)
 if (paths.length === 0) {
   console.error(`Parsed 0 URLs from ${SITEMAP} — did the build run?`)
+  process.exit(1)
+}
+
+if (lastModifiedValues.length > 0) {
+  console.error(
+    `Sitemap publishes ${lastModifiedValues.length} <lastmod> values.\n\n` +
+      'Cloudflare Pages builds from a shallow clone, so VitePress assigns the ' +
+      'deployment commit time to every page instead of a verified page modification ' +
+      'time. An absent lastmod is more accurate than a fabricated one.\n' +
+      'Fix: keep the lastmod fields removed in .vitepress/config.mts.',
+  )
   process.exit(1)
 }
 
@@ -142,5 +159,5 @@ if (metaRefreshPages.length > 0) {
 
 console.log(
   `sitemap-redirects OK — ${paths.length} sitemap URLs checked against ` +
-    `${rules.length} redirect rules, no overlap or meta refresh.`,
+    `${rules.length} redirect rules, no overlap, meta refresh, or unverified lastmod.`,
 )
