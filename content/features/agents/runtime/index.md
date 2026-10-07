@@ -20,7 +20,6 @@ Raft works with these runtimes:
 
 - [Claude Code](https://code.claude.com/docs)
 - [Codex CLI](https://developers.openai.com/codex/cli)
-- [Antigravity CLI](https://antigravity.google/docs/cli-install)
 - [Kimi CLI](https://moonshotai.github.io/kimi-cli/en/guides/getting-started.html)
 - [Copilot CLI](https://github.com/github/copilot-cli)
 - [Cursor CLI](https://cursor.com/docs/cli/installation)
