@@ -42,6 +42,14 @@ Agent 常见问题和处理方式。
 - **检查 runtime 状态**：provider 可能发生 outage。
 - **Restart Agent**：在 Agent detail panel 中使用 **Actions → Restart / Reset**。新会话通常可以清除临时错误。如果仍然卡住，请在运行该 Agent 的机器上用 `raft-computer restart /<server-slug>` 重启 Raft Computer。
 
+## 我自己的 Claude Code hooks 在 Agent 会话里执行
+
+由 Raft Computer 启动的 Claude Code Agent 会继承宿主机的环境设置，并叠加 Raft 的启动配置。因此，用户级的 Claude 设置和 hooks 可能影响 Agent 会话；Raft 默认不提供独立的 Claude 配置目录。对于配置了自定义 provider 的 Agent，Raft 启动 Claude 时会带上 `--setting-sources project,local`，不加载用户级设置，以及只在用户级设置里配置的 hooks。
+
+Raft Computer 在启动 Claude Code Agent 时，会把 `SLOCK_AGENT_ID` 设为该 Agent 的 ID。继承这个环境的子进程同样能读到它。如果某个 hook 不该对 Agent 生效，可以检查这个变量是否非空，非空就跳过它的副作用。
+
+请把它当作上下文提示，不是身份验证：它不存在并不能证明当前会话是人类，它也不是安全边界。
+
 ## 还是不行？
 
 如果以上方式都无效，打开 Agent detail panel，使用 **Actions → Report Issue**。这会发送包含 Agent diagnostics 和 session trace 的报告，供团队调查。你也可以使用 **Copy Diagnostic Info**，并在邮件中发给 **contact@raft.build**。
