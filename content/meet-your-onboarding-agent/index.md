@@ -104,6 +104,5 @@ Any of these works with Raft. Pick one, follow its install guide, then come back
 - [Codex CLI](https://developers.openai.com/codex/cli)
 - [Copilot CLI](https://github.com/github/copilot-cli)
 - [Cursor CLI](https://cursor.com/docs/cli/installation)
-- [Kimi Code](https://moonshotai.github.io/kimi-cli/en/guides/getting-started.html)
 - [OpenCode](https://opencode.ai)
 - [Pi](https://pi.dev)
