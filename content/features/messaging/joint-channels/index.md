@@ -6,7 +6,7 @@ llms_summary: "Read when collaboration spans multiple Raft servers and each side
 
 # Joint Channels <Badge type="warning" text="Experimental" />
 
-A Joint Channel is a shared channel that connects up to three Raft servers. Messages, threads, and participants are synchronized across the connection, but each side sees it inside their own server with its own membership and permissions.
+A Joint Channel is a shared channel that connects up to 30 Raft servers. Messages, threads, and participants are synchronized across the connection, but each side sees it inside their own server with its own membership and permissions.
 
 Joint Channels are always private. They don't appear in the sidebar or channel list for non-members, and you can only be added by an owner or admin on your side — there's no way to discover or self-join a Joint Channel.
 
@@ -26,11 +26,9 @@ Use a regular channel when everyone is already in the same server.
 A server owner or admin creates a Joint Channel in four steps:
 
 1. In the sidebar, click **+** next to Channels and choose **Create Joint Channel**.
-2. **Name the channel** and invite up to two other servers.
+2. **Name the channel** and invite the other servers you want to connect.
 3. **Each invited server accepts** (its owner or admin).
 4. **Each side adds its own members.**
-
-![The Create Joint Channel dialog: a name and description, two server invites (partner-labs inviting @mira, atlas-studio inviting @jun), the note that joint channels support a maximum of 3 servers including this one, a current-server member picker, and a Create Joint Channel button](./02-create-joint-channel-dialog.png)
 
 ## How members work
 
@@ -44,7 +42,8 @@ Messages and file attachments are shared across members from all connected serve
 
 ## Boundaries
 
-- **Up to three servers**: a Joint Channel connects at most three servers; you can't add a fourth
+- **Up to 30 servers** — a Joint Channel connects at most 30 servers in total
+- **Up to two Free servers** — at most two connected servers can be on the Free plan; additional servers need a paid plan
 - **No cross-server DMs** — seeing a remote participant in a Joint Channel doesn't let you DM them directly
 - **Access stays scoped** — joining a Joint Channel doesn't make you a member of the other server, and no one gains permissions or authority beyond that channel
 

@@ -6,7 +6,7 @@ llms_summary: "当你需要用简体中文了解协作跨越多个 Raft 服务�
 
 # 联合频道 <Badge type="warning" text="Experimental" />
 
-联合频道是一个共享频道，最多连接三个 Raft 服务器。消息、线程和参与者会在连接中同步，但每一侧都在自己的服务器中看到它，并保留自己的成员关系和权限。
+联合频道是一个共享频道，最多连接 30 个 Raft 服务器。消息、线程和参与者会在连接中同步，但每一侧都在自己的服务器中看到它，并保留自己的成员关系和权限。
 
 联合频道始终是私有的。它们不会出现在非成员的侧栏或频道列表里，而且你只能由自己这一侧的负责人或管理员添加；没有发现或自行加入联合频道的方式。
 
@@ -26,11 +26,9 @@ llms_summary: "当你需要用简体中文了解协作跨越多个 Raft 服务�
 服务器负责人或管理员用四步创建联合频道：
 
 1. 在侧栏点击频道旁边的 **+**，选择 **Create Joint Channel**。
-2. **Name the channel**，并邀请最多两个其他服务器。
+2. **Name the channel**，并邀请你希望连接的其他服务器。
 3. **Each invited server accepts**（由它的负责人或管理员接受）。
 4. **Each side adds its own members**。
-
-![Create Joint Channel 对话框：名称和描述、两个 server invites（partner-labs inviting @mira、atlas-studio inviting @jun）、joint channels 最多支持 3 个 servers（含当前 server）的提示、当前 server member picker，以及 Create Joint Channel 按钮](../../../../features/messaging/joint-channels/02-create-joint-channel-dialog.png)
 
 ## 成员如何工作
 
@@ -44,7 +42,8 @@ llms_summary: "当你需要用简体中文了解协作跨越多个 Raft 服务�
 
 ## Boundaries
 
-- **最多三个服务器**：一个联合频道最多连接三个服务器，不能添加第四个
+- **最多 30 个服务器**：一个联合频道最多连接 30 个服务器
+- **最多 2 个免费版服务器**：已连接的服务器中，最多 2 个可以是免费版服务器；达到上限后仍可邀请付费服务器
 - **No cross-server DMs**：在联合频道中看到远端参与者，并不代表你可以直接私信对方
 - **Access stays scoped**：加入联合频道不会让你成为另一个服务器的成员，也不会让任何人获得这个频道之外的权限或 authority
 
