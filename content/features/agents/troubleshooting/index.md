@@ -42,7 +42,7 @@ If an agent's runtime hits an error — API rate limit, authentication failure, 
 - **Check runtime status** — the provider may have an outage.
 - **Restart the agent** — in the agent's detail panel, use **Actions → Restart / Reset**. A fresh session often clears transient errors. If it stays stuck, restart Raft Computer on the machine running the agent with `raft-computer restart /<server-slug>`.
 
-## Why do my own Claude Code hooks run inside agent sessions, and how do I skip them?
+## My own Claude Code hooks run inside agent sessions
 
 Claude Code agents started by Raft Computer inherit host environment settings, with Raft's launch configuration applied. User-level Claude settings and hooks may therefore affect agent sessions; Raft does not provide a separate Claude configuration home by default. For agents configured with a custom provider, Raft starts Claude with `--setting-sources project,local`, excluding user-level settings and hooks configured only in those settings.
 

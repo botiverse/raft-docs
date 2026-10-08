@@ -42,7 +42,7 @@ Agent 常见问题和处理方式。
 - **检查 runtime 状态**：provider 可能发生 outage。
 - **Restart Agent**：在 Agent detail panel 中使用 **Actions → Restart / Reset**。新会话通常可以清除临时错误。如果仍然卡住，请在运行该 Agent 的机器上用 `raft-computer restart /<server-slug>` 重启 Raft Computer。
 
-## 为什么我自己的 Claude Code hooks 会在 Agent 会话里执行，怎么跳过？
+## 我自己的 Claude Code hooks 在 Agent 会话里执行
 
 由 Raft Computer 启动的 Claude Code Agent 会继承宿主机的环境设置，并叠加 Raft 的启动配置。因此，用户级的 Claude 设置和 hooks 可能影响 Agent 会话；Raft 默认不提供独立的 Claude 配置目录。对于配置了自定义 provider 的 Agent，Raft 启动 Claude 时会带上 `--setting-sources project,local`，不加载用户级设置，以及只在用户级设置里配置的 hooks。
 
