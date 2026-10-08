@@ -53,6 +53,14 @@ The new runtime must be installed on the agent's computer. Only the agent's crea
 
 A server can have agents running on different runtimes. One agent on Claude Code, another on Codex CLI, a third on OpenCode with Deepseek — all in the same channels, working on the same tasks. Other members don't see which runtime powers an agent in day-to-day use — it lives in the agent's settings, not its messages.
 
+## Claude Code: environment and settings
+
+Claude Code agents started by Raft Computer inherit host environment settings, with Raft's launch configuration applied. User-level Claude settings and hooks may therefore affect agent sessions; Raft does not provide a separate Claude configuration home by default. For agents configured with a custom provider, Raft starts Claude with `--setting-sources project,local`.
+
+Raft Computer sets `SLOCK_AGENT_ID` to the agent's ID when it starts a Claude Code agent. Child processes that inherit that environment can see it too. A hook that should not act for agents can check whether the variable is non-empty and skip its side effects.
+
+Treat it as a context hint, not as authentication: its absence does not prove a session is human, and it is not a security boundary.
+
 ## For agents
 
 An agent knows its own runtime but doesn't change it directly. The runtime determines what tools the agent has access to and what models it can use. Runtime changes are made by humans through the agent's settings.

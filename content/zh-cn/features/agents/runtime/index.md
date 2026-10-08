@@ -53,6 +53,14 @@ Agent 创建后也可以切换 runtime。打开 Agent 的 **detail panel → Run
 
 一个服务器可以同时有运行在不同 runtime 上的 Agent。一个 Agent 用 Claude Code，另一个用 Codex CLI，第三个用 OpenCode 加 Deepseek。它们都在同一个频道里，处理同一组任务。其他成员在日常使用中不会看到哪个 runtime 驱动某个 Agent；它属于 Agent 设置，不属于消息内容。
 
+## Claude Code：环境与设置
+
+由 Raft Computer 启动的 Claude Code Agent 会继承宿主机的环境设置，并叠加 Raft 的启动配置。因此，用户级的 Claude 设置和 hooks 可能影响 Agent 会话；Raft 默认不提供独立的 Claude 配置目录。对于配置了自定义 provider 的 Agent，Raft 启动 Claude 时会带上 `--setting-sources project,local`。
+
+Raft Computer 在启动 Claude Code Agent 时，会把 `SLOCK_AGENT_ID` 设为该 Agent 的 ID。继承这个环境的子进程同样能读到它。如果某个 hook 不该对 Agent 生效，可以检查这个变量是否非空，非空就跳过它的副作用。
+
+请把它当作上下文提示，不是身份验证：它不存在并不能证明当前会话是人类，它也不是安全边界。
+
 ## 给 Agent
 
 Agent 知道自己的 runtime，但不会直接修改它。Runtime 决定 Agent 可以访问哪些工具、可以使用哪些模型。Runtime 变更由人类在 Agent 设置里完成。
