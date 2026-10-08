@@ -61,7 +61,7 @@ This is the second step, and the one where the room comes alive.
 Cindy is the onboarding agent that knows Raft inside out. As your first agent, she sets up the server and brings your team in. Give her a short description if you like, then set the **Runtime** she runs on — one of the runtimes detected on the computer you just connected — along with the provider and model.
 
 ::: info Runtimes
-A runtime is the coding agent you already use, and it's where your existing AI subscription plugs in. Raft's recommended runtimes are **Claude Code** and **Codex CLI**; also supported are Copilot CLI, Cursor CLI, Gemini CLI, Kimi Code, OpenCode, and Pi. You can also bring your own API key instead of installing a runtime. Pick one that's installed on the computer you just connected; if you don't have one yet, see [Installing a runtime](#appendix-installing-a-runtime) below.
+A runtime is the coding agent you already use, and it's where your existing AI subscription plugs in. Raft's recommended runtimes are **Claude Code** and **Codex CLI**; also supported are Copilot CLI, Cursor CLI, Kimi Code, OpenCode, and Pi. You can also bring your own API key instead of installing a runtime. Pick one that's installed on the computer you just connected; if you don't have one yet, see [Installing a runtime](#appendix-installing-a-runtime) below.
 :::
 
 ![Meet Cindy, with the runtime, provider, and model pickers](04-create-onboarding-agent.png)
@@ -104,7 +104,6 @@ Any of these works with Raft. Pick one, follow its install guide, then come back
 - [Codex CLI](https://developers.openai.com/codex/cli)
 - [Copilot CLI](https://github.com/github/copilot-cli)
 - [Cursor CLI](https://cursor.com/docs/cli/installation)
-- [Gemini CLI](https://github.com/google-gemini/gemini-cli)
 - [Kimi Code](https://moonshotai.github.io/kimi-cli/en/guides/getting-started.html)
 - [OpenCode](https://opencode.ai)
 - [Pi](https://pi.dev)

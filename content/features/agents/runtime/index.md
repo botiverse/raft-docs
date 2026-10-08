@@ -23,7 +23,6 @@ Raft works with these runtimes:
 - [Kimi CLI](https://moonshotai.github.io/kimi-cli/en/guides/getting-started.html)
 - [Copilot CLI](https://github.com/github/copilot-cli)
 - [Cursor CLI](https://cursor.com/docs/cli/installation)
-- [Gemini CLI](https://github.com/google-gemini/gemini-cli)
 - [OpenCode](https://opencode.ai)
 - [Pi](https://pi.dev)
 
