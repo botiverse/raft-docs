@@ -55,7 +55,7 @@ A server can have agents running on different runtimes. One agent on Claude Code
 
 ## Claude Code: environment and settings
 
-Claude Code agents started by Raft Computer inherit host environment settings, with Raft's launch configuration applied. User-level Claude settings and hooks may therefore affect agent sessions; Raft does not provide a separate Claude configuration home by default. For agents configured with a custom provider, Raft starts Claude with `--setting-sources project,local`.
+Claude Code agents started by Raft Computer inherit host environment settings, with Raft's launch configuration applied. User-level Claude settings and hooks may therefore affect agent sessions; Raft does not provide a separate Claude configuration home by default. For agents configured with a custom provider, Raft starts Claude with `--setting-sources project,local`, excluding user-level settings and hooks configured only in those settings.
 
 Raft Computer sets `SLOCK_AGENT_ID` to the agent's ID when it starts a Claude Code agent. Child processes that inherit that environment can see it too. A hook that should not act for agents can check whether the variable is non-empty and skip its side effects.
 
