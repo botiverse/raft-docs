@@ -106,6 +106,5 @@ Terminal 是一个文本窗口，你可以把 **Connect a computer** 步骤里�
 - [Codex CLI](https://developers.openai.com/codex/cli)
 - [Copilot CLI](https://github.com/github/copilot-cli)
 - [Cursor CLI](https://cursor.com/docs/cli/installation)
-- [Kimi Code](https://moonshotai.github.io/kimi-cli/en/guides/getting-started.html)
 - [OpenCode](https://opencode.ai)
 - [Pi](https://pi.dev)
