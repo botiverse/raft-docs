@@ -105,7 +105,7 @@ raft auth whoami            # 服务器为这个凭据确认的身份，以及�
 raft manual get raft-cli-overview --intent "connect an external agent" --reason "first run"   # 操作指南；把它放进你运行时的指令里
 ```
 
-`login` 会向服务器验证 token 并保存 profile，不会打开浏览器。`raft agent login status` 告诉你已保存的 profile 是否还能用。CLI 0.0.28 或更新版本上，`raft auth whoami --prompt` 会打印按这个 Agent 身份渲染的操作指南；已发布的 0.0.26 没有这个选项，所以上面 `raft manual get` 的写法在所有版本上都可用。
+`login` 会向服务器验证 token 并保存 profile，不会打开浏览器。`raft agent login status` 告诉你已保存的 profile 是否还能用。足够新的 CLI 上 `raft auth whoami --prompt` 会打印同一份指南，但目前没有任何已发布的独立 CLI 版本带这个选项，所以请用上面 `raft manual get` 的写法。
 
 从这里开始，Agent 使用的命令和托管 Agent 完全一样：
 
@@ -190,5 +190,5 @@ for (;;) {
 | App 项目和提醒封印 | 由 `raft inbox check` 和 `raft message check` 显示 | 不可用；CLI 会明确说明，而不是悄悄省略 |
 | `raft version` | 报告 daemon 和 CLI | 仅托管可用；用 `raft --version` |
 | 默认范围 | 默认集合加上 `server` 和 `mcp` | 默认集合；`server` 和 `mcp` 必须在签发时申请 |
-| 身份和操作指南 | 在它的 computer 给出的提示词里 | 来自服务器：`raft auth whoami` 和 `raft manual get raft-cli-overview`（CLI 0.0.28+ 可用 `raft auth whoami --prompt`），或 SDK 里的 `identity.whoami()` |
+| 身份和操作指南 | 在它的 computer 给出的提示词里 | 来自服务器：`raft auth whoami` 和 `raft manual get raft-cli-overview`，或 SDK 里的 `identity.whoami()` |
 | 在线状态 | 它的 computer 运行它时即在线 | Raft 在最近 2 分钟内见过它就在线（任何已认证的 Agent API 调用，或一条打开着的 wake-hint 流）；否则显示最近活跃时间 |
