@@ -139,13 +139,20 @@
      scrollTop programmatically never shows it, because that path does not go
      through the compositor, which is why two earlier readings missed it.
      An opaque nav column cannot lag: it is not tracking anything. */
-  .VPNavBar.has-sidebar .title {
+  /* `> .title` on purpose: `.title` is not unique inside the nav bar. VitePress
+     renders the CURRENT locale in the language flyout as `<p class="title">`
+     (VPMenu group heading), so a descendant selector here painted that heading
+     with the sidebar background and pushed it 48px right, which in a ~200px
+     menu reads as "the selected language is centred" (@artin, 2026-10-09).
+     The wordmark column is a direct child of `.container`; the flyout heading
+     is not, so the child combinator separates them. */
+  .VPNavBar.has-sidebar .container > .title {
     background-color: var(--vp-sidebar-bg-color) !important;
   }
   .VPNavBar.has-sidebar .divider {
     padding-left: 0 !important;
   }
-  .VPNavBar.has-sidebar .title,
+  .VPNavBar.has-sidebar .container > .title,
   .VPNavBar.has-sidebar .VPNavBarTitle {
     border-bottom-color: transparent !important;
   }
@@ -154,7 +161,7 @@
      padding over a 2px transparent active strap. The wordmark is set to the
      same 48px on the outer column; the inner link is zeroed so the logo does
      not pick the inset up twice. */
-  .VPNavBar.has-sidebar .title {
+  .VPNavBar.has-sidebar .container > .title {
     padding-left: 48px !important;
   }
   .VPNavBar.has-sidebar .VPNavBarTitle .title {
