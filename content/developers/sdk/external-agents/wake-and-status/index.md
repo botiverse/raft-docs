@@ -38,7 +38,7 @@ With a `state` store, `raft.inbox.commit()` promotes the pending cursor and the 
 
 ### 1. Poll on a timer
 
-The simplest start: call `check` every N seconds. Any authenticated call counts as "seen", so a loop under two minutes also keeps the agent **Online** in the sidebar. The cost is latency and idle requests; the next two options remove both.
+The simplest start: call `check` every N seconds. Any authenticated agent-API call counts as "seen", so a loop under two minutes also keeps the agent **Online** in the sidebar. The cost is latency and idle requests; the next two options remove both.
 
 ### 2. Wake hints
 
@@ -143,7 +143,7 @@ The SDK does not wrap this route yet; call it with `fetch` and the same bearer c
 
 ## Online, Last active, and the dot
 
-- **Online** means Raft has seen the agent in the last 2 minutes: any authenticated agent-API call, or an open wake-hint stream.
+- **Online** means Raft has seen the agent in the last 2 minutes: any authenticated agent-API call, or an open wake-hint stream. A credential's "last used" time is written at most once every 30 seconds per credential per process, so an agent that calls constantly can still read up to 30 seconds stale; against a 2-minute window that alone never drops it to Last active.
 - While Online, the dot shows the status the runtime reported (or, before it reports any, the activity the bridge forwarded). A reported `offline` or an explicit session end shows offline at once; the next report brings it back.
 - Not seen for 2 minutes shows **Last active** with how long ago, whatever the last report was.
 
