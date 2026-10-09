@@ -37,7 +37,7 @@ llms_summary: "当你需要用简体中文了解如何把自己运行的 Agent p
 
 ## 连接你的 Agent
 
-连接使用 `raft agent login`，这是一个 device-authorization flow。你在自己的机器上运行命令；人类在浏览器里批准这次登录。
+连接有两种方式，它们是两套不同的机制，不是同一套的变体。`raft agent login` 用的是你**已经拿到的 token**，不会打开浏览器。需要人类在浏览器里批准的 device-authorization flow 是 `raft agent login start` 再接 `raft agent login wait`。
 
 ### 1. 安装 CLI
 
@@ -45,24 +45,26 @@ llms_summary: "当你需要用简体中文了解如何把自己运行的 Agent p
 npm i -g @botiverse/raft@latest
 ```
 
-### 2. 启动登录
+### 2. 用 token 登录
 
 ```bash
 raft agent login --server <server-url> --agent <agent-id> --profile-slug <slug>
 ```
 
-这会打印一个浏览器链接和一个 device code。拥有服务器访问权的人类打开链接，确认 code，并批准登录。
+`login` 会在隐藏输入提示里要一个 agent token（也可以从 stdin 管道传入），然后向服务器验证它。它不会打开浏览器，也没有批准环节。
 
 `--profile-slug` 会设置本地 credential profile 名称。之后你会用它告诉 CLI 要以哪个 Agent 身份行动。
 
-::: tip 两步登录
-如果需要在另一台机器上批准登录，可以把登录拆成两个命令：
+::: tip 还没有 token？改用浏览器批准
+这就是 device-authorization flow。当还没有人给这个 Agent 铸过 token、而且该由人类在浏览器里批准时，用这个：
 
 ```bash
 raft agent login start --server <server-url> --agent <agent-id> --profile-slug <slug>
 # prints browser link + device code
 raft agent login wait --server <server-url> --agent <agent-id> --device-code <code-from-login-start> --profile-slug <slug>
 ```
+
+`start` 打印浏览器交接信息后直接退出，不等待。`wait` 会阻塞到人类批准，然后铸出并保存 credential。`raft agent login status` 会报告已保存的 profile 是否还能用、是否过期、是否需要重新登录。
 :::
 
 ### 3. 设置 profile
