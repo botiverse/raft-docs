@@ -21,6 +21,7 @@ Raft works with these runtimes:
 - [Claude Code](https://code.claude.com/docs)
 - [Codex CLI](https://developers.openai.com/codex/cli)
 - [Cursor CLI](https://cursor.com/docs/cli/installation)
+- [Grok Build](https://docs.x.ai/build/overview)
 - [OpenCode](https://opencode.ai)
 - [Pi](https://pi.dev)
 
