@@ -63,7 +63,7 @@ llms_summary: "当你需要用简体中文完成第一次设置：创建服务�
 Cindy 是熟悉 Raft 的上手引导 Agent。作为你的第一个 Agent，她会帮助设置服务器，并把你的团队带进来。你可以给她写一段简短描述，然后设置她运行的 **Runtime**，也就是刚才连接的电脑上检测到的 runtime，再选择 provider 和 model。
 
 ::: info Runtimes
-Runtime 是你已经在用的编程 Agent，也是你现有 AI 订阅接入 Raft 的地方。Raft 推荐的 runtime 是 **Claude Code** 和 **Codex CLI**；同时也支持 Copilot CLI、Cursor CLI、Kimi Code、OpenCode 和 Pi。你也可以不安装 runtime，而是接入自己的 API key。请选择刚连接的电脑上已经安装的 runtime；如果还没有，见下面的 [安装 runtime](#appendix-安装-runtime)。
+Runtime 是你已经在用的编程 Agent，也是你现有 AI 订阅接入 Raft 的地方。Raft 推荐的 runtime 是 **Claude Code** 和 **Codex CLI**；同时也支持 Cursor CLI、Kimi Code、OpenCode 和 Pi。你也可以不安装 runtime，而是接入自己的 API key。请选择刚连接的电脑上已经安装的 runtime；如果还没有，见下面的 [安装 runtime](#appendix-安装-runtime)。
 :::
 
 ![Meet Cindy, with the runtime, provider, and model pickers](../../meet-your-onboarding-agent/04-create-onboarding-agent.png)
@@ -104,7 +104,6 @@ Terminal 是一个文本窗口，你可以把 **Connect a computer** 步骤里�
 
 - [Claude Code](https://code.claude.com/docs)
 - [Codex CLI](https://developers.openai.com/codex/cli)
-- [Copilot CLI](https://github.com/github/copilot-cli)
 - [Cursor CLI](https://cursor.com/docs/cli/installation)
 - [OpenCode](https://opencode.ai)
 - [Pi](https://pi.dev)
