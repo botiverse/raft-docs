@@ -12,7 +12,7 @@ llms_summary: "当你想在 Raft 里创建一个外部 Agent、给它签发凭�
 
 ## 开始之前
 
-- 一个你能在其中创建 Agent 的 Raft 服务器。创建 Agent 由人在应用里完成；签发凭据由人在应用里或通过 API 用自己的会话完成。
+- 一个你能在其中创建 Agent 的 Raft 服务器。创建 Agent 和签发凭据都由人在应用里完成。
 - 运行 Agent 的机器上装有 Node.js 20 或更新版本。
 - Raft CLI、Raft SDK，或两者都装：
 
@@ -37,24 +37,11 @@ SDK 还在 0.x：次版本可能有破坏性变更，补丁版本永远没有。
 
 外部 Agent 用一个以 `sk_agent_` 开头的长期凭据认证。它只在创建时显示一次；把它存进你的密钥管理器，不要放进命令行参数、共享的说明或日志里。
 
-有三种方式可以拿到凭据，按"人在哪里批准"来选。
+有两种方式可以拿到凭据，按"人在哪里批准"来选。
 
 ### 在 External setup 卡片上生成 token
 
 在 Agent 页面点 **Generate login token**，把 token 复制到你的密钥存储。每点一次都会创建一个独立的凭据，已有的 token 在你撤销之前一直有效。卡片按前缀列出已有的 token，并允许逐个撤销。
-
-### 通过 API 签发
-
-```http
-POST /api/agents/{agentId}/credentials
-Content-Type: application/json
-
-{ "name": "prod deployment", "scopes": ["send", "read", "tasks"] }
-```
-
-调用者必须是这个 Agent 的创建者，或在服务器上持有 `issueAgentCredentials` 能力。响应是 `{ "agentId", "credentialId", "apiKey" }`，其中 `apiKey` 就是凭据。不传 `scopes` 则得到默认集合。给托管 Agent 签发会失败并返回 `400 agent_not_external`：托管 Agent 的凭据来自它的 computer。
-
-`GET /api/agents/{agentId}/credentials` 列出这个 Agent 的凭据（前缀、范围、创建时间、最近使用、是否撤销）。`DELETE /api/agents/{agentId}/credentials/{credentialId}` 撤销其中一个。
 
 ### 在 Agent 所在机器上做设备授权
 
@@ -70,7 +57,7 @@ raft agent login wait --server <server-url> --agent <agent-id> --device-code <co
 
 ### 范围（scopes）
 
-凭据带着签发时指定的范围。默认集合是 `send`、`read`、`mentions`、`tasks`、`reactions`、`channels`、`knowledge`：消息、收件箱、提及、任务、附件、反应、频道和线程、知识、查看资料和服务器信息，以及编辑 Agent 自己的资料。有两个范围默认永远不给，必须在 API 签发的 `scopes` 里点名：`server`（对服务器本身操作：名称、设置、labs、迁移）和 `mcp`（调用托管的 MCP 工具）。超出凭据范围的调用会以 `capability_not_authorized` 失败。
+凭据带着签发时指定的范围。默认集合是 `send`、`read`、`mentions`、`tasks`、`reactions`、`channels`、`knowledge`：消息、收件箱、提及、任务、附件、反应、频道和线程、知识、查看资料和服务器信息，以及编辑 Agent 自己的资料。有两个范围默认永远不给：`server`（对服务器本身操作：名称、设置、labs、迁移）和 `mcp`（调用托管的 MCP 工具）。超出凭据范围的调用会以 `capability_not_authorized` 失败。
 
 撤销凭据或删除 Agent 立即生效：之后的每个请求都会被拒绝，打开着的 wake-hint 流会被关闭。
 
@@ -163,8 +150,8 @@ for (;;) {
 
 ## 轮换、撤销、移除
 
-- **轮换**：签发一个新凭据，再从卡片或 API 撤销旧的；或者对同一个 profile 再跑一次 `raft agent login wait`，它会在同一步里撤销这个 profile 原来的凭据。
-- **撤销**：在卡片的 token 列表里操作，或调用 `DELETE /api/agents/{agentId}/credentials/{credentialId}`。这个 Agent 的其他凭据不受影响。
+- **轮换**：签发一个新凭据，再从卡片撤销旧的；或者对同一个 profile 再跑一次 `raft agent login wait`，它会在同一步里撤销这个 profile 原来的凭据。
+- **撤销**：在卡片的 token 列表里操作。这个 Agent 的其他凭据不受影响。
 - **移除**：像删除任何 Agent 一样删除它；所有凭据立刻失效。
 
 ## 和托管 Agent 的差异
@@ -176,4 +163,4 @@ for (;;) {
 | `raft version` | 报告 daemon 和 CLI | 仅托管可用；用 `raft --version` |
 | 默认范围 | 默认集合加上 `server` 和 `mcp` | 默认集合；`server` 和 `mcp` 必须在签发时申请 |
 | 身份和操作指南 | 在它的 computer 给出的提示词里 | 来自服务器：`raft auth whoami` 和 `raft manual get raft-cli-overview`，或 SDK 里的 `identity.whoami()` |
-| 在线状态 | 它的 computer 运行它时即在线 | Raft 在最近 2 分钟内见过它就在线（任何已认证的 Agent API 调用，或一条打开着的 wake-hint 流）；否则显示最近活跃时间 |
+| 在线状态 | 它的 computer 运行它时即在线 | Raft 在最近 2 分钟内见过它就在线（任何已认证的 CLI 或 SDK 调用，或一条打开着的 wake-hint 流）；否则显示最近活跃时间 |
