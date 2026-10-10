@@ -69,7 +69,7 @@ APP_ORIGIN="https://orbital.example.com"
 
 ### 脚手架路径（最快起步）
 
-不必从零手写集成；你可以搭一个符合契约的应用脚手架，再补上认证交换：
+先生成适合应用的脚手架，再按所选模板完成认证配置：
 
 ```bash
 npm create raft-app@latest my-raft-app
@@ -81,16 +81,25 @@ npm create raft-app@latest my-raft-app
 npm create raft-app@latest my-raft-app -- --template pure-sign-in-web-app
 ```
 
-第一个应用可以从 **`pure-sign-in-web-app`**（只做人类 Login with Raft）或 **`hosted-http-action-service`**（manifest 声明的 Agent 操作）开始。每个模板都带自己的 `README.md` 和 `AGENTS.md`，里面有该模板精确的环境变量、回调 URL 和注册提示。
+浏览器登录可从 **`pure-sign-in-web-app`** 开始；需要 OAuth 认证的 Agent 操作可选 **`oauth-http-action-service`**。**`hosted-http-action-service`** 使用开发用 bearer token 演示受保护的操作，不包含 Login with Raft 登录流程。每个模板都带自己的 `README.md` 和 `AGENTS.md`，说明环境变量、回调 URL 和注册步骤。
 
 然后：
 
 1. `cd my-raft-app && npm install`
-2. 在 Raft 中注册应用并配置回调，得到 **客户端 ID**；然后让应用负责人生成 **客户端密钥**。注册只给你凭据，生成的应用仍然需要服务端交换，登录才会完成。
+2. 对 Login with Raft 模板，在 Raft 中注册应用和精确回调，得到 **客户端 ID**，再让应用负责人生成 **客户端密钥**。用这些凭据配置模板的服务端交换。
 3. 把 `.env.example` 复制为 `.env` 并填入值。`RAFT_CLIENT_SECRET` 必须只存在于服务端。
-4. `npm run dev`
+4. 按生成的 `package.json` 启动：上面的 `pure-sign-in-web-app` 示例使用 **`npm start`**，`hono-react-cfworker` 使用 **`npm run dev`**。
 
-> **生成的应用会 fail closed，直到你接入 OAuth 交换。** 脚手架应用是起点，不是完整 OAuth client。它的受保护路由会 fail closed：callback 不会自动完成登录，`/api/auth/me` 会返回 `501`。你需要在服务端实现真实流程：authorization-code exchange 加 HttpOnly 浏览器 session（人类模板），以及 Agent session / Bearer 验证和已声明的 manifest 操作（action-service 模板）。在那之前，点击 “Login with Raft” 会回到 setup 页面。这是有意的 fail-closed 行为，不是 bug。模板会标出每一步应该填在哪里。
+认证实现**取决于所选模板**。已发布的 `create-raft-app@0.2.0` 包中：
+
+| 模板 | 认证起点 |
+| --- | --- |
+| `pure-sign-in-web-app` | 已包含服务端 authorization-code exchange、userinfo 查询和 HttpOnly 浏览器 session cookie；需要配置已注册的凭据与 session。 |
+| `oauth-http-action-service` | 已包含 OAuth callback／exchange 路由和受保护的 action endpoint；配置回调和应用凭据，再按业务调整服务授权。 |
+| `hosted-http-action-service` | 使用模板内的开发用 bearer token。部署前应替换这套凭据配置；此模板没有 Login with Raft 登录流程。 |
+| `hono-react-cfworker` | 仍有未接入的认证占位实现，包括 `/api/auth/me` 返回 `501`；需要实现 callback／session resolver 和受保护路由的授权。 |
+
+不要把 `501` 当成所有模板的共同表现，也不要把生成脚手架等同于完成应用授权。以实际生成的文件及下方安全要求为准。仓库 `main` 可能已有尚未发布到 npm 的变更；使用其他版本时，应重新检查模板的 `README.md` 和启动脚本。
 
 ### Agent 路径（推荐）
 
