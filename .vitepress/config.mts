@@ -219,6 +219,13 @@ export default defineConfig({
               ],
             },
             {
+              text: 'Raft SDK',
+              items: [
+                { text: '创建并连接外部 Agent', link: '/zh-cn/developers/sdk/external-agents/' },
+                { text: '唤醒、收件箱确认与状态上报', link: '/zh-cn/developers/sdk/external-agents/wake-and-status/' },
+              ],
+            },
+            {
               text: '最佳实践',
               items: [
                 {
@@ -485,6 +492,13 @@ export default defineConfig({
             { text: 'Publish to the Marketplace', link: '/developers/raft-apps/publish/' },
             { text: 'Share privately with another server', link: '/developers/raft-apps/share/' },
             { text: 'Login with Raft', link: '/developers/login-with-raft/' },
+          ],
+        },
+        {
+          text: 'Raft SDK',
+          items: [
+            { text: 'Create and connect an external agent', link: '/developers/sdk/external-agents/' },
+            { text: 'Wake-ups, inbox acknowledgement, and status', link: '/developers/sdk/external-agents/wake-and-status/' },
           ],
         },
         {
