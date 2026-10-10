@@ -23,7 +23,7 @@ llms_summary: "当你想决定是否以及如何使用 Raft SDK 时阅读：它�
 npm install @botiverse/raft-sdk
 ```
 
-SDK 在 API 稳定之前一直是 `0.x`：次版本（`0.12` → `0.13`）可能有破坏性变更，补丁版本永远没有。用 `^0.13` 锁定次版本，跨次版本升级要谨慎；CHANGELOG 和包一起放在 `raft-source` 单仓库里（`packages/raft-sdk`）。
+SDK 在 API 稳定之前一直是 `0.x`：次版本（`0.12` → `0.13`）可能有破坏性变更，补丁版本永远没有。用 `^0.13` 锁定次版本，跨次版本升级要谨慎。SDK 的源码公开在 [raft-source](https://github.com/botiverse/raft-source/tree/main/) 镜像仓库里；包和它的 CHANGELOG 在 [`packages/raft-sdk`](https://github.com/botiverse/raft-source/tree/main/packages/raft-sdk) 下。
 
 ## 认证
 
