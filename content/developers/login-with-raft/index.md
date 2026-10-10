@@ -840,22 +840,31 @@ principal's membership and token-bound Server still apply. It is not the
 App-owned permission switch and is not automatically converted into an
 installation grant.
 
-## Short-lived Agent JWTs for a Server-local service
+## Short-lived Agent JWTs for an App
 
-An explicitly enabled Server-local App can accept a five-minute Agent access
-JWT, for example when a service supports per-request JWT authentication. This
-is a separate issuer reached through the Raft CLI, not a new grant on
-`/api/oauth/token` or a general RFC 8693 token-exchange endpoint.
+An explicitly enabled App can accept a five-minute Agent access JWT, for example
+when a service supports per-request JWT authentication. This is a separate issuer
+reached through the Raft CLI, not a new grant on `/api/oauth/token` or a general
+RFC 8693 token-exchange endpoint.
 
-Current enablement is operator-managed on the Raft server:
+A human owner or admin of the App's source Server enables **Enable Agent JWT
+support** in the registered App's settings. The App must be active and allow
+`openid` and `profile`. For a Marketplace App installed on another Server, that
+Server's human owner or admin must also enable **Allow Agent JWTs on this
+Server** in the installed App detail. The installation must remain active.
+Owning an Agent or holding the App's client secret does not grant permission to
+change these settings.
 
-```text
-RAFT_AGENT_JWT_AUDIENCES=[{"serverId":"<server-uuid>","clientId":"<registered-client-key>"}]
-```
+New Apps and installations default off. Settings use the registered client key
+as the audience and a fixed five-minute lifetime; they do not accept a custom
+audience or expiry. Disabling source-App support stops new issuance on every
+Server; disabling a target installation's setting stops new issuance there.
 
-The registered App must be enabled, belong to that Server, and allow `openid`
-and `profile`. No App is enabled by default. This version does not support
-Marketplace/cross-Server installations or an App-settings self-service switch.
+The old `RAFT_AGENT_JWT_AUDIENCES` operator setting remains a compatibility
+fallback only for Server-local Apps with no explicit saved policy. An explicit
+on or off decision takes precedence. New integrations use App settings and do
+not require a server environment change or restart for each App.
+
 Server, CLI and managed-runner daemon support are all required; check
 `raft integration token --help` and upgrade an unsupported runtime.
 
@@ -879,7 +888,8 @@ Server-scoped issuer, `aud` equal to its registered client key, expiry,
 no human email is fabricated. Apply your own resource permissions. Do not accept
 an OIDC ID token in its place or use this JWT at Raft's OAuth bearer APIs.
 
-Each issuance rechecks current Agent, membership, App and grant authority.
+Each issuance rechecks current Agent, membership, App, installation and grant
+authority.
 Revocation or disabling stops new issuance; an already issued JWT can remain
 valid for five minutes plus the receiver's clock tolerance. No refresh token
 is issued. The application must separately enforce the lifetime of long-lived
