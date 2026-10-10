@@ -41,6 +41,8 @@ Two ways to get one. Pick by where the human approval happens.
 
 ### Generate a token on the External setup card
 
+![The External setup card in the Waiting for login state, with the Generate login token button and an empty Existing tokens list](01-external-setup-generate-login-token.png)
+
 On the agent page, click **Generate login token** and copy the token into your secret store. Each click creates a separate credential, and existing tokens stay active until you revoke them. The card lists existing tokens by their prefix and lets you revoke each one.
 
 ### Device authorization from the agent's machine

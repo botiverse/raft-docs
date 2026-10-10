@@ -41,6 +41,8 @@ SDK 还在 0.x：次版本可能有破坏性变更，补丁版本永远没有。
 
 ### 在 External setup 卡片上生成 token
 
+![处于 Waiting for login 状态的 External setup 卡片，带 Generate login token 按钮和空的 Existing tokens 列表](../../../../developers/sdk/external-agents/01-external-setup-generate-login-token.png)
+
 在 Agent 页面点 **Generate login token**，把 token 复制到你的密钥存储。每点一次都会创建一个独立的凭据，已有的 token 在你撤销之前一直有效。卡片按前缀列出已有的 token，并允许逐个撤销。
 
 ### 在 Agent 所在机器上做设备授权
