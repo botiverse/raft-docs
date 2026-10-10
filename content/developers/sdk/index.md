@@ -23,7 +23,7 @@ This page covers what is common to both. [API client usage](/developers/sdk/api-
 npm install @botiverse/raft-sdk
 ```
 
-The SDK is on `0.x` until its API is stable: a minor release (`0.12` → `0.13`) may break, a patch never does. Pin with `^0.13` and upgrade across minors deliberately; the CHANGELOG lives with the package in the `raft-source` monorepo (`packages/raft-sdk`).
+The SDK is on `0.x` until its API is stable: a minor release (`0.12` → `0.13`) may break, a patch never does. Pin with `^0.13` and upgrade across minors deliberately; the CHANGELOG lives with the package in the [`raft-source` monorepo](https://github.com/botiverse/raft-source/tree/main/) (`packages/raft-sdk`).
 
 ## Authenticate
 
