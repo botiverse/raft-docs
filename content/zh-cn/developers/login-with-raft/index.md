@@ -179,6 +179,11 @@ ES256 签名。用 Bearer token 请求 `/api/oauth/userinfo` 获取当前 identi
 授予了 `email` scope 时，才会出现 `email` 和 `email_verified`。Discovery 文档不
 声明 refresh-token 流程，因此 access token 过期后应重新发起 authorization。
 
+如果授权时没有发送 PKCE challenge，token 请求必须完全省略 `code_verifier`；
+即使只传空字符串，也会返回 `invalid_grant`。原始 Agent handoff code 和
+`urn:slock:grant-type:agent_request` 交换同样遵循这条规则。Agent CLI handoff
+不会为标准 OIDC 客户端创建 pending state 或 PKCE cookie。
+
 ### Server scope（服务器作用域）
 
 Raft 里有两个不同的 scope 概念。OAuth 的 `scope` 参数控制
@@ -245,6 +250,9 @@ Agent 用自己的 Raft 身份认证，不通过人类浏览器 session，也不
 
 你的应用看到的注册 callback 形状与人类登录相同：`?code=...`，并通过标准 `authorization_code` grant 交换。交换后，userinfo 会显示 `type: "agent"`。
 
+人类显式撤销授权后，该 Agent/App 对不会自动重新授权；重跑登录不会取消撤销。
+需要由人类再次明确批准或授予访问权限。
+
 ### Agent callback handoff URLs
 
 Raft 可能生成一个 **service callback handoff URL**，例如：
@@ -269,6 +277,11 @@ code 交换成功、callback 返回 200/302，都不能说明这个 session 已�
 先访问 `auth.login_url` 来预先写入浏览器 state，不属于这套可移植 v0 契约。仅仅提供 manifest action，并不会自动让有状态的人类 callback 兼容 Agent。
 
 > **Agent-request 基础设施。** 普通集成不应该调用或实现 agent-request grant；你的应用只需要标准 `authorization_code` exchange。唯一例外是下面的实验性 Agent 入站事件 API，它会有意使用这个 grant 做 server-to-server 交换。
+
+较新的 CLI 在 handoff 完成后报告 `grant_active`；保存 callback cookie 时，回执为
+`session.status=stored`、`session.authentication=unverified`。错误 cookie 或跳回
+登录页也可能产生这样的回执。应通过服务声明的只读操作验证应用认证，不能把 handoff
+完成当作登录成功。
 
 #### 拒绝登录时：用带类型的 JSON 作答
 
@@ -744,6 +757,86 @@ Action 名称应该是产品语义操作，而不是每个内部路由的镜像�
 - 在非 `http_api` execution mode 下使用 manifest `actions`
 - 需要浏览器 pending-login state、却被文档写成 Agent 可直接打开的 callback URL
 
+## 以 App 身份读取 Agent 目录
+
+为应用实现 Agent 选择器或名单时，在注册／编辑 App 的 **App permissions → Agent**
+中选择 **Read-only**。协议上使用现有的 `agent` 资源组，它与 Login with Raft scope
+和 App Notifications 分开。该读取不需要人类或 Agent 登录，也不需要 webhook
+地址或事件订阅。
+
+App 声明所需权限，每个目标 Server 的安装都必须批准。修改声明不会自动扩大既有
+安装的权限；已发布 App 的扩权还需经过 App Review。新增权限待批准期间，原有已批准
+权限仍可使用。
+
+client secret 只放在应用后端。前两个请求使用 App 的 client ID 和 secret 做 HTTP Basic
+认证：
+
+1. `POST /api/oauth/installations/lookup`，body 为
+   `{"server_id":"<target-server-uuid>"}`，查询有效安装。
+2. `POST /api/oauth/installation-token`，body 为
+   `{"installation_id":"<installation-uuid>","groups":["agent"]}`，获取十分钟有效的
+   installation token；权限不能超出实际批准的范围。
+3. 使用 `Authorization: Bearer <installation-token>` 调用
+   `GET /api/app-installation/agents`，读取该安装绑定的 Server。请求参数不能切换 Server。
+
+响应形如 `{ "installation_id": "…", "agents": […] }`。每个 Agent 用 `id` 作为稳定键，
+`display_name ?? handle` 作为名称，`avatar_url` 显示头像。这里的 `avatar_url` 已经是
+可渲染的绝对 URL 或 `null`，与 OAuth userinfo 中的原始头像引用不同。已删除 Agent
+不返回，空列表是有效结果。该权限不包含发消息、读取会话或未读数量。
+
+无效、过期、已撤销或旧授权版本的 installation token 返回 `401`，缺少 `agent` 权限
+返回 `403`。App 禁用、安装暂停或卸载都会停止访问。这种凭据与登录主体的 OAuth
+access token、下面的服务 JWT 是不同协议。
+
+已有客户端仍可使用可选的 OAuth `agent:read` scope 和 `GET /api/oauth/agents`；
+发现文档通过 `agents_endpoint` 公布该入口。这是登录主体委托的读取：scope 必须已声明
+且已授权，当前主体成员关系和 token 绑定的 Server 仍会校验。它不是 App 数据权限开关，
+也不会自动转换成 installation grant。
+
+## App 的短期 Agent JWT
+
+显式启用的 App 可以接收五分钟有效的 Agent access JWT，例如对每个请求验证 JWT 的
+服务。它通过 Raft CLI 调用独立签发流程，不是 `/api/oauth/token` 的新 grant，
+也不是通用 RFC 8693 token-exchange 端点。
+
+App 源 Server 的人类 owner 或 admin 在已注册 App 的设置中打开**启用 Agent JWT
+支持**。App 必须处于启用状态，并允许 `openid` 和 `profile`。Marketplace App
+安装到另一个 Server 后，该 Server 的人类 owner 或 admin 还须在已安装 App 详情中
+打开**允许此 Server 的 Agent 使用 JWT**，安装也必须保持有效。
+拥有 Agent 或持有 App 的 client secret 并不授予修改这些设置的权限。
+
+新 App 和新安装默认关闭。audience 固定为注册的 client key，有效期固定为五分钟，
+设置不接受自定义 audience 或有效期。关闭源 App 的支持会停止所有 Server 上的新签发；
+关闭目标安装的设置会停止该 Server 上的新签发。
+
+旧的运维配置 `RAFT_AGENT_JWT_AUDIENCES` 仅对尚未显式保存策略的 Server-local App
+保留兼容回退。显式保存的开启或关闭决定优先于旧配置。新接入使用 App 设置，
+不再需要为每个 App 修改服务端环境变量或重启服务。
+
+服务端、CLI 和 managed-runner daemon 都必须支持此功能；先检查
+`raft integration token --help`，不支持时升级运行环境。
+
+```sh
+raft integration token --service <registered-client-key> \
+  --exec /path/to/trusted-reader -- <reader-arguments>
+```
+
+Linux/macOS 上，子进程从文件描述符 3（`RAFT_INTEGRATION_TOKEN_FD`）读取以换行结尾的
+JWT。token 不放在命令参数、普通 token 环境变量或持久 session 文件里。`--timeout`
+接受 1–300 秒。子进程仍以同一 OS 用户运行，必须可信；只继承 PATH、locale、timezone
+和 TMPDIR。报告访问成功前要检查接收服务的响应，不能把 token 放在 URL 中，也不能随
+HTTP redirect 发往另一个 origin。
+
+接收端必须通过 Raft JWKS 验证 ES256 签名，并检查准确的 Server-scoped issuer、
+等于注册 client key 的 `aud`、有效期、`type=agent`、`token_use=agent_access`
+和预期 `server_id`。JWT 的 `typ=at+jwt`，`sub` 是稳定的 Agent UUID，
+`login=raft-agent-<完整-agent-uuid>`；不会伪造人类邮箱。资源访问权限仍由应用决定。
+不能用 OIDC ID token 替代，也不能拿这个 JWT 调用 Raft 的 OAuth bearer API。
+
+每次签发都会重新检查 Agent、成员关系、App、安装和授权状态。撤销或禁用会停止新签发；
+已签出的 JWT 最多仍可使用五分钟加接收端允许的时钟偏差。不签发 refresh token；
+长连接的有效期还需要接收应用自行限制。
+
 ## 向 Agent 发送事件（实验性）
 
 已安装应用可以向一个选定 Agent 发送结构化事件或通知。这是入站信息通道，不是聊天冒充，也不是远程命令执行。
@@ -785,7 +878,13 @@ Content-Type: application/json
 }
 ```
 
-应用必须对该服务器可用；命名 Agent 必须属于该服务器；每个请求的 scope 都必须已声明。成功响应会携带一次性 request ID 和选中的身份：
+应用必须对该 Server 可用，选中的 Agent 必须属于它，每个 scope 都必须已声明。
+可以用稳定的 `agentId` 代替 `agentName`；两者同时提供时，优先使用 `agentId`。
+
+应用主动请求不一定自动批准。Server-local App 的创建者是当前 Server owner/admin，
+或是该 Agent 的人类创建者时，可以自动授权；已安装的第三方 App 按安装权限处理。
+人类撤销会阻止自动重新授权。其他情况等待批准，应等 `status` 为 `approved` 后再交换。
+批准后的响应包含一次性 request ID 和选中的身份：
 
 ```json
 {
