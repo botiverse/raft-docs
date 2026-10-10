@@ -793,20 +793,26 @@ access token、下面的服务 JWT 是不同协议。
 且已授权，当前主体成员关系和 token 绑定的 Server 仍会校验。它不是 App 数据权限开关，
 也不会自动转换成 installation grant。
 
-## Server-local 服务的短期 Agent JWT
+## App 的短期 Agent JWT
 
-显式启用的 Server-local App 可以接收五分钟有效的 Agent access JWT，例如对每个请求
-验证 JWT 的服务。它通过 Raft CLI 调用独立签发流程，不是 `/api/oauth/token` 的新 grant，
+显式启用的 App 可以接收五分钟有效的 Agent access JWT，例如对每个请求验证 JWT 的
+服务。它通过 Raft CLI 调用独立签发流程，不是 `/api/oauth/token` 的新 grant，
 也不是通用 RFC 8693 token-exchange 端点。
 
-当前由平台运维在 Raft 服务端配置：
+App 源 Server 的人类 owner 或 admin 在已注册 App 的设置中打开**启用 Agent JWT
+支持**。App 必须处于启用状态，并允许 `openid` 和 `profile`。Marketplace App
+安装到另一个 Server 后，该 Server 的人类 owner 或 admin 还须在已安装 App 详情中
+打开**允许此 Server 的 Agent 使用 JWT**，安装也必须保持有效。
+拥有 Agent 或持有 App 的 client secret 并不授予修改这些设置的权限。
 
-```text
-RAFT_AGENT_JWT_AUDIENCES=[{"serverId":"<server-uuid>","clientId":"<registered-client-key>"}]
-```
+新 App 和新安装默认关闭。audience 固定为注册的 client key，有效期固定为五分钟，
+设置不接受自定义 audience 或有效期。关闭源 App 的支持会停止所有 Server 上的新签发；
+关闭目标安装的设置会停止该 Server 上的新签发。
 
-App 必须已启用、属于该 Server，并允许 `openid` 和 `profile`。默认不启用任何 App。
-当前版本不支持 Marketplace／跨 Server 安装，也没有 App 设置里的自助开关。
+旧的运维配置 `RAFT_AGENT_JWT_AUDIENCES` 仅对尚未显式保存策略的 Server-local App
+保留兼容回退。显式保存的开启或关闭决定优先于旧配置。新接入使用 App 设置，
+不再需要为每个 App 修改服务端环境变量或重启服务。
+
 服务端、CLI 和 managed-runner daemon 都必须支持此功能；先检查
 `raft integration token --help`，不支持时升级运行环境。
 
@@ -827,7 +833,7 @@ HTTP redirect 发往另一个 origin。
 `login=raft-agent-<完整-agent-uuid>`；不会伪造人类邮箱。资源访问权限仍由应用决定。
 不能用 OIDC ID token 替代，也不能拿这个 JWT 调用 Raft 的 OAuth bearer API。
 
-每次签发都会重新检查 Agent、成员关系、App 和授权状态。撤销或禁用会停止新签发；
+每次签发都会重新检查 Agent、成员关系、App、安装和授权状态。撤销或禁用会停止新签发；
 已签出的 JWT 最多仍可使用五分钟加接收端允许的时钟偏差。不签发 refresh token；
 长连接的有效期还需要接收应用自行限制。
 
