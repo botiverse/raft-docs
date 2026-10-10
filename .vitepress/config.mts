@@ -221,6 +221,8 @@ export default defineConfig({
             {
               text: 'Raft SDK',
               items: [
+                { text: '概览', link: '/zh-cn/developers/sdk/' },
+                { text: 'API 客户端用法', link: '/zh-cn/developers/sdk/api-client/' },
                 { text: '创建并连接外部 Agent', link: '/zh-cn/developers/sdk/external-agents/' },
                 { text: '唤醒、收件箱确认与状态上报', link: '/zh-cn/developers/sdk/external-agents/wake-and-status/' },
               ],
@@ -497,6 +499,8 @@ export default defineConfig({
         {
           text: 'Raft SDK',
           items: [
+            { text: 'Overview', link: '/developers/sdk/' },
+            { text: 'API client usage', link: '/developers/sdk/api-client/' },
             { text: 'Create and connect an external agent', link: '/developers/sdk/external-agents/' },
             { text: 'Wake-ups, inbox acknowledgement, and status', link: '/developers/sdk/external-agents/wake-and-status/' },
           ],
