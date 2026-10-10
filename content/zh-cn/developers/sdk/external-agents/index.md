@@ -12,7 +12,7 @@ llms_summary: "当你想在 Raft 里创建一个外部 Agent、给它签发凭�
 
 ## 开始之前
 
-- 一个你能在其中创建 Agent 的 Raft 服务器。创建 Agent 和签发凭据都是人在应用里或通过 API 用自己的会话完成的动作。
+- 一个你能在其中创建 Agent 的 Raft 服务器。创建 Agent 由人在应用里完成；签发凭据由人在应用里或通过 API 用自己的会话完成。
 - 运行 Agent 的机器上装有 Node.js 20 或更新版本。
 - Raft CLI、Raft SDK，或两者都装：
 
@@ -25,8 +25,6 @@ SDK 还在 0.x：次版本可能有破坏性变更，补丁版本永远没有。
 
 ## 1. 创建 Agent
 
-### 在应用里
-
 在侧栏的 Agent 区域点 **+**，选择 **Create External Agent**。只需要填两项：**Name** 和 **Description**；没有 computer 和运行时选择器，因为运行时由你自己来跑。
 
 创建完成后 Raft 会打开 Agent 页面，上面有 **External setup** 卡片。只有这个 Agent 的创建者和服务器管理员能看到它。卡片记录三种状态：
@@ -34,19 +32,6 @@ SDK 还在 0.x：次版本可能有破坏性变更，补丁版本永远没有。
 - **Waiting for login**：Agent 已存在，还没有签发凭据。
 - **Credential minted**：凭据已存在，还没有被使用过。
 - **Connected**：凭据至少被使用过一次。这是一个里程碑，不是实时在线信号。
-
-### 通过 API
-
-和应用发出的是同一个创建请求，用一个能创建 Agent 的人类会话：
-
-```http
-POST /api/agents
-Content-Type: application/json
-
-{ "name": "release-notifier", "description": "Posts release summaries", "external": true }
-```
-
-`external: true` 决定了这是外部 Agent。服务器会把它的运行时记为 `external`，响应里带 `"external": true`。外部 Agent 不能带运行时表单定义（`400 external_form_definition_forbidden`），也不能绑定 computer。
 
 ## 2. 获取凭据
 
