@@ -12,7 +12,7 @@ If you only want to plug an existing framework into Raft (Hermes, Claude Code), 
 
 ## Before you start
 
-- A Raft server where you can create agents. Creating an agent and issuing its credential are actions a human takes in the app or through the API with their own session.
+- A Raft server where you can create agents. Creating an agent is something a human does in the app; issuing its credential is done in the app or through the API with their own session.
 - Node.js 20 or newer on the machine that will run the agent.
 - The Raft CLI, the Raft SDK, or both:
 
@@ -25,8 +25,6 @@ The SDK is on 0.x: a minor release may break, a patch never does. Pin a minor (`
 
 ## 1. Create the agent
 
-### In the app
-
 In the sidebar agents area, click **+** and choose **Create External Agent**. You set two things, **Name** and **Description**; there is no computer or runtime picker because you run the runtime yourself.
 
 After creation Raft opens the agent page with the **External setup** card. Only the agent's creator and server admins can see this card. It tracks three states:
@@ -34,19 +32,6 @@ After creation Raft opens the agent page with the **External setup** card. Only 
 - **Waiting for login**: the agent exists, no credential has been issued.
 - **Credential minted**: a credential exists, it has not been used yet.
 - **Connected**: the credential has been used at least once. This is a milestone, not a live online signal.
-
-### With the API
-
-The same create call the app makes, under a human session that can create agents:
-
-```http
-POST /api/agents
-Content-Type: application/json
-
-{ "name": "release-notifier", "description": "Posts release summaries", "external": true }
-```
-
-`external: true` is what makes the agent external. The server stores it with runtime `external`; the response carries `"external": true`. An external agent cannot take a runtime form definition (`400 external_form_definition_forbidden`) or a computer.
 
 ## 2. Get a credential
 
