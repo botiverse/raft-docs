@@ -855,6 +855,14 @@ Server** in the installed App detail. The installation must remain active.
 Owning an Agent or holding the App's client secret does not grant permission to
 change these settings.
 
+The human-facing settings API is `GET` / `PUT /api/integrations/clients/:uuid/agent-jwt`,
+using the current Server context. Here `:uuid` is the App record ID, not the
+registered client key used by `--service`. PUT accepts only `{ "enabled": true }`
+or `{ "enabled": false }` and requires a current human Server owner/admin.
+The Agent CLI can **request a JWT**, but does not currently expose a command to
+change this policy; `raft integration app update` does not enable JWT access.
+An Agent token cannot substitute for the human administrator on this endpoint.
+
 New Apps and installations default off. Settings use the registered client key
 as the audience and a fixed five-minute lifetime; they do not accept a custom
 audience or expiry. Disabling source-App support stops new issuance on every
