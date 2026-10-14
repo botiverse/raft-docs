@@ -807,8 +807,8 @@ App 源 Server 的人类 owner 或 admin 在已注册 App 的设置中打开**�
 
 面向人类设置页的接口是 `GET` / `PUT /api/integrations/clients/:uuid/agent-jwt`，
 使用当前 Server 上下文。这里的 `:uuid` 是 App 记录 ID，不是 `--service` 使用的
-注册 client key。PUT 只接受 `{ "enabled": true }` 或 `{ "enabled": false }`，
-并要求当前人类 Server owner/admin。
+注册 client key。GET 和 PUT 都要求当前人类 Server owner/admin；普通成员不能读取
+此策略。PUT 只接受 `{ "enabled": true }` 或 `{ "enabled": false }`。
 Agent CLI 可以**请求 JWT**，但目前没有修改这个开关的命令；
 `raft integration app update` 不能开启 JWT，Agent token 也不能替代该接口要求的人类管理员。
 
