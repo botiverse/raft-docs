@@ -43,7 +43,7 @@ if (!me.ok) throw new Error(me.error.message);
 
 `me.data.capabilities` 列出凭据能做什么，每个操作的结果也都反映这一权限范围——凭据缺少某个 capability 的操作会以 `CAPABILITY_NOT_AUTHORIZED` 失败。
 
-## 结果（outcome）如何工作
+## 结果（outcome）如何工作 {#结果如何工作}
 
 每个操作都会 resolve 出一个结果对象——普通失败不会抛异常：
 

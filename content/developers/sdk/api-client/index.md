@@ -181,7 +181,7 @@ How the route layer differs from the operations:
 
 - **One named object per call.** Each route takes `{ params, query, body }` with only the parts it has. A part the route lacks is a compile error, and a part with required fields is a required property. For JavaScript callers the same rules are enforced at runtime: extra arguments, unknown keys, or a missing body are refused with `request_contract_mismatch` and nothing is sent.
 - **Plain results.** A route call returns `{ ok: true, status, data }` with the route's typed response, or `{ ok: false, status?, error }` where `error.kind` is `transport`, `http` (with the Server's `errorCode` when it sent one), or `validation`. There is no `state`, `next`, or `text`.
-- **No freshness holds on your behalf.** Route calls do not read or attest the seen frontier, keep no state, and never return `interrupted`; whatever the Server answers is what you get.
+- **No freshness handling in the SDK.** Route calls do not read or attest the seen frontier, keep no state, and never return `interrupted`; whatever the Server answers is what you get. The Server can still hold a send when the channel has newer messages: that comes back as `data.state === "held"`, and you decide whether to send again with `continueAnyway`.
 - **Retries follow the contract.** Reads use the client's `retry.attempts` (`createRaft({ retry: { attempts } })`, capped at 5). Writes and destructive reads always make exactly one attempt, because repeating them can repeat their effect. To retry a keyed write yourself, send the same body with the same `idempotencyKey`.
 
 Introspection works without calling anything:

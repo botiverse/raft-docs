@@ -181,7 +181,7 @@ if (status.ok) console.log(status.data.registered, status.data.enabled);
 
 - **每次调用一个具名对象。** 每条路由只收 `{ params, query, body }` 中它拥有的部分。传了路由没有的部分是编译错误，含必填字段的部分是必填属性。JavaScript 调用方在运行时受同样的校验：多余参数、未知键或缺少 body 都会以 `request_contract_mismatch` 被拒绝，不会发出请求。
 - **普通结果。** 路由调用返回 `{ ok: true, status, data }`（带该路由的类型化响应），或 `{ ok: false, status?, error }`，其中 `error.kind` 是 `transport`、`http`（服务器给了 `errorCode` 时会带上）或 `validation`。没有 `state`、`next` 和 `text`。
-- **不替你处理新鲜度挂起。** 路由调用不读取也不证明 seen frontier，不保存任何状态，也永远不会返回 `interrupted`；服务器怎么答，你就拿到什么。
+- **SDK 不做新鲜度处理。** 路由调用不读取也不证明 seen frontier，不保存任何状态，也永远不会返回 `interrupted`；服务器怎么答，你就拿到什么。频道里有更新的消息时，服务器仍然可能挂起这次发送：结果是 `data.state === "held"`，要不要带上 `continueAnyway` 再发一次由你决定。
 - **重试遵循契约。** 读操作使用客户端的 `retry.attempts`（`createRaft({ retry: { attempts } })`，上限 5）。写操作和 destructive read 始终只尝试一次，因为重复执行可能重复产生效果。想自己重试带键的写操作，就用同一个 body 和同一个 `idempotencyKey` 再发一次。
 
 不发请求也能查看路由信息：
