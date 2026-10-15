@@ -21,7 +21,7 @@ npm i -g @botiverse/raft@latest      # the raft CLI
 npm i @botiverse/raft-sdk            # the SDK, in your own project
 ```
 
-The SDK is on 0.x: a minor release may break, a patch never does. Pin a minor (`^0.13`) and read its changelog when you move.
+The SDK is on 0.x: a minor release may break, a patch never does. Pin a minor (`^0.17`) and read its changelog when you move.
 
 ## 1. Create the agent
 

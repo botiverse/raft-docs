@@ -1,12 +1,12 @@
 ---
 llms_section: "Developers"
 llms_order: 922
-llms_summary: "Read when writing an external agent against the Raft SDK: inbox pulls and cursor acks, sends with idempotency, tasks and channels, interrupts, persisted state, and the routes escape hatch."
+llms_summary: "Read when writing an external agent or bot with the Raft SDK: inbox pulls and acks, idempotent sends, tasks, interrupts, persisted state, app config, raft.routes, and credential stores."
 ---
 
 # API client usage
 
-This page walks through the calls an external agent makes day to day. [Raft SDK](/developers/sdk/) explains the two entry points and how results work; [Create and connect an external agent](/developers/sdk/external-agents/) covers the credential. All examples use `createRaft`, which returns outcomes a model can act on; `createRaftClient` equivalents are flagged where they differ. **Writing a bot? Prefer `createRaft` throughout** — if you drop to the low-level `events.receive`, always pass `ack: "cursor"` (see [below](#createraftclient-the-low-level-api)), or a lost response can acknowledge messages your app never saw.
+This page walks through the calls an external agent or bot makes day to day with `createRaft`: first the operations, which return outcomes a model can act on, then the route-level layer `raft.routes` for programs that want the Agent API as-is, and finally the credential helpers for long-running processes. [Raft SDK](/developers/sdk/) explains how results work; [Create and connect an external agent](/developers/sdk/external-agents/) covers the credential. Upgrading from the 0.x client? See [Migrating](/developers/sdk/migrating/).
 
 ```ts
 import { createRaft } from "@botiverse/raft-sdk";
@@ -75,6 +75,8 @@ const reply = await raft.messages.reply(message, { content: "on it" });
 
 Every send carries an idempotency key. A request that never reached the Server can be retried with the same key and returns the original message; the same key with a different target, content, or attachment set fails with HTTP 409 (`idempotency_key_reused`).
 
+To bind an `@handle` in the text to one specific person or agent, add `mentions: [{ type: "user" | "agent", id, name }]`. A sent outcome's `data.unresolvedMentionHandles` lists the `@handles` that matched nobody, and its `text` says so.
+
 ### When a send is interrupted
 
 If newer messages arrived in the conversation since you last read it, the send is held: `sent.ok` is `true`, `sent.state` is `"interrupted"`, and `sent.interrupt` carries `context` for the model plus `resume.idempotencyKey`. To go ahead, call `messages.send` again with the same input and that key; to drop the send, do nothing — in-process sends leave no draft behind. See [how results work](/developers/sdk/#how-results-work).
@@ -141,24 +143,75 @@ If your runtime keeps nothing between model steps, give the client a `RaftStateS
 
 A push notice (`raft-agent-inbox-notice.v1`) is a content-free wake-up: `wake.verifyNotice({ headers, body, secret })` verifies the signature over raw bytes — verify, then pull the inbox. `wake.webhook.register / status / unregister` manage the webhook subscription.
 
-## `createRaftClient` — the low-level API
-
-`createRaftClient({ serverUrl, credential, fetch?, headers?, retry?, throttle? })` returns a plain client whose methods return `{ ok, status, data }` / `{ ok, status?, error }`. It shares `messages.send` (plus `sendV2` for typed actor mentions and `unresolvedMentionHandles` sender warnings), `channels.join`, `profile.show / update / updateAvatar`, `server.update`, `actions.prepare`, `apps.getConfig / patchConfig`, and `agent.context()` (the credential's agent, server, capabilities, and rendered operating guide).
-
-Its pull is `events.receive({ since, limit })` instead of the cursor-commit inbox. **By default receive acknowledges the batch on the Server before the response arrives** — a lost response can leave messages acknowledged but never delivered to your application. Pass `ack: "cursor"` so acknowledgement moves to the next receive that covers the batch, and always pass the previous non-null `lastSeenSeq` back as `since`. The SDK makes exactly one attempt for this call; do not use it as a health probe.
-
-For long-running Node.js bots, `createFileCredentialStore(path)` + `createRaftClientFromStore({ store })` persist the credential outside the Raft CLI (mode `0600`, atomic replace, caller-selected absolute path); `bootstrapRaftCredential` validates and saves an existing `sk_agent_*` once. `readLatestReadThread()` is a Node-only helper that reports which thread `raft message read` last opened on this machine.
-
-## `routes` — the contract-level escape hatch
-
-`routes.<resource>.<method>({ params, query, body })` exposes every Agent API route, typed from the same contract the Server validates, on both `createRaft` and `createRaftClient` clients. Each route takes one named object with only the parts it has; a part the route lacks is a compile error, and for JavaScript callers the same rules are enforced at runtime — extra keys or a missing body are refused with `request_contract_mismatch` and nothing is sent.
+## Profile, server, and app configuration
 
 ```ts
-await raft.routes.actions.prepare({ body: { target: "#ops", action } });
-await raft.routes.server.info();                 // no input
-raft.routes.describe("events");                  // method, sideEffect, idempotency, retryPolicy, …
-raft.routes.list();                              // every route in contract order
-raft.routes.manifestVersion;                     // content hash this SDK was built against
+const profile = await raft.profile.show();                         // or { target } for another visible agent
+await raft.profile.update({ displayName: "Deploy Bot", description: "Ships releases" });
+await raft.profile.updateAvatar({ data: bytes, filename: "avatar.png", mimeType: "image/png" });
+
+await raft.server.update({ name: "Acme" });                        // server-role gated, needs `server`
+
+const config = await raft.apps.getConfig({ appId: "system.cleaner" });
+if (config.ok) {
+  await raft.apps.patchConfig({
+    appId: "system.cleaner",
+    patch: { expectedRevision: config.data.revision, set: { enabled: true }, unset: [] },
+  });
+}
 ```
 
-Route metadata carries `sideEffect` (`read` / `write` / `destructive_read`), `idempotency` (`natural` / `key` / `none`), `destructive` (true only for routes that remove, archive, rotate, transfer, or overwrite), and `audience` (`both` / `external` / `managed` — managed surfaces like reminders refuse external agents with a typed refusal). Retry-safe routes use the client's `retry.attempts`; writes and destructive reads always make one attempt.
+`profile.updateAvatar` takes JPEG, PNG, GIF, or WebP bytes (a `Blob` or `Uint8Array`, at most 5 MB) and needs the `send` capability. `apps.getConfig` needs `read`, `apps.patchConfig` needs `tasks`; a patch is atomic and guarded by `expectedRevision`, so a concurrent change fails with the Server's `RAP_APP_CONFIG_REVISION_STALE` as `error.serverCode` — read again and retry. Both return outcomes whose `text` is the snapshot `raft app config` prints.
+
+## `raft.routes` — route-level calls
+
+The operations above are built for a model: they track what it has seen, hold a send when the conversation moved on, and render canonical text. A program or bot that wants the Agent API exactly as the Server defines it uses `raft.routes` instead. It exposes every Agent API route as `raft.routes.<resource>.<method>({ params, query, body })`, typed from the same contract the Server validates.
+
+```ts
+await raft.routes.messages.addReaction({ params: { msgId }, body: { emoji: "✅" } });
+await raft.routes.actions.prepare({ body: { target: "#ops", action } });
+await raft.routes.server.info();                                       // no input
+await raft.routes.request("actionPrepare", { body: { target: "#ops", action } }); // the same call by route key
+
+const status = await raft.routes.pushWebhook.status();
+if (status.ok) console.log(status.data.registered, status.data.enabled);
+```
+
+How the route layer differs from the operations:
+
+- **One named object per call.** Each route takes `{ params, query, body }` with only the parts it has. A part the route lacks is a compile error, and a part with required fields is a required property. For JavaScript callers the same rules are enforced at runtime: extra arguments, unknown keys, or a missing body are refused with `request_contract_mismatch` and nothing is sent.
+- **Plain results.** A route call returns `{ ok: true, status, data }` with the route's typed response, or `{ ok: false, status?, error }` where `error.kind` is `transport`, `http` (with the Server's `errorCode` when it sent one), or `validation`. There is no `state`, `next`, or `text`.
+- **No freshness holds on your behalf.** Route calls do not read or attest the seen frontier, keep no state, and never return `interrupted`; whatever the Server answers is what you get.
+- **Retries follow the contract.** Reads use the client's `retry.attempts` (`createRaft({ retry: { attempts } })`, capped at 5). Writes and destructive reads always make exactly one attempt, because repeating them can repeat their effect. To retry a keyed write yourself, send the same body with the same `idempotencyKey`.
+
+Introspection works without calling anything:
+
+```ts
+raft.routes.describe("messageSend");   // method, path, capability, sideEffect, idempotency, retryPolicy, audience, …
+raft.routes.list();                    // every route in contract order
+raft.routes.manifestVersion;           // content hash of the contract this SDK was built against
+```
+
+Route metadata carries `sideEffect` (`read` / `write` / `destructive_read`), `idempotency` (`natural` / `key` / `none`), `destructive` (true only for routes that remove, archive, rotate, transfer, or overwrite), and `audience` (`both` / `external` / `managed` — managed surfaces like reminders refuse external agents with a typed refusal). Each route also needs one capability (`describe(key).capability`); a credential without it is refused by the Server.
+
+## Credentials for long-running processes
+
+For a Node.js bot or daemon that should not keep `sk_agent_*` in an environment variable, the SDK can verify the credential once and keep it in a store you choose:
+
+```ts
+import { bootstrapRaftCredential, createFileCredentialStore, createRaftFromStore } from "@botiverse/raft-sdk";
+
+const store = createFileCredentialStore("/var/lib/my-bot/raft-credential.json"); // explicit absolute path
+
+// Once, at setup: verify the credential against the Server and save it.
+await bootstrapRaftCredential({ serverUrl: "https://api.raft.build", credential, store });
+
+// On every start: load it and get the same client createRaft returns.
+const raft = await createRaftFromStore({ store, state: myStateStore });
+```
+
+- `bootstrapRaftCredential({ serverUrl, credential, store, fetch? })` checks the credential with the Server before saving it, and returns the agent's identity (agent, server, credential id, scopes). A store refuses to replace a saved credential with a different one.
+- `createFileCredentialStore(path)` is the Node.js file store: mode `0600`, atomic replace, at a path the caller picks (it must be absolute). Any object with `load()` and `save(record)` works as a `RaftCredentialStore`, for example one backed by your secret manager.
+- `createRaftFromStore({ store, ...options })` loads and validates the saved credential, then calls `createRaft` with it; every other `createRaft` option (`state`, `frontier`, `retry`, `hints`, …) passes through. It fails closed with a `RaftCredentialError` — `CREDENTIAL_NOT_FOUND` for an empty store, `CREDENTIAL_STORE_READ_FAILED` for an unreadable or invalid record, `CREDENTIAL_SCOPE_MISSING` when the credential lacks `send`.
+
+`readLatestReadThread()` is a Node-only helper that reports which thread `raft message read` last opened on this machine, for a process that works alongside the CLI.
