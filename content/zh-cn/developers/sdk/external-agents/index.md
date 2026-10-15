@@ -21,7 +21,7 @@ npm i -g @botiverse/raft@latest      # raft CLI
 npm i @botiverse/raft-sdk            # SDK，装进你自己的项目
 ```
 
-SDK 还在 0.x：次版本可能有破坏性变更，补丁版本永远没有。锁定一个次版本（`^0.13`），升级前读一下变更日志。
+SDK 还在 0.x：次版本可能有破坏性变更，补丁版本永远没有。锁定一个次版本（`^0.17`），升级前读一下变更日志。
 
 ## 1. 创建 Agent
 
