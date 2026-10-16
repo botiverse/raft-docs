@@ -30,7 +30,7 @@ Agent 常见问题和处理方式。
 
 机器上的 Raft Computer 已停止或失去连接。常见原因包括：机器关机、网络中断、本地服务停止，或 legacy daemon 进程被终止。
 
-在同一台机器上，如果服务已停止，运行 `raft-computer start /<server-slug>`；如果服务卡住，运行 `raft-computer restart /<server-slug>`；如果重装后登录或本地状态缺失，运行 `raft-computer setup /<server-slug>`。见 [重新连接电脑](/zh-cn/features/server/computers/#重新连接电脑)。连接恢复后，这台电脑上的 Agent 会自动继续。
+在同一台机器上，如果服务已停止，运行 `raft-computer start /<server-slug>`；如果服务卡住，运行 `raft-computer restart /<server-slug>`；如果重装后登录或本地状态缺失，运行 `raft-computer setup /<server-slug>`。见 [重新连接电脑](/zh-cn/features/server/computers/#重新连接电脑)。如果这台电脑由 Raft Desktop 运行，也可以在应用里操作，见 [重启 Raft Computer](#重启-raft-computer)。连接恢复后，这台电脑上的 Agent 会自动继续。
 
 如果这台机器仍在使用 legacy daemon，请在同一台机器上运行 Raft Computer setup，用拥有该 daemon 的同一个用户登录，并在 setup 提供匹配 legacy candidate 时选择它。如果 setup 无法匹配本地痕迹，请使用迁移 diagnostics 和 machine-ID recovery 路径。见 [从旧 daemon 迁移](/zh-cn/features/server/computers/#从旧-daemon-迁移)。
 
@@ -40,7 +40,21 @@ Agent 常见问题和处理方式。
 
 - **检查你的 runtime subscription**：确认 API key 或 license 有效且额度充足。
 - **检查 runtime 状态**：provider 可能发生 outage。
-- **Restart Agent**：在 Agent detail panel 中使用 **Actions → Restart / Reset**。新会话通常可以清除临时错误。如果仍然卡住，请在运行该 Agent 的机器上用 `raft-computer restart /<server-slug>` 重启 Raft Computer。
+- **Restart Agent**：在 Agent detail panel 中使用 **Actions → Restart / Reset**。新会话通常可以清除临时错误。如果仍然卡住，请在运行该 Agent 的机器上[重启 Raft Computer](#重启-raft-computer)。
+
+## 重启 Raft Computer
+
+重启 Raft Computer 会停止并重新启动这台机器上的服务，上面运行的 Agent 也会一起重启。工作区文件会保留。当同一台电脑上的 Agent 反复出现同样的问题时可以试试：例如刚安装或刚登录的 runtime 没有被识别，或者重启 Agent 之后错误仍然出现。它可能清除卡住的服务或过时的环境，但不保证能解决问题。
+
+它和 Agent detail panel 里的 **Actions → Restart / Reset** 不同，后者只重启这一个 Agent。
+
+可以在三个地方重启：
+
+- **在 Raft 里**：在侧栏 **Computers** 下打开这台电脑，在 **操作** 区域点 **重启**。这个按钮只在电脑在线时出现，并且只对连接这台电脑的人、或能在这个服务器上管理电脑的人显示。
+- **在这台机器的 Raft Desktop 里**：在 **Computers** 下打开标着 **本机** 的电脑，点 **重启**。如果服务已停止，点 **启动**。
+- **在这台机器的终端里**：运行 `raft-computer restart /<server-slug>`。
+
+如果重启后问题仍然存在，请在 Agent detail panel 里使用 **Actions → Report Issue**（见下文）。不需要发送 API key 或完整日志。
 
 ## 我自己的 Claude Code hooks 在 Agent 会话里执行
 
