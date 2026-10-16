@@ -21,8 +21,9 @@ import { loadDocsConfig } from '../config-node.mjs'
 //
 // Artifacts emitted for a site:
 // - per-page .md twins (always);
-// - llms.txt per localeConfigs (default; a site can turn it off with
-//   artifacts.llms=false in docs.config.mjs — ties to the Raft docs shape);
+// - llms.txt per declared locale (default; a site can turn it off with
+//   artifacts.llms=false in docs.config.mjs), titled/described by the
+//   locale's chrome.llmsTitle / chrome.llmsDescription (Raft text fallback);
 // - index twins driven by `twins.index` in docs.config.mjs: one machine
 //   index per declared locale, built from frontmatter title/description/
 //   category/order, with chrome.markdownIndexTitle / markdownIndexNote /
@@ -72,24 +73,34 @@ const previewMarkerPatterns = [
 ]
 const privateKnowledgeSummaryPattern =
   /\b(internal\s+Raft\s+Manual|internal\s+Manual|raft\s+manual|Agent Knowledge)\b/i
-const localeConfigs = [
-  {
-    key: 'root',
-    llmsPath: 'llms.txt',
+// raft-docs' historical llms.txt text, keyed by locale key. A site sets its
+// own per locale through chrome.llmsTitle / chrome.llmsDescription (Stamp:
+// 'Stamp Docs'); these remain the fallback so raft-docs' output is unchanged.
+const defaultLlmsText = {
+  root: {
     title: 'Raft Docs',
     description:
       'Public docs discovery router for agents, crawlers, and tools that need machine-readable Raft documentation.',
-    includePage: (page) => page.locale === 'root',
   },
-  {
-    key: 'zh-cn',
-    llmsPath: 'zh-cn/llms.txt',
+  'zh-cn': {
     title: 'Raft Docs zh-CN',
     description:
       '简体中文公共文档发现入口，供需要机器可读 Raft 文档的 Agent、爬虫和工具使用。',
-    includePage: (page) => page.locale === 'zh-cn',
   },
-]
+}
+const localeConfigs = (
+  siteConfig?.locales ?? [
+    { key: 'root', dir: '', chrome: {} },
+    { key: 'zh-cn', dir: 'zh-cn', chrome: {} },
+  ]
+).map((locale) => ({
+  key: locale.key,
+  llmsPath: locale.dir ? `${locale.dir}/llms.txt` : 'llms.txt',
+  title: locale.chrome?.llmsTitle ?? defaultLlmsText[locale.key]?.title,
+  description: locale.chrome?.llmsDescription ?? defaultLlmsText[locale.key]?.description,
+  // Pages carry the locale key resolved by localeForPath().
+  includePage: (page) => page.locale === locale.key,
+}))
 
 async function listMarkdownFiles(dir, prefix = '') {
   const entries = await readdir(dir, { withFileTypes: true })
@@ -569,6 +580,12 @@ async function main() {
   const llmsPaths = []
   if (artifactsConfig.llms) {
     for (const config of localeConfigs) {
+      if (!config.title || !config.description) {
+        throw new Error(
+          `docs.config: locale '${config.key}' emits llms.txt; ` +
+            'chrome.llmsTitle and chrome.llmsDescription are required (or set artifacts.llms=false)',
+        )
+      }
       llmsPaths.push(`/${config.llmsPath}`)
       agentArtifacts.push({
         outputPath: path.join(outDir, config.llmsPath),
