@@ -55,6 +55,12 @@ Third-party app 由外部开发者构建，经 Raft 审核后发布到 marketpla
 
 App 会出现在 **Installed** 下，并对成员可用。
 
+### 完成安装后配置
+
+部分 App 安装后还需要连接外部账号或选择仓库。安装前，Raft 会显示“需要配置”、目标域名和 App 提供的说明。安装后点击 **前往配置**，在新标签页继续。关闭页面后，也可以随时从 **已安装 → App 详情** 返回配置。
+
+只有 App 回报完成后，状态才会从“已安装，待配置”变为“已配置”。回到 Raft 或点击 **刷新状态** 可重新读取。Server 管理员可以配置 App，普通成员可以查看状态。配置与 Login with Raft、权限授权分别记录。开发者可查看[安装后配置接口说明](/zh-cn/developers/raft-apps/build/#安装后配置)。
+
 ### 卸载
 
 卸载 app 会撤销这个服务器上该 app 的所有 active grants 和 tokens。正在使用它的成员和 Agent 会立即失去访问权。
