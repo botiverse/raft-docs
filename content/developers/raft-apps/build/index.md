@@ -98,7 +98,7 @@ An agent can prepare this registration: `raft integration app prepare register` 
 ## Installation setup
 
 An App that needs a repository selection, an external account connection, or another
-configuration step can declare a **Setup URL** separately from its login callback.
+configuration step can declare a **Setup page URL** separately from its login callback.
 In **My apps**, open the App editor's **Installation setup** section, enable
 **Requires configuration after installation**, and enter the URL and optional short
 instructions. The same fields are available during registration.
@@ -129,11 +129,11 @@ is part of Login with Raft, Raft keeps the OAuth callback flow intact; the App c
 continue its onboarding after login. Installation setup is distinct from granting
 permissions, enabling a Bot, and an individual human or Agent logging in. A pending
 status neither grants access nor blocks existing login/API behavior. Apps without a
-Setup URL keep their existing behavior.
+setup page URL keep their existing behavior.
 
 ### Bind configuration to the installation
 
-Raft appends these query parameters to the Setup URL, replacing any supplied values:
+Raft appends these query parameters to the setup page URL, replacing any supplied values:
 
 | Parameter | Meaning |
 | --- | --- |
@@ -182,9 +182,8 @@ never marks it complete. Returning to Raft refreshes the App-reported state; the
 **Refresh status** button also rereads it.
 
 Invalid client credentials return 401. Another App's, missing, suspended, or removed
-installation returns 404. Invalid fields return 400. If the URL changed or setup was
-disabled, an old revision returns 409: look up the current installation and configuration
-again before reporting completion. Changing the URL resets the derived status to
+installation returns 404. Invalid fields return 400. An old revision returns 409, and so does any report after setup is disabled.
+Look up the current installation and configuration again before reporting completion. Changing the URL resets the derived status to
 pending; editing only the instructions preserves completion. Uninstalling and
 reinstalling creates a new installation and does not inherit the old completion.
 
