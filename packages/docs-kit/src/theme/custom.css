@@ -239,6 +239,18 @@
 .VPSidebar .VPSidebarItem.level-1 .link:hover {
   background: var(--docs-sidebar-hover-bg);
 }
+/* External sidebar link: VitePress draws its arrow as the link's ::after,
+   but the block .link above (plus the block <p class="text"> inside) drops
+   that arrow onto its own line. Flex keeps it inline after the label; the
+   extra .item/.vp-external-link-icon classes out-rank the block rule. */
+.VPSidebar .VPSidebarItem .item .link.vp-external-link-icon {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.VPSidebar .VPSidebarItem .item .link.vp-external-link-icon::after {
+  flex-shrink: 0;
+}
 /* Active page: yellow plate + 3px ink left strap (border, not box-shadow,
    so it always paints). !important guards against VitePress scoped rules. */
 .VPSidebar .VPSidebarItem.level-1.is-active .link {

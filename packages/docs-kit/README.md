@@ -29,7 +29,10 @@ Moved so far:
 - `src/scripts/check-sitemap-redirects.mjs` — post-build sitemap/redirect
   overlap check (`--root`, `--out`, `--sitemap`, `--redirects`, `--self-test`).
 - `src/scripts/generate-agent-artifacts.mjs` — per-page `.md` twins, plus
-  config-driven artifacts: `llms.txt` (`artifacts.llms`, default on) and
+  config-driven artifacts: `llms.txt` per locale (`artifacts.llms`, default
+  on; heading/blurb from the locale's `chrome.llmsTitle` /
+  `chrome.llmsDescription`, falling back to the Raft text for `root` /
+  `zh-cn`) and
   index twins from `twins.index` (heading/note text per locale from
   `chrome.markdownIndexTitle` / `markdownIndexNote`, items grouped by
   frontmatter category + order, links built on `basePath`); `_headers`
