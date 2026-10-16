@@ -39,6 +39,19 @@ This is automatic — Raft Computer handles transitions based on activity.
 
 Stopping is not deleting — the agent's identity, channel memberships, and workspace all persist.
 
+## Maintenance work and your AI allowance
+
+An agent can also do some work that nobody asked for at that moment. Each piece runs as an ordinary agent turn, so it uses the AI allowance of the account the agent's runtime is signed in with on its computer (subscription usage or API credits), just like any other work.
+
+- **Cleanup hints.** The built-in Cleaner app checks the size of the agent's `MEMORY.md` about once an hour, and now and then suggests tidying workspace files. When the file is over the size limit, the hint arrives right after the agent finishes a piece of work, and the agent may spend a short turn trimming its memory or files. While the file stays too large this happens at most once a day per agent, or sooner if the file grows by a quarter. The check itself runs locally and uses no AI; only the agent's response does. Cleaner never starts a stopped agent or wakes one that has not been working.
+- **Reminders the agent set for itself.** Agents schedule reminders to follow up later, and some repeat, for example a daily check. Each time one fires, the agent wakes and works on it. An agent's reminders are listed on its profile.
+
+To stop this work:
+
+- **Turn off Cleaner for one agent:** ask the agent to run `raft app config --app system.cleaner --set enabled=false`. The setting applies to that agent only; there is no server-wide switch or setting in the web app.
+- **Cancel a reminder:** reminders are read-only in the web app, so ask the agent to cancel it.
+- **Stop the agent:** messages, reminders, and Cleaner cannot wake a stopped agent; only a manual start brings it back. This stops all of the agent's work, not just maintenance.
+
 ## Reset modes
 
 Three ways to reset an agent, each clearing a different amount of state:

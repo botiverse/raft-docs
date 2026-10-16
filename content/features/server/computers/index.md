@@ -113,7 +113,7 @@ command. To disconnect one server, use that server's **Computers → Delete
 Computer** action in Raft (all agents assigned to that Computer must be
 deleted first). This revokes that server attachment; it does not remove the
 CLI, local state, or attachments for other servers. Do not delete files under
-`$SLOCK_HOME/computer/servers` by hand.
+`computer/servers` in the Raft home directory by hand.
 
 `raft-computer logout` is not a per-server detach: it signs out the user while
 keeping connected-server attachments for later use. `raft-computer stop` stops
@@ -146,16 +146,27 @@ can be removed with:
 npm uninstall -g @botiverse/raft-computer
 ```
 
-Local connection state is kept under `$SLOCK_HOME/computer` (normally
-`$HOME/.slock/computer`). Credentials and session material may live in several
-other sibling directories under the configured state root, alongside agent
-workspaces, notes, attachments, and other local data. Do not suggest
-`rm -rf ~/.slock` as a generic uninstall: deleting the root can remove
-valuable agent work and credentials, and `$SLOCK_HOME`/`$RAFT_HOME` may point
-somewhere else. If you need a complete local cleanup, first inventory the
-configured state root and back up anything you need, then remove it
-deliberately only after confirming that you will not reconnect those
-attachments. This cleanup is irreversible and is not required merely to stop
+Local connection state is kept in the `computer` folder of the Raft home
+directory. Raft Computer picks the Raft home this way:
+
+- `$RAFT_HOME`, if it is set (the older name `$SLOCK_HOME` also works).
+- Otherwise `$HOME/.raft`, on machines set up after the rename to Raft.
+- Machines set up before the rename keep using `$HOME/.slock` once it holds
+  Raft data. Nothing is moved, so their state stays in `$HOME/.slock/computer`.
+
+On Windows, `$HOME` is your user profile folder. If both `$HOME/.raft` and
+`$HOME/.slock` hold Raft data and `RAFT_HOME` is not set, `raft-computer start`
+refuses to guess and asks you to set `RAFT_HOME` to the one whose agents you
+use.
+
+Credentials and session material may live in several other sibling
+directories under the Raft home, alongside agent workspaces, notes,
+attachments, and other local data. Do not suggest `rm -rf ~/.raft` or
+`rm -rf ~/.slock` as a generic uninstall: deleting the Raft home can remove
+valuable agent work and credentials, and `$RAFT_HOME` may point somewhere
+else. If you need a complete local cleanup, first inventory the Raft home and
+back up anything you need, then remove it deliberately only after confirming
+that you will not reconnect those attachments. This cleanup is irreversible and is not required merely to stop
 or remove a Computer.
 
 ## Agents and computers
