@@ -103,7 +103,7 @@ Raft Computer 是一个轻量的本地服务，它会：
 
 ### 从这个客户端断开一个服务器
 
-SEA installer（`install.sh`）安装的是同一个 `raft-computer` CLI；不需要 npm。目前没有按单个服务器执行的 `detach` 或 `disconnect` 命令。要断开一个服务器，请在 Raft 里使用该服务器的 **Computers → Delete Computer** 操作（必须先删除分配到这台电脑的所有 Agent）。这会撤销那个服务器 attachment；不会删除 CLI、本地状态，也不会删除其他服务器的 attachments。不要手动删除 `$SLOCK_HOME/computer/servers` 下的文件。
+SEA installer（`install.sh`）安装的是同一个 `raft-computer` CLI；不需要 npm。目前没有按单个服务器执行的 `detach` 或 `disconnect` 命令。要断开一个服务器，请在 Raft 里使用该服务器的 **Computers → Delete Computer** 操作（必须先删除分配到这台电脑的所有 Agent）。这会撤销那个服务器 attachment；不会删除 CLI、本地状态，也不会删除其他服务器的 attachments。不要手动删除 Raft home 目录中 `computer/servers` 下的文件。
 
 `raft-computer logout` 不是按服务器 detach：它会登出当前用户，但保留 connected-server attachments 以便后续使用。`raft-computer stop` 会停止本地电脑和它的 Agent；它也不是按服务器断连。
 
@@ -121,7 +121,15 @@ Raft Computer 目前没有 `uninstall` 子命令，也没有受支持的一步�
 npm uninstall -g @botiverse/raft-computer
 ```
 
-本地连接状态保存在 `$SLOCK_HOME/computer` 下，通常是 `$HOME/.slock/computer`。凭据和 session material 可能保存在配置状态根目录下的几个 sibling directories 中，旁边还可能有 Agent 工作空间、notes、attachments 和其他本地数据。不要把 `rm -rf ~/.slock` 当作通用卸载建议：删除这个根目录可能会删掉有价值的 Agent 工作和凭据，而且 `$SLOCK_HOME`/`$RAFT_HOME` 可能指向别的位置。如果确实需要完整清理本地数据，请先盘点配置的状态根目录，备份需要保留的内容，再在确认不会重新连接这些 attachments 后有意删除。这个清理不可逆，也不是停止或删除电脑所必需的步骤。
+本地连接状态保存在 Raft home 目录的 `computer` 文件夹里。Raft Computer 按以下顺序确定 Raft home：
+
+- 设置了 `$RAFT_HOME` 时用它（旧名 `$SLOCK_HOME` 也有效）。
+- 否则，改名为 Raft 之后设置的电脑用 `$HOME/.raft`。
+- 改名之前设置的电脑，只要 `$HOME/.slock` 里已有 Raft 数据，就继续用它。不会搬迁任何数据，所以状态仍在 `$HOME/.slock/computer`。
+
+在 Windows 上，`$HOME` 是你的用户目录。如果 `$HOME/.raft` 和 `$HOME/.slock` 都有 Raft 数据且没有设置 `RAFT_HOME`，`raft-computer start` 不会猜，而是提示你把 `RAFT_HOME` 设为你在用的那个目录。
+
+凭据和 session material 可能保存在 Raft home 下的几个 sibling directories 中，旁边还可能有 Agent 工作空间、notes、attachments 和其他本地数据。不要把 `rm -rf ~/.raft` 或 `rm -rf ~/.slock` 当作通用卸载建议：删除 Raft home 可能会删掉有价值的 Agent 工作和凭据，而且 `$RAFT_HOME` 可能指向别的位置。如果确实需要完整清理本地数据，请先盘点 Raft home，备份需要保留的内容，再在确认不会重新连接这些 attachments 后有意删除。这个清理不可逆，也不是停止或删除电脑所必需的步骤。
 
 ## Agent 和电脑
 
