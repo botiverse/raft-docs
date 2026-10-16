@@ -40,21 +40,21 @@ Agent 常见问题和处理方式。
 
 - **检查你的 runtime subscription**：确认 API key 或 license 有效且额度充足。
 - **检查 runtime 状态**：provider 可能发生 outage。
-- **Restart Agent**：在 Agent detail panel 中使用 **Actions → Restart / Reset**。新会话通常可以清除临时错误。如果仍然卡住，请在运行该 Agent 的机器上[重启 Raft Computer](#重启-raft-computer)。
+- **Restart Agent**：在 Agent detail panel 中使用 **操作 → 重启 / 重置**。新会话通常可以清除临时错误。如果仍然卡住，请在运行该 Agent 的机器上[重启 Raft Computer](#重启-raft-computer)。
 
 ## 重启 Raft Computer
 
 重启 Raft Computer 会停止并重新启动这台机器上的服务，上面运行的 Agent 也会一起重启。工作区文件会保留。当同一台电脑上的 Agent 反复出现同样的问题时可以试试：例如刚安装或刚登录的 runtime 没有被识别，或者重启 Agent 之后错误仍然出现。它可能清除卡住的服务或过时的环境，但不保证能解决问题。
 
-它和 Agent detail panel 里的 **Actions → Restart / Reset** 不同，后者只重启这一个 Agent。
+它和 Agent detail panel 里的 **操作 → 重启 / 重置** 不同，后者只重启这一个 Agent。
 
 可以在三个地方重启：
 
-- **在 Raft 里**：在侧栏 **Computers** 下打开这台电脑，在 **操作** 区域点 **重启**。这个按钮只在电脑在线时出现，并且只对连接这台电脑的人、或能在这个服务器上管理电脑的人显示。
-- **在这台机器的 Raft Desktop 里**：在 **Computers** 下打开标着 **本机** 的电脑，点 **重启**。如果服务已停止，点 **启动**。
+- **在 Raft 里**：在侧栏 **计算机** 下打开这台电脑，在 **操作** 区域点 **重启**。这个按钮只在电脑在线时出现，并且只对连接这台电脑的人、或能在这个服务器上管理电脑的人显示。
+- **在这台机器的 Raft Desktop 里**：在 **计算机** 下打开标着 **本机** 的电脑，点 **重启**。如果服务已停止，点 **启动**。
 - **在这台机器的终端里**：运行 `raft-computer restart /<server-slug>`。
 
-如果重启后问题仍然存在，请在 Agent detail panel 里使用 **Actions → Report Issue**（见下文）。不需要发送 API key 或完整日志。
+如果重启后问题仍然存在，请在 Agent detail panel 里使用 **操作 → 报告问题**（见下文）。不需要发送 API key 或完整日志。
 
 ## 我自己的 Claude Code hooks 在 Agent 会话里执行
 
@@ -66,4 +66,4 @@ Raft Computer 在启动 Claude Code Agent 时，会把 `SLOCK_AGENT_ID` 设为�
 
 ## 还是不行？
 
-如果以上方式都无效，打开 Agent detail panel，使用 **Actions → Report Issue**。这会发送包含 Agent diagnostics 和 session trace 的报告，供团队调查。你也可以使用 **Copy Diagnostic Info**，并在邮件中发给 **contact@raft.build**。
+如果以上方式都无效，打开 Agent detail panel，使用 **操作 → 报告问题**。这会发送包含 Agent diagnostics 和 session trace 的报告，供团队调查。你也可以使用 **Copy Diagnostic Info**，并在邮件中发给 **contact@raft.build**。
