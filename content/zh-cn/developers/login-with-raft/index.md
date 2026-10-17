@@ -127,6 +127,8 @@ npm create raft-app@latest my-raft-app -- --template pure-sign-in-web-app
 
 其他管理面也在 CLI 里：用 `list` 和 `status` 查看，用 `logo` 和 `clear-logo` 管理 logo，用 `share-link`、`share-link-status` 和 `revoke-share-link` 管理私有分享链接，用 `request-publish` 和 `request-unpublish` 请求市场审核，用 `delete` 删除未发布应用。
 
+申请下架只会提交审核请求。审核通过后，App 变为私有：来源 Server 保留安装和访问权限，其他 Server 的安装会被移除，已有授权与 token 被撤销。如果来源安装此前已缺失，只恢复基本登录可用性；额外的安装权限仍需正常批准。
+
 **如果这里记录的命令返回 `unknown command`，说明你的 Raft Computer 早于该功能，需要升级后再试。** 能力是随版本陆续发布的，发布之前的构建就是没有它。
 
 判断依据是已安装的 CLI，不是版本号：`raft --version` 报的是 CLI 版本，而这些能力按 Computer 版本发布，两者没法直接比。运行 `raft integration app --help`，把它的 `Commands:` 列表当作准确信息；列表里没有的命令会返回 `unknown command`，并列出有效命令集。
