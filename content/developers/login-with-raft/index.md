@@ -99,7 +99,7 @@ Keep the client secret on your server only. Never put it in browser JavaScript, 
 
 ### The scaffold path (fastest start)
 
-Instead of wiring an integration by hand, scaffold a working, contract-conformant app and fill in the auth exchange:
+Scaffold a starting point for your app, then follow the selected template’s authentication setup:
 
 ```bash
 npm create raft-app@latest my-raft-app
@@ -111,16 +111,25 @@ Pick a template when prompted, or pass one explicitly (`--list-templates` shows 
 npm create raft-app@latest my-raft-app -- --template pure-sign-in-web-app
 ```
 
-For a first app, start with **`pure-sign-in-web-app`** (human Login with Raft only) or **`hosted-http-action-service`** (manifest-declared agent actions). Each template ships its own `README.md` and `AGENTS.md` with its exact environment variables, callback URLs, and registration hints.
+For browser sign-in, start with **`pure-sign-in-web-app`**. For OAuth-backed Agent actions, use **`oauth-http-action-service`**. **`hosted-http-action-service`** demonstrates bearer-protected actions with a development token; it does not implement Login with Raft. Each template ships its own `README.md` and `AGENTS.md` with its environment variables, callback URLs, and registration hints.
 
 Then:
 
 1. `cd my-raft-app && npm install`
-2. Register the app in Raft and configure its callback to get a **client ID**, then have the app owner generate a **client secret**. Registration gives you credentials only — the generated app still needs the server-side exchange before login completes.
+2. For a Login with Raft template, register the app and its exact callback to get a **client ID**, then have the app owner generate a **client secret**. Configure the template’s server-side exchange with those credentials.
 3. Copy `.env.example` to `.env` and fill in the values. Keep `RAFT_CLIENT_SECRET` server-only.
-4. `npm run dev`
+4. Run the start command in the generated `package.json`: **`npm start`** for the `pure-sign-in-web-app` example above; **`npm run dev`** for `hono-react-cfworker`.
 
-> **The generated app fails closed until you wire the OAuth exchange.** A scaffolded app is a starting point, not a complete OAuth client. Its protected routes fail closed — the callback does not auto-complete login and `/api/auth/me` returns `501` — until you implement the real flow server-side: the authorization-code exchange plus an HttpOnly browser session (human templates), and agent-session / Bearer verification plus the declared manifest actions (action-service templates). Until then, clicking "Login with Raft" bounces back to the setup page. That is intended fail-closed behavior, not a bug. The template marks where to fill each step in.
+Authentication behavior is **template-specific**. In the published `create-raft-app@0.2.0` package:
+
+| Template | Authentication starting point |
+| --- | --- |
+| `pure-sign-in-web-app` | Includes a server-side authorization-code exchange, userinfo lookup, and an HttpOnly browser-session cookie. Supply the registered credentials and session configuration. |
+| `oauth-http-action-service` | Includes OAuth callback/exchange routes and protected action endpoints. Configure the callback and app credentials, then adapt its service authorization. |
+| `hosted-http-action-service` | Uses a fixture-local development bearer token. Replace that credential setup for deployment; this template has no Login with Raft flow. |
+| `hono-react-cfworker` | Contains unwired authentication placeholders, including a `501` response from `/api/auth/me`. Implement the callback/session resolver and protected-route authorization. |
+
+Do not expect every template to return `501`, or assume that generating a template completes your app’s authorization. Follow its emitted files and the security requirements below. Repository `main` can contain changes that are not yet in the npm release; for another package version, recheck the generated template’s `README.md` and scripts.
 
 ### The agent path (recommended)
 
@@ -147,6 +156,13 @@ Your agent registers the app and pauses once for your approval:
 Owning an app does not publish it or make it available on other servers — publication and installation are separate.
 
 The rest of the surface is on the CLI too — inspect with `list` and `status`, manage the logo with `logo` and `clear-logo`, manage private share links with `share-link`, `share-link-status` and `revoke-share-link`, request Marketplace review with `request-publish` and `request-unpublish`, and remove an unpublished app with `delete`.
+
+Requesting Marketplace removal only submits a review request. Once removal is
+approved, the App becomes private: its source Server keeps its installation and
+access, while installations on other Servers are removed and their grants and
+tokens are revoked. If the source installation was already missing, only basic
+login availability is restored; extra installation permissions still require
+normal approval.
 
 **If a command documented here returns `unknown command`, your Raft Computer is older than the feature — upgrade and try again.** Capabilities land release by release, so a build from before a feature shipped simply does not have it.
 
@@ -197,7 +213,13 @@ GET https://api.raft.build/api/oauth/authorize
 
 `state` and `nonce` are client-generated and should be verified by the client.
 PKCE with `S256` is supported; when used, send the matching `code_verifier` to
-the token endpoint. To preselect one Raft Server, add
+the token endpoint. If authorization did not include a PKCE challenge, omit
+`code_verifier` entirely: supplying it, even as an empty string, returns
+`invalid_grant`. This also applies to raw Agent handoff codes and the
+`urn:slock:grant-type:agent_request` exchange. The Agent CLI handoff does not
+create a standard OIDC client's pending state or PKCE cookies.
+
+To preselect one Raft Server, add
 `server=<server-id-or-slug>`. This only narrows the consent picker; the
 server-local OAuth client binding remains the security boundary.
 
@@ -280,7 +302,9 @@ The ticket is the only credential that ever appears in a URL, and it is worthles
 
 ### Agents arrive at the same callback
 
-Agents authenticate with their own Raft identity — not through a human browser session, and not by pasting tokens. Agent access is initiated inside Raft: when an App is available to a server (server-local or installed there), Raft grants Agent Login without a separate per-Agent approval card. A public App that is not installed returns `install_required`; the owner/admin installation card described above is the availability gate. Private or unknown Apps remain undiscoverable and fail closed.
+Agents authenticate with their own Raft identity — not through a human browser session, and not by pasting tokens. Agent access is initiated inside Raft: when an App is available to a server (server-local or installed there), Raft grants Agent Login without a separate per-Agent approval card. A public App that is not installed returns `install_required`; the owner/admin installation card described above is the availability gate. Private or unknown Apps remain undiscoverable and fail closed. An explicit human
+revocation prevents automatic regrant for that Agent/App pair; rerunning login
+does not undo it. A person must explicitly approve or grant access again.
 
 Your app sees the same registered callback shape as human login: `?code=...`, exchanged with the standard `authorization_code` grant. After exchange, userinfo says `type: "agent"`.
 
@@ -302,6 +326,12 @@ A third-party app must be implementable and testable without Raft client source,
 - exchange the code and use `userinfo.type` to prove the principal is an Agent — never infer Agent identity from missing state;
 - keep human login stateful: if the callback has no valid login-init state and userinfo says `human`, reject it;
 - mint the app's own service session on the callback response, with cookie origin/path/Secure attributes that cover the declared action endpoint.
+
+A completed CLI handoff is not an authenticated application session. Newer CLI
+builds report `grant_active`; when callback cookies are stored, their receipt is
+`session.status=stored` with `session.authentication=unverified`. An error cookie
+or redirect to a login page can still produce such a receipt. Use the service's
+documented read-only action to verify authentication.
 
 A successful code exchange, or a 200/302 from your callback, does not show that this session exists. The proof is an Agent running `raft integration login` and then one real `raft integration invoke` action that succeeds. If login reports ready but every authenticated action fails, the callback completed the exchange without minting the session.
 
@@ -453,6 +483,9 @@ async function exchangeRaftCode(code: string) {
     `${process.env.RAFT_API_ORIGIN}/api/oauth/token`,
     {
       method: "POST",
+      // Worker runtimes support manual/follow only. Reject redirects before
+      // parsing: never send the client secret to a Location target.
+      redirect: "manual",
       headers: {
         "content-type": "application/json",
         authorization:
@@ -469,6 +502,9 @@ async function exchangeRaftCode(code: string) {
     }
   );
 
+  if (response.status >= 300 && response.status < 400) {
+    throw new Error("Raft token exchange redirect rejected");
+  }
   if (!response.ok) {
     throw new Error("Raft token exchange failed");
   }
@@ -487,12 +523,17 @@ async function fetchRaftUserinfo(
   const response = await fetch(
     `${process.env.RAFT_API_ORIGIN}/api/oauth/userinfo`,
     {
+      // Do not follow a redirect carrying a bearer token across origins.
+      redirect: "manual",
       headers: {
         authorization: `Bearer ${accessToken}`,
       },
     }
   );
 
+  if (response.status >= 300 && response.status < 400) {
+    throw new Error("Raft userinfo redirect rejected");
+  }
   if (!response.ok) {
     throw new Error("Raft userinfo failed");
   }
@@ -783,6 +824,101 @@ For `local_cli` integrations that need local credential files, set `credential_b
 - Manifest `actions` for non-`http_api` execution modes
 - Callback URLs that require browser pending-login state but are documented as directly openable by agents
 
+## Reading the Agent directory as an App
+
+For an App-owned Agent picker or roster, use **App permissions → Agent →
+Read-only** in Register/Edit App. This is the existing `agent` resource group,
+separate from Login with Raft scopes and App Notifications. No human or Agent
+login, webhook endpoint, or event subscription is needed for this read.
+
+The App declares access; each target Server's installation must approve it.
+Expanding the declaration does not expand an existing installation's authority
+without approval. Published App expansions also follow App Review. Existing
+approved access remains usable while added access awaits approval.
+
+Keep the client secret on your backend. Authenticate the first two requests with
+HTTP Basic using the App's client ID and secret:
+
+1. `POST /api/oauth/installations/lookup` with
+   `{"server_id":"<target-server-uuid>"}` resolves the active installation.
+2. `POST /api/oauth/installation-token` with
+   `{"installation_id":"<installation-uuid>","groups":["agent"]}` obtains a
+   ten-minute installation token, limited to the effective approved groups.
+3. `GET /api/app-installation/agents` with that token in
+   `Authorization: Bearer <installation-token>` reads the installation's Server.
+   A request parameter cannot select another Server.
+
+The response is `{ "installation_id": "…", "agents": […] }`. Use each Agent's
+`id` as the stable key, `display_name ?? handle` for its name, and `avatar_url`
+for its image. Here `avatar_url` is already an absolute renderable URL or `null`;
+this differs from the raw avatar reference in OAuth userinfo. Deleted Agents
+are excluded and an empty list is valid. This permission does not grant message
+sending, conversation access, or unread counts.
+
+Invalid, expired, revoked or stale installation tokens return `401`; missing
+`agent` authority returns `403`. Disabled Apps and suspended or uninstalled
+installations lose access. These credentials are distinct from principal OAuth
+access tokens and the service JWTs below.
+
+Existing clients can still use the optional OAuth `agent:read` scope and
+`GET /api/oauth/agents`, advertised as `agents_endpoint` in discovery. That is a
+principal-delegated path: the scope must be declared and granted, and the current
+principal's membership and token-bound Server still apply. It is not the
+App-owned permission switch and is not automatically converted into an
+installation grant.
+
+## Short-lived Agent JWTs for an App
+
+An App can accept a five-minute Agent access JWT, for example when a service
+supports per-request JWT authentication. This is built into Agent Login: there is
+no App, installation or operator setting to turn it on. It is a separate issuer
+reached through the Raft CLI, not a new grant on `/api/oauth/token` or a general
+RFC 8693 token-exchange endpoint.
+
+An Agent can get a JWT for an App when all of these hold:
+
+- The App is enabled and allows `openid` and `profile`.
+- The App belongs to the Agent's Server, or is installed on the Agent's Server
+  (Marketplace or private share) and the installation is active.
+- The Agent is a current member of that Server.
+- The Agent's access to the App has not been revoked.
+
+The audience is always the registered client key and the lifetime is fixed at
+five minutes; the request does not accept a custom audience or expiry. Your App
+decides whether to accept these JWTs by verifying them as described below; an App
+that does not verify Raft JWTs is unaffected. To stop new issuance, disable or
+uninstall the App, or revoke the Agent's access.
+
+Server, CLI and managed-runner daemon support are all required; check
+`raft integration token --help` and upgrade an unsupported runtime.
+
+```sh
+raft integration token --service <registered-client-key> \
+  --exec /path/to/trusted-reader -- <reader-arguments>
+```
+
+On Linux/macOS, the child reads one newline-terminated JWT from file descriptor
+3 (`RAFT_INTEGRATION_TOKEN_FD`). No token is passed in argv, an ordinary token
+environment variable, or a persistent session file. `--timeout` accepts 1–300
+seconds. The child runs as the same OS user and must be trusted; only
+PATH/locale/timezone/TMPDIR are inherited. Check the receiving service's response
+before reporting access success, and never send the token in a URL or across an
+HTTP redirect to another origin.
+
+The receiver must verify the ES256 signature with Raft's JWKS, the exact
+Server-scoped issuer, `aud` equal to its registered client key, expiry,
+`type=agent`, `token_use=agent_access`, and the expected `server_id`. The JWT has
+`typ=at+jwt`, stable Agent UUID `sub`, and `login=raft-agent-<full-agent-uuid>`;
+no human email is fabricated. Apply your own resource permissions. Do not accept
+an OIDC ID token in its place or use this JWT at Raft's OAuth bearer APIs.
+
+Each issuance rechecks current Agent, membership, App, installation and grant
+authority.
+Revocation or disabling stops new issuance; an already issued JWT can remain
+valid for five minutes plus the receiver's clock tolerance. No refresh token
+is issued. The application must separately enforce the lifetime of long-lived
+connections.
+
 ## Sending events to an agent (Experimental)
 
 An installed app can send a structured event or notification to one selected agent. This is an inbound information channel — not chat impersonation, not remote command execution.
@@ -824,7 +960,16 @@ Content-Type: application/json
 }
 ```
 
-The app must be available to that server, the named agent must belong to it, and every requested scope must be declared. A successful response carries the one-time request ID and the selected identity:
+The app must be available to that Server, the selected Agent must belong to it,
+and every requested scope must be declared. You may send stable `agentId`
+instead of `agentName`; when both are supplied, `agentId` takes precedence.
+
+An App-initiated request is not always automatically approved. A Server-local
+App can auto-grant when its creator is a current Server owner/admin or that
+Agent's human creator; installed third-party Apps follow installation authority.
+A human revocation prevents automatic regrant. Otherwise the request waits for
+approval: do not exchange it until `status` is `approved`. An approved response
+carries the one-time request ID and selected identity:
 
 ```json
 {
