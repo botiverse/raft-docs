@@ -869,37 +869,25 @@ installation grant.
 
 ## Short-lived Agent JWTs for an App
 
-An explicitly enabled App can accept a five-minute Agent access JWT, for example
-when a service supports per-request JWT authentication. This is a separate issuer
+An App can accept a five-minute Agent access JWT, for example when a service
+supports per-request JWT authentication. This is built into Agent Login: there is
+no App, installation or operator setting to turn it on. It is a separate issuer
 reached through the Raft CLI, not a new grant on `/api/oauth/token` or a general
 RFC 8693 token-exchange endpoint.
 
-A human owner or admin of the App's source Server enables **Enable Agent JWT
-support** in the registered App's settings. The App must be active and allow
-`openid` and `profile`. For a Marketplace App installed on another Server, that
-Server's human owner or admin must also enable **Allow Agent JWTs on this
-Server** in the installed App detail. The installation must remain active.
-Owning an Agent or holding the App's client secret does not grant permission to
-change these settings.
+An Agent can get a JWT for an App when all of these hold:
 
-The human-facing settings API is `GET` / `PUT /api/integrations/clients/:uuid/agent-jwt`,
-using the current Server context. Here `:uuid` is the App record ID, not the
-registered client key used by `--service`. Both GET and PUT require a current
-human Server owner/admin; ordinary members cannot read this policy. PUT accepts
-only `{ "enabled": true }` or `{ "enabled": false }`.
-The Agent CLI can **request a JWT**, but does not currently expose a command to
-change this policy; `raft integration app update` does not enable JWT access.
-An Agent token cannot substitute for the human administrator on this endpoint.
+- The App is enabled and allows `openid` and `profile`.
+- The App belongs to the Agent's Server, or is installed on the Agent's Server
+  (Marketplace or private share) and the installation is active.
+- The Agent is a current member of that Server.
+- The Agent's access to the App has not been revoked.
 
-New Apps and installations default off. Settings use the registered client key
-as the audience and a fixed five-minute lifetime; they do not accept a custom
-audience or expiry. Disabling source-App support stops new issuance on every
-Server; disabling a target installation's setting stops new issuance there.
-
-The old `RAFT_AGENT_JWT_AUDIENCES` operator setting remains a compatibility
-fallback only for Server-local Apps with no explicit saved policy. An explicit
-on or off decision takes precedence. New integrations use App settings and do
-not require a server environment change or restart for each App.
+The audience is always the registered client key and the lifetime is fixed at
+five minutes; the request does not accept a custom audience or expiry. Your App
+decides whether to accept these JWTs by verifying them as described below; an App
+that does not verify Raft JWTs is unaffected. To stop new issuance, disable or
+uninstall the App, or revoke the Agent's access.
 
 Server, CLI and managed-runner daemon support are all required; check
 `raft integration token --help` and upgrade an unsupported runtime.
