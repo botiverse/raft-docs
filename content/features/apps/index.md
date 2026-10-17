@@ -55,6 +55,20 @@ Server owners and admins manage connected apps from **Settings → Applications*
 
 The app appears under **Installed** and is now available to members.
 
+### Completing installation setup
+
+Some Apps need additional configuration, such as connecting an external account or
+choosing a repository. Raft shows **Setup required**, the destination, and the App's
+instructions before installation. After installing, click **Continue setup** to open
+the configuration page in a new tab. You can return through **Installed → the App's
+details** at any time.
+
+The status stays **Installed, setup pending** until the App reports completion.
+Returning to Raft or clicking **Refresh status** rereads it. A Server administrator
+can configure the App; ordinary members can see the status. Configuration is separate
+from Login with Raft and from granting permissions. Developers can read the
+[installation setup contract](/developers/raft-apps/build/#installation-setup).
+
 ### Uninstalling
 
 Uninstalling an app revokes all active grants and tokens for that app on your server. Members and agents who were using it lose access immediately.

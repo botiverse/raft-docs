@@ -95,6 +95,98 @@ Store the secret only on your server. Do not place it in browser JavaScript, scr
 
 An agent can prepare this registration: `raft integration app prepare register` posts a commit card that a server owner or admin approves once. Details in [Login with Raft → Registering your app](/developers/login-with-raft/#registering-your-app). If that command returns `unknown command`, the Raft Computer running the agent predates the feature — upgrade it.
 
+## Installation setup
+
+An App that needs a repository selection, an external account connection, or another
+configuration step can declare a **Setup page URL** separately from its login callback.
+In **My apps**, open the App editor's **Installation setup** section, enable
+**Requires configuration after installation**, and enter the URL and optional short
+instructions. The same fields are available during registration.
+
+Agents can include `--setup-url https://example.com/setup` and
+`--setup-description "Choose a repository"` in `raft integration app prepare register`,
+or use them with `raft integration app update --client <client-key>`. An empty
+`--setup-url ''` disables the requirement. Older Computers that do not recognize these
+flags need an upgrade.
+
+The URL must use HTTPS; loopback HTTP is allowed for local development (Agent registration/update also requires
+`--unsafe-demo-url-override` for local or private hosts). URLs with
+embedded credentials or fragments are rejected. Use at most 2,000 characters for the
+URL and 500 for the single-line instructions. Do not put secrets in either field.
+
+### What installers see
+
+Before installation, Raft shows that configuration is required, the destination
+hostname, and the App's instructions. After installation, **Continue setup** opens
+the App's configuration page in a new tab. Closing that page does not lose the entry:
+open the installed App's details to continue or manage configuration. A Server member
+without permission to manage integrations sees the status and can ask an admin to
+configure the App. Agent installation cards and `raft integration list` also surface
+the setup requirement or link.
+
+This is an explicit link, not an automatic navigation away from Raft. When installation
+is part of Login with Raft, Raft keeps the OAuth callback flow intact; the App can
+continue its onboarding after login. Installation setup is distinct from granting
+permissions, enabling a Bot, and an individual human or Agent logging in. A pending
+status neither grants access nor blocks existing login/API behavior. Apps without a
+setup page URL keep their existing behavior.
+
+### Bind configuration to the installation
+
+Raft appends these query parameters to the setup page URL, replacing any supplied values:
+
+| Parameter | Meaning |
+| --- | --- |
+| `installation_id` | This App's installation in the selected Server |
+| `server_id` | The selected Server |
+| `setup_revision` | The current setup declaration version |
+
+These identifiers are **not proof of permission**. Authenticate the visitor in your
+App, verify their Server and configuration authority, and validate the installation
+from your backend. Do not configure an installation just because its ID appeared in
+a link. Keep client credentials on your backend; Raft never adds tokens to this URL.
+
+Using your App's client credentials, call `POST /api/oauth/installations/lookup` with
+`server_id` (and `client_id`, `client_secret`). Its response contains
+`installation_id`, `server_id`, and `setup`:
+
+```json
+{
+  "status": "pending",
+  "url": "https://example.com/setup?installation_id=...&server_id=...&setup_revision=1",
+  "description": "Choose a repository",
+  "revision": 1,
+  "completedAt": null
+}
+```
+
+`setup.status` is `not_required`, `pending`, or `complete`. Once configuration is
+actually saved, the authenticated App backend reports completion:
+
+```http
+PUT /api/oauth/installations/{installation_id}/setup
+Content-Type: application/json
+
+{
+  "client_id": "your-app-key",
+  "client_secret": "<server-side client secret>",
+  "revision": 1,
+  "status": "complete"
+}
+```
+
+The response is the current `setup` object, with `completedAt` for completed setup.
+Send `status: "pending"` to reopen configuration. The same state report is idempotent,
+including its audit record and completion time. Reading or opening the setup page
+never marks it complete. Returning to Raft refreshes the App-reported state; the
+**Refresh status** button also rereads it.
+
+Invalid client credentials return 401. Another App's, missing, suspended, or removed
+installation returns 404. Invalid fields return 400. An old revision returns 409, and so does any report after setup is disabled.
+Look up the current installation and configuration again before reporting completion. Changing the URL resets the derived status to
+pending; editing only the instructions preserves completion. Uninstalling and
+reinstalling creates a new installation and does not inherit the old completion.
+
 ## Wire the auth exchange
 
 The generated app fails closed until you implement the real server-side exchange.
