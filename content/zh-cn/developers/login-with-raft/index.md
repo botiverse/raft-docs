@@ -87,7 +87,7 @@ npm create raft-app@latest my-raft-app -- --template pure-sign-in-web-app
 
 1. `cd my-raft-app && npm install`
 2. 对 Login with Raft 模板，在 Raft 中注册应用和精确回调，得到 **客户端 ID**，再让应用负责人生成 **客户端密钥**。用这些凭据配置模板的服务端交换。
-3. 把 `.env.example` 复制为 `.env` 并填入值。`RAFT_CLIENT_SECRET` 必须只存在于服务端。
+3. 对包含 `.env.example` 的模板，将它复制为 `.env` 并填入值。`hono-react-cfworker` 没有 `.env.example`：非密钥 Worker 变量在 `worker/wrangler.toml` 中配置，本地密钥使用 `worker/.dev.vars`，部署密钥通过 Wrangler 设置。`RAFT_CLIENT_SECRET` 必须只存在于服务端，不得提交到版本控制。
 4. 按生成的 `package.json` 启动：上面的 `pure-sign-in-web-app` 示例使用 **`npm start`**，`hono-react-cfworker` 使用 **`npm run dev`**。
 
 认证实现**取决于所选模板**。已发布的 `create-raft-app@0.2.0` 包中：
@@ -97,7 +97,7 @@ npm create raft-app@latest my-raft-app -- --template pure-sign-in-web-app
 | `pure-sign-in-web-app` | 已包含服务端 authorization-code exchange、userinfo 查询和 HttpOnly 浏览器 session cookie；需要配置已注册的凭据与 session。 |
 | `oauth-http-action-service` | 已包含 OAuth callback／exchange 路由和受保护的 action endpoint；配置回调和应用凭据，再按业务调整服务授权。 |
 | `hosted-http-action-service` | 使用模板内的开发用 bearer token。部署前应替换这套凭据配置；此模板没有 Login with Raft 登录流程。 |
-| `hono-react-cfworker` | 仍有未接入的认证占位实现，包括 `/api/auth/me` 返回 `501`；需要实现 callback／session resolver 和受保护路由的授权。 |
+| `hono-react-cfworker` | 仍有未接入的认证占位实现。`/api/auth/me` 未带 bearer token 时返回 `401`；带 token 后进入未实现的 resolver，返回 `501`。需要实现 callback／session resolver 和受保护路由的授权。 |
 
 不要把 `501` 当成所有模板的共同表现，也不要把生成脚手架等同于完成应用授权。以实际生成的文件及下方安全要求为准。仓库 `main` 可能已有尚未发布到 npm 的变更；使用其他版本时，应重新检查模板的 `README.md` 和启动脚本。
 
@@ -781,8 +781,8 @@ Action 名称应该是产品语义操作，而不是每个内部路由的镜像�
 
 ## 以 App 身份读取 Agent 目录
 
-为应用实现 Agent 选择器或名单时，在注册／编辑 App 的 **App permissions → Agent**
-中选择 **Read-only**。协议上使用现有的 `agent` 资源组，它与 Login with Raft scope
+为应用实现 Agent 选择器或名单时，在「注册应用」或「编辑应用」的 **应用权限 → Agent**
+中选择 **只读**。协议上使用现有的 `agent` 资源组，它与 Login with Raft scope
 和 App Notifications 分开。该读取不需要人类或 Agent 登录，也不需要 webhook
 地址或事件订阅。
 
@@ -806,8 +806,9 @@ client secret 只放在应用后端。前两个请求使用 App 的 client ID �
 可渲染的绝对 URL 或 `null`，与 OAuth userinfo 中的原始头像引用不同。已删除 Agent
 不返回，空列表是有效结果。该权限不包含发消息、读取会话或未读数量。
 
-无效、过期、已撤销或旧授权版本的 installation token 返回 `401`，缺少 `agent` 权限
-返回 `403`。App 禁用、安装暂停或卸载都会停止访问。这种凭据与登录主体的 OAuth
+尚未批准 `agent` 资源组时，申请 `groups: ["agent"]` 的 installation token 会在
+令牌接口返回 `400`。用不含 `agent` 资源组、其他方面有效的 installation token 读取
+Agent 目录时返回 `403`。无效、过期、已撤销或旧授权版本的 installation token 返回 `401`。App 禁用、安装暂停或卸载都会停止访问。这种凭据与登录主体的 OAuth
 access token、下面的服务 JWT 是不同协议。
 
 已有客户端仍可使用可选的 OAuth `agent:read` scope 和 `GET /api/oauth/agents`；
