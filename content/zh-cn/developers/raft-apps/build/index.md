@@ -95,6 +95,62 @@ npm run dev
 
 Agent 可以准备这次注册：`raft integration app prepare register` 会发布一张提交卡，由服务器负责人或管理员批准一次。细节见 [Login with Raft → 注册你的应用](/zh-cn/developers/login-with-raft/#注册你的应用)。如果该命令返回 `unknown command`，说明运行这个 Agent 的 Raft Computer 早于该功能，需要升级。
 
+## 安装后配置
+
+如果 App 安装后还需要选择仓库、连接外部账号或完成其他配置，可以声明独立于登录回调的 **配置页面地址**。在 **我的应用** 中打开 App 编辑器的 **安装后配置**，开启 **安装后需要配置**，填写 URL 和可选的简短说明；注册时也可以填写。
+
+Agent 可在 `raft integration app prepare register` 中添加 `--setup-url https://example.com/setup` 和 `--setup-description "选择仓库"`；已有 App 使用 `raft integration app update --client <client-key>` 的同名参数。传入 `--setup-url ''` 可关闭配置要求。旧版 Computer 如果不识别这些参数，需要先升级。
+
+URL 必须使用 HTTPS；本地开发允许回环地址的 HTTP；Agent 注册或修改本地、私有地址时还需 `--unsafe-demo-url-override`。拒绝含用户名密码或片段的 URL。URL 最多 2,000 个字符，单行说明最多 500 个字符。两者都不要包含密钥。
+
+### 安装者看到什么
+
+安装前，Raft 显示配置要求、目标域名和 App 提供的说明。安装成功后，点击 **前往配置** 在新标签页打开 App 的配置页面。关闭页面后仍可从已安装 App 的详情继续配置或管理配置。没有应用管理权限的 Server 成员只能查看状态，由管理员完成配置。Agent 的安装卡片和 `raft integration list` 也会显示配置要求或入口。
+
+这是需要点击的入口，不会自动把用户带离 Raft。如果安装发生在 Login with Raft 流程中，原有 OAuth 回调保持不变，App 可在登录后继续引导配置。配置状态与权限授权、Bot 启用和个人登录状态分别记录。“待配置”不会授予权限，也不会阻止既有登录或 API 行为。没有配置页 URL 的 App 保持原有行为。
+
+### 把配置绑定到具体安装
+
+Raft 会在配置 URL 中添加以下参数，并覆盖 URL 中已有的同名参数：
+
+| 参数 | 含义 |
+| --- | --- |
+| `installation_id` | 当前 App 在所选 Server 中的安装 ID |
+| `server_id` | 所选 Server |
+| `setup_revision` | 当前配置声明的版本 |
+
+这些 ID **不是权限证明**。App 必须验证访问者身份、所属 Server 和配置权限，并在后端核对安装记录。不能只凭链接中的安装 ID 就允许修改配置。客户端凭据只保留在 App 后端，Raft 不会在配置链接里附加 token。
+
+App 后端用客户端凭据调用 `POST /api/oauth/installations/lookup`，提交 `server_id`、`client_id` 和 `client_secret`。响应包含 `installation_id`、`server_id` 和 `setup`：
+
+```json
+{
+  "status": "pending",
+  "url": "https://example.com/setup?installation_id=...&server_id=...&setup_revision=1",
+  "description": "选择仓库",
+  "revision": 1,
+  "completedAt": null
+}
+```
+
+`setup.status` 可以是 `not_required`（无需配置）、`pending`（待配置）或 `complete`（已配置）。实际保存配置后，由 App 后端认证并回报完成：
+
+```http
+PUT /api/oauth/installations/{installation_id}/setup
+Content-Type: application/json
+
+{
+  "client_id": "your-app-key",
+  "client_secret": "<仅保存在后端的客户端密钥>",
+  "revision": 1,
+  "status": "complete"
+}
+```
+
+响应是当前 `setup` 对象，完成后包含 `completedAt`。提交 `status: "pending"` 可重新打开配置。同一状态重复提交是幂等的，不重复写审计或改变完成时间。读取或打开页面不会自动标记完成；回到 Raft 或点击 **刷新状态** 会重新读取 App 回报的状态。
+
+无效凭据返回 401。其他 App 的安装、不存在、已暂停或已卸载的安装返回 404。字段无效返回 400。旧版本回报返回 409；关闭配置后，任何回报也都会返回 409。需要重新查询安装和当前配置后再回报。修改 URL 会使配置重新变为待完成；只改说明不影响已完成状态。卸载后重装使用新的安装 ID，不继承旧完成状态。
+
 ## 接入认证交换
 
 生成的应用会 fail closed，直到你实现真正的服务端交换。
