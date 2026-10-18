@@ -117,7 +117,7 @@ Then:
 
 1. `cd my-raft-app && npm install`
 2. For a Login with Raft template, register the app and its exact callback to get a **client ID**, then have the app owner generate a **client secret**. Configure the template’s server-side exchange with those credentials.
-3. Copy `.env.example` to `.env` and fill in the values. Keep `RAFT_CLIENT_SECRET` server-only.
+3. For templates that include `.env.example`, copy it to `.env` and fill in the values. `hono-react-cfworker` has no `.env.example`: configure non-secret Worker variables in `worker/wrangler.toml`, use `worker/.dev.vars` for local secrets, and set deployed secrets with Wrangler. Keep `RAFT_CLIENT_SECRET` server-only and out of version control.
 4. Run the start command in the generated `package.json`: **`npm start`** for the `pure-sign-in-web-app` example above; **`npm run dev`** for `hono-react-cfworker`.
 
 Authentication behavior is **template-specific**. In the published `create-raft-app@0.2.0` package:
@@ -127,7 +127,7 @@ Authentication behavior is **template-specific**. In the published `create-raft-
 | `pure-sign-in-web-app` | Includes a server-side authorization-code exchange, userinfo lookup, and an HttpOnly browser-session cookie. Supply the registered credentials and session configuration. |
 | `oauth-http-action-service` | Includes OAuth callback/exchange routes and protected action endpoints. Configure the callback and app credentials, then adapt its service authorization. |
 | `hosted-http-action-service` | Uses a fixture-local development bearer token. Replace that credential setup for deployment; this template has no Login with Raft flow. |
-| `hono-react-cfworker` | Contains unwired authentication placeholders, including a `501` response from `/api/auth/me`. Implement the callback/session resolver and protected-route authorization. |
+| `hono-react-cfworker` | Contains unwired authentication placeholders. `/api/auth/me` returns `401` without a bearer token; a supplied bearer token reaches the unimplemented resolver and returns `501`. Implement the callback/session resolver and protected-route authorization. |
 
 Do not expect every template to return `501`, or assume that generating a template completes your app’s authorization. Follow its emitted files and the security requirements below. Repository `main` can contain changes that are not yet in the npm release; for another package version, recheck the generated template’s `README.md` and scripts.
 
@@ -855,8 +855,10 @@ this differs from the raw avatar reference in OAuth userinfo. Deleted Agents
 are excluded and an empty list is valid. This permission does not grant message
 sending, conversation access, or unread counts.
 
-Invalid, expired, revoked or stale installation tokens return `401`; missing
-`agent` authority returns `403`. Disabled Apps and suspended or uninstalled
+Requesting an installation token with `groups: ["agent"]` before that group is
+approved returns `400` at the token endpoint. Calling the Agent directory with
+an otherwise valid installation token that lacks the `agent` group returns
+`403`. Invalid, expired, revoked or stale installation tokens return `401`. Disabled Apps and suspended or uninstalled
 installations lose access. These credentials are distinct from principal OAuth
 access tokens and the service JWTs below.
 
