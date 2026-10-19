@@ -8,9 +8,7 @@ llms_summary: "Register an App-owned link preview, verify the viewer callback, a
 
 An App can turn links on its own domain into a title and a small, read-only card in Raft chat. For example, a PR link can show its title, review status and a short description. The App returns JSON; Raft renders it with [json-render](https://json-render.dev/docs) and Raft components. Your App does not upload JavaScript or HTML into the chat client. Your backend can construct this JSON directly from business data; it does not need to install json-render or call a language model.
 
-::: warning Availability
-This is a preview capability merged into the Raft `staging` branch in [PR #10243](https://stamp.build/github/botiverse/slock/pull/10243). Production availability has not yet been verified. Use a deployment containing that change to test; a registered App alone does not make this API available on older deployments.
-:::
+Link previews are currently available only in test environments. They are not yet available in the production service.
 
 ## Before you start
 
@@ -180,7 +178,7 @@ Run `node --test server.test.mjs` for the standalone signature and access-check 
 
 | Symptom | Check |
 | --- | --- |
-| Registration returns `404` | Confirm the deployment contains this preview capability and the request uses its API origin. |
+| Registration returns `404` | Confirm that link previews are available in your target environment and that the request uses its API origin. |
 | Registration returns `400` | Check canonical origin/path syntax, callback origin, and that the proof contains this App's exact client key. |
 | Registration returns `409` | Another App owns the origin. Do not work around it with another domain spelling; coordinate removal of the old registration. |
 | Registration returns `502` | Check public DNS, TLS, JSON content type and reachability of the proof endpoint. Redirects and private network destinations are rejected. |

@@ -8,9 +8,7 @@ llms_summary: "注册 App 链接预览，验证查看者回调，并返回只读
 
 App 可以将自己域名下的链接显示为 Raft 聊天中的标题和只读小卡片。例如，PR 链接可以展示标题、审查状态和简短描述。App 返回 JSON，Raft 使用 [json-render](https://json-render.dev/docs) 和自身组件绘制；App 不需要向聊天客户端上传 JavaScript 或 HTML。后端可以直接根据业务数据构造 JSON，不必安装 json-render，也不必调用语言模型。
 
-::: warning 可用状态
-这是预览能力，已通过 [PR #10243](https://stamp.build/github/botiverse/slock/pull/10243) 合入 Raft 的 `staging` 分支，尚未核验生产可用性。请在包含该变更的部署上测试；仅注册 App 不会让旧版部署自动支持这个接口。
-:::
+链接预览目前仅在测试环境开放，正式环境暂不可用。
 
 ## 开始之前
 
@@ -179,7 +177,7 @@ node server.mjs
 
 | 现象 | 检查内容 |
 | --- | --- |
-| 注册返回 `404` | 确认目标部署已经包含预览能力，请求使用的是该部署的 API 域名。 |
+| 注册返回 `404` | 确认目标环境已开放链接预览，请求使用的是该环境的 API 地址。 |
 | 注册返回 `400` | 检查 origin／路径格式、回调 origin，以及证明文件是否包含此 App 的精确 client key。 |
 | 注册返回 `409` | origin 已归另一 App 使用，应协调删除旧注册，不要通过变换域名拼写绕过。 |
 | 注册返回 `502` | 检查证明地址的公开 DNS、TLS、JSON Content-Type 和可达性。重定向或私网目标会被拒绝。 |
