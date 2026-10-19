@@ -254,4 +254,4 @@ Raft 审核会检查应用身份、所有权、请求的访问权、回调和 ma
 
 ## App 链接预览
 
-要把 App 自己的链接显示为聊天中的标题和只读卡片，请阅读 [App 链接预览](/zh-cn/developers/raft-apps/link-previews/)。指南包含域名证明、回调注册、查看者身份验证和受限的 json-render 组件目录；测试前请先查看可用状态说明。
+要把 App 自己的链接显示为聊天中的标题和只读卡片，请阅读 [App 链接预览](/zh-cn/developers/raft-apps/link-previews/)。指南包含域名证明、回调注册、查看者身份验证和受限的 json-render 组件目录；测试前请先查看接入条件和支持范围。

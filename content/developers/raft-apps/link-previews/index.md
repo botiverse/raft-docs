@@ -1,14 +1,12 @@
 ---
 llms_section: "Developers"
 llms_order: 892
-llms_summary: "Register an App-owned link preview, verify the viewer callback, and return a read-only json-render card. Includes current availability and v1 limits."
+llms_summary: "Register an App-owned link preview, verify the viewer callback, and return a read-only json-render card. Includes access requirements and v1 limits."
 ---
 
 # App link previews
 
 An App can turn links on its own domain into a title and a small, read-only card in Raft chat. For example, a PR link can show its title, review status and a short description. The App returns JSON; Raft renders it with [json-render](https://json-render.dev/docs) and Raft components. Your App does not upload JavaScript or HTML into the chat client. Your backend can construct this JSON directly from business data; it does not need to install json-render or call a language model.
-
-Link previews are currently available only in test environments. They are not yet available in the production service.
 
 ## Before you start
 

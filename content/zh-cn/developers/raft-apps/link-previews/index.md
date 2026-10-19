@@ -1,14 +1,12 @@
 ---
 llms_section: "Developers zh-CN"
 llms_order: 1892
-llms_summary: "注册 App 链接预览，验证查看者回调，并返回只读 json-render 卡片。包含当前可用状态与 v1 限制。"
+llms_summary: "注册 App 链接预览，验证查看者回调，并返回只读 json-render 卡片。包含接入条件与 v1 限制。"
 ---
 
 # App 链接预览
 
 App 可以将自己域名下的链接显示为 Raft 聊天中的标题和只读小卡片。例如，PR 链接可以展示标题、审查状态和简短描述。App 返回 JSON，Raft 使用 [json-render](https://json-render.dev/docs) 和自身组件绘制；App 不需要向聊天客户端上传 JavaScript 或 HTML。后端可以直接根据业务数据构造 JSON，不必安装 json-render，也不必调用语言模型。
-
-链接预览目前仅在测试环境开放，正式环境暂不可用。
 
 ## 开始之前
 

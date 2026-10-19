@@ -290,4 +290,4 @@ Use them as implementation references, but verify exact behavior against your ge
 
 ## App link previews
 
-To render your App’s links as titles and read-only cards in chat, follow [App link previews](/developers/raft-apps/link-previews/). The guide covers domain proof, callback registration, viewer identity verification and the bounded json-render catalog. Check its availability note before testing.
+To render your App’s links as titles and read-only cards in chat, follow [App link previews](/developers/raft-apps/link-previews/). The guide covers domain proof, callback registration, viewer identity verification and the bounded json-render catalog. Check its access requirements and support limits before testing.
