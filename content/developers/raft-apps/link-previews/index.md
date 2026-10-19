@@ -10,7 +10,7 @@ An App can turn links on its own domain into a title and a small, read-only card
 
 ## Before you start
 
-You need a [registered Raft App](/developers/raft-apps/build/), a public HTTPS domain you control, and a backend callback on that domain. The App must have an active installation on the viewer's Server.
+You need a [registered Raft App](/developers/raft-apps/build/), a public HTTPS domain you control, and a backend callback on that domain. The App must be enabled and have an active installation on the viewer's Server.
 
 A viewer must already have signed in to this App through [Login with Raft](/developers/login-with-raft/). Raft requires an unexpired, unrevoked human access token for the same App and Server with `openid profile`, still permitted by the App's current scope declaration. Raft does not forward that token to your callback or automatically sign anyone in. When these conditions are absent, the original link stays visible.
 
@@ -85,7 +85,7 @@ if (!response.ok) throw new Error(`Registration failed: HTTP ${response.status}`
 
 ## 3. Verify the preview request
 
-When an eligible viewer reads a message with a matching URL, Raft sends your callback:
+When an eligible viewer reads a message with a matching URL, Raft sends an HTTP **POST** to your callback with `Content-Type: application/json`:
 
 ```json
 {
@@ -103,7 +103,7 @@ Require these values before reading private App data:
 | --- | --- |
 | `alg`, `kid` | `ES256`; verify the signature against the matching published Raft key. |
 | `typ` | `raft-link-preview+jwt` |
-| `iss` | Your configured issuer; for a Server-scoped integration, the issuer includes `/oidc/<server-slug>`. |
+| `iss` | Exactly your configured issuer: `<Raft API origin>/oidc/<server-slug>`. Link-preview assertions always use this Server-scoped form. |
 | `aud` | `urn:raft:link-preview:<your-client-key>` |
 | `token_use`, `type` | `link_preview`, `human` |
 | `iat`, `nbf`, `exp` | Valid time window; assertions live for 30 seconds. |
@@ -147,7 +147,9 @@ This is a restricted json-render catalog. Expressions, state, watchers, visibili
 
 ## Fallback and privacy
 
-Raft considers at most three eligible visible HTTPS links per message. Links containing credentials, fragments or non-default ports are not eligible. Code, image destinations and unused Markdown link definitions do not trigger callbacks. Requests have a three-second deadline including DNS, and responses must be at most 32 KiB of JSON. Slow, malformed, unauthorized or failed responses leave the ordinary link intact.
+Raft takes the **first three distinct visible HTTPS URLs that meet its URL rules**, in message order, **before matching App registrations**. Links to sites without a registered renderer still count toward this limit; a fourth distinct URL is not considered. URLs containing credentials, fragments, non-default ports, IP-literal hosts or dotless hosts are not eligible. Code, image destinations and unused Markdown link definitions do not trigger callbacks. Requests have a three-second deadline including DNS, and responses must be at most 32 KiB of JSON. Slow, malformed, unauthorized or failed responses leave the ordinary link intact.
+
+Preview fetch requests are limited to 60 per minute for each viewer and Server. Above that limit, the original link remains visible.
 
 Previews are personal views: they are not saved in message bodies or shared in a cross-viewer cache. Raft rechecks the App, installation, viewer authorization, registration revision and message visibility/content before returning a callback result. Switching viewer or Server discards an older browser request.
 

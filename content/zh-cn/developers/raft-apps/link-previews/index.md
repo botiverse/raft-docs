@@ -10,7 +10,7 @@ App 可以将自己域名下的链接显示为 Raft 聊天中的标题和只读�
 
 ## 开始之前
 
-你需要一个[已注册的 Raft App](/zh-cn/developers/raft-apps/build/)、自己控制的公开 HTTPS 域名，以及该域名下的服务端回调。查看者所在的 Server 必须有这个 App 的有效安装。
+你需要一个[已注册的 Raft App](/zh-cn/developers/raft-apps/build/)、自己控制的公开 HTTPS 域名，以及该域名下的服务端回调。App 必须处于启用状态，且查看者所在的 Server 必须有这个 App 的有效安装。
 
 查看者需要已经通过 [Login with Raft](/zh-cn/developers/login-with-raft/) 登录此 App。Raft 要求同一个 App、同一个 Server 下存在未过期、未撤销的人类 access token，包含 `openid profile`，且仍符合 App 当前声明的 scope。Raft 不会把这个 token 转发给回调，也不会因为查看链接就自动登录。条件不满足时，原始链接仍然可见。
 
@@ -84,7 +84,7 @@ if (!response.ok) throw new Error(`Registration failed: HTTP ${response.status}`
 
 ## 3. 验证预览请求
 
-符合条件的查看者阅读包含匹配 URL 的消息时，Raft 向回调发送：
+符合条件的查看者阅读包含匹配 URL 的消息时，Raft 使用 HTTP **POST** 向回调发送以下 JSON，并设置 `Content-Type: application/json`：
 
 ```json
 {
@@ -102,7 +102,7 @@ Raft 只发送匹配的 URL，不发送消息正文或频道历史。`Authorizat
 | --- | --- |
 | `alg`、`kid` | `ES256`，使用匹配的 Raft 公钥验证签名。 |
 | `typ` | `raft-link-preview+jwt` |
-| `iss` | 与已配置的 issuer 完全一致；Server-scoped 接入的 issuer 包含 `/oidc/<server-slug>`。 |
+| `iss` | 与已配置的 issuer 完全一致，格式为 `<Raft API origin>/oidc/<server-slug>`；链接预览断言始终使用这个 Server-scoped 格式。 |
 | `aud` | `urn:raft:link-preview:<your-client-key>` |
 | `token_use`、`type` | 分别为 `link_preview`、`human`。 |
 | `iat`、`nbf`、`exp` | 在有效时间窗内；断言有效期为 30 秒。 |
@@ -125,7 +125,7 @@ Raft 只发送匹配的 URL，不发送消息正文或频道历史。`Authorizat
     "root":"summary",
     "elements":{
       "summary":{"type":"Stack","props":{},"children":["status","detail"]},
-      "status":{"type":"Badge","props":{"text":"待处理"}},
+      "status":{"type":"Badge","props":{"text":"Open"}},
       "detail":{"type":"Text","props":{"text":"可以开始审查","tone":"muted"}}
     }
   }
@@ -146,7 +146,9 @@ Raft 只发送匹配的 URL，不发送消息正文或频道历史。`Authorizat
 
 ## 回退与隐私
 
-Raft 每条消息最多考虑 3 个符合条件的可见 HTTPS 链接；含凭据、fragment 或非默认端口的链接不符合条件。代码、图片地址和未使用的 Markdown 链接定义不会触发回调。请求总时限为 3 秒（包含 DNS），响应最多为 32 KiB JSON。超时、格式错误、无权限或失败时，普通链接保持可用。
+Raft 按消息顺序先取**前三个符合 URL 规则、去重后的可见 HTTPS 链接，再匹配 App 注册**。没有注册渲染器的网站链接也占用这个上限，第四个不同的 URL 不会被考虑。含凭据、fragment、非默认端口、IP 地址主机名或不含点的主机名的链接不符合条件。代码、图片地址和未使用的 Markdown 链接定义不会触发回调。请求总时限为 3 秒（包含 DNS），响应最多为 32 KiB JSON。超时、格式错误、无权限或失败时，普通链接保持可用。
+
+每位查看者在每个 Server 每分钟最多发起 60 次预览获取请求，超限时仍显示原始链接。
 
 预览是查看者个人的视图，不会保存到消息正文，也不会在不同查看者之间共用缓存。Raft 返回回调结果前，会重新检查 App、安装、查看者授权、注册版本，以及原消息的可见性和内容。切换查看者或 Server 后，浏览器会丢弃旧请求的结果。
 
