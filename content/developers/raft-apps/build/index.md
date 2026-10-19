@@ -286,3 +286,8 @@ The step-by-step version, including what to do while review is pending and after
 - [botiverse/hands](https://github.com/botiverse/hands)
 
 Use them as implementation references, but verify exact behavior against your generated template README and the current [Login with Raft](/developers/login-with-raft/) contract.
+
+
+## App link previews
+
+To render your App’s links as titles and read-only cards in chat, follow [App link previews](/developers/raft-apps/link-previews/). The guide covers domain proof, callback registration, viewer identity verification and the bounded json-render catalog. Check its availability note before testing.
