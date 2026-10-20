@@ -1,0 +1,691 @@
+/* ──────────────────────────────────────────────────────────────
+   Raft Design System skin for docs.raft.build.
+
+   docs.raft.build looks like the design system's own site
+   (https://raft-design.botiverse.build): the same frame, sidebar, paper and
+   type. Every colour and font here is a raft-ui token, read from
+   ./raft-ui/foundation.css and ./raft-ui/fonts.css, which
+   scripts/sync-raft-ui.mjs copies from a published @botiverse/raft-ui. When the
+   design system changes a value, sync and rebuild; do not copy values in here.
+
+   Sizes come from the design system's docs site, measured at 1440 wide:
+   56px yellow frame, 240px cream sidebar with 36px rows and the yellow
+   sticker for the current page, a 760px content column, "On this page" from
+   1280px, 10px radius on every container, hairlines inside content and seams
+   between regions, no hard shadows on controls (raft-design decision 0009),
+   no all-caps (decision 0002).
+
+   This file is raft-docs' own. The docs-kit theme it sits on top of is shared
+   with other sites (docs.stamp.build), which keep their look.
+   ────────────────────────────────────────────────────────────── */
+
+/* ── Tokens → VitePress variables ─────────────────────────────── */
+:root,
+.dark {
+  --vp-font-family-base: var(--sans-font);
+  --vp-font-family-mono: var(--mono-font);
+
+  --vp-c-bg: var(--layer-canvas);
+  --vp-c-bg-alt: var(--layer-sidebar);
+  --vp-c-bg-elv: var(--layer-popover);
+  --vp-c-bg-soft: var(--fill-muted);
+  --vp-c-text-1: var(--foreground);
+  --vp-c-text-2: var(--foreground-muted);
+  --vp-c-text-3: var(--foreground-hint);
+  --vp-c-divider: var(--line-hairline);
+  --vp-c-border: var(--line-seam);
+  --vp-c-gutter: var(--line-hairline);
+
+  --vp-c-brand-1: var(--foreground-link);
+  --vp-c-brand-2: color-mix(in oklab, var(--foreground-link) 80%, var(--foreground));
+  --vp-c-brand-3: var(--brand-400);
+  --vp-c-brand-soft: var(--brand-soft);
+
+  --vp-nav-height: 56px;
+  --vp-nav-bg-color: var(--layer-frame);
+  --vp-sidebar-width: 240px !important;
+  --vp-sidebar-bg-color: var(--layer-sidebar);
+
+  --vp-code-font-size: 0.875em;
+  --vp-code-color: var(--foreground);
+  --vp-code-bg: var(--fill-muted);
+  --vp-code-block-bg: var(--layer-code);
+  --vp-code-copy-code-bg: var(--layer-code);
+  --vp-code-copy-code-hover-bg: var(--fill-muted);
+  --vp-code-lang-color: var(--foreground-hint);
+
+  --vp-custom-block-info-border: var(--line-hairline);
+  --vp-custom-block-info-bg: var(--info-soft);
+  --vp-custom-block-tip-border: var(--line-hairline);
+  --vp-custom-block-tip-bg: var(--success-soft);
+  --vp-custom-block-warning-border: var(--line-hairline);
+  --vp-custom-block-warning-bg: var(--warning-soft);
+  --vp-custom-block-details-border: var(--line-hairline);
+  --vp-custom-block-details-bg: var(--fill-muted);
+
+  /* docs-kit's own knobs */
+  --docs-sidebar-pad-left: 8px;
+  --docs-sidebar-pad-right: 8px;
+  --docs-sidebar-fg: var(--foreground);
+  --docs-sidebar-fg-muted: var(--foreground-hint);
+  --docs-sidebar-hover-bg: var(--fill-pressed);
+  --docs-sidebar-active-fg: var(--foreground);
+  --docs-sidebar-active-bg: var(--brand-400);
+  --docs-sidebar-active-bar: var(--brand-edge);
+  --docs-nav-fg: var(--foreground-on-frame);
+  --docs-nav-fg-muted: var(--foreground-on-frame-muted);
+  --docs-nav-active-bar: var(--foreground-on-frame);
+}
+
+body {
+  font-size: 16px;
+  line-height: 24px;
+}
+
+/* ── Frame: the yellow top bar ────────────────────────────────── */
+.VPNav,
+.VPNavBar,
+.VPNavBar:not(.home),
+.VPNavBar:not(.home.top) .content-body,
+.VPNavBar .content-body,
+.VPNavBar.has-sidebar .content-body {
+  background-color: var(--layer-frame) !important;
+}
+.VPNavBar {
+  border-bottom: 1px solid var(--line-seam);
+}
+.VPNavBar .divider,
+.VPNavBar .divider-line {
+  display: none;
+}
+@media (min-width: 960px) {
+  .VPNavBar.has-sidebar .container > .title {
+    background-color: transparent !important;
+    padding-left: 20px !important;
+  }
+}
+.VPNavBarTitle .title {
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--foreground-on-frame);
+  border-bottom: 0 !important;
+}
+.VPNavBarTitle .logo {
+  height: 24px;
+  border-radius: 0;
+}
+
+/* Nav tabs (Introduction / Features / Developers) and the language menu */
+.VPNavBar .VPNavBarMenuLink,
+.VPNavBar .VPFlyout .button,
+.VPNavBar .VPNavBarMenuLink:hover {
+  font-size: 14px;
+}
+.VPNavBar .VPFlyout .button,
+.VPNavBar .VPFlyout .button .text {
+  color: var(--foreground-on-frame);
+}
+
+/* Search box: the design system's SearchTrigger, white on the frame. On a
+   phone it stays VitePress's icon button. */
+@media (min-width: 768px) {
+  .VPNavBarSearch .DocSearch-Button {
+    min-width: 240px;
+  }
+}
+.VPNavBarSearch .DocSearch-Button {
+  height: 36px;
+  padding: 0 8px 0 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: var(--layer-canvas);
+  color: var(--foreground-hint);
+  font-size: 14px;
+}
+.VPNavBarSearch .DocSearch-Button:hover {
+  border-color: var(--line-strong);
+  background: var(--layer-canvas);
+}
+.VPNavBarSearch .DocSearch-Button .DocSearch-Button-Placeholder {
+  font-size: 14px;
+  color: var(--foreground-hint);
+}
+.VPNavBarSearch .DocSearch-Button .DocSearch-Button-Keys {
+  border-radius: 4px;
+}
+.VPNavBarSearch .DocSearch-Button .DocSearch-Button-Key {
+  border-color: var(--line-hairline);
+  font-family: var(--mono-font);
+}
+
+/* Light/dark switch on the frame */
+.VPNavBar .VPSwitchAppearance {
+  border-color: var(--line-strong);
+  background-color: var(--layer-canvas);
+}
+
+/* "Open Raft": the pink primary action. 8px radius, ink edge, and no hard
+   shadow: the design system gives controls no offset shadow (decision 0009). */
+.VPNavBar .docs-open-cta,
+.VPNavBar .docs-open-cta:hover,
+.VPNavBar .docs-open-cta:active {
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--brand-edge);
+  border-radius: 8px;
+  background: var(--attention-400);
+  color: var(--sticker-ink);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 22px;
+  box-shadow: none;
+  transform: none;
+}
+.VPNavBar .docs-open-cta:hover {
+  background: var(--attention-hover);
+}
+.VPNavBar .docs-open-cta:active {
+  background: var(--attention-active);
+}
+
+/* ── Sidebar: cream, 240 wide, 36px rows ──────────────────────── */
+.VPSidebar {
+  border-right: 1px solid var(--line-seam);
+}
+.VPSidebar .group {
+  width: 100% !important;
+}
+@media (min-width: 960px) {
+  .VPSidebar {
+    padding-top: calc(var(--vp-nav-height) + 8px) !important;
+  }
+}
+.VPSidebar .VPSidebarItem.level-0 {
+  padding-bottom: 4px;
+}
+/* Section label: 12/18 bold, hint colour, sentence case */
+.VPSidebar .VPSidebarItem.level-0 > .item > .text {
+  padding: 16px 8px 6px;
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 700;
+  letter-spacing: normal;
+  text-transform: none;
+}
+.VPSidebar .VPSidebarItem.level-0 > .item > .caret {
+  color: var(--foreground-hint);
+}
+/* Page row: 36 tall, 8px radius; the edge is reserved so the sticker does
+   not move the text. */
+.VPSidebar .VPSidebarItem.level-1 .link {
+  display: flex;
+  align-items: center;
+  min-height: 36px;
+  margin: 1px 0;
+  padding: 0 10px 0 8px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+}
+.VPSidebar .VPSidebarItem.level-1 .link > .text {
+  padding: 0;
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 500;
+}
+/* Current page: the yellow sticker, ink edge and ink type in both themes */
+.VPSidebar .VPSidebarItem.level-1.is-active .link {
+  background: var(--brand-400) !important;
+  border-color: var(--brand-edge) !important;
+}
+.VPSidebar .VPSidebarItem.level-1.is-active .link > .text {
+  color: var(--sticker-ink) !important;
+  font-weight: 700;
+  letter-spacing: normal;
+}
+
+/* ── Paper: content column and "On this page" ─────────────────── */
+/* The text column starts 80px past the sidebar and stays put; "On this page"
+   follows it 48px later instead of floating to the viewport's edge. */
+@media (min-width: 960px) {
+  .VPDoc {
+    padding: 40px 40px 0 !important;
+  }
+  .VPDoc > .container {
+    max-width: 1120px !important;
+    margin: 0 !important;
+    justify-content: flex-start !important;
+  }
+  .VPDoc > .container > .content {
+    max-width: none !important;
+    padding: 0 0 0 40px !important;
+  }
+}
+@media (min-width: 1280px) {
+  .VPDoc > .container > .content {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+  }
+}
+.VPDoc .content-container,
+.VPDoc.has-aside .content-container {
+  position: relative;
+  max-width: 760px !important;
+  margin: 0 !important;
+}
+.VPDoc .aside {
+  max-width: 240px !important;
+  padding-left: 48px !important;
+}
+.VPDoc .aside-container {
+  padding-top: calc(var(--vp-nav-height) + 40px) !important;
+}
+.VPDocAsideOutline .outline-title {
+  margin-bottom: 8px;
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 700;
+  color: var(--foreground-hint);
+}
+.VPDocAsideOutline .content {
+  padding-left: 12px !important;
+  border-left: 1px solid var(--line-hairline) !important;
+}
+.VPDocAsideOutline .outline-marker {
+  display: none;
+}
+.VPDocAside .outline-link {
+  padding: 4px 0;
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 400;
+  color: var(--foreground-muted);
+}
+.VPDocAside .outline-link:hover,
+.VPDocAside .outline-link.active {
+  color: var(--foreground);
+}
+.VPDocAside .outline-link.active {
+  font-weight: 500;
+}
+
+/* ── Page header: section label, title, Markdown button ──────── */
+.docs-page-kicker {
+  margin: 0 0 12px;
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 700;
+  color: var(--foreground-hint);
+}
+.docs-markdown-link {
+  margin: 0 0 12px;
+}
+.docs-markdown-link a {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: var(--layer-canvas);
+  color: var(--foreground);
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 700;
+  text-decoration: none;
+}
+.docs-markdown-link a:hover {
+  background: var(--fill-muted);
+}
+/* The button sits on the title's row; on a phone, on the section label's. */
+.content-container:has(.docs-page-kicker) .docs-markdown-link {
+  position: absolute;
+  top: -7px;
+  right: 0;
+  margin: 0;
+}
+@media (min-width: 768px) {
+  .docs-markdown-link {
+    position: absolute;
+    top: 4px;
+    right: 0;
+    margin: 0;
+  }
+  .content-container:has(.docs-page-kicker) .docs-markdown-link {
+    top: 34px;
+  }
+  .vp-doc h1 {
+    padding-right: 180px;
+  }
+}
+
+/* ── Prose ─────────────────────────────────────────────────────── */
+.vp-doc {
+  font-size: 16px;
+  line-height: 24px;
+}
+.vp-doc h1 {
+  margin: 0 0 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--line-hairline);
+  font-size: 34px;
+  line-height: 40px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.vp-doc h1:has(.VPBadge) {
+  padding-right: 0;
+}
+.vp-doc h2 {
+  margin: 40px 0 8px;
+  padding-top: 0;
+  border-top: 0;
+  font-size: 22px;
+  line-height: 28px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.vp-doc h3 {
+  margin: 28px 0 4px;
+  font-size: 17px;
+  line-height: 22px;
+  font-weight: 700;
+  letter-spacing: normal;
+}
+.vp-doc h4,
+.vp-doc h5,
+.vp-doc h6 {
+  margin: 20px 0 4px;
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 700;
+  color: var(--foreground-muted);
+}
+.vp-doc p,
+.vp-doc summary {
+  margin: 12px 0;
+  line-height: 24px;
+}
+.vp-doc ul,
+.vp-doc ol {
+  margin: 12px 0;
+  padding-left: 20px;
+}
+.vp-doc li + li {
+  margin-top: 4px;
+}
+.vp-doc strong {
+  font-weight: 700;
+}
+
+.vp-doc a {
+  color: var(--foreground-link);
+  font-weight: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 2px;
+  text-decoration-color: color-mix(in oklab, var(--foreground-link) 40%, transparent);
+  border-radius: 2px;
+}
+.vp-doc a:hover {
+  color: color-mix(in oklab, var(--foreground-link) 80%, var(--foreground));
+  text-decoration-color: currentColor;
+}
+.vp-doc a[href$=".md"] {
+  font-weight: inherit;
+}
+.vp-doc .header-anchor {
+  text-decoration: none;
+  color: var(--foreground-hint);
+}
+
+.vp-doc blockquote {
+  margin: 12px 0;
+  padding-left: 10px;
+  border-left: 2px solid var(--line-seam);
+  color: var(--foreground-muted);
+}
+.vp-doc blockquote > p {
+  color: inherit;
+  font-size: inherit;
+}
+.vp-doc hr {
+  margin: 24px 0;
+  border-top: 1px solid var(--line-hairline);
+}
+
+/* Inline code: Space Mono on a muted fill */
+.vp-doc :not(pre) > code {
+  padding: 1px 4px;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: inherit;
+}
+.vp-doc a > code {
+  color: inherit;
+}
+
+/* Tables: a card with hairlines, filled header row */
+.vp-doc table {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  margin: 16px 0;
+  overflow-x: auto;
+  border: 1px solid var(--line-hairline);
+  border-radius: 10px;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--layer-card);
+  font-size: 14px;
+  line-height: 22px;
+}
+.vp-doc tr {
+  border-top: 0;
+  background: transparent !important;
+}
+.vp-doc th,
+.vp-doc td {
+  padding: 6px 12px;
+  border: 0;
+  border-bottom: 1px solid var(--line-hairline);
+}
+.vp-doc th:not(:last-child),
+.vp-doc td:not(:last-child) {
+  border-right: 1px solid var(--line-hairline);
+}
+.vp-doc tr:last-child > td {
+  border-bottom: 0;
+}
+.vp-doc th {
+  background: var(--fill-muted);
+  color: var(--foreground);
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+}
+
+/* Images and embedded figures: 10px radius, hairline edge */
+.vp-doc img {
+  max-width: 100%;
+  border: 1px solid var(--line-hairline);
+  border-radius: 10px;
+}
+.vp-doc a > img,
+.vp-doc img[src$=".svg"] {
+  border: 0;
+  border-radius: 0;
+}
+.vp-doc iframe {
+  border-radius: 10px;
+}
+.tutorial-figure-frame {
+  border-color: var(--line-hairline);
+  border-radius: 10px;
+}
+
+/* Code blocks: the design system's CodeBlock */
+.vp-doc div[class*="language-"],
+.vp-doc .vp-code-group .tabs {
+  border-radius: 10px;
+}
+.vp-doc div[class*="language-"] {
+  margin: 16px 0;
+  border: 1px solid var(--line-hairline);
+}
+.vp-doc div[class*="language-"] pre {
+  border-radius: 10px;
+}
+.vp-doc div[class*="language-"] code {
+  font-size: 13px;
+  line-height: 20px;
+}
+.vp-doc [class*="language-"] > button.copy {
+  border: 1px solid var(--line-hairline);
+  border-radius: 8px;
+}
+.vp-doc [class*="language-"] > span.lang {
+  top: 20px;
+  right: 60px;
+  font-family: var(--mono-font);
+  font-size: 12px;
+}
+.vp-doc .vp-code-group .tabs {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border: 1px solid var(--line-hairline);
+  border-bottom: 0;
+}
+.vp-doc .vp-code-group div[class*="language-"] {
+  margin-top: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+/* Callouts: a family wash, the family's strong shade for the title */
+.vp-doc .custom-block {
+  margin: 16px 0;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  line-height: 22px;
+}
+.vp-doc .custom-block p {
+  margin: 4px 0;
+  line-height: 22px;
+}
+.vp-doc .custom-block .custom-block-title {
+  font-weight: 700;
+}
+.vp-doc .custom-block.info .custom-block-title,
+.dark .vp-doc .custom-block.info .custom-block-title {
+  color: var(--info-strong);
+}
+.vp-doc .custom-block.tip .custom-block-title,
+.dark .vp-doc .custom-block.tip .custom-block-title {
+  color: var(--success-strong);
+}
+.vp-doc .custom-block.warning .custom-block-title,
+.dark .vp-doc .custom-block.warning .custom-block-title {
+  color: var(--warning-strong);
+}
+.vp-doc .custom-block a {
+  color: var(--foreground-link);
+}
+.vp-doc .custom-block div[class*="language-"] {
+  margin: 8px 0;
+}
+
+/* Content tabs (vitepress-plugin-tabs) */
+.vp-doc .plugin-tabs {
+  border: 1px solid var(--line-hairline);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--layer-canvas);
+}
+.vp-doc .plugin-tabs--tab-list {
+  border-bottom: 1px solid var(--line-hairline);
+}
+.vp-doc .plugin-tabs--tab {
+  font-size: 14px;
+  font-weight: 500;
+}
+.vp-doc .plugin-tabs--tab[aria-selected="true"] {
+  font-weight: 700;
+}
+.vp-doc .plugin-tabs--tab[aria-selected="true"]::after {
+  background-color: var(--foreground);
+}
+
+/* Badge ("Experimental"): a small sticker */
+.VPBadge {
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 18px;
+}
+.VPBadge.warning,
+.dark .VPBadge.warning {
+  background-color: var(--brand-400);
+  border-color: var(--brand-edge);
+  color: var(--sticker-ink);
+}
+
+/* ── Page footer: edit link and prev/next ─────────────────────── */
+.VPDocFooter .edit-link-button {
+  color: var(--foreground-link);
+  font-size: 14px;
+}
+.VPDocFooter .pager-link {
+  border: 1px solid var(--line-hairline);
+  border-radius: 10px !important;
+}
+.VPDocFooter .pager-link:hover {
+  border-color: var(--line-strong);
+}
+.VPDocFooter .pager-link .desc {
+  font-size: 12px;
+  color: var(--foreground-hint);
+}
+.VPDocFooter .pager-link .title {
+  font-size: 14px;
+  color: var(--foreground);
+}
+.VPFooter {
+  border-top: 1px solid var(--line-hairline);
+}
+
+/* ── Search dialog ─────────────────────────────────────────────── */
+.VPLocalSearchBox .shell {
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+}
+.VPLocalSearchBox .search-bar {
+  border-radius: 8px;
+}
+.VPLocalSearchBox .result {
+  border-radius: 8px;
+}
+.VPLocalSearchBox .result.selected {
+  border-color: var(--brand-edge);
+  background: var(--brand-soft);
+}
+
+/* ── Phone ─────────────────────────────────────────────────────── */
+@media (max-width: 959px) {
+  .VPLocalNav {
+    background-color: var(--layer-canvas);
+    border-bottom: 1px solid var(--line-hairline);
+  }
+  .VPNavScreen {
+    background-color: var(--layer-sidebar);
+  }
+}
+@media (max-width: 767px) {
+  .vp-doc h1 {
+    font-size: 28px;
+    line-height: 34px;
+  }
+}

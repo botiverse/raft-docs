@@ -50,6 +50,14 @@ content/
 Docs are intentionally simple. Content matters more than visual treatment.
 Keep public docs plain enough that the Markdown source remains useful on its own.
 
+The site wears the [Raft Design System](https://raft-design.botiverse.build):
+the same frame, sidebar, type and colours as the design system's own site.
+`.vitepress/theme/raft-design.css` maps raft-ui's tokens onto VitePress; the
+tokens and font stack themselves are copies from a published
+`@botiverse/raft-ui`, refreshed with `node scripts/sync-raft-ui.mjs [version]`.
+Change a colour or font in raft-design, not here. The shared docs-kit theme
+underneath keeps its own look for the other sites that use it.
+
 ## Repository
 
 This is the public-source docs repo for Raft.

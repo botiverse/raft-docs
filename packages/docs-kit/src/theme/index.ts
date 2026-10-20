@@ -1,7 +1,7 @@
 import DefaultTheme from 'vitepress/theme'
 import type { EnhanceAppContext } from 'vitepress'
 import { useData } from 'vitepress'
-import { defineComponent, h, nextTick, onMounted, onUnmounted, watch } from 'vue'
+import { defineComponent, h, nextTick, onMounted, onUnmounted, watch, type VNode } from 'vue'
 import { enhanceAppWithTabs } from 'vitepress-plugin-tabs/client'
 import { pageTwinPath } from '../config.mjs'
 import './custom.css'
@@ -19,6 +19,8 @@ import './custom.css'
  * content tree, never hand-maintained.
  *
  * options.initAnalytics: fire-and-forget hook called in enhanceApp.
+ * options.slots: extra DefaultTheme layout slots for one site. A slot the kit
+ *   already fills renders the kit's content first, then the site's.
  */
 
 type LocaleEntry = {
@@ -124,7 +126,12 @@ function rewriteLocaleLinks(config: any, translated: Record<string, string[]>) {
   }
 }
 
-export function createDocsTheme(config: any, options: { initAnalytics?: () => void } = {}) {
+type SlotRender = () => VNode | VNode[] | null
+
+export function createDocsTheme(
+  config: any,
+  options: { initAnalytics?: () => void; slots?: Record<string, SlotRender> } = {},
+) {
   const LocaleLinkRewriter = defineComponent({
     setup() {
       const { page, theme } = useData()
@@ -256,11 +263,17 @@ export function createDocsTheme(config: any, options: { initAnalytics?: () => vo
   return {
     extends: DefaultTheme,
     Layout() {
-      return h(DefaultTheme.Layout, null, {
+      const kitSlots: Record<string, SlotRender> = {
         'doc-before': () => h(MarkdownLink),
         'nav-bar-content-after': () => h(HeaderCta),
         'layout-bottom': () => [h(LocaleLinkRewriter), h(NavTabIndicator)],
-      })
+      }
+      const slots: Record<string, SlotRender> = { ...kitSlots }
+      for (const [name, render] of Object.entries(options.slots ?? {})) {
+        const kit = kitSlots[name]
+        slots[name] = kit ? () => [kit(), render()].flat().filter(Boolean) as VNode[] : render
+      }
+      return h(DefaultTheme.Layout, null, slots)
     },
     enhanceApp({ app }: EnhanceAppContext) {
       enhanceAppWithTabs(app)
