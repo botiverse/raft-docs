@@ -1,0 +1,932 @@
+{
+  "$comment": [
+    "Scenes for scripts/screenshots/capture.mjs; see README.md for the format.",
+    "Order matters: opening a conversation marks it read, and 'Add computer' creates a pending machine, so the shots that show unread state come first and that one comes last. Re-run the docs fixture before every capture."
+  ],
+  "normalizeText": [
+    [
+      "RAFT_HOME=\"\\$HOME/\\.raft-computer-[\\w-]+\" RAFT_COMPUTER_INSTALL_DIR=\"\\$HOME/\\.raft-computer-[\\w-]+/bin\" sh -c '([^']+)'",
+      "$1"
+    ],
+    [
+      "RAFT_HOME=\"\\$HOME/\\.raft-computer-[\\w-]+\" RAFT_COMPUTER_INSTALL_DIR=\"\\$HOME/\\.raft-computer-[\\w-]+/bin\" \"\\$HOME/\\.raft-computer-[\\w-]+/bin/raft-computer\"",
+      "raft-computer"
+    ],
+    [
+      " --server-url https?://(localhost|127\\.0\\.0\\.1)(:\\d+)?",
+      ""
+    ],
+    [
+      "https?://(localhost|127\\.0\\.0\\.1)(:\\d+)?",
+      "https://app.raft.build"
+    ]
+  ],
+  "standIns": {
+    "models": [
+      {
+        "url": "re:/machines/[^/]+/runtime-models/claude(\\?|$)",
+        "json": {
+          "kind": "live",
+          "value": {
+            "default": "opus",
+            "models": [
+              {
+                "id": "opus",
+                "label": "Claude Opus"
+              },
+              {
+                "id": "sonnet",
+                "label": "Claude Sonnet"
+              },
+              {
+                "id": "haiku",
+                "label": "Claude Haiku"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "url": "re:/machines/[^/]+/runtime-models/codex(\\?|$)",
+        "json": {
+          "kind": "live",
+          "value": {
+            "default": "gpt-5",
+            "models": [
+              {
+                "id": "gpt-5",
+                "label": "GPT-5"
+              },
+              {
+                "id": "gpt-5-codex",
+                "label": "GPT-5 Codex"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "url": "re:/machines/[^/]+/runtime-models/cursor(\\?|$)",
+        "json": {
+          "kind": "live",
+          "value": {
+            "default": "composer-2",
+            "models": [
+              {
+                "id": "composer-2",
+                "label": "Composer 2"
+              },
+              {
+                "id": "auto",
+                "label": "Auto"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "skills": [
+      {
+        "url": "re:/agents/[^/]+/skills(\\?|$)",
+        "json": {
+          "global": [],
+          "workspace": []
+        }
+      }
+    ],
+    "workspace": [
+      {
+        "url": "re:/agents/[^/]+/workspace-files/read\\?",
+        "json": {
+          "content": "# Koda\n\n## Role\n\nScreenshot and docs helper.\n\n## Current Work\n\nPrepare product screenshots for the Raft Manual.\n",
+          "binary": false,
+          "path": "MEMORY.md",
+          "size": 126,
+          "modifiedAt": "2026-10-20T16:35:00.000Z",
+          "mimeType": "text/markdown",
+          "encoding": "utf-8"
+        }
+      },
+      {
+        "url": "re:/agents/[^/]+/workspace-files(\\?|$)",
+        "json": {
+          "files": [
+            {
+              "name": "notes",
+              "path": "notes",
+              "isDirectory": true,
+              "size": 0,
+              "modifiedAt": "2026-10-20T16:20:00.000Z"
+            },
+            {
+              "name": "scripts",
+              "path": "scripts",
+              "isDirectory": true,
+              "size": 0,
+              "modifiedAt": "2026-10-20T15:02:00.000Z"
+            },
+            {
+              "name": "MEMORY.md",
+              "path": "MEMORY.md",
+              "isDirectory": false,
+              "size": 126,
+              "modifiedAt": "2026-10-20T16:35:00.000Z"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "shots": [
+    {
+      "out": "features/messaging/activity/06-activity-feed.png",
+      "path": "/s/{server}/activity"
+    },
+    {
+      "out": "catch-up-in-one-place/09-activity-view.png",
+      "server": "raft-workshop-tutorial",
+      "path": "/s/{server}/activity"
+    },
+    {
+      "out": "features/messaging/activity/07-saved-sidebar.png",
+      "path": "/s/{server}/saved"
+    },
+    {
+      "out": "features/messaging/dms/03-dms-sidebar-list-recut.png",
+      "steps": [
+        {
+          "do": "click",
+          "target": "[data-slot=sidebar-item]",
+          "has": "Koda"
+        },
+        {
+          "do": "hover",
+          "target": "[data-slot=sidebar-item]",
+          "has": "customer-feedback"
+        }
+      ],
+      "clip": {
+        "x": 0,
+        "y": 0,
+        "width": 297,
+        "height": 940
+      }
+    },
+    {
+      "out": "features/messaging/dms/04-agent-dm-conversation.png",
+      "steps": [
+        {
+          "do": "click",
+          "target": "[data-slot=sidebar-item]",
+          "has": "Koda"
+        }
+      ]
+    },
+    {
+      "out": "features/messaging/joint-channels/01-joint-channel-sidebar.png",
+      "viewport": [
+        940,
+        720
+      ],
+      "steps": [
+        {
+          "do": "click",
+          "target": "[data-slot=sidebar-item]",
+          "has": "partner-launch"
+        }
+      ]
+    },
+    {
+      "out": "features/server/01-server-overview.png",
+      "steps": [
+        {
+          "do": "click",
+          "target": "[data-slot=sidebar-item]",
+          "has": "all"
+        }
+      ]
+    },
+    {
+      "out": "features/messaging/channels/01-channels-sidebar-open-channel.png",
+      "steps": [
+        {
+          "do": "click",
+          "target": "[data-slot=sidebar-item]",
+          "has": "launch-room"
+        },
+        {
+          "do": "hover",
+          "target": "[data-message-id]",
+          "has": "Collect customer examples"
+        }
+      ]
+    },
+    {
+      "out": "features/messaging/channels/02-create-channel-dialog.png",
+      "steps": [
+        {
+          "do": "click",
+          "target": "[data-slot=sidebar-item]",
+          "has": "launch-room"
+        },
+        {
+          "do": "click",
+          "target": "[aria-label='Create Channel']"
+        },
+        {
+          "do": "fill",
+          "target": "input[placeholder='e.g. ai-research']",
+          "value": "roadmap"
+        },
+        {
+          "do": "fill",
+          "target": "textarea[placeholder='What is this channel about?']",
+          "value": "Roadmap planning and product decisions"
+        }
+      ]
+    },
+    {
+      "out": "features/messaging/joint-channels/02-create-joint-channel-dialog.png",
+      "viewport": [
+        1440,
+        1200
+      ],
+      "steps": [
+        {
+          "do": "click",
+          "target": "[data-slot=sidebar-item]",
+          "has": "all"
+        },
+        {
+          "do": "click",
+          "target": "[aria-label='Create Joint Channel']"
+        },
+        {
+          "do": "fill",
+          "target": "input[placeholder='e.g. partner-launch']",
+          "value": "partner-launch"
+        },
+        {
+          "do": "fill",
+          "target": "textarea[placeholder='What will both servers use this channel for?']",
+          "value": "Launch brief with Partner Labs and Atlas Studio"
+        },
+        {
+          "do": "fill",
+          "target": "input[placeholder='partner-workspace']",
+          "value": "partner-labs"
+        },
+        {
+          "do": "fill",
+          "target": "textarea[placeholder='@admin or admin@example.com']",
+          "value": "@mira"
+        },
+        {
+          "do": "click",
+          "target": "button",
+          "has": "Add Server"
+        },
+        {
+          "do": "fill",
+          "target": "input[placeholder='partner-workspace']",
+          "nth": 1,
+          "value": "atlas-studio"
+        },
+        {
+          "do": "fill",
+          "target": "textarea[placeholder='@admin or admin@example.com']",
+          "nth": 1,
+          "value": "@jun"
+        }
+      ]
+    },
+    {
+      "out": "features/messaging/messages/08-reaction-presets-hover.png",
+      "steps": [
+        {
+          "do": "click",
+          "target": "[data-slot=sidebar-item]",
+          "has": "launch-room"
+        },
+        {
+          "do": "hover",
+          "target": "[data-message-id]",
+          "has": "Can someone react when the launch checklist looks good?"
+        },
+        {
+          "do": "click",
+          "target": "[data-message-affordance=reaction]"
+        }
+      ]
+    },
+    {
+      "out": "features/messaging/messages/09-message-action-menu.png",
+      "steps": [
+        {
+          "do": "click",
+          "target": "[data-slot=sidebar-item]",
+          "has": "launch-room"
+        },
+        {
+          "do": "hover",
+          "target": "[data-message-id]",
+          "has": "Please quote this decision in the weekly update."
+        },
+        {
+          "do": "click",
+          "target": "[data-message-id]:has-text(\"Please quote this decision\") [aria-label='More Actions']"
+        }
+      ]
+    },
+    {
+      "out": "features/collaboration/tasks/11-convert-to-task-context-menu.png",
+      "steps": [
+        {
+          "do": "click",
+          "target": "[data-slot=sidebar-item]",
+          "has": "launch-room"
+        },
+        {
+          "do": "hover",
+          "target": "[data-message-id]",
+          "has": "Please quote this decision in the weekly update."
+        },
+        {
+          "do": "click",
+          "target": "[data-message-id]:has-text(\"Please quote this decision\") [aria-label='More Actions']"
+        },
+        {
+          "do": "hover",
+          "target": "[role=menuitem]",
+          "has": "Convert to Task"
+        }
+      ],
+      "clip": {
+        "selector": "[role=menu]",
+        "pad": 12
+      }
+    },
+    {
+      "out": "features/collaboration/tasks/12-as-task-composer-toggle.png",
+      "steps": [
+        {
+          "do": "click",
+          "target": "[data-slot=sidebar-item]",
+          "has": "launch-room"
+        }
+      ],
+      "clip": {
+        "x": 1040,
+        "y": 800,
+        "width": 400,
+        "height": 140
+      }
+    },
+    {
+      "out": "features/messaging/threads/05-thread-panel.png",
+      "steps": [
+        {
+          "do": "click",
+          "target": "[data-slot=sidebar-item]",
+          "has": "launch-room"
+        },
+        {
+          "do": "click",
+          "target": "[data-message-id]:has-text(\"Let's keep launch checklist questions\") [data-message-affordance=inline-thread-replies]"
+        }
+      ]
+    },
+    {
+      "out": "features/collaboration/tasks/13-task-board.png",
+      "path": "/s/{server}/tasks?view=board",
+      "steps": [
+        {
+          "do": "click",
+          "target": "button",
+          "has": "Assignee"
+        }
+      ]
+    },
+    {
+      "out": "features/collaboration/files/10-file-attachment-preview.png",
+      "steps": [
+        {
+          "do": "click",
+          "target": "[data-slot=sidebar-item]",
+          "has": "docs-review"
+        }
+      ]
+    },
+    {
+      "out": "features/collaboration/comments/02-thread-re-chip.png",
+      "steps": [
+        {
+          "do": "click",
+          "target": "[data-slot=sidebar-item]",
+          "has": "docs-review"
+        },
+        {
+          "do": "click",
+          "target": "[data-message-id]:has-text(\"Release notes draft for review.\") [data-message-affordance=inline-thread-replies]"
+        }
+      ]
+    },
+    {
+      "out": "features/collaboration/comments/01-file-comments-panel-anchor.png",
+      "steps": [
+        {
+          "do": "click",
+          "target": "[data-slot=sidebar-item]",
+          "has": "docs-review"
+        },
+        {
+          "do": "click",
+          "target": "[aria-label='release-notes-review.md']"
+        },
+        {
+          "do": "click",
+          "target": "[aria-label='Comment']"
+        },
+        {
+          "do": "tripleclick",
+          "target": "p",
+          "has": "Keep the update concise"
+        },
+        {
+          "do": "fill",
+          "target": "textarea[placeholder^='Comment on']",
+          "value": "Link the source thread here before we publish."
+        }
+      ]
+    },
+    {
+      "out": "features/agents/reminders/06-reminder-firing-thread.png",
+      "steps": [
+        {
+          "do": "click",
+          "target": "[data-slot=sidebar-item]",
+          "has": "all"
+        },
+        {
+          "do": "click",
+          "target": "[data-message-id]:has-text(\"please remind me\") [data-message-affordance=inline-thread-replies]"
+        }
+      ]
+    },
+    {
+      "out": "features/server/02-settings-server-profile-focused.png",
+      "path": "/s/{server}/settings/server",
+      "clip": {
+        "x": 297,
+        "y": 48,
+        "width": 1143,
+        "height": 892
+      }
+    },
+    {
+      "out": "features/server/computers/02-connected-computer-detail.png",
+      "path": "/s/{server}/computers",
+      "steps": [
+        {
+          "do": "click",
+          "target": "text=Alex MacBook Pro"
+        }
+      ]
+    },
+    {
+      "out": "features/agents/02-agent-detail-profile.png",
+      "path": "/s/{server}/members",
+      "standIn": [
+        "models",
+        "skills"
+      ],
+      "steps": [
+        {
+          "do": "click",
+          "target": "[data-slot=sidebar-item]",
+          "has": "Koda"
+        }
+      ]
+    },
+    {
+      "out": "features/agents/03-agent-role-switch.png",
+      "path": "/s/{server}/members",
+      "standIn": [
+        "models",
+        "skills"
+      ],
+      "steps": [
+        {
+          "do": "click",
+          "target": "[data-slot=sidebar-item]",
+          "has": "Koda"
+        },
+        {
+          "do": "click",
+          "target": "[aria-label='Edit role']"
+        }
+      ]
+    },
+    {
+      "out": "features/agents/runtime/04-runtime-config-panel.png",
+      "path": "/s/{server}/members",
+      "standIn": [
+        "models",
+        "skills"
+      ],
+      "steps": [
+        {
+          "do": "click",
+          "target": "[data-slot=sidebar-item]",
+          "has": "Koda"
+        },
+        {
+          "do": "click",
+          "target": "[aria-label='Edit runtime config']"
+        },
+        {
+          "do": "click",
+          "target": "[data-testid=agent-runtime-config-dialog] [role=combobox]",
+          "has": "Codex CLI"
+        }
+      ]
+    },
+    {
+      "out": "features/agents/lifecycle/07-lifecycle-reset-options.png",
+      "path": "/s/{server}/members",
+      "standIn": [
+        "models",
+        "skills"
+      ],
+      "steps": [
+        {
+          "do": "click",
+          "target": "[data-slot=sidebar-item]",
+          "has": "Koda"
+        },
+        {
+          "do": "click",
+          "target": "[data-testid=agent-profile-inline-restart-reset]"
+        }
+      ]
+    },
+    {
+      "out": "features/agents/workspace/05-workspace-file-tree.png",
+      "path": "/s/{server}/members",
+      "standIn": [
+        "models",
+        "skills",
+        "workspace"
+      ],
+      "steps": [
+        {
+          "do": "click",
+          "target": "[data-slot=sidebar-item]",
+          "has": "Koda"
+        },
+        {
+          "do": "click",
+          "target": "[data-testid=panel-tab-workspace]"
+        },
+        {
+          "do": "click",
+          "target": "text=MEMORY.md"
+        }
+      ]
+    },
+    {
+      "out": "features/agents/lifecycle/status-dots.png",
+      "path": "/s/{server}/members",
+      "scale": 2,
+      "clip": {
+        "x": 57,
+        "y": 100,
+        "width": 240,
+        "height": 240
+      }
+    },
+    {
+      "out": "features/agents/01-agent-basics-create-agent-dialog.png",
+      "path": "/s/{server}/members",
+      "standIn": [
+        "models"
+      ],
+      "steps": [
+        {
+          "do": "click",
+          "target": "[aria-label='Add agent']"
+        },
+        {
+          "do": "click",
+          "target": "[role=menuitem]",
+          "has": "Create Agent"
+        },
+        {
+          "do": "fill",
+          "target": "input[placeholder='e.g. Alice']",
+          "value": "Taylor"
+        },
+        {
+          "do": "fill",
+          "target": "textarea[placeholder^='Leave blank']",
+          "value": "Research and docs reviewer"
+        },
+        {
+          "do": "click",
+          "target": "[role=combobox]",
+          "has": "Select…"
+        },
+        {
+          "do": "click",
+          "target": "[role=option]",
+          "has": "Claude Code"
+        }
+      ]
+    },
+    {
+      "out": "features/agents/runtime/03-runtime-picker-dropdown.png",
+      "path": "/s/{server}/members",
+      "standIn": [
+        "models"
+      ],
+      "steps": [
+        {
+          "do": "click",
+          "target": "[aria-label='Add agent']"
+        },
+        {
+          "do": "click",
+          "target": "[role=menuitem]",
+          "has": "Create Agent"
+        },
+        {
+          "do": "fill",
+          "target": "input[placeholder='e.g. Alice']",
+          "value": "Taylor"
+        },
+        {
+          "do": "fill",
+          "target": "textarea[placeholder^='Leave blank']",
+          "value": "Research and docs reviewer"
+        },
+        {
+          "do": "click",
+          "target": "[role=combobox]",
+          "has": "Select…"
+        },
+        {
+          "do": "click",
+          "target": "[role=option]",
+          "has": "Claude Code"
+        },
+        {
+          "do": "click",
+          "target": "[role=combobox]",
+          "has": "Claude Code"
+        }
+      ]
+    },
+    {
+      "out": "features/agents/external/01-create-external-agent-entry-crop.png",
+      "path": "/s/{server}/members",
+      "steps": [
+        {
+          "do": "click",
+          "target": "[aria-label='Add agent']"
+        }
+      ],
+      "clip": {
+        "x": 0,
+        "y": 48,
+        "width": 340,
+        "height": 390
+      }
+    },
+    {
+      "out": "features/agents/external/02-external-setup-card-hermes-redacted.png",
+      "path": "/s/{server}/members",
+      "viewport": [
+        1440,
+        1500
+      ],
+      "steps": [
+        {
+          "do": "click",
+          "target": "[data-slot=sidebar-item]",
+          "has": "Relay"
+        }
+      ],
+      "clip": {
+        "selector": "xpath=//div[normalize-space(text())='External setup']/.."
+      }
+    },
+    {
+      "out": "developers/sdk/external-agents/01-external-setup-generate-login-token.png",
+      "path": "/s/{server}/members",
+      "scale": 2,
+      "steps": [
+        {
+          "do": "click",
+          "target": "[data-slot=sidebar-item]",
+          "has": "Relay"
+        }
+      ],
+      "clip": {
+        "selector": "xpath=//div[normalize-space(text())='External setup']/..",
+        "width": 778,
+        "height": 242
+      }
+    },
+    {
+      "out": "features/agents/external/03-external-status-badges-readable.png",
+      "canvas": [
+        920,
+        520
+      ],
+      "parts": [
+        {
+          "path": "/s/{server}/members",
+          "steps": [
+            {
+              "do": "click",
+              "target": "[data-slot=sidebar-item]",
+              "has": "Relay"
+            }
+          ],
+          "clip": {
+            "selector": "xpath=//div[normalize-space(text())='External setup']/..",
+            "height": 112
+          },
+          "viewport": [
+            1180,
+            900
+          ]
+        },
+        {
+          "path": "/s/{server}/members",
+          "steps": [
+            {
+              "do": "click",
+              "target": "[data-slot=sidebar-item]",
+              "has": "Courier"
+            }
+          ],
+          "clip": {
+            "selector": "xpath=//div[normalize-space(text())='External setup']/..",
+            "height": 112
+          },
+          "viewport": [
+            1180,
+            900
+          ]
+        },
+        {
+          "path": "/s/{server}/members",
+          "steps": [
+            {
+              "do": "click",
+              "target": "[data-slot=sidebar-item]",
+              "has": "AutomationShell"
+            }
+          ],
+          "clip": {
+            "selector": "xpath=//div[normalize-space(text())='External setup']/..",
+            "height": 112
+          },
+          "viewport": [
+            1180,
+            900
+          ]
+        }
+      ]
+    },
+    {
+      "out": "features/apps/login-with-raft/03-login-with-raft-authorization.png",
+      "path": "/login-with-raft/setup?flow=oidc&client_id=workshop-notes&return_to=https%3A%2F%2Fworkshop-notes.example%2Fauth%2Fcallback&scope=openid%20profile&server=raft-workshop"
+    },
+    {
+      "out": "hand-off-your-first-task/06-stacked-messages.png",
+      "server": "raft-workshop-tutorial",
+      "steps": [
+        {
+          "do": "click",
+          "target": "[data-slot=sidebar-item]",
+          "has": "all"
+        },
+        {
+          "do": "scroll",
+          "target": "[data-testid=message-scroller]",
+          "top": 0
+        }
+      ]
+    },
+    {
+      "out": "hand-off-your-first-task/07-agent-progress-thread.png",
+      "server": "raft-workshop-tutorial",
+      "steps": [
+        {
+          "do": "click",
+          "target": "[data-slot=sidebar-item]",
+          "has": "all"
+        },
+        {
+          "do": "scroll",
+          "target": "[data-testid=message-scroller]",
+          "top": 0
+        },
+        {
+          "do": "click",
+          "target": "[data-message-id]:has-text(\"Turn the customer notes into a launch checklist\") [data-message-affordance=inline-thread-replies]"
+        }
+      ]
+    },
+    {
+      "out": "divide-the-work/08-agent-task-breakdown.png",
+      "server": "raft-workshop-tutorial",
+      "steps": [
+        {
+          "do": "click",
+          "target": "[data-slot=sidebar-item]",
+          "has": "all"
+        },
+        {
+          "do": "click",
+          "target": "[data-message-id]:has-text(\"Ship the launch checklist by Friday\") [data-message-affordance=inline-thread-replies]"
+        }
+      ]
+    },
+    {
+      "out": "search-your-raft/10-search-results.png",
+      "server": "raft-workshop-tutorial",
+      "path": "/s/{server}/search?q=launch%20checklist"
+    },
+    {
+      "out": "meet-your-onboarding-agent/05-oa-first-hello.png",
+      "server": "raft-workshop-tutorial",
+      "steps": [
+        {
+          "do": "click",
+          "target": "[data-slot=sidebar-item]",
+          "has": "onboarding-owner"
+        }
+      ]
+    },
+    {
+      "out": "meet-your-onboarding-agent/03-computer-connected.png",
+      "server": "workshop",
+      "note": "Setup reads are answered as the computer step (what an owner sees right after the computer connects, before pressing Next); everything else in the response is the server's own answer.",
+      "patchResponses": [
+        {
+          "url": "re:/servers/[^/]+/setup-projection(\\?|$)",
+          "set": {
+            "surface": "computer_runtime",
+            "currentStep": "computer_runtime"
+          }
+        }
+      ],
+      "standIn": [
+        "models"
+      ]
+    },
+    {
+      "out": "meet-your-onboarding-agent/04-create-onboarding-agent.png",
+      "server": "workshop",
+      "standIn": [
+        "models"
+      ]
+    },
+    {
+      "out": "meet-your-onboarding-agent/01-create-server.png",
+      "email": "new-owner@example.com",
+      "path": "/",
+      "steps": [
+        {
+          "do": "fill",
+          "target": "#server-create-name",
+          "value": "Raft Workshop"
+        },
+        {
+          "do": "fill",
+          "target": "#server-create-slug",
+          "value": "raft-workshop"
+        }
+      ]
+    },
+    {
+      "out": "features/server/computers/01-add-computer-dialog.png",
+      "path": "/s/{server}/computers",
+      "note": "Last on purpose: 'Next' registers a pending computer on the server.",
+      "steps": [
+        {
+          "do": "click",
+          "target": "[aria-label='Add computer']"
+        },
+        {
+          "do": "click",
+          "target": "button",
+          "has": "Next"
+        }
+      ]
+    }
+  ]
+}
