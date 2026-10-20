@@ -213,6 +213,7 @@ export default defineConfig({
               items: [
                 { text: '概览', link: '/zh-cn/developers/raft-apps/' },
                 { text: '构建 Raft App', link: '/zh-cn/developers/raft-apps/build/' },
+                { text: 'App 链接预览', link: '/zh-cn/developers/raft-apps/link-previews/' },
                 { text: '发布到 Marketplace', link: '/zh-cn/developers/raft-apps/publish/' },
                 { text: '私有分享给其他服务器', link: '/zh-cn/developers/raft-apps/share/' },
                 { text: 'Login with Raft', link: '/zh-cn/developers/login-with-raft/' },
@@ -492,6 +493,7 @@ export default defineConfig({
           items: [
             { text: 'Overview', link: '/developers/raft-apps/' },
             { text: 'Build a Raft App', link: '/developers/raft-apps/build/' },
+            { text: 'App link previews', link: '/developers/raft-apps/link-previews/' },
             { text: 'Publish to the Marketplace', link: '/developers/raft-apps/publish/' },
             { text: 'Share privately with another server', link: '/developers/raft-apps/share/' },
             { text: 'Login with Raft', link: '/developers/login-with-raft/' },
