@@ -257,7 +257,9 @@ ticket 是唯一会出现在 URL 里的凭据，而没有 verifier 它毫无用�
 
 ### Agent 到达同一个 callback
 
-Agent 用自己的 Raft 身份认证，不通过人类浏览器 session，也不靠粘贴 token。Agent access 在 Raft 内部发起：当应用对服务器可用（服务器本地或已安装）时，Raft 会授予 Agent Login，不需要额外负责人或管理员 approval card。可用性和安装状态就是授权边界；不可用的应用 fail closed。
+Agent 用自己的 Raft 身份认证，不通过人类浏览器 session，也不靠粘贴 token。Agent access 在 Raft 内部发起：对服务器可用的应用可以不经额外的逐 Agent 审批而获得登录授权。对于已安装的第三方 App，自动批准还要求此次请求的每个登录 scope 都在该安装已批准的范围内；超出范围的新增 scope 会进入审批流程。未安装的公开 App 返回 `install_required`，由 Server owner/admin 完成上文的安装卡；私有或未知 App 不可发现并 fail closed。人类明确撤销某个 Agent 对 App 的授权后，重新登录不会自动恢复，必须由人类重新批准或授权。
+
+安装第三方 App 时，Raft 会记录这次安装批准的登录 scope。开发者修改 App 声明不会静默扩大这个范围；Server owner/admin 可以在已安装 App 的设置中查看新增 scope 并批准更新。安装批准范围、Agent 自己的登录授权、安装 token 使用的 App 权限组，以及 App 内部的业务权限，是不同的授权层次。
 
 你的应用看到的注册 callback 形状与人类登录相同：`?code=...`，并通过标准 `authorization_code` grant 交换。交换后，userinfo 会显示 `type: "agent"`。
 
@@ -830,6 +832,7 @@ RFC 8693 token-exchange 端点。
 - App 处于启用状态，并允许 `openid` 和 `profile`。
 - App 属于 Agent 所在的 Server，或已安装到 Agent 所在的 Server（Marketplace
   或私有分享），且安装处于有效状态。
+- 对于第三方 App，该安装已批准 `openid` 和 `profile`。
 - Agent 当前是该 Server 的成员。
 - Agent 对该 App 的授权没有被撤销。
 
@@ -993,7 +996,7 @@ Payload 是应用控制的内容，不是可信指令通道：会议应用可以
 7. **CLI 不发送我的 session cookie。** 先确认 callback 不依赖之前的浏览器 state 也能创建 service cookie；再检查 cookie 的 origin/path/Secure 规则是否覆盖 `execution.base_url`。
 8. **我们把 Cloudflare Access 放在前面，Agent 坏了。** 这是设计：perimeter SSO 是只给人类用的门。
 9. **Deploy 是绿的，但生产 auth 500。** 密钥必须存在于应用运行的地方。检查 serving environment，不是 repo host。
-10. **Agent-led integration 需要多少个人类步骤？** 两步：回答一次性决策集，批准一张注册卡。之后可用性就是边界。Agent 登录一个可用应用不需要逐 Agent 批准。（→ A1, A2）
+10. **Agent-led integration 需要多少个人类步骤？** 两步：回答一次性决策集，批准一张注册卡。注册后，应用仍须对当前 Server 可用。对于已安装的第三方 App，Raft 只会自动授予该安装已同意的登录 scope；新增 scope 或此前被撤销的 Agent 授权需要审批。（→ A1, A2）
 11. **Agent login 从未到达我的 callback。** 检查应用是否对所选服务器可用；对第三方应用来说，安装可能还在 pending；检查 return URL 是否是 HTTPS 且可访问。
 12. **失败的 event POST 可以安全重试吗？** 使用稳定的 `externalEventId`：重试会返回原事件，而不是重复投递。
 13. **Fresh login 仍然返回 401。** 通用的 session-rejected 响应不能证明 session 已过期。只使用应用自己的公开 callback 和日志，确认 Agent callback 不依赖浏览器 state 也能成功，并设置 scope 正确的 service cookie。如果这些都成立，但已发布的 Raft 客户端仍然失败，请报告 service、action、已发布 CLI 和 Computer 版本，以及已脱敏的 error/request ID。不要读取或粘贴 Raft 私有 session 文件。
@@ -1050,7 +1053,8 @@ Payload 是应用控制的内容，不是可信指令通道：会议应用可以
 - [ ] 签发给其他 client 的 Raft access token 会被拒绝（检查 userinfo 的 `client_id`）
 - [ ] Agent handoff 设置的 service cookie 能到达 action endpoint（检查它的 `Path`），复用的 handoff 返回带类型 JSON 的 `409`
 - [ ] `picture` URL 可以在 image tag 里渲染，包括 pixel Agent avatar 的 `/api/avatars/pixel/*.svg`；`picture: null` 会渲染 fallback
-- [ ] 未安装的第三方应用 fail closed；安装后，Agent Login 不需要单独逐 Agent 批准即可工作
+- [ ] 未安装的第三方 App fail closed；安装后，已批准范围内的登录 scope 可自动授予，新增 scope 则进入审批
+- [ ] App 新增 scope 不会扩大已有安装的批准范围；已撤销的 Agent 授权不会自动恢复
 - [ ] 应用卸载或 grant 撤销会移除访问权
 - [ ] Manifest JSON 是公开、有效、无凭据、HTTPS 可访问的
 - [ ] Local CLI manifest 使用 bare command 和安全 credential boundary

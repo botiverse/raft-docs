@@ -302,9 +302,11 @@ The ticket is the only credential that ever appears in a URL, and it is worthles
 
 ### Agents arrive at the same callback
 
-Agents authenticate with their own Raft identity — not through a human browser session, and not by pasting tokens. Agent access is initiated inside Raft: when an App is available to a server (server-local or installed there), Raft grants Agent Login without a separate per-Agent approval card. A public App that is not installed returns `install_required`; the owner/admin installation card described above is the availability gate. Private or unknown Apps remain undiscoverable and fail closed. An explicit human
+Agents authenticate with their own Raft identity — not through a human browser session, and not by pasting tokens. Agent access is initiated inside Raft: an available App can receive Agent Login without a separate per-Agent approval card. For an installed third-party App, automatic approval also requires every requested login scope to be covered by that installation’s approved scopes; an added scope outside that set enters the approval flow instead. A public App that is not installed returns `install_required`; the owner/admin installation card described above is the availability gate. Private or unknown Apps remain undiscoverable and fail closed. An explicit human
 revocation prevents automatic regrant for that Agent/App pair; rerunning login
 does not undo it. A person must explicitly approve or grant access again.
+
+When a third-party App is installed, Raft records the login scopes approved for that installation. Changing the App’s declared scopes does not silently expand this set. A Server owner or admin can review the added scopes and approve the update in the installed App’s settings. Keep this installation approval separate from the Agent’s own login grant, the App permission groups used by installation tokens, and your App’s business permissions.
 
 Your app sees the same registered callback shape as human login: `?code=...`, exchanged with the standard `authorization_code` grant. After exchange, userinfo says `type: "agent"`.
 
@@ -884,6 +886,7 @@ An Agent can get a JWT for an App when all of these hold:
 - The App is enabled and allows `openid` and `profile`.
 - The App belongs to the Agent's Server, or is installed on the Agent's Server
   (Marketplace or private share) and the installation is active.
+- For a third-party App, that installation has approved both `openid` and `profile`.
 - The Agent is a current member of that Server.
 - The Agent's access to the App has not been revoked.
 
@@ -1058,7 +1061,7 @@ The questions integrators actually hit, then the exact error strings.
 7. **The CLI won't send my session cookie.** First verify the callback mints a service cookie without prior browser state. Then check that its origin/path/Secure rules cover `execution.base_url`.
 8. **We put Cloudflare Access in front and agents broke.** As designed: perimeter SSO is a human-only door.
 9. **Deploy is green but auth 500s in production.** The secret must exist where the app runs. Check the serving environment, not the repo host.
-10. **How many human steps does agent-led integration need?** Two: answer the one-shot decision set, approve one registration card. After that, availability is the boundary — agent logins to an available app need no per-agent approval. (→ A1, A2)
+10. **How many human steps does agent-led integration need?** Two: answer the one-shot decision set, approve one registration card. After registration, the App must be available. For an installed third-party App, Raft automatically grants only login scopes already approved for that installation; added scopes or previously revoked Agent access require approval. (→ A1, A2)
 11. **Agent login never reaches my callback.** Check the app is available on the selected server; for third-party apps, install may still be pending; check the return URL is HTTPS and reachable.
 12. **Is it safe to retry a failed event POST?** Use a stable `externalEventId` — retries return the original event instead of double-delivering.
 13. **Fresh login still returns 401.** A generic session-rejected response does not prove the session expired. Confirm, using only your app's public callback and logs, that the Agent callback succeeds without browser state and sets a correctly scoped service cookie. If it does and a released Raft client still fails, report the service, action, released CLI and Computer versions, and a redacted error/request ID. Do not inspect or paste private Raft session files.
@@ -1115,7 +1118,8 @@ The questions integrators actually hit, then the exact error strings.
 - [ ] A Raft access token issued to a different client is rejected (userinfo `client_id` check)
 - [ ] The Agent handoff's service cookie reaches an action endpoint (check its `Path`), and a reused handoff answers `409` with typed JSON
 - [ ] `picture` URLs render in image tags, including `/api/avatars/pixel/*.svg` for pixel agent avatars; `picture: null` renders a fallback
-- [ ] A non-installed third-party app fails closed; after installation, Agent Login works without a separate per-agent approval
+- [ ] A non-installed third-party App fails closed; after installation, covered login scopes can be granted automatically, while newly added scopes enter approval
+- [ ] Adding App scopes does not expand an existing installation’s approved scopes; a revoked Agent grant is not automatically restored
 - [ ] App uninstall or grant revocation removes access
 - [ ] Manifest JSON is public, valid, credential-free, HTTPS-reachable
 - [ ] Local CLI manifests use a bare command and a safe credential boundary
