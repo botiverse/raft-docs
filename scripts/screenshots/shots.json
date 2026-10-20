@@ -1,7 +1,8 @@
 {
   "$comment": [
     "Scenes for scripts/screenshots/capture.mjs; see README.md for the format.",
-    "Order matters: opening a conversation marks it read, and 'Add computer' creates a pending machine, so the shots that show unread state come first and that one comes last. Re-run the docs fixture before every capture."
+    "Order matters: opening a conversation marks it read, and 'Add computer' creates a pending machine, so the shots that show unread state come first and that one comes last. Re-run the docs fixture before every capture.",
+    "Tutorial stages: the tutorial pages are sequential, so every raft-workshop-tutorial shot names its 'stage' (onboarding | handoff | progress | full). Before a shot whose stage differs from the current one, capture runs --stage-cmd, which rebuilds only that server with `./raftdev script docs-fixture --tutorial-stage <stage>`. A shot never shows content from a later step."
   ],
   "normalizeText": [
     [
@@ -145,7 +146,8 @@
     {
       "out": "catch-up-in-one-place/09-activity-view.png",
       "server": "raft-workshop-tutorial",
-      "path": "/s/{server}/activity"
+      "path": "/s/{server}/activity",
+      "stage": "full"
     },
     {
       "out": "features/messaging/activity/07-saved-sidebar.png",
@@ -315,7 +317,7 @@
         },
         {
           "do": "click",
-          "target": "[data-message-affordance=reaction]"
+          "target": "[data-message-id]:has-text(\"Can someone react\") [data-message-affordance=reaction]"
         }
       ]
     },
@@ -330,11 +332,11 @@
         {
           "do": "hover",
           "target": "[data-message-id]",
-          "has": "Please quote this decision in the weekly update."
+          "has": "Turn this into a follow-up task for release notes."
         },
         {
           "do": "click",
-          "target": "[data-message-id]:has-text(\"Please quote this decision\") [aria-label='More Actions']"
+          "target": "[data-message-id]:has-text(\"Turn this into a follow-up task\") [aria-label='More Actions']"
         }
       ]
     },
@@ -349,11 +351,11 @@
         {
           "do": "hover",
           "target": "[data-message-id]",
-          "has": "Please quote this decision in the weekly update."
+          "has": "Turn this into a follow-up task for release notes."
         },
         {
           "do": "click",
-          "target": "[data-message-id]:has-text(\"Please quote this decision\") [aria-label='More Actions']"
+          "target": "[data-message-id]:has-text(\"Turn this into a follow-up task\") [aria-label='More Actions']"
         },
         {
           "do": "hover",
@@ -805,42 +807,6 @@
       "path": "/login-with-raft/setup?flow=oidc&client_id=workshop-notes&return_to=https%3A%2F%2Fworkshop-notes.example%2Fauth%2Fcallback&scope=openid%20profile&server=raft-workshop"
     },
     {
-      "out": "hand-off-your-first-task/06-stacked-messages.png",
-      "server": "raft-workshop-tutorial",
-      "steps": [
-        {
-          "do": "click",
-          "target": "[data-slot=sidebar-item]",
-          "has": "all"
-        },
-        {
-          "do": "scroll",
-          "target": "[data-testid=message-scroller]",
-          "top": 0
-        }
-      ]
-    },
-    {
-      "out": "hand-off-your-first-task/07-agent-progress-thread.png",
-      "server": "raft-workshop-tutorial",
-      "steps": [
-        {
-          "do": "click",
-          "target": "[data-slot=sidebar-item]",
-          "has": "all"
-        },
-        {
-          "do": "scroll",
-          "target": "[data-testid=message-scroller]",
-          "top": 0
-        },
-        {
-          "do": "click",
-          "target": "[data-message-id]:has-text(\"Turn the customer notes into a launch checklist\") [data-message-affordance=inline-thread-replies]"
-        }
-      ]
-    },
-    {
       "out": "divide-the-work/08-agent-task-breakdown.png",
       "server": "raft-workshop-tutorial",
       "steps": [
@@ -853,12 +819,8 @@
           "do": "click",
           "target": "[data-message-id]:has-text(\"Ship the launch checklist by Friday\") [data-message-affordance=inline-thread-replies]"
         }
-      ]
-    },
-    {
-      "out": "search-your-raft/10-search-results.png",
-      "server": "raft-workshop-tutorial",
-      "path": "/s/{server}/search?q=launch%20checklist"
+      ],
+      "stage": "full"
     },
     {
       "out": "meet-your-onboarding-agent/05-oa-first-hello.png",
@@ -869,12 +831,47 @@
           "target": "[data-slot=sidebar-item]",
           "has": "onboarding-owner"
         }
-      ]
+      ],
+      "stage": "onboarding"
+    },
+    {
+      "out": "hand-off-your-first-task/06-stacked-messages.png",
+      "server": "raft-workshop-tutorial",
+      "steps": [
+        {
+          "do": "click",
+          "target": "[data-slot=sidebar-item]",
+          "has": "all"
+        }
+      ],
+      "stage": "handoff"
+    },
+    {
+      "out": "hand-off-your-first-task/07-agent-progress-thread.png",
+      "server": "raft-workshop-tutorial",
+      "steps": [
+        {
+          "do": "click",
+          "target": "[data-slot=sidebar-item]",
+          "has": "all"
+        },
+        {
+          "do": "click",
+          "target": "[data-message-id]:has-text(\"Turn the customer notes into a launch checklist\") [data-message-affordance=inline-thread-replies]"
+        }
+      ],
+      "stage": "progress"
+    },
+    {
+      "out": "search-your-raft/10-search-results.png",
+      "server": "raft-workshop-tutorial",
+      "path": "/s/{server}/search?q=launch%20checklist",
+      "stage": "full"
     },
     {
       "out": "meet-your-onboarding-agent/03-computer-connected.png",
       "server": "workshop",
-      "note": "Setup reads are answered as the computer step (what an owner sees right after the computer connects, before pressing Next); everything else in the response is the server's own answer.",
+      "note": "Setup reads are answered as the computer step (what an owner sees right after the computer connects, before pressing Next); everything else in the response is the server's own answer. The fixture's setup server is /workshop (raft-workshop is taken by the feature server); the setup command is shown as /raft-workshop to match the create-server step.",
       "patchResponses": [
         {
           "url": "re:/servers/[^/]+/setup-projection(\\?|$)",
@@ -886,6 +883,12 @@
       ],
       "standIn": [
         "models"
+      ],
+      "normalizeText": [
+        [
+          "raft-computer setup /workshop\\b",
+          "raft-computer setup /raft-workshop"
+        ]
       ]
     },
     {

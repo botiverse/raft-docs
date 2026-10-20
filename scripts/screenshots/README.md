@@ -21,12 +21,14 @@ Maya, Taylor, Koda, Maggie, Cindy). `shots.json` lists every scene.
    ./raftdev script docs-fixture --env docs-shots
    ```
 
-3. Capture, from this repo:
+3. Capture, from this repo. `--stage-cmd` is how the script moves the tutorial
+   server between steps (see "Tutorial stages" below); `{stage}` is filled in:
 
    ```sh
    pnpm install
    pnpm exec playwright install chromium   # first time only
-   node scripts/screenshots/capture.mjs --base-url http://localhost:<web-port>
+   node scripts/screenshots/capture.mjs --base-url http://localhost:<web-port> \
+     --stage-cmd 'cd ../slock && ./raftdev script docs-fixture --env docs-shots --tutorial-stage {stage}'
    ```
 
    `./raftdev start` prints the web port. The PNGs are overwritten in place.
@@ -39,6 +41,7 @@ Options:
 | `--email` | `RAFT_EMAIL` | `alex@example.com` (the fixture viewer) |
 | `--password` | `RAFT_PASSWORD` | `password123` |
 | `--only a,b` | `RAFT_SHOTS` | all shots; matches substrings of the output path |
+| `--stage-cmd` | `RAFT_STAGE_CMD` | none; required for the tutorial shots |
 | `--out-dir` | | `content/` (use another folder to try changes) |
 | `--list` | | print the shots and exit |
 
@@ -69,6 +72,7 @@ Each entry in `shots`:
 - `clip`: crop by `selector` (+ `pad`, `width`, `height`) or by `x`/`y`/`width`/`height`.
 - `parts` + `canvas`: a composite of several crops on one canvas.
 - `email`: run the shot as another fixture account.
+- `stage`: the tutorial stage the shot needs (see below).
 - `standIn`: named API answers from `standIns` (see below).
 - `patchResponses`: overwrite fields in a real API response.
 
@@ -81,11 +85,36 @@ opt into `standIns`, which answer with what a computer would report. The
 onboarding "Connect a computer" shot also holds the setup step on screen with
 `patchResponses`, as an owner sees it right after the computer connects.
 
+### Tutorial stages
+
+The tutorial pages walk through one server in order, so each tutorial shot
+must show the server only as it is at that step. The fixture builds
+`raft-workshop-tutorial` at a stage, each including the previous ones:
+
+| Stage | Adds | Shots |
+| --- | --- | --- |
+| `onboarding` | `#all`, `#onboarding-owner` with Cindy's opener | meet-your-onboarding-agent/05 |
+| `handoff` | Alex's three messages in `#all` | hand-off-your-first-task/06 |
+| `progress` | task #1 and Cindy's progress thread | hand-off-your-first-task/07 |
+| `full` | task #2 and its breakdown, `#launch-room`, `#customer-feedback` | divide-the-work/08, catch-up/09, search/10 |
+
+A plain fixture run builds `full`. Before a shot whose `stage` differs from the
+current one, the script runs `--stage-cmd`, which rebuilds only the tutorial
+server (`--tutorial-stage <stage>`); the other servers are untouched. After the
+last shot it puts the tutorial server back to `full`.
+
+### Onboarding slug
+
+The setup-wizard server is `/workshop`, because `raft-workshop` is the feature
+server. The "Connect a computer" shot shows its setup command as
+`raft-computer setup /raft-workshop`, so it matches the "create your first
+server" step before it (a per-shot `normalizeText` rule).
+
 ### Order
 
 Opening a conversation marks it read, so the Activity and Saved shots run
-first. "Add computer → Next" registers a pending computer on the server, so it
-runs last.
+first. The staged tutorial shots run in stage order. "Add computer → Next"
+registers a pending computer on the server, so it runs last.
 
 ## Fixture accounts
 

@@ -8,6 +8,7 @@
 // Every shot in shots.json is a scene: a starting page, the interactions that
 // reach the scene, and an optional crop. Output PNGs overwrite the files in
 // place, at the pixel size the shot asks for.
+import { execSync } from "node:child_process";
 import { chromium } from "playwright";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
@@ -27,6 +28,7 @@ function parseArgs(argv) {
     headed: false,
     manifest: join(here, "shots.json"),
     outDir: contentDir,
+    stageCmd: process.env.RAFT_STAGE_CMD ?? "",
   };
   for (let i = 0; i < argv.length; i += 1) {
     const a = argv[i];
@@ -37,10 +39,11 @@ function parseArgs(argv) {
     else if (a === "--only") opts.only = next();
     else if (a === "--manifest") opts.manifest = resolve(next());
     else if (a === "--out-dir") opts.outDir = resolve(next());
+    else if (a === "--stage-cmd") opts.stageCmd = next();
     else if (a === "--list") opts.list = true;
     else if (a === "--headed") opts.headed = true;
     else if (a === "-h" || a === "--help") {
-      console.log("Usage: node scripts/screenshots/capture.mjs [--only <substring,...>] [--list] [--out-dir DIR] [--base-url URL] [--email E] [--password P]");
+      console.log("Usage: node scripts/screenshots/capture.mjs [--only <substring,...>] [--list] [--out-dir DIR] [--stage-cmd CMD] [--base-url URL] [--email E] [--password P]");
       process.exit(0);
     } else throw new Error(`Unknown argument: ${a}`);
   }
@@ -320,6 +323,22 @@ async function main() {
   }
   const browser = await chromium.launch({ headless: !opts.headed });
   const failures = [];
+  // Tutorial shots carry a "stage": the fixture rebuilds the tutorial server as
+  // it stands at that step (--tutorial-stage). A fresh fixture run is "full".
+  let currentStage = "full";
+  const setStage = (stage) => {
+    if (stage === currentStage) return;
+    if (!opts.stageCmd) {
+      throw new Error(`needs tutorial stage "${stage}": pass --stage-cmd (or RAFT_STAGE_CMD), see README.md`);
+    }
+    try {
+      execSync(opts.stageCmd.replaceAll("{stage}", stage), { stdio: "pipe" });
+    } catch (error) {
+      throw new Error(`stage command failed for "${stage}": ${String(error.stderr ?? error.message).trim().split("\n").slice(-3).join(" | ")}`);
+    }
+    console.log(`stage ${stage}`);
+    currentStage = stage;
+  };
   try {
     const sessions = new Map([[opts.email, await login(browser, opts)]]);
     for (const shot of shots) {
@@ -329,6 +348,7 @@ async function main() {
         const email = shot.email ?? opts.email;
         if (!sessions.has(email)) sessions.set(email, await login(browser, opts, email));
         const storageState = sessions.get(email);
+        setStage(shot.stage ?? currentStage);
         const png = shot.parts
           ? await captureComposite(browser, storageState, shot, opts, manifest)
           : await captureScene(browser, storageState, shot, opts, manifest);
@@ -341,6 +361,8 @@ async function main() {
         console.log(`FAIL  ${shot.out}: ${error instanceof Error ? error.message.split("\n")[0] : error}`);
       }
     }
+    // Leave the tutorial server as a plain fixture run leaves it.
+    if (currentStage !== "full") setStage("full");
   } finally {
     await browser.close();
   }
