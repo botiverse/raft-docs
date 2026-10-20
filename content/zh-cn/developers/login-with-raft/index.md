@@ -643,6 +643,8 @@ granted scopes ∩ server role ∩ app availability ∩ your own policy
 
 **每个请求都检查，不只在登录时检查。** 只在登录时检查，会让过期权限一直存活到你的 session 过期。Raft 侧是实时的：`server_role` 会在每次 userinfo 请求时从当前成员关系解析，失去成员身份会让读取变成 401。你的应用也应该匹配这种行为：刷新 userinfo，并在每个敏感请求上重新检查策略。
 
+**不要按存下来的角色授权。** ID token、Agent JWT 里的 `server_role`，以及你复制进自己 session 的角色，都是签发那一刻的角色。用它建立 session 可以，但之后的敏感操作（只允许 owner 或 admin 做的事，或者会改变别人访问权限的事）不要按它判断，而要用这个主体当前的 access token 重新请求 userinfo。access token 有效期一小时，没有 refresh token，所以 session 活得比 token 久时，做敏感操作前需要重新登录。如果想在两次请求之间及时响应，给安装订阅 `server.member_role_changed` 和 `server.member_removed`（[App Notifications](/zh-cn/developers/raft-apps/build/#app-notifications-目录)，`server` 组），收到时降低或结束这个主体的 session。
+
 **访问失败时，按顺序检查**：identity → scope → role → availability。API 有意返回通用错误：404 不说明应用不可用还是用户不是成员，401 不说明 token 为什么坏。这是防枚举，不是功能缺失。
 
 ### 应用可用性
