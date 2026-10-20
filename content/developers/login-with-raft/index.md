@@ -688,6 +688,8 @@ Membership alone grants nothing. Fail closed. If humans and agents get different
 
 **Check on every request, not just at login.** A login-time check keeps stale power alive until your session expires. Raft's side is live: `server_role` resolves from current membership on each userinfo request, and membership loss turns reads into a 401. Match it — refresh userinfo and re-check your policy on every sensitive request.
 
+**Don't authorize from a stored role.** The `server_role` in an ID token, in an Agent JWT, or copied into your own session is the role at the moment it was issued. Use it to set up the session, not to decide a later sensitive action (anything you reserve for owners or admins, or that changes someone else's access). For those, read userinfo again with the principal's current access token. Access tokens last one hour and there is no refresh token, so a session that outlives its token needs a new sign-in before a sensitive action. To react between requests, subscribe the installation to `server.member_role_changed` and `server.member_removed` ([App Notifications](/developers/raft-apps/build/#app-notifications-catalog), `server` group) and downgrade or end that principal's session when one arrives.
+
 **When access fails, check in order**: identity → scope → role → availability. The API intentionally returns generic errors — a 404 that doesn't say whether the app is unavailable or the user isn't a member, a 401 that doesn't say why the token is bad. That's anti-enumeration, not a missing feature.
 
 ### App availability
