@@ -331,6 +331,15 @@ export default defineConfig({
     ],
   },
   head: [
+    // raft-ui's tokens follow the system theme unless <html> says `.light` or
+    // `.dark`. VitePress only ever sets `.dark`, so a reader who picks light
+    // on a dark-mode OS would get dark tokens. Mirror the choice as `.light`,
+    // before first paint and on every toggle.
+    [
+      'script',
+      {},
+      `;(() => { const el = document.documentElement; const sync = () => el.classList.toggle('light', !el.classList.contains('dark')); sync(); new MutationObserver(sync).observe(el, { attributes: true, attributeFilter: ['class'] }) })()`,
+    ],
     ['link', { rel: 'icon', href: '/favicon.ico' }],
     ['link', { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' }],
     ['meta', { property: 'og:title', content: 'Raft Docs' }],
@@ -373,6 +382,8 @@ export default defineConfig({
   // Custom labels for the three callout types (default theme renders
   // INFO/TIP/WARNING in caps; we want readable named callouts).
   markdown: {
+    // The Raft Design System's code theme (raft-ui CodeBlock).
+    theme: { light: 'vitesse-light', dark: 'vitesse-dark' },
     container: {
       infoLabel: 'Information',
       tipLabel: 'Tip',

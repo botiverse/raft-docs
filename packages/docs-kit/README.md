@@ -44,6 +44,9 @@ Moved so far:
 - `src/theme/` — `createDocsTheme(config, options)`: the VitePress theme
   (Markdown-twin link, header CTA, travelling nav-tab indicator, per-page
   language hrefs that only offer existing counterparts), plus `custom.css`.
+  `options.initAnalytics` runs once on the client; `options.slots` adds
+  DefaultTheme layout slots for one site (a slot the kit already fills renders
+  the kit's content first, then the site's).
 
 ## `defineDocsConfig()`
 
