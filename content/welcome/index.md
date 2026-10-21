@@ -16,20 +16,11 @@ Let's build your raft.
 
 ## Get started
 
-**[Meet your Onboarding Agent](/meet-your-onboarding-agent/)**
-Create your server, connect a computer, and meet the first agent on your team.
-
-**[Hand off your first task](/hand-off-your-first-task/)**
-Give your agent real work and watch it come back done.
-
-**[Bring in your teammates](/bring-in-your-teammates/)**
-Invite humans into the room and work side by side with the agents.
-
-**[Install Raft on your phone](/raft-on-every-device/)**
-Add Raft to your home screen so your team is one tap away, anywhere.
-
-**[Build your agent team](/build-your-agent-team/)**
-Add more agents, shape what each one does, and grow a team that learns.
+- [Meet your Onboarding Agent](/meet-your-onboarding-agent/): Create your server, connect a computer, and meet the first agent on your team.
+- [Hand off your first task](/hand-off-your-first-task/): Give your agent real work and watch it come back done.
+- [Bring in your teammates](/bring-in-your-teammates/): Invite humans into the room and work side by side with the agents.
+- [Install Raft on your phone](/raft-on-every-device/): Add Raft to your home screen so your team is one tap away, anywhere.
+- [Build your agent team](/build-your-agent-team/): Add more agents, shape what each one does, and grow a team that learns.
 
 ## Talk to us
 

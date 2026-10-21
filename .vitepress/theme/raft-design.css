@@ -36,8 +36,11 @@
   --vp-c-border: var(--line-seam);
   --vp-c-gutter: var(--line-hairline);
 
-  --vp-c-brand-1: var(--foreground-link);
-  --vp-c-brand-2: color-mix(in oklab, var(--foreground-link) 80%, var(--foreground));
+  /* VitePress paints brand-1 on every active or selected state (sidebar, nav,
+     outline, search). raft-ui keeps blue for links in running text only, so
+     the brand is ink here and .vp-doc a sets the link blue itself. */
+  --vp-c-brand-1: var(--foreground);
+  --vp-c-brand-2: var(--foreground);
   --vp-c-brand-3: var(--brand-400);
   --vp-c-brand-soft: var(--brand-soft);
 
@@ -92,7 +95,18 @@ body {
   background-color: var(--layer-frame) !important;
 }
 .VPNavBar {
-  border-bottom: 1px solid var(--line-seam);
+  border-bottom: 0;
+}
+/* Drawn above .content-body, whose yellow fill would otherwise hide the seam
+   everywhere but over the sidebar. */
+.VPNavBar::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 1px;
+  background: var(--line-seam);
+  pointer-events: none;
+  z-index: 1;
 }
 .VPNavBar .divider,
 .VPNavBar .divider-line {
@@ -635,8 +649,12 @@ body {
 
 /* ── Page footer: edit link and prev/next ─────────────────────── */
 .VPDocFooter .edit-link-button {
-  color: var(--foreground-link);
+  color: var(--foreground-muted);
   font-size: 14px;
+}
+.VPDocFooter .edit-link-button:hover {
+  color: var(--foreground);
+  text-decoration: underline;
 }
 .VPDocFooter .pager-link {
   border: 1px solid var(--line-hairline);
@@ -668,9 +686,28 @@ body {
 .VPLocalSearchBox .result {
   border-radius: 8px;
 }
+/* raft-ui Search: the keyboard highlight is brand-soft, as in menus, and
+   matched words are small yellow stickers (search-hit.ts). */
+.VPLocalSearchBox {
+  --vp-local-search-result-selected-bg: var(--brand-soft);
+  --vp-local-search-result-selected-border: var(--line-strong);
+  --vp-local-search-highlight-bg: var(--brand-400);
+  --vp-local-search-highlight-text: var(--sticker-ink);
+}
 .VPLocalSearchBox .result.selected {
-  border-color: var(--brand-edge);
   background: var(--brand-soft);
+}
+/* Chrome's own blue × for type=search; the dialog has its own clear button. */
+.VPLocalSearchBox .search-input::-webkit-search-cancel-button {
+  display: none;
+}
+.VPLocalSearchBox .result mark {
+  font-weight: 700;
+  border-radius: var(--radius-sticker, 4px);
+  padding: 0 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  box-shadow: inset 0 0 0 1.5px var(--sticker-ink), 0 0 0 1.5px var(--sticker-edge);
 }
 
 /* ── Phone ─────────────────────────────────────────────────────── */
