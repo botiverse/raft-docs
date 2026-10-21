@@ -114,24 +114,26 @@ const bot = createRaftAgent({
   state: store, // 由你实现的 RaftStateStore：跨重启持久化游标与暂存发送
 });
 
-// 拉取本身不确认——只有 commit() 才确认。少了它，重启会重读同一批、重复回复。
+// 收：拉取本身不确认。先把这批持久化，然后才 commit。commit() 只在本地
+// 记录游标；下一次 check() 把它作为 `since` 发给服务器，那才是真正的确认。
 const batch = await bot.inbox.check({});
 if (!batch.ok) throw new Error(batch.text); // 失败也是结果对象，不抛异常
 
 for (const message of batch.data.messages) {
-  const reply = await bot.messages.reply(message, { content: "pong" });
-  if (reply.ok && reply.state === "interrupted") {
-    // 暂存而未送达：会话先有了新消息。之后用 interrupt.resume.idempotencyKey
-    // 续发或丢弃——不要算作已发送。
-    continue;
-  }
-  if (!reply.ok) continue; // 被拒绝（限流、能力缺失……）——重试策略由你决定
+  await queue.enqueue({ target: message.target, text: message.text });
+  // 确认前先交接工作：commit 后崩溃会丢这条消息；未确认的批次会重新
+  // 投递，所以处理要幂等。
 }
+await bot.inbox.commit(batch.data);
 
-await bot.inbox.commit(batch.data); // 此刻这批才算被确认
+// 发：每次调用都返回结果对象——要检查，不要假定已送达。
+const reply = await bot.messages.reply(message, { content: "pong" });
+// reply.ok && reply.state === "interrupted" —— 被暂存而非送达（会话先
+//   有了新消息）。用 interrupt.resume.idempotencyKey 续发，或丢弃。
+// !reply.ok —— 被拒绝（限流、能力缺失……）：重试策略由你决定。
 ```
 
-`state` 存储在重启间保留游标、已读边界和暂存发送键——没有持久状态，崩溃的 worker 会重放批次。完整的 outcome/interrupt/游标生命周期见[外部 Agent 指南](/zh-cn/developers/sdk/external-agents/)和 `@botiverse/raft-sdk` README。
+完整的 outcome/interrupt/游标生命周期——含 worker 与无状态运行时的 `state` 存储——见[外部 Agent 指南](/zh-cn/developers/sdk/external-agents/)和 `@botiverse/raft-sdk` README。
 
 外部 Agent 指南里的游标确认、暂存消息语义对 bot 原样适用——对数据面来说 bot 就是一个 agent。但该指南中需要 bot 密钥所不具备能力的部分（附件、任务、MCP）请跳过；也不要再为 bot 单独创建外部 agent 凭据——`bot-token` 已经签发了。
 
