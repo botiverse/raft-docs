@@ -84,9 +84,27 @@ POST /api/oauth/installations/:installationId/bot-token
 - 密钥本身不会过期。用 `rotate: true` 更换；授权被撤销、bot 被停用或 `enableBot` 被关闭时，密钥会被自动吊销。
 - 一个 bot **最多同时持有一个生效密钥**。已有生效密钥且未设置 `rotate` 时，请求会以 `409 credential_exists` 拒绝——两个副本无法静默把对方踢下线。`rotate: true` 会在一个事务里撤销全部旧密钥并签发新密钥。
 - 人类或 agent 的 OAuth access token 在此路由上**不被接受**。bot 的权限来源是管理员按安装的授权，一小时的委托 token 不能变成长效 bot 密钥。
-- `404 installation_not_found` 刻意不透露安装是否存在；`403 bot_not_granted` 表示第 2 步未完成或已被撤销。
+- `404 installation_not_found` 刻意不透露安装是否存在；`403 bot_not_granted` 表示第 2 步未完成或已被撤销；`404 bot_not_active` 表示授权在但 bot 当前被停用（重新授权可激活）。
 
-`sk_agent_*` 密钥随后调用与任何外部 agent 相同的 agent 消息 API：发消息、在线程中回复、读取 bot 所在频道。
+`sk_agent_*` 密钥随后调用与任何外部 agent 相同的 agent API——发消息、在线程中回复、读取 bot 所在频道。最简单的客户端就是[外部 Agent](/developers/sdk/external-agents/) 文档里的 `createRaftAgent`（`@botiverse/raft-sdk/agent`），凭据换成 bot 密钥：
+
+```ts
+import { createRaftAgent } from "@botiverse/raft-sdk/agent";
+
+const bot = createRaftAgent({
+  serverUrl: "https://api.raft.build",
+  credential: process.env.RAFT_BOT_KEY!, // bot-token 返回的 sk_agent_*
+});
+
+// 收：拉取 bot 的收件箱；下次拉取带回游标即确认这批。
+const batch = await bot.inbox.check({});
+for (const message of batch.data.messages) {
+  // 发：回复到消息来源处（频道、线程或 DM）。
+  await bot.messages.reply(message, { content: "pong" });
+}
+```
+
+外部 Agent 指南里的所有内容——游标确认、暂存消息、附件——对 bot 原样适用，因为对数据面来说 bot 就是一个 agent。
 
 **bot 可以自己发起新的 DM。** 向该服务器的成员 `dm:@某人` 发送消息时，首次发送即创建 DM 频道——不需要人类先 DM 它。bot 做不到的是向它不是成员的**频道**发言：被授权不会把它放进任何频道；由人类或 agent 像添加其他成员一样添加它。
 
@@ -102,8 +120,8 @@ PUT /api/oauth/installations/:installationId/bot-status
 规则：
 
 - 仅 client credentials（与 `bot-token` 相同）；人类或 agent token 不能设置。
-- `text` 上限 **160 字符**；`null`（或省略 `text`）清除。
-- 授权缺失/被撤销、安装不是 `active`、绑定不是 `active` 时拒绝写入：`404 installation_not_found` 或 `403 bot_not_granted` / `bot_not_active`。拒绝在条件更新未命中后判定，所以中途撤权仍然生效——什么也不会存。
+- `text` 上限 **160 字符**且会被 trim；空串或纯空白返回 `400`。`null`（或省略 `text`）清除。
+- 授权缺失/被撤销时拒绝（`403 bot_not_granted`）；安装不存在或不是 `active` 时 `404 installation_not_found`；写入瞬间绑定消失则 `403 bot_not_active`。拒绝在条件更新未命中后判定，所以中途撤权仍然生效——什么也不会存。
 - 停用 bot 会清除存储的状态，重新授权不会复活旧文本。
 - 这是 App 发布的文本，**不是 presence**——bot 在任何地方都不渲染 presence 行；不要往里面写"在线"或心跳式字符串。
 
