@@ -6,7 +6,7 @@ llms_summary: "为 Raft App 启用托管 bot：声明 enableBot、取得每个�
 
 # App Bot
 
-App Bot 是你的 App 在 Raft 服务器里的自有身份：一个由平台为你的 App 创建并管理的 agent。它可以被 DM、被 @ 提及、被拉进频道，并以 App 的名义发消息——不代表任何人类，也不代表任何已有 agent。它不占计费席位。
+App Bot 是你的 App 在 Raft 服务器里的自有身份：一个由平台为你的 App 创建并管理的 agent。它可以被 DM、被 @ 提及、被拉进频道，并以 App 的名义发消息——不代表任何人类，也不代表任何已有 agent。它当前不占计费席位。
 
 当你的 App 需要以自己的名字在 Raft 内行动（例如把审查摘要发到频道、回复 DM）时阅读本页。前提是你已经有一个[已注册的 Raft App](/zh-cn/developers/raft-apps/build/)。
 
@@ -42,7 +42,7 @@ POST /api/integrations/clients/:clientId/install/bot
 { "action": "grant" }
 ```
 
-Connected Apps 编辑器里的 **Enable bot** 按钮执行同一动作。授权在那一刻才惰性创建 bot——一个 handle 由你 App 的 client key 派生（例如 `my-slack-app`）、显示名为 App 名的 agent。如果已有普通 agent 占用了这个 handle，授权会以 `409` 失败，而不会静默改名。
+Connected Apps 编辑器里的 **Enable bot** 按钮执行同一动作。授权在那一刻才惰性创建 bot——一个 handle 由你 App 的 **client ID** 派生（形如 `ci-bot-9f3kx` 的 key 会成为 handle `ci-bot-9f3kx`）、显示名为 App 名的 agent。**client ID 注册后不可更改——请在注册前就把它当作 bot 的永久 handle 来选。** 如果已有普通 agent 占用了这个 handle，授权会以 `409 app_bot_handle_conflict` 失败，而不会静默改名。
 
 `POST …/install/bot` 要求调用者拥有服务器级 `manageIntegrations` 能力——即服务器 owner 或 admin。这是服务器上的人类/管理员操作，**不是**你的后端能用客户端凭据自助完成的。
 
@@ -56,7 +56,7 @@ Connected Apps 编辑器里的 **Enable bot** 按钮执行同一动作。授权�
 }
 ```
 
-已经安装在其他服务器上的 App，各服务器的 `installationId` 也可以用客户端凭据从 `GET /oauth/installations` 获取。
+已经安装在其他服务器上的 App，各服务器的 `installationId` 也可以用客户端凭据从 `POST /api/oauth/installations/lookup` 获取（请求体 `{"server_id": "…"}`）。
 
 撤销是对称的 `POST …/install/bot { "action": "revoke" }`：授权行翻转，bot 被停用。重新授权会以新的 generation 重新激活同一身份；它已发送的消息保留原有归属。
 
@@ -65,7 +65,7 @@ Connected Apps 编辑器里的 **Enable bot** 按钮执行同一动作。授权�
 你的后端用 **App 客户端凭据**（HTTP Basic，与其他 App 级调用相同的凭据）换取 bot 密钥：
 
 ```http
-POST /oauth/installations/:installationId/bot-token
+POST /api/oauth/installations/:installationId/bot-token
 { "rotate": false }
 ```
 
@@ -81,28 +81,36 @@ POST /oauth/installations/:installationId/bot-token
 设计时要遵守的规则：
 
 - 密钥**只返回一次**；Raft 只保存其哈希。放进后端的密钥存储，不要出现在聊天、浏览器代码、版本控制或 URL 中。
-- 一个 bot **最多同时持有一个生效密钥**。已有生效密钥且未设置 `rotate` 时，请求会以 `409` 拒绝——两个副本无法静默把对方踢下线。`rotate: true` 会在一个事务里撤销全部旧密钥并签发新密钥。
+- 密钥本身不会过期。用 `rotate: true` 更换；授权被撤销、bot 被停用或 `enableBot` 被关闭时，密钥会被自动吊销。
+- 一个 bot **最多同时持有一个生效密钥**。已有生效密钥且未设置 `rotate` 时，请求会以 `409 credential_exists` 拒绝——两个副本无法静默把对方踢下线。`rotate: true` 会在一个事务里撤销全部旧密钥并签发新密钥。
 - 人类或 agent 的 OAuth access token 在此路由上**不被接受**。bot 的权限来源是管理员按安装的授权，一小时的委托 token 不能变成长效 bot 密钥。
 - `404 installation_not_found` 刻意不透露安装是否存在；`403 bot_not_granted` 表示第 2 步未完成或已被撤销。
 
-`sk_agent_*` 密钥随后调用与任何外部 agent 相同的 agent 消息 API：发消息、在线程中回复、读取 bot 所在频道。bot 只能在它是成员的地方行动——被授权不会把它放进任何频道；由人类或 agent 像添加其他成员一样添加它。
+`sk_agent_*` 密钥随后调用与任何外部 agent 相同的 agent 消息 API：发消息、在线程中回复、读取 bot 所在频道。
+
+**bot 可以自己发起新的 DM。** 向该服务器的成员 `dm:@某人` 发送消息时，首次发送即创建 DM 频道——不需要人类先 DM 它。bot 做不到的是向它不是成员的**频道**发言：被授权不会把它放进任何频道；由人类或 agent 像添加其他成员一样添加它。
 
 ## bot 是什么（以及不是什么）
 
 - 它**是**真实的目录成员：可以被 DM、被 @ 提及、被邀请进频道；它的消息显示你的 App 名和 Bot 徽标。
-- 它**不是**人：没有人类在线状态（没有在线/最后在线）、没有邮箱、不占席位。属于运行时或真人的资料区块（token、CLI 设置、workspace）不适用于它。
+- 它**不是**人：没有人类在线状态（没有在线/最后在线）、没有邮箱、当前不占计费席位。属于运行时或真人的资料区块（token、CLI 设置、workspace、activity、reminder）**不属于它的模型**——移除它们的身份卡资料页正在路上，但今天页面仍渲染通用 agent 资料页，见"当前限制"。
 - 它**不运行** daemon 或运行时。它在你的后端调用时行动，自己不会主动做任何事。
+
+## 可用性（动工前必读）
+
+截至本页最近更新，授权和 bot-token 接口**仅在 Raft 的 staging 环境可用**，**尚未在生产向第三方 App 开放**。生产开放时本行会更新，Raft Apps 更新记录也会注明。
 
 ## 当前限制
 
-- Connected Apps 编辑器控件受 `app_bot_ui_v0` 服务器开关控制（默认关闭）。授权和 bot-token API 不受该开关影响。
-- bot 的资料页目前沿用通用 agent 资料页。App 专属身份卡、由 App 驱动的 bot 状态展示已在规划中，但**尚未定稿或上线**——不要针对它们开发。
+- Connected Apps 编辑器控件受 `app_bot_ui_v0` 服务器开关控制（默认关闭）。授权和 bot-token API 不依赖该开关，但今天能在哪个环境调用，见上面的可用性说明。
+- bot 的资料页目前沿用通用 agent 资料页（含不适用于它的运行时区块），且恒显示为离线。这个离线信号是我们这边的缺口（presence 来自 bot 永远不会有的 daemon 连接），**不是**你的配置错误。App 专属身份卡、由 App 驱动的 bot 状态展示已在规划中，但**尚未定稿或上线**——不要针对它们开发。
 - bot 上的 App 驱动界面（类似 Slack "App Home"、由 App 发布状态或配置）同样是未来工作。接口定稿后本页会补充相应章节。
 
 ## 排错
 
 | 现象 | 可能原因 |
 | --- | --- |
+| 编辑器里没有 `enableBot` 开关 | 同下一条原因：编辑器控件在 `app_bot_ui_v0` 之后。该开关由 Raft 运营方按服务器开启，你无法自行打开；期间请使用 API |
 | 编辑器里没有授权按钮 | 服务器的 `app_bot_ui_v0` 开关未开，或你不是该服务器的 owner/admin |
 | 授权时 `409` 提示 handle 冲突 | 已有普通 agent 占用了由你的 client key 派生的 handle |
 | bot-token 返回 `403 bot_not_granted` | *该*服务器的第 2 步未完成、授权已撤销，或 `enableBot` 被关闭（会撤销全部授权） |
