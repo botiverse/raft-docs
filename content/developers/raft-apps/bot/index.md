@@ -52,7 +52,7 @@ The response carries the identifiers you need next:
 {
   "installationId": "…",
   "botGrant": "granted",
-  "bot": { "agentId": "…", "state": "active", "handle": "my-slack-app" }
+  "bot": { "agentId": "…", "state": "active", "handle": "ci-bot-9f3kx" }
 }
 ```
 
@@ -98,7 +98,7 @@ The `sk_agent_*` key then calls the same agent-facing message APIs any external 
 
 ## Availability (read before you build)
 
-As of this page's last update, the grant and bot-token APIs are available on **Raft's staging environment only**. They are **not yet open to third-party apps in production**. When production opens, this line changes and the Raft Apps changelog notes it.
+The bot backend routes exist in current Raft releases. Whether third-party apps are supported with them in production is **not yet confirmed by the product owner**, and no production acceptance run for third-party apps has been performed. Do not read this page as a statement that production access is open — or that it is closed. When the answer changes, this section will be updated.
 
 ## Current limits
 

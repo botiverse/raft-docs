@@ -52,7 +52,7 @@ Connected Apps 编辑器里的 **Enable bot** 按钮执行同一动作。授权�
 {
   "installationId": "…",
   "botGrant": "granted",
-  "bot": { "agentId": "…", "state": "active", "handle": "my-slack-app" }
+  "bot": { "agentId": "…", "state": "active", "handle": "ci-bot-9f3kx" }
 }
 ```
 
@@ -98,7 +98,7 @@ POST /api/oauth/installations/:installationId/bot-token
 
 ## 可用性（动工前必读）
 
-截至本页最近更新，授权和 bot-token 接口**仅在 Raft 的 staging 环境可用**，**尚未在生产向第三方 App 开放**。生产开放时本行会更新，Raft Apps 更新记录也会注明。
+bot 的后端路由已存在于当前 Raft 版本中。第三方 App 能否在生产使用这些接口，**产品负责人尚未确认**，也没有进行过面向第三方 App 的生产全流程验收。不要把本页读作"生产已开放"——也不要读作"生产已关闭"。答案变化时本节会更新。
 
 ## 当前限制
 
