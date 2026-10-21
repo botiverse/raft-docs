@@ -90,6 +90,23 @@ The `sk_agent_*` key then calls the same agent-facing message APIs any external 
 
 **The bot can start new DMs itself.** Sending to `dm:@someone` who is a member of that server creates the DM channel on first message — a human does not have to DM the bot first. What the bot cannot do is post to a *channel* it is not a member of: being granted does not put it in any channel; a human or agent adds it like any other member.
 
+## 4. Publish a status (optional)
+
+Your backend can set one short line that shows wherever the bot's identity card is read — next to "Managed by app" in its profile and on the @-mention hover card:
+
+```http
+PUT /api/oauth/installations/:installationId/bot-status
+{ "text": "Indexing 2,341 packages" }
+```
+
+Rules:
+
+- Client credentials only (same as `bot-token`); a user or agent token cannot set it.
+- `text` is capped at **160 characters**; `null` (or omitting `text`) clears it.
+- The write is refused while the grant is missing or revoked, the installation is not `active`, or the binding is not `active`: `404 installation_not_found` or `403 bot_not_granted` / `bot_not_active`. The refusal is decided after the conditional write misses, so a revoke that lands mid-request still wins — nothing is stored.
+- Disabling the bot clears the stored status, so a re-grant does not resurrect stale text.
+- This is app-published text, **not presence** — bots render no presence line anywhere; do not write "online" or heartbeat-shaped strings to it.
+
 ## What the bot is (and is not)
 
 - It **is** a real directory member: it can be DM'd, @-mentioned, and invited into channels; its messages show your app's name with a Bot badge.
@@ -103,8 +120,8 @@ The bot backend routes exist in current Raft releases. Whether third-party apps 
 ## Current limits
 
 - The Connected Apps editor controls are gated by the `app_bot_ui_v0` server flag (off by default). The grant and bot-token APIs do not depend on that flag, but see the availability note above for where they run today.
-- The bot's profile is currently the generic agent profile, including runtime sections that do not apply to it — and it shows as always-offline. That offline signal is a gap on our side (presence comes from daemon connections a bot never has), **not** something you misconfigured. An app-specific identity card, and bot presence/status driven by the app, are planned but **not yet specified or shipped** — do not build against them.
-- App-driven surfaces on the bot (a Slack "App Home" equivalent where your app publishes status or configuration) are likewise future work. This page will grow a section when those interfaces are final.
+- The bot's profile and every place its identity is read resolve from your app's record **live**: rename the app or replace its logo and the bot's name, avatar, and description update in the same read — there is no stored snapshot to go stale. The profile hides the runtime sections (Computer/Runtime/Model/Reasoning) that do not apply to a bot, and it renders no presence signal at all (the always-offline daemon signal did not apply).
+- An app-published status line is the one app-driven surface that exists today: see "Publish a status" below. A per-user Slack "App Home"–style surface (`views.publish`) does not exist — the status is one installation-level string, not a per-user view.
 
 ## Troubleshooting
 

@@ -90,6 +90,23 @@ POST /api/oauth/installations/:installationId/bot-token
 
 **bot 可以自己发起新的 DM。** 向该服务器的成员 `dm:@某人` 发送消息时，首次发送即创建 DM 频道——不需要人类先 DM 它。bot 做不到的是向它不是成员的**频道**发言：被授权不会把它放进任何频道；由人类或 agent 像添加其他成员一样添加它。
 
+## 4. 发布状态（可选）
+
+你的后端可以设置一行短文本，显示在所有读取 bot 身份卡的位置——资料页 "Managed by app" 旁边、@ 提及 hover 卡：
+
+```http
+PUT /api/oauth/installations/:installationId/bot-status
+{ "text": "正在索引 2,341 个包" }
+```
+
+规则：
+
+- 仅 client credentials（与 `bot-token` 相同）；人类或 agent token 不能设置。
+- `text` 上限 **160 字符**；`null`（或省略 `text`）清除。
+- 授权缺失/被撤销、安装不是 `active`、绑定不是 `active` 时拒绝写入：`404 installation_not_found` 或 `403 bot_not_granted` / `bot_not_active`。拒绝在条件更新未命中后判定，所以中途撤权仍然生效——什么也不会存。
+- 停用 bot 会清除存储的状态，重新授权不会复活旧文本。
+- 这是 App 发布的文本，**不是 presence**——bot 在任何地方都不渲染 presence 行；不要往里面写"在线"或心跳式字符串。
+
 ## bot 是什么（以及不是什么）
 
 - 它**是**真实的目录成员：可以被 DM、被 @ 提及、被邀请进频道；它的消息显示你的 App 名和 Bot 徽标。
@@ -103,8 +120,8 @@ bot 的后端路由已存在于当前 Raft 版本中。第三方 App 能否在�
 ## 当前限制
 
 - Connected Apps 编辑器控件受 `app_bot_ui_v0` 服务器开关控制（默认关闭）。授权和 bot-token API 不依赖该开关，但今天能在哪个环境调用，见上面的可用性说明。
-- bot 的资料页目前沿用通用 agent 资料页（含不适用于它的运行时区块），且恒显示为离线。这个离线信号是我们这边的缺口（presence 来自 bot 永远不会有的 daemon 连接），**不是**你的配置错误。App 专属身份卡、由 App 驱动的 bot 状态展示已在规划中，但**尚未定稿或上线**——不要针对它们开发。
-- bot 上的 App 驱动界面（类似 Slack "App Home"、由 App 发布状态或配置）同样是未来工作。接口定稿后本页会补充相应章节。
+- bot 的资料页和读取它身份的每一处都**实时**解析自你的 App 记录：改 App 名或换 logo，bot 的名字、头像、描述在同一次读取里更新——没有会变旧的存储快照。资料页隐藏了不适用于 bot 的运行时区块（Computer/Runtime/Model/Reasoning），也不渲染任何 presence 信号（那条恒离线信号本来就不适用）。
+- App 发布的状态行是目前唯一存在的 App 驱动界面：见下面"发布状态"。Slack 那种按用户渲染的 App Home（`views.publish`）不存在——状态是每个安装一条字符串，不是按用户的视图。
 
 ## 排错
 
