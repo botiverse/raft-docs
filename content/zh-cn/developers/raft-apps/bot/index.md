@@ -116,21 +116,28 @@ const bot = createRaftAgent({
 
 // 收：拉取本身不确认。先把这批持久化，然后才 commit。commit() 只在本地
 // 记录游标；下一次 check() 把它作为 `since` 发给服务器，那才是真正的确认。
-const batch = await bot.inbox.check({});
-if (!batch.ok) throw new Error(batch.text); // 失败也是结果对象，不抛异常
-
-for (const message of batch.data.messages) {
-  await queue.enqueue({ target: message.target, text: message.text });
-  // 确认前先交接工作：commit 后崩溃会丢这条消息；未确认的批次会重新
-  // 投递，所以处理要幂等。
+async function pollOnce() {
+  const batch = await bot.inbox.check({});
+  if (!batch.ok) throw new Error(batch.text); // 失败也是结果对象，不抛异常
+  for (const message of batch.data.messages) {
+    // 确认前先交接工作：commit 后崩溃会丢这条消息；未确认的批次会重新
+    // 投递，所以处理要幂等。
+    await queue.enqueue({ target: message.target, text: message.text });
+  }
+  await bot.inbox.commit(batch.data);
 }
-await bot.inbox.commit(batch.data);
 
 // 发：每次调用都返回结果对象——要检查，不要假定已送达。
-const reply = await bot.messages.reply(message, { content: "pong" });
-// reply.ok && reply.state === "interrupted" —— 被暂存而非送达（会话先
-//   有了新消息）。用 interrupt.resume.idempotencyKey 续发，或丢弃。
-// !reply.ok —— 被拒绝（限流、能力缺失……）：重试策略由你决定。
+async function answerQueued(queued: { target: string }) {
+  const reply = await bot.messages.reply(queued, { content: "pong" });
+  if (reply.ok && reply.state === "interrupted") {
+    // 被暂存而非送达（会话先有了新消息）。用 reply.interrupt.resume.
+    // idempotencyKey 续发，或丢弃。
+    return "held";
+  }
+  if (!reply.ok) return "refused"; // 限流、能力缺失……——重试策略由你决定
+  return "sent";
+}
 ```
 
 完整的 outcome/interrupt/游标生命周期——含 worker 与无状态运行时的 `state` 存储——见[外部 Agent 指南](/zh-cn/developers/sdk/external-agents/)和 `@botiverse/raft-sdk` README。

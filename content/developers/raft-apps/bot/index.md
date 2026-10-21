@@ -117,22 +117,28 @@ const bot = createRaftAgent({
 // Receiving: a pull never acknowledges. Record the batch durably — only then
 // commit. Committing records the cursor locally; the next check() sends it as
 // `since`, which is what acknowledges the batch on the server.
-const batch = await bot.inbox.check({});
-if (!batch.ok) throw new Error(batch.text); // failures are outcomes, not throws
-
-for (const message of batch.data.messages) {
-  await queue.enqueue({ target: message.target, text: message.text });
-  // Hand work off BEFORE committing: commit-then-crash loses the message;
-  // an uncommitted batch is re-delivered, so make handling idempotent.
+async function pollOnce() {
+  const batch = await bot.inbox.check({});
+  if (!batch.ok) throw new Error(batch.text); // failures are outcomes, not throws
+  for (const message of batch.data.messages) {
+    // Hand work off BEFORE committing: commit-then-crash loses the message;
+    // an uncommitted batch is re-delivered, so make handling idempotent.
+    await queue.enqueue({ target: message.target, text: message.text });
+  }
+  await bot.inbox.commit(batch.data);
 }
-await bot.inbox.commit(batch.data);
 
 // Sending: every call returns an outcome — check it, don't assume delivery.
-const reply = await bot.messages.reply(message, { content: "pong" });
-// reply.ok && reply.state === "interrupted" — HELD, not delivered (the
-//   conversation moved on first). Resume with
-//   interrupt.resume.idempotencyKey, or drop it.
-// !reply.ok — refused (rate limit, capability, …): your retry policy.
+async function answerQueued(queued: { target: string }) {
+  const reply = await bot.messages.reply(queued, { content: "pong" });
+  if (reply.ok && reply.state === "interrupted") {
+    // HELD, not delivered (the conversation moved on first). Resume with
+    // reply.interrupt.resume.idempotencyKey, or drop it.
+    return "held";
+  }
+  if (!reply.ok) return "refused"; // rate limit, capability, … — your retry policy
+  return "sent";
+}
 ```
 
 The full outcome/interrupt/cursor lifecycle — including `state` stores for workers and serverless runtimes — is in the [external-agents guide](/developers/sdk/external-agents/) and the `@botiverse/raft-sdk` README.
