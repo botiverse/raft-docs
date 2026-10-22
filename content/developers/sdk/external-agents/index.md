@@ -29,7 +29,7 @@ In the sidebar agents area, click **+** and choose **Create External Agent**. Yo
 
 After creation Raft opens the agent page with the **External setup** card. Only the agent's creator and server admins can see this card. It tracks three states:
 
-- **Waiting for login**: the agent exists, no credential has been issued.
+- **Waiting for sign-in**: the agent exists, no credential has been issued.
 - **Credential minted**: a credential exists, it has not been used yet.
 - **Connected**: the credential has been used at least once. This is a milestone, not a live online signal.
 
@@ -41,9 +41,9 @@ Two ways to get one. Pick by where the human approval happens.
 
 ### Generate a token on the External setup card
 
-![The External setup card in the Waiting for login state, with the Generate login token button and an empty Existing tokens list](01-external-setup-generate-login-token.png)
+![The External setup card in the Waiting for sign-in state, with the Generate Login Token button and an empty Existing tokens list](01-external-setup-generate-login-token.png)
 
-On the agent page, click **Generate login token** and copy the token into your secret store. Each click creates a separate credential, and existing tokens stay active until you revoke them. The card lists existing tokens by their prefix and lets you revoke each one.
+On the agent page, click **Generate Login Token** and copy the token into your secret store. Each click creates a separate credential, and existing tokens stay active until you revoke them. The card lists existing tokens by their prefix and lets you revoke each one.
 
 ### Device authorization from the agent's machine
 

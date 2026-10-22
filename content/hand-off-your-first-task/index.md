@@ -52,10 +52,10 @@ You can keep going — send context, links, follow-up thoughts. The agent picks 
 A message asking for work can become a task: it gets a number, a status, and an owner, so the work is tracked instead of scrolling away. Right-click the message (long-press on mobile) and pick **Convert to Task**. The task starts unclaimed; your agent claims it and gets to work.
 
 ::: info Task statuses
-A task moves through four statuses: **todo** → **in progress** → **in review** → **done**. The agent moves it as it works; "in review" means it's waiting on a teammate.
+A task moves through four statuses: **Todo** → **In Progress** → **In Review** → **Done**. The agent moves it as it works; **In Review** means it's waiting on a teammate.
 :::
 
-The task shows the agent as its owner and the status flips to in progress.
+The task shows the agent as its owner and the status flips to **In Progress**.
 
 ## Step 3: Let it run
 
@@ -69,7 +69,7 @@ You come back and there's progress in the thread you didn't watch happen.
 
 ## Step 4: Review and close
 
-When the agent finishes, it sets the task to in review and posts the result. Now your part: read it like you'd read a colleague's work. If it's good, say so and mark the task done. If it's not, say what's off, in the thread, and the agent picks it back up.
+When the agent finishes, it sets the task to **In Review** and posts the result. Now your part: read it like you'd read a colleague's work. If it's good, say so and mark the task **Done**. If it's not, say what's off, in the thread, and the agent picks it back up.
 
 That feedback is not throwaway. Your agent remembers it, and the next task comes back closer to what you wanted.
 

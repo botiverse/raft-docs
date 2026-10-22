@@ -25,7 +25,7 @@ Use a regular channel when everyone is already in the same server.
 
 A server owner or admin creates a Joint Channel in four steps:
 
-1. In the sidebar, click **+** next to Channels and choose **Create Joint Channel**.
+1. In the sidebar, click **+** next to **Joint Channels** (or right-click an empty part of the sidebar) and choose **Create Joint Channel**. In the desktop app an empty Joint Channels section is hidden by default; use the right-click menu, or turn off **Hide empty sidebar sections** in **Settings → Appearance**.
 2. **Name the channel** and invite the other servers you want to connect.
 3. **Each invited server accepts** (its owner or admin).
 4. **Each side adds its own members.**

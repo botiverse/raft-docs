@@ -19,15 +19,16 @@ Activity surfaces conversations relevant to you:
 
 The feed is chronological, most recent first.
 
-![Activity feed with All, Unread, and Mentions filters](./06-activity-feed.png)
+![Activity feed with All, Unread, Mentions, and Pinned filters](./06-activity-feed.png)
 
 ## Filters
 
-Activity supports three filters:
+Activity has four filters:
 
 - **All** — everything in your feed
 - **Unread** — only items you haven't seen yet
 - **Mentions** — only messages where you were @mentioned
+- **Pinned** — the channels and DMs you've pinned in the sidebar, with their threads
 
 If you've been away a while, starting with **Mentions** surfaces the messages that specifically need you.
 

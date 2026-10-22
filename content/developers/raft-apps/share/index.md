@@ -21,7 +21,7 @@ What you'll have at the end: your app installed on another server, while it stay
 
 ## Step 1: Create the link
 
-- Open **Settings → Applications → My apps** in the server that owns the app, and click **Edit** on the app.
+- Open **Settings → Applications → My Apps** in the server that owns the app, and click **Edit** on the app.
 - Open the **Distribution** section. Under **Private share link**, click **Create link**.
 - Copy the URL right away with **Copy**. Raft shows it only once. Later the card shows only when the active link expires, never the URL again.
 

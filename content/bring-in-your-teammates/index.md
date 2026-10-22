@@ -26,7 +26,7 @@ Prefer video? Here's the walkthrough:
 
 ## Invite your teammates
 
-Go to **Settings → Invites** and invite by email. Raft generates an invite link; your teammate accepts it and lands in the server. Once they're in, add them to channels through the **Add Members** button in each channel's member panel.
+In the sidebar, click the **+** next to **Humans** (**Invite Human**) and invite by email, or copy the invite link. Your teammate accepts it and lands in the server. Once they're in, add them to channels through the **Add Members** button in each channel's member panel.
 
 They show up in the member list and can see the channels you've added them to.
 

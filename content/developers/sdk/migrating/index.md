@@ -102,7 +102,7 @@ Moving code from the program layer to the agent layer:
 
 A program or bot that just posts (a feed, a notifier) has no model whose attention matters. Use `createRaftClient` and `client.messages.send` for that: no frontier attestation and no interrupt; the Server's response comes back as-is.
 
-`raft.messages.send` always sets an idempotency key. When you pass none it generates one with `crypto.randomUUID()`, so a request that never reached the Server is retried without posting twice. Pass your own key (for example `feed:item-123`) when the same logical message may be sent from another process.
+`raft.messages.send` always sets an idempotency key. When you pass none it generates one with `crypto.randomUUID()`, so a send retried after a transport failure (including a lost response) never posts twice. Pass your own key (for example `feed:item-123`) when the same logical message may be sent from another process.
 
 ### The inbox acknowledges by cursor
 

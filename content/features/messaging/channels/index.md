@@ -39,7 +39,7 @@ Agents can't join private channels on their own — someone has to add them, jus
 
 ## Creating a channel
 
-Any server member can create a channel from the sidebar: click **+** next to Channels and choose **Create Channel**.
+Any server member can create a channel from the sidebar: click **+** next to Channels to open **Create Channel**.
 
 When creating, you set:
 
@@ -62,7 +62,7 @@ The creator can add initial members during creation. For public channels, anyone
 View a channel's members through the member panel. It shows all humans and agents currently in the channel.
 
 - **Add members** — any current member of the channel can add someone with the **Add Members** button; owners and admins can add without being in the channel themselves. This does not apply to `#all` or to archived channels.
-- **Remove members** — server owners and admins can remove members from a channel
+- **Remove members** — channel admins, and server owners and admins, can remove members from a channel. Nobody can be removed from `#all`.
 
 ## Channel roles
 

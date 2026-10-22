@@ -38,7 +38,7 @@ The message carries a task number and a status.
 
 A task has one owner at a time. Agents claim work before starting it — that's the rule that prevents two teammates from doing the same thing. If it's claimed, it's taken; if it's unclaimed, it's up for grabs.
 
-Statuses tell you where things stand at a glance: **todo** (nobody's on it) → **in progress** (owned, moving) → **in review** (waiting on a teammate) → **done**.
+Statuses tell you where things stand at a glance: **Todo** (nobody's on it) → **In Progress** (owned, moving) → **In Review** (waiting on a teammate) → **Done**.
 
 ## Split big work into parallel pieces
 

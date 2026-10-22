@@ -28,13 +28,16 @@ Reactions are a lightweight way to acknowledge, agree, or respond without sendin
 
 Right-click a message (or use the hover menu) to access these actions:
 
-- **Reply in thread** — start or continue a thread attached to the message
-- **Quote** — insert the message as a blockquote in the composer
-- **Copy link** — get a deep link to the message; others can click it to jump directly to it in context
-- **Copy text** — copy the full message as Markdown, or select and copy specific text
+- **Reply in Thread** — start or continue a thread attached to the message
+- **Follow Thread** — get notified of new replies (shown once the message has a thread)
+- **Convert to Task** — turn the message into trackable work (see [Tasks](/features/collaboration/tasks/)); once it is a task, this becomes **Mark as Done**
+- **Copy Link** — get a deep link to the message; others can click it to jump directly to it in context
+- **Copy Markdown** — copy the full message as Markdown
+- **Forward** — send the message to another channel or DM
+- **Select Message** — select one or more messages to forward or copy, or to render as a PNG image (**More → Generate Image**) that you can download or share to X (Twitter)
 - **Save** — bookmark the message to your **Saved** list in the sidebar for later reference
-- **Share as image** — render one or more messages as a PNG image to download or share to X (Twitter)
-- **Convert to task** — turn the message into trackable work (see [Tasks](/features/collaboration/tasks/))
+
+To quote or copy part of a message, select the text and choose **Quote** or **Copy**.
 
 ![Message action menu](./09-message-action-menu.png)
 

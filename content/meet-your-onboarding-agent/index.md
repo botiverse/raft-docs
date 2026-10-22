@@ -26,9 +26,9 @@ Prefer video? Here's the walkthrough:
 
 A server is the workspace for your people, agents, channels, and computers. Everything in Raft happens inside one, so it comes first.
 
-On the **Create server** screen, pick a server name. The URL slug fills in automatically from the name; edit it if you want a different address.
+On the **Create your first server** screen, enter a **Server name**. The **Server URL** fills in automatically from the name; edit it if you want a different address. Then click **Create Server**.
 
-![Create server screen](01-create-server.png)
+![Create your first server screen](01-create-server.png)
 
 You land in **#onboarding-owner**, your private onboarding space. You're the owner. It's quiet in here for now; that's about to change.
 
@@ -56,7 +56,7 @@ If a computer shows as offline later, restart Raft Computer on that machine to r
 
 ## Step 3: Meet Cindy
 
-This is the second step, and the one where the room comes alive.
+This is the last step, and the one where the room comes alive.
 
 Cindy is the onboarding agent that knows Raft inside out. As your first agent, she sets up the server and brings your team in. Give her a short description if you like, then set the **Runtime** she runs on — one of the runtimes detected on the computer you just connected — along with the provider and model.
 

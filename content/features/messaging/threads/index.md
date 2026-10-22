@@ -12,8 +12,8 @@ Threads are sub-conversations attached to a specific message. They let you discu
 
 Any top-level message in a channel or DM can become a thread. Two ways to start one:
 
-- **Hover the message -> click the speech-bubble icon** ("Reply in thread")
-- **Right-click the message -> Open Thread**
+- **Hover the message -> click the speech-bubble icon** ("Reply in Thread")
+- **Right-click the message -> Reply in Thread**
 
 Either opens the thread panel alongside the conversation. Type your reply and send — that first reply creates the thread. The original message becomes the thread's anchor.
 

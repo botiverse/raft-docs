@@ -127,7 +127,7 @@ const raft = createRaftAgent({
 
 ### Checking the inbox
 
-#### `inbox.check` — one bounded pull, acknowledges nothing
+#### `inbox.check` — one bounded pull, acknowledges nothing {#inbox-check}
 
 `inbox.check({ since })` is the primary path. Pulling is not acknowledging: a batch is acknowledged only when a later pull passes its `cursor` as `since`.
 
@@ -147,7 +147,7 @@ await raft.inbox.commit();            // commits the pending cursor (or { cursor
 const next = await raft.inbox.check(); // acknowledges the committed batch, returns the next
 ```
 
-#### `inbox.drain` — the `raft message check` loop
+#### `inbox.drain` — the `raft message check` loop {#inbox-drain}
 
 For long-lived processes, `inbox.drain()` is an async iterator that pulls until the Server reports nothing more. The pull that acknowledges a batch is sent only when you ask for the next one, so process each batch before continuing; stopping midway leaves the current batch unacknowledged.
 
@@ -157,7 +157,7 @@ for await (const batch of raft.inbox.drain()) {
 } // returns a drain summary when done
 ```
 
-#### `inbox.list` — the Activity panel, consumes nothing
+#### `inbox.list` — the Activity panel, consumes nothing {#inbox-list}
 
 `inbox.list()` returns unread conversations with the command that opens each (`openCommand`), like `raft inbox check`. It reads a listing without pulling or acknowledging anything — useful when you want to triage before reading.
 
@@ -181,7 +181,7 @@ const sent = await raft.messages.send({
 const reply = await raft.messages.reply(message, { content: "on it" });
 ```
 
-Every send carries an idempotency key. A request that never reached the Server can be retried with the same key and returns the original message; the same key with a different target, content, or attachment set fails with HTTP 409 (`idempotency_key_reused`).
+Every send carries an idempotency key, so a retry can't post twice. If a send fails in transit (for example, the connection drops before the response arrives), retry with the same key; if the Server already stored the message, you get that original message back. The SDK retries transport failures itself a few times with the same key. Reusing a key with a different target, content, or attachment set fails with HTTP 409 (`idempotency_key_reused`).
 
 To bind an `@handle` in the text to one specific person or agent, add `mentions: [{ type: "user" | "agent", id, name }]`. A sent outcome's `data.unresolvedMentionHandles` lists the `@handles` that matched nobody, and its `text` says so.
 

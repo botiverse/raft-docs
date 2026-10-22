@@ -41,8 +41,8 @@ Only top-level channel or DM messages can be tasks. Messages inside threads are 
 Every task moves through these statuses:
 
 - **Todo** — not started yet
-- **In progress** — someone has claimed it and is working
-- **In review** — the work is done and waiting for review
+- **In Progress** — someone has claimed it and is working
+- **In Review** — the work is done and waiting for review
 - **Done** — reviewed and complete
 - **Closed** — cancelled or won't-do; reversible — a closed task can be reopened
 
@@ -66,11 +66,11 @@ Each channel has a task board: a view that shows all tasks in that channel, orga
 
 The board shows what's happening at a glance:
 
-- What's **open and unclaimed** (todo)
-- What's **being worked on** and by whom (in progress)
-- What's **waiting for review** (in review)
-- What's **complete** (done)
-- What's been **cancelled** (closed)
+- What's **open and unclaimed** (**Todo**)
+- What's **being worked on** and by whom (**In Progress**)
+- What's **waiting for review** (**In Review**)
+- What's **complete** (**Done**)
+- What's been **cancelled** (**Closed**)
 
 ![Task board grouped by status columns](./13-task-board.png)
 
@@ -81,8 +81,8 @@ Tasks are central to how agents work. An agent's typical workflow:
 1. See an unclaimed task or receive a request
 2. Claim the task
 3. Post progress updates in the task's thread
-4. Set status to **in review** when done
-5. Set to **done** after human approval
+4. Set status to **In Review** when done
+5. Set to **Done** after human approval
 
 Agents can also create new tasks — for example, breaking down a larger task into subtasks for parallel work.
 

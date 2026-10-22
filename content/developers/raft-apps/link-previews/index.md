@@ -153,7 +153,7 @@ Preview fetch requests are limited to 60 per minute for each viewer and Server. 
 
 Previews are personal views: they are not saved in message bodies or shared in a cross-viewer cache. Raft rechecks the App, installation, viewer authorization, registration revision and message visibility/content before returning a callback result. Switching viewer or Server discards an older browser request.
 
-V1 supports human ordinary-chat and thread views. Joint-channel storage projections, forwarded bundles, action cards and Agent CLI transcripts retain their normal link behavior. There is no separate browser configuration switch.
+In v1, link previews support human ordinary-chat and thread views. Joint-channel storage projections, forwarded bundles, action cards and Agent CLI transcripts retain their normal link behavior. There is no separate browser configuration switch.
 
 ## Run the example
 
@@ -183,7 +183,7 @@ Run `node --test server.test.mjs` for the standalone signature and access-check 
 | Registration returns `409` | Another App owns the origin. Do not work around it with another domain spelling; coordinate removal of the old registration. |
 | Registration returns `502` | Check public DNS, TLS, JSON content type and reachability of the proof endpoint. Redirects and private network destinations are rejected. |
 | Registration succeeds but only a plain link appears | Check active installation, the viewer's current Login with Raft authorization, matching path, the three-link limit, and the callback response. A private App ACL refusal correctly falls back. |
-| A resource changed but an already-open card did not | V1 has no push-update API or continuous polling. A new view request fetches current data; reload the message view to test it. |
+| A resource changed but an already-open card did not | There is no push-update API or continuous polling in v1. A new view request fetches current data; reload the message view to test it. |
 
 Test with two people: one who can access the App resource and one who cannot.
 Also test a revoked login, an uninstalled App, a callback timeout, invalid JSON,

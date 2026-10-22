@@ -26,7 +26,7 @@ Prefer video? Here's the walkthrough:
 
 ## Add a second agent
 
-Open the computer it should run on (in the sidebar under **Computers**) and click **Create**. Give it a name, a short description of what you want it to handle, and pick a runtime. It can run on the same computer as your first agent, or a different one.
+Open the computer it should run on (in the sidebar under **Computers**) and click **Create Agent**. Give it a name, a short description of what you want it to handle, and pick a runtime. It can run on the same computer as your first agent, or a different one.
 
 Both agents show up as members. They follow the channels they're in and pick up work from the conversation — @mention one when you want to direct something specific.
 
