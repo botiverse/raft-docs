@@ -94,8 +94,11 @@ body {
 .VPNavBar.has-sidebar .content-body {
   background-color: var(--layer-frame) !important;
 }
-.VPNavBar {
-  border-bottom: 0;
+.VPNavBar,
+.VPNavBar.screen-open {
+  /* VitePress adds its own bottom border while the phone menu is open,
+     which would double the seam below. */
+  border-bottom: 0 !important;
 }
 /* Drawn above .content-body, whose yellow fill would otherwise hide the seam
    everywhere but over the sidebar. */
@@ -446,6 +449,14 @@ body {
   color: color-mix(in oklab, var(--foreground-link) 80%, var(--foreground));
   text-decoration-color: currentColor;
 }
+/* VitePress colours callout links per family (and hovers them to brand-2,
+   which is ink here); links in callouts are running text too. */
+.vp-doc .custom-block[class] a {
+  color: var(--foreground-link);
+}
+.vp-doc .custom-block[class] a:hover {
+  color: color-mix(in oklab, var(--foreground-link) 80%, var(--foreground));
+}
 .vp-doc a[href$=".md"] {
   font-weight: inherit;
 }
@@ -690,7 +701,8 @@ body {
    matched words are small yellow stickers (search-hit.ts). */
 .VPLocalSearchBox {
   --vp-local-search-result-selected-bg: var(--brand-soft);
-  --vp-local-search-result-selected-border: var(--line-strong);
+  /* A soft tint is a highlight, never a sticker: no border of its own. */
+  --vp-local-search-result-selected-border: var(--vp-local-search-result-border);
   --vp-local-search-highlight-bg: var(--brand-400);
   --vp-local-search-highlight-text: var(--sticker-ink);
 }
@@ -701,7 +713,10 @@ body {
 .VPLocalSearchBox .search-input::-webkit-search-cancel-button {
   display: none;
 }
-.VPLocalSearchBox .result mark {
+/* .titles/.excerpt: VitePress's own mark rules match as specifically and load
+   later, so they would reset the radius and padding. */
+.VPLocalSearchBox .result .titles mark,
+.VPLocalSearchBox .result .excerpt mark {
   font-weight: 700;
   border-radius: var(--radius-sticker, 4px);
   padding: 0 3px;
