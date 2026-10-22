@@ -52,6 +52,7 @@ function parseArgs(argv) {
     } else throw new Error(`Unknown argument: ${a}`);
   }
   opts.baseUrl = opts.baseUrl.replace(/\/$/, "");
+  if (Number.isNaN(new Date(opts.clock).getTime())) throw new Error(`--clock: not a date: ${opts.clock}`);
   return opts;
 }
 
