@@ -1,115 +1,115 @@
 ---
-title: 把你的应用发布到 Raft Marketplace
-description: 把一个已注册的 Raft App 变成 Marketplace 上的应用：补全信息、申请审核、看懂结果，以及发布之后有什么不同。
+title: 把你的应用发布到 Raft 市场
+description: 把已注册的 Raft 应用上架到市场。完善上架信息，申请审核，查看审核结果，并了解发布之后有哪些变化。
 llms_section: "Developers zh-CN"
 llms_order: 1895
-llms_summary: "当一个已注册的 Raft App 需要让其他服务器也能安装，并且你需要准确的审核申请、状态和审核后步骤时，请用简体中文阅读本页。"
+llms_summary: "已注册的 Raft 应用需要让其他服务器也能安装时阅读，包括申请审核的具体操作、状态，以及审核结果出来后的步骤。"
 ---
 
-# 把你的应用发布到 Raft Marketplace
+# 把你的应用发布到 Raft 市场
 
-完成后，你的应用会出现在 Marketplace（应用市场）里，任何 Raft 服务器的负责人或管理员都可以安装它。
+完成后：你的应用会在市场上架，任何 Raft 服务器的所有者或管理员都可以安装它。
 
-**预计时间：** 你自己的操作大约 10 分钟，另加等待审核的时间。
+**预计用时：** 你自己操作约 10 分钟，另加等待审核的时间。
 
-## 开始之前
+## 开始之前 {#before-you-start}
 
-- 你的应用已经在某个 Raft 服务器里注册，并且登录能正常工作。如果还没有，先看[构建 Raft App](/zh-cn/developers/raft-apps/build/)。不存在单独的「市场应用」需要创建；你注册的那个应用就是要发布的应用。
-- 你是注册这个应用的服务器的负责人或管理员。普通成员可以打开 **我的应用**（My apps），但不能申请审核。
-- 如果由 Agent 代你操作，这个 Agent 需要拥有该应用（它注册了这个应用，或者负责人把应用转给了它），或者在这个服务器上持有 Agent 的管理员角色。
-- 当 Raft 告知应用在某个服务器上不可用时，你的应用必须 fail closed。审核会检查这一点。见[应用可用性](/zh-cn/developers/login-with-raft/#应用可用性)。
-- 如果只有一两个特定的服务器需要这个应用，私密分享链接不需要审核就能做到。见 [把私有应用分享给另一个服务器](/zh-cn/developers/raft-apps/share/)。
+- 你的应用已在某个 Raft 服务器中注册，并且登录能正常使用。如果还没有，请从 [构建 Raft 应用](/zh-cn/developers/raft-apps/build/) 开始。不需要另外创建一个「市场应用」：你注册的应用就是要发布的应用。
+- 你是注册这个应用的服务器的所有者或管理员。普通成员可以打开 **我的应用**，但不能申请审核。
+- 如果由 Agent 替你操作，这个 Agent 需要拥有该应用（应用是它注册的，或者所有者把应用转给了它），或者在该服务器上拥有 Agent 的管理员角色。
+- Raft 报告应用在某个服务器上不可用时，你的应用会拒绝访问。审核会检查这一点。见 [应用可用性](/zh-cn/developers/login-with-raft/#app-availability)。
+- 如果只有一两个特定的服务器需要这个应用，用私有共享链接就能做到，不需要审核。见 [把私有应用分享给另一个服务器](/zh-cn/developers/raft-apps/share/)。
 
-## 第 1 步：补全应用信息
+## 第 1 步：完善上架信息 {#step-1-finish-the-listing}
 
-安装者看到的就是你注册的内容：应用名称、logo（没有上传的话 Raft 会生成一个）、类别、描述、作为开发者显示的你的服务器名称、主页和回调的域名，以及申请的 scope 和 App Notifications 分组。审核人看到的是同一份信息。
+安装者看到的就是你注册时填写的内容：应用名称、Logo（如果你没有上传，Raft 会生成一个）、分类、描述、你服务器的名称（显示为开发者）、主页和回调地址的域名，以及申请的 scope 和 App Notifications 组。审核员看到的也是这些信息。
 
-- 在拥有这个应用的服务器里打开 **设置 → 应用 → 我的应用**（Settings → Applications → My apps），在应用上点击 **编辑**（Edit）。
-- 写一段描述。没有描述不能申请审核，请求会被拒绝并提示 `description is required before requesting marketplace review`。
-- 选一个符合应用用途的类别：AI & Automation、Communication、Productivity & Collaboration、Developer Tools、Data & Analytics、Business Ops、Infrastructure、Content & Creative 或 Other。
-- 有 logo 就上传：JPEG、PNG、GIF 或 WebP，最大 5 MB。
-- 再核对一遍主页 URL、回调 URL 和 scope。列表页上显示的类别和数据访问范围就来自这些字段。
+- 在拥有该应用的服务器中打开 **设置 → 应用 → 我的应用**，点击这个应用的 **编辑**。
+- 写好描述。没有描述就不能申请审核，申请会被拒绝，并提示 `description is required before requesting marketplace review`。
+- 选择与应用功能相符的分类：AI 与自动化、沟通、生产力与协作、开发者工具、数据与分析、商业运营、基础设施、内容与创意，或其他。
+- 如果有 Logo，就上传：支持 JPEG、PNG、GIF 或 WebP，最大 5 MB。
+- 再检查一遍主页网址、回调地址和 scope。上架信息里显示的分类和数据访问权限，都来自这些字段。
 
-用 Agent 操作：
+由 Agent 执行：
 
 ```bash
-raft integration app update --client <client-key> --description "<这个应用做什么>" --category "Developer Tools"
+raft integration app update --client <client-key> --description "<what the app does>" --category "Developer Tools"
 raft integration app logo --client <client-key> --file ./logo.png
 ```
 
-## 第 2 步：申请审核
+## 第 2 步：申请审核 {#step-2-request-review}
 
-- 在应用编辑页里打开 **分发**（Distribution）一节。
-- 在 **市场发布申请**（Marketplace publish request）下点击 **申请发布**（Request publish）。Raft 会先保存你对应用信息的修改，再提交申请。
-- 状态标签变为 **审核中**（Review pending）。
+- 在应用编辑器中打开 **分发** 分区。
+- 在 **市场发布申请** 下点击 **申请发布**。Raft 会先保存你修改的元数据，再提交申请。
+- 状态标签变为 **审核中**。
 
-这张申请卡片只在应用处于私有（Private）或已驳回（Rejected）状态时显示，所以申请等待期间没有可点的按钮。等待期间再跑一次 `request-publish` 不会新建申请，但会再给审核人发一封通知邮件。
+申请卡片只在应用处于私有或已驳回状态时显示，所以申请审核期间没有可点的按钮。审核期间再次运行 `request-publish` 不会提交第二份申请，但会再给审核员发一封通知邮件。
 
-用 Agent 操作：
+由 Agent 执行：
 
 ```bash
 raft integration app request-publish --client <client-key>
 ```
 
-回执是 `Marketplace review requested (publish_requested) for <app name> (<client-key>)`。申请不等于发布。审核人做出决定之前，其他服务器上什么都不会变。
+回执内容是 `Marketplace review requested (publish_requested) for <app name> (<client-key>)`。申请不等于发布。审核员做出决定之前，其他服务器上什么都不会变。
 
-## 第 3 步：等待审核
+## 第 3 步：等待审核 {#step-3-wait-for-review}
 
-审核由 Raft 完成，不是你的服务器管理员。审核会检查应用身份、所有权、请求的访问权、回调和 manifest 行为，以及应用在不可用时是否 fail closed。一般七个工作日内会有结果。
+审核由 Raft 完成，不是由你服务器的管理员完成。审核会检查应用身份、所有权、申请的访问权限、回调和 manifest 的行为，以及应用在不可用时是否拒绝访问。审核通常最多需要 7 个工作日。
 
-**会检查什么。** 有几条由系统在你保存应用或申请审核时强制检查；下面其余的都是审核团队的人工判断。系统检查全部通过的应用，仍可能因为某条人工判断被拒。
+**检查哪些内容。** 少数规则由系统在你保存应用或申请审核时强制检查；下面其余各项都由审核团队人工判断。应用通过了系统检查，仍可能因为某个人工判断项被驳回。
 
-系统检查：
+由系统检查：
 
-- 必须有描述（见第 1 步）。
-- 回调地址使用 HTTPS（只有 `localhost` 这类本机回环地址允许用 http），且不能带凭据或 `#fragment`。
-- 如果有 agent manifest，它的地址使用 HTTPS，且不能带凭据。
-- 如果使用 PKCE，方法必须是 S256。
+- 有描述（第 1 步）。
+- 回调地址使用 HTTPS（只有 `localhost` 这类回环地址允许用普通 HTTP），并且不含凭据或 `#fragment`。
+- Agent 清单网址（如果有）使用 HTTPS，并且不含凭据。
+- 如果使用 PKCE，方法是 S256。
 
-审核人判断：
+由审核员判断：
 
-- **地址可用。** 首页能公开访问；要发布的应用，回调指向一个在线的公开地址，而不是内网或私有地址。
-- **描述和数据访问说清楚。** 描述写明应用做什么、为什么需要它申请的这些 scope。申请敏感数据或 App Notifications 分组时说明理由。只申请够用的最小权限。
-- **fail closed。** 下游服务不可用或 token 过期时，应用用普通的错误拒绝请求，绝不暴露 token、secret、凭据或原始错误堆栈。
-- **agent manifest 可靠（如果有）。** manifest 稳定返回合法 JSON。每个 action 参数清楚、做了鉴权。没有能执行任意代码或系统命令的 action。
-- **凭据处理安全。** OAuth 流程用 `state` 防 CSRF。client secret 只放在你的服务端，绝不打包进前端。人类和 agent 的 token 不混用。
+- **端点可用。** 主页可以公开访问；已发布应用的回调指向一个在线的公开地址，而不是私有地址或内部地址。
+- **描述和数据访问说得清楚。** 描述讲明应用做什么，以及为什么需要所申请的 scope。任何敏感数据访问或 App Notifications 组都要给出说明。只申请够用的最小权限。
+- **不可用时拒绝访问。** 下游服务宕机或 token 过期时，应用用普通的错误提示拒绝请求，绝不显示 token、密钥、凭据或原始的堆栈跟踪。
+- **Agent manifest 合理（如果有）。** manifest 能稳定地返回有效的 JSON。每个操作的参数都清楚，并且都会检查授权。没有任何操作会执行任意代码或系统命令。
+- **凭据处理安全。** OAuth 流程使用 `state` 防范 CSRF。客户端密钥只保存在你的服务器上，绝不放进前端打包产物。人和 Agent 的 token 绝不混用。
 
-申请等待期间：
+申请审核期间：
 
 - 你可以继续编辑应用。编辑不会取消申请。
-- 撤回申请的唯一办法是删除应用，而删除会移除 OAuth 客户端、密钥和所有授权。不要把它当作撤销申请的手段。
+- 撤回申请的唯一办法是删除应用，而删除会移除 OAuth 客户端、它的密钥和所有授权。不要把删除当作撤回申请的手段。
 - 你自己的服务器照常使用这个应用。
 
-用 Agent 查看状态：运行 `raft integration app status --client <client-key>`。`publish status:` 这一行在等待期间是 `publish_requested`（或 `in_review`，应用编辑页里两者显示相同），之后变为 `published` 或 `rejected`。
+要通过 Agent 查看状态，运行 `raft integration app status --client <client-key>`。申请审核期间，`publish status:` 这一行显示 `publish_requested`（或 `in_review`，两者在应用编辑器中显示得一样），之后变为 `published` 或 `rejected`。
 
-## 第 4 步：看懂结果
+## 第 4 步：查看结果 {#step-4-read-the-result}
 
-### 已发布（Published）
+### 已发布 {#published}
 
-标签显示 **已发布**（Published）。应用会出现在每个服务器的 Marketplace 里，并且自动安装到你自己的服务器上。安装者打开 **设置 → 应用 → 市场**（Settings → Applications → Marketplace），打开这个应用，点击 **安装到此服务器**（Install to this server）。可以把[安装 third-party app](/zh-cn/features/apps/#安装-third-party-app)发给他们。
+状态标签显示 **已发布**。应用会出现在每个服务器的市场里，并且自动安装到你自己的服务器上。安装者打开 **设置 → 应用 → 市场**，打开这个应用，点击 **安装到此服务器**。可以让他们参考 [安装第三方应用](/zh-cn/features/apps/#installing-a-third-party-app)。
 
 发布之后：
 
-- 你仍然可以编辑名称、描述、类别、URL、logo 和 scope。
-- 不再提供删除。要把应用从 Marketplace 下架，打开 **危险区**（Danger zone），点击 **申请下架**（Request offline）；用 Agent 操作是 `raft integration app request-unpublish --client <client-key>`。标签显示 **下架审核中**（Offline pending），`publish status:` 是 `unpublish_requested`。在 Raft 批准下架之前，应用会继续展示并可安装。批准后，每一个安装了它的服务器都会失去访问，包括你自己的，已有的授权和 token 会被撤销。
-- 给已发布的应用新增 App Notifications 分组或事件需要再次审核。移除会立即生效；新增要等审核通过，在此之前应用保持之前批准的集合。
+- 你仍然可以编辑名称、描述、分类、网址、Logo 和 scope。
+- 不再提供删除选项。要把应用从市场下架，打开 **危险区**，点击 **申请下架审核**（由 Agent 执行：`raft integration app request-unpublish --client <client-key>`）。状态标签显示 **下架审核中**，`publish status:` 显示 `unpublish_requested`。在 Raft 批准下架之前，应用会一直保持上架、可以安装。一旦批准，所有安装了它的服务器都会失去访问权限，包括你自己的服务器，现有的授权和 token 也会被撤销。
+- 给已发布的应用新增 App Notifications 组或事件，需要重新审核。移除的项立即生效；新增的项要等审核通过，在此之前，应用沿用之前已批准的那一组。
 
-### 已驳回（Rejected）
+### 已驳回 {#rejected}
 
-标签显示 **已驳回**（Rejected）。审核人在做出决定时会记录理由，但目前应用编辑页和 CLI 都不显示这个理由。修正被指出的问题后，再次点击 **申请发布**（Request publish）；被拒绝的应用会重新出现这张申请卡片。
+状态标签显示 **已驳回**。审核员做出决定时会记录原因，但目前应用编辑器和 CLI 都不显示这个原因。改好审核提出的问题，再次点击 **申请发布**；被驳回的应用会重新显示申请卡片。
 
-拒绝不会影响已经在使用这个应用的服务器。你自己的服务器照常使用，通过私密分享链接安装了它的服务器也照常使用。
+驳回对已经在使用这个应用的服务器没有任何影响。你自己的服务器继续保留它，通过私有共享链接安装了它的服务器也一样。
 
-## 交给你的 Agent
+## 交给你的 Agent {#hand-it-to-your-agent}
 
-Agent 可以完成第 1 步、第 2 步和状态检查。把下面这些放在一条消息里给它：
+Agent 可以完成第 1 步、第 2 步和状态查询。在一条消息里交给它以下内容：
 
-- 应用的 client key（在 **我的应用**（My apps）或 `raft integration app list` 里能看到），并确认这个 Agent 拥有该应用，或者在这个服务器上持有 Agent 的管理员角色。
-- 上架信息的决定：描述、上面列表里的一个类别，以及你有的话一个 logo 文件。
-- 本页和[构建 Raft App](/zh-cn/developers/raft-apps/build/)。如果应用还在开发中，再加上 [Login with Raft](/zh-cn/developers/login-with-raft/) 契约。
-- 如果 Agent 同时也在写这个应用，给它参考仓库 [botiverse/musik](https://github.com/botiverse/musik) 和 [botiverse/hands](https://github.com/botiverse/hands)。
+- 应用的 client key（在 **我的应用** 中查看，或运行 `raft integration app list`），并确认这个 Agent 拥有该应用，或者在该服务器上拥有 Agent 的管理员角色。
+- 上架信息中由你决定的内容：描述、从上面列表中选定的分类，以及 Logo 文件（如果有）。
+- 本页和 [构建 Raft 应用](/zh-cn/developers/raft-apps/build/)。如果应用还在开发中，再加上 [Login with Raft 集成指南](/zh-cn/developers/login-with-raft/) 中的约定。
+- 如果 Agent 也要编写应用，再提供参考仓库 [botiverse/musik](https://github.com/botiverse/musik) 和 [botiverse/hands](https://github.com/botiverse/hands)。
 
-一条把这些都带上的 prompt：
+包含以上全部内容的提示词：
 
 ```text
 Publish our Raft App <client-key> to the Marketplace. Follow https://docs.raft.build/developers/raft-apps/publish/.
@@ -118,12 +118,12 @@ Do not delete the app or rotate its secret. Report the request-publish receipt a
 from `raft integration app status`, then stop. Raft reviews the request; you cannot approve it.
 ```
 
-Agent 做不了的事：批准申请（只有 Raft 的审核人可以）、把应用装到别的服务器（由那个服务器的负责人或管理员操作）、读取被拒理由（Raft 目前不显示）。
+Agent 不能做的事：批准申请（只有 Raft 审核员可以）、把应用安装到其他服务器（由那些服务器的所有者或管理员安装）、查看驳回原因（Raft 目前还不显示）。
 
-如果应用还没有写，先从构建页的[交给你的 Agent](/zh-cn/developers/raft-apps/build/#交给你的-agent)开始。发布是那条流程的最后一步。
+如果应用还没做好，先看构建页面上的 [交给你的 Agent](/zh-cn/developers/raft-apps/build/#hand-it-to-your-agent)。发布是那个流程的最后一步。
 
-## 下一步
+## 接下来 {#what-s-next}
 
-- 告诉安装者去哪里找：[Connected Apps](/zh-cn/features/apps/) 讲了安装、卸载和服务器管理员的角色模型。
-- 发布之后保持回调和 manifest 稳定。已发布的应用仍是同一个注册，同一个客户端 ID 和密钥；轮换密钥仍会让旧密钥在所有地方失效。
-- Agent 的完整命令集见 `raft integration app --help`。如果 `request-publish` 返回 `unknown command`，说明运行这个 Agent 的 Raft Computer 早于该功能，需要升级。
+- 告诉安装者去哪里找：[已连接应用](/zh-cn/features/apps/) 介绍了安装、卸载，以及服务器管理员的管理方式。
+- 发布后，保持回调和 manifest 稳定。已发布的应用仍是原来那份注册，客户端 ID 和密钥都不变；轮换密钥仍然会让旧密钥在所有地方失效。
+- Agent 可用的全部命令见 `raft integration app --help`。如果 `request-publish` 返回 `unknown command`，说明运行这个 Agent 的 Raft Computer 版本太旧，还没有这个功能，需要升级。
