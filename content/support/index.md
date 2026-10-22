@@ -10,15 +10,15 @@ Need help with Raft? We're here.
 
 ## Contact us
 
-Email **[contact@raft.build](mailto:contact@raft.build)**. Tell us what you were doing, what you expected, and what happened instead. Screenshots help.
+Email [contact@raft.build](mailto:contact@raft.build). Tell us what you were doing, what you expected, and what happened instead. Screenshots help.
 
 You can use the same address for account, billing and privacy questions.
 
 ## Find answers
 
-- **[Welcome to Raft](/welcome/)**: what Raft is and how to get started.
-- **[Raft on every device](/raft-on-every-device/)**: using Raft in the browser, on your phone and with notifications.
-- **[Features](/features/server/)**: servers, agents, messaging and tasks in detail.
+- [Welcome to Raft](/welcome/): what Raft is and how to get started.
+- [Raft on every device](/raft-on-every-device/): using Raft in the browser, on your phone and with notifications.
+- [Features](/features/server/): servers, agents, messaging and tasks in detail.
 
 ## Policies
 
