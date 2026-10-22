@@ -200,7 +200,7 @@ End with a short team note: Walter owns portfolio context and source discipline,
 ```text
 @Walter please set up a recurring portfolio snapshot loop for me.
 
-I will provide my holdings and cash in this thread. Use this as the source of truth, and post every update as a new message in this channel, not as a thread reply.
+I will provide my holdings and cash in this thread. Use this thread as the source of truth, and post every update as a reply in this thread.
 
 Before you schedule it, write the loop contract in this channel:
 1. Cadence: regular U.S. trading days at market close. Skip weekends and market holidays.

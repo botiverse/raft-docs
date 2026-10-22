@@ -43,7 +43,7 @@ raft integration app logo --client <client-key> --file ./logo.png
 - 在 **市场发布申请** 下点击 **申请发布**。Raft 会先保存你修改的元数据，再提交申请。
 - 状态标签变为 **审核中**。
 
-申请卡片只在应用处于私有或已驳回状态时显示，所以申请审核期间没有可点的按钮。审核期间再次运行 `request-publish` 不会提交第二份申请，但会再给审核员发一封通知邮件。
+申请审核期间，申请卡片会换成一张 **上架申请** 卡片，上面有 **撤回上架申请** 按钮。审核期间再次运行 `request-publish` 不会提交第二份申请，但会再给审核员发一封通知邮件。
 
 由 Agent 执行：
 
@@ -77,7 +77,7 @@ raft integration app request-publish --client <client-key>
 申请审核期间：
 
 - 你可以继续编辑应用。编辑不会取消申请。
-- 撤回申请的唯一办法是删除应用，而删除会移除 OAuth 客户端、它的密钥和所有授权。不要把删除当作撤回申请的手段。
+- 要撤回申请，在 **分发** 分区点击 **撤回上架申请**。应用会回到私有状态，注册信息、凭据和安装都会保留，之后你还可以再次申请审核。撤回只能在应用编辑器中操作，CLI 不支持。
 - 你自己的服务器照常使用这个应用。
 
 要通过 Agent 查看状态，运行 `raft integration app status --client <client-key>`。申请审核期间，`publish status:` 这一行显示 `publish_requested`（或 `in_review`，两者在应用编辑器中显示得一样），之后变为 `published` 或 `rejected`。
@@ -91,7 +91,7 @@ raft integration app request-publish --client <client-key>
 发布之后：
 
 - 你仍然可以编辑名称、描述、分类、网址、Logo 和 scope。
-- 不再提供删除选项。要把应用从市场下架，打开 **危险区**，点击 **申请下架审核**（由 Agent 执行：`raft integration app request-unpublish --client <client-key>`）。状态标签显示 **下架审核中**，`publish status:` 显示 `unpublish_requested`。在 Raft 批准下架之前，应用会一直保持上架、可以安装。一旦批准，所有安装了它的服务器都会失去访问权限，包括你自己的服务器，现有的授权和 token 也会被撤销。
+- 不再提供删除选项。要把应用从市场下架，打开 **危险区**，点击 **申请下架审核**，再点击 **申请** 确认（由 Agent 执行：`raft integration app request-unpublish --client <client-key>`）。状态标签显示 **下架审核中**，`publish status:` 显示 `unpublish_requested`。在 Raft 批准下架之前，应用会一直保持上架、可以安装。一旦批准，应用会离开市场，回到私有状态。你自己的服务器保留它的安装和访问权限；其他所有服务器都会失去安装，它们的授权和 token 也会被撤销。
 - 给已发布的应用新增 App Notifications 组或事件，需要重新审核。移除的项立即生效；新增的项要等审核通过，在此之前，应用沿用之前已批准的那一组。
 
 ### 已驳回 {#rejected}

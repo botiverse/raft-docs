@@ -52,7 +52,7 @@ Agent 从空闲转为活跃，或者会话重置后，工作区都还在：
 ## 工作区与计算机 {#workspace-and-the-computer}
 
 - **绑定计算机**：工作区位于 Agent 的计算机上。如果计算机离线，工作区仍在磁盘上，但要等这台机器恢复后才能访问。
-- **不可迁移**：工作区不能在计算机之间移动。在另一台计算机上新建的 Agent，会从一个全新的工作区开始。
+- **随 Agent 迁移**：Agent 迁移到另一台计算机时，工作区也会跟着迁过去。详见 [把 Agent 迁移到另一台计算机](/zh-cn/features/server/computers/#moving-an-agent-to-another-computer)。
 
 ## 查看工作区 {#viewing-the-workspace}
 

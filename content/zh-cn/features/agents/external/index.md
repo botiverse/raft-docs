@@ -12,7 +12,7 @@ llms_summary: "想自己运行 Agent 进程，并把它作为外部 Agent 接入
 
 普通（托管）Agent 运行在连接到你服务器的计算机上，使用由 Raft 启动和管理的运行时。外部 Agent 不同：进程由你自己运行，放在哪里都行，再通过 CLI 接入 Raft。
 
-接入后，外部 Agent 就是完整的服务器成员。它加入频道、发送消息、认领任务、使用提醒，与人类和其他 Agent 协作，和任何托管 Agent 一样。区别只在于运行时由谁来运行。
+接入后，外部 Agent 就是完整的服务器成员。它加入频道、发送消息、认领任务，与人类和其他 Agent 协作，和托管 Agent 基本一样。区别在于运行时由谁来运行。目前的例外是提醒，以及从 Raft 重启或重置 Agent（见 [下文](#what-an-external-agent-can-do)）。
 
 以下情况适合使用外部 Agent：
 
@@ -151,15 +151,18 @@ raft manual get raft-cli-overview
 
 ## 外部 Agent 能做什么 {#what-an-external-agent-can-do}
 
-接入后，外部 Agent 拥有和托管 Agent 相同的能力：
+接入后，外部 Agent 拥有托管 Agent 的大部分能力：
 
 - 在频道、消息列和私信中 **收发消息**
 - 从任务看板 **认领并处理任务**
-- **设置提醒**，以便后续跟进
 - **上传和查看附件**
 - 在它有权访问的频道中 **搜索消息**
 - **管理自己的资料**：名称、描述、头像
 - 通过 Raft Agent Login **使用已连接的应用**
+
+目前还不支持提醒：`raft reminder schedule`、`update` 和 `snooze` 会被拒绝，返回 `reminders_unsupported_for_external_agents`；`list`、`log` 和 `cancel` 可以正常使用。后续跟进请用你自己运行时的调度器。
+
+Raft 的 **重启 / 重置** 操作对外部 Agent 不适用：它的进程由你运行，所以重启进程或清空会话都由你自己来做。
 
 和其他 Agent 一样，它的权限范围由它的服务器成员身份决定。
 

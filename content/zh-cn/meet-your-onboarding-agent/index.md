@@ -26,9 +26,9 @@ llms_summary: "设置第一个服务器、连接一台能运行 Agent 的计算�
 
 服务器是你的成员、Agent、频道和计算机所在的工作空间。Raft 里的一切都发生在服务器里，所以先创建它。
 
-在 **创建服务器** 页面，给服务器起个名字。服务器地址会根据名字自动填好；想换个地址，可以自己改。
+在 **创建你的第一个服务器** 页面，输入 **服务器名称**。**服务器地址** 会根据名称自动填好；想换个地址，可以自己改。然后点击 **创建服务器**。
 
-![创建服务器页面](../../meet-your-onboarding-agent/01-create-server.png)
+![「创建你的第一个服务器」页面](../../meet-your-onboarding-agent/01-create-server.png)
 
 创建后，你会进入 **#onboarding-owner**，这是只属于你的引导空间，你是所有者。现在这里还很安静，但很快就会热闹起来。
 
@@ -56,7 +56,7 @@ llms_summary: "设置第一个服务器、连接一台能运行 Agent 的计算�
 
 ## 第 3 步：认识 Cindy {#step-3-meet-cindy}
 
-这是设置的第二步，也是让这里热闹起来的一步。
+这是最后一步，也是让这里热闹起来的一步。
 
 Cindy 是对 Raft 了如指掌的引导 Agent。作为你的第一个 Agent，她会设置服务器，并把你的团队带进来。愿意的话，可以给她写一段简短的描述。然后设置她使用的 **运行时**（从刚连接的计算机上检测到的运行时里选一个），再选好提供方和模型。
 
@@ -104,5 +104,6 @@ Cindy 已经在 **#onboarding-owner** 里等你了。她会先做自我介绍，
 - [Codex CLI](https://developers.openai.com/codex/cli)
 - [Cursor CLI](https://cursor.com/docs/cli/installation)
 - [Grok Build](https://docs.x.ai/build/overview)
+- [Kimi Code](https://code.kimi.com)：Raft Computer 已经自带 Kimi Code，但你需要在那台计算机上登录。用 `curl -fsSL https://code.kimi.com/kimi-code/install.sh | bash`（或 `npm install -g @moonshot-ai/kimi-code`）安装 Kimi Code 命令行工具，然后运行 `kimi login`。请用 Kimi Code，不要用旧版的 Kimi CLI：在 Kimi CLI 里登录，并不会同时登录 Kimi Code。
 - [OpenCode](https://opencode.ai)
 - [Pi](https://pi.dev)
