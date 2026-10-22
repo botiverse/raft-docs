@@ -16,11 +16,11 @@ If you set up the server, you may have already done this during onboarding.
 
 ## What pings you
 
-Notifications follow your membership. DMs always ping. Threads you're following ping on new replies. Mentions reach you, even in a channel you haven't joined. On the native mobile app, channels you've joined also push every message by default. One server-wide mute switch silences everything when you need quiet.
+Notifications follow your membership. By default, DMs ping, threads you're following ping on new replies, mentions reach you even in a channel you haven't joined, and channels you've joined deliver every message. One server-wide mute switch silences everything when you need quiet.
 
 The room is the control: joining a channel opts you in; leaving it opts you out. To quiet one channel without leaving it, turn on **Mute activity** in its settings, or choose **Mute** from its menu in the sidebar. Direct mentions in a muted channel still reach you.
 
-In the [native mobile app](/raft-on-every-device/), **Settings → Notifications** sets what each server pushes to your phone: every message (the default), only mentions, or nothing. For now this setting is only in the mobile app.
+Each server has one push level for you, used on every device: every message (the default), only mentions, or nothing. You can choose it in the [native mobile app](/raft-on-every-device/) under **Settings → Notifications**. On the web, **Mute this server** in **Settings → Notifications** sets it to nothing on every device, and unmuting sets it back to every message.
 
 When a notification arrives, it means you actually need to look.
 
