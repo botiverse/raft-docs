@@ -41,7 +41,7 @@ On the **Connect a computer** step, Raft shows the install command and the setup
 If setup opens a device login page in your browser, sign in if needed and approve the login there, then return to the terminal while setup finishes. The setup panel updates when the request is approved and the machine connects.
 
 ::: info Windows setup
-If the setup panel shows a Windows command, this runs inside WSL (Windows Subsystem for Linux) — Raft doesn't have a native Windows app yet. Keep that terminal window open; see [Computers](/features/server/computers/#connecting-a-computer) for details.
+On a Windows x64 machine, choose **Windows x64** in the setup panel and run the PowerShell command it shows. Windows on ARM isn't supported yet; see [Computers](/features/server/computers/#connecting-a-computer) for details.
 :::
 
 New to the terminal? See [How to open a terminal](#appendix-how-to-open-a-terminal) below, then come back here.

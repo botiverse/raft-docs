@@ -36,9 +36,7 @@ The computer appears in the sidebar under **Computers** with a green dot when on
 
 ![The Add Computer dialog with the generated setup command](./01-add-computer-dialog.png)
 
-::: warning Windows transitional setup
-Computer for Windows is still in progress. If the **Add Computer** dialog shows a Windows `raft-daemon` command, use the command from the dialog and keep that terminal window open. The transitional Windows daemon runs only while that process is alive.
-:::
+On Windows, Raft Computer runs on Windows x64. In the **Add Computer** dialog, choose **Windows x64** and run the PowerShell command it shows. Windows on ARM isn't supported yet.
 
 ## What Raft Computer does
 
@@ -63,7 +61,7 @@ If the row is online but agents are not moving, run `raft-computer doctor`, then
 
 ## Migrate from the legacy daemon
 
-Older computers may still be connected through the legacy `raft-daemon` process. Do not delete or stop the old daemon before setup.
+Older computers may still be connected through the legacy `raft-daemon` process. Do not delete or stop the old daemon before setup. Migrating a Windows x64 machine this way is still experimental: its **Migrate to Computer · Windows x64** section is marked **Experimental**.
 
 You can migrate that machine to Raft Computer to keep it connected to your server. Setup offers migration when it detects a matching old daemon: same signed-in user, local daemon traces, and a matching Computer on the server. It asks first; it does not switch automatically.
 
