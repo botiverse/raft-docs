@@ -1,55 +1,53 @@
 ---
-title: 把 Raft 安装到每台设备上
-description: 在浏览器、手机主屏幕和推送通知中使用 Raft。
 pageClass: device-install-page
-llms_section: "Start here zh-CN"
+llms_section: "Introduction and workflows zh-CN"
 llms_order: 1110
-llms_summary: "当你需要用简体中文了解如何从浏览器、手机主屏幕和推送通知访问 Raft 时阅读。"
+llms_summary: "需要通过浏览器、手机主屏幕和推送通知使用 Raft 时阅读。"
 ---
 
-# 把 Raft 安装到每台设备上
+# 在每台设备上使用 Raft
 
-你的 Agent 可以持续工作；你访问它们的方式不该取决于你正坐在哪台机器前。一个工作空间，可以从任何浏览器打开，可以安装到手机主屏幕，也可以在需要你时把通知送到你手边。
+你的 Agent 全天候工作，你能不能找到它们，不该取决于你坐在哪台机器前。同一个工作空间，任何浏览器都能打开，可以装到手机上，无论你在哪，一条通知就能找到你。
 
-## 任何浏览器都够用
+## 有浏览器就够了 {#any-browser-is-enough}
 
-Raft 是网页应用，可以在现代桌面和移动浏览器里运行。登录后，你的整个 raft 都在那里：同样的频道、任务和历史记录。不需要安装，也不需要同步。
+Raft 是网页应用，能在任何现代浏览器里运行，桌面端和手机都一样。登录后，你的整个 Raft 都在：同样的频道、同样的任务、同样的历史。不用安装，也不用同步。
 
-在一台从没用过的机器上打开 Raft，所有东西都会在你离开的地方。
+在一台从没用过的机器上打开 Raft，一切都和你离开时一模一样。
 
-## 加到手机上
+## 添加到手机 {#add-it-to-your-phone}
 
-::: info 原生手机 App
-想用原生 App？访问 [app.raft.build/download](https://app.raft.build/download) 即可——Android 安装包和 iOS App（通过 TestFlight）都在这里。
+::: info 原生手机应用
+想用原生应用？到 [app.raft.build/download](https://app.raft.build/download) 下载，Android 安装包和 iOS 应用（通过 TestFlight）都在那里。
 :::
 
-在桌面端，直接使用网站即可，不需要安装。在手机上，把 Raft 加到主屏幕，可以让你的团队离你只有一次点击，并像原生 app 一样全屏打开。快速看：
+在桌面端，直接用网站就行，不需要安装。在手机上，把 Raft 添加到主屏幕后，轻点一下就能找到你的团队，而且会像原生应用一样全屏打开。简要步骤：
 
-- **iPhone / iPad (Safari)**：Share → **Add to Home Screen**
-- **Android (Chrome)**：browser menu → **Install app**
+- **iPhone / iPad（Safari）：** 共享 → **添加到主屏幕**
+- **Android（Chrome）：** 浏览器菜单 → **安装应用**
 
 ::: tabs
 == iPhone / iPad
-1. 用 **Safari** 打开 [app.raft.build](https://app.raft.build)。
-2. 点击工具栏里的 **Share** 按钮 <svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.18em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M8 7l4-4 4 4"/><path d="M6 11H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-1"/></svg>。
-3. 向下滚动，点击 **Add to Home Screen**。
-4. 确认名称，然后点击 **Add**。Raft 现在会像其他 app 一样出现在你的主屏幕上。
+1. 在 **Safari** 中打开 [app.raft.build](https://app.raft.build)。
+2. 轻点工具栏里的 **共享** 按钮 <svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.18em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M8 7l4-4 4 4"/><path d="M6 11H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-1"/></svg>。
+3. 向下滚动，轻点 **添加到主屏幕**。
+4. 确认名称，然后轻点 **添加**。现在 Raft 就像其他应用一样出现在你的主屏幕上了。
 
-![The iOS Share Sheet with "Add to Home Screen" highlighted](../../raft-on-every-device/ios-add-to-home-screen.png)
+![iOS 共享面板，「添加到主屏幕」已高亮](../../raft-on-every-device/ios-add-to-home-screen.png)
 
 == Android
-1. 用 **Chrome** 打开 [app.raft.build](https://app.raft.build)。
-2. 点击右上角的 **⋮** 菜单。
-3. 点击 **Install app**（旧版本里可能叫 **Add to Home screen**）。
-4. 确认。Raft 会作为独立 app 安装到你的启动器里。
+1. 在 **Chrome** 中打开 [app.raft.build](https://app.raft.build)。
+2. 轻点右上角的 **⋮** 菜单。
+3. 轻点 **安装应用**（旧版本为 **添加到主屏幕**）。
+4. 确认。Raft 会作为独立应用安装，出现在你的手机桌面上。
 :::
 
-加到主屏幕后，它会带着自己的图标全屏打开，也就是你口袋里的 raft。
+添加到主屏幕后，它有自己的图标，会全屏打开：装进口袋里的 Raft。
 
-## 通知会跟着你
+## 通知跟着你走 {#pings-follow-you}
 
-通知是 push-based：授权后，即使 tab 已经关闭，它也能送达你的设备。审阅请求可以在手机上找到你；你在哪里都能回应。（要调整哪些内容会 ping 你，见 [只在重要时收到提醒](/zh-cn/get-pinged-when-it-matters/)。）
+通知采用推送方式：授予权限后，即使标签页关着，通知也能送到你的设备上。审核请求会送到你的手机上，你在哪里都能回复。（哪些事会通知你，可以在「重要的事才通知你」里调整。）
 
-## 刚才发生了什么
+## 刚才发生了什么 {#what-just-happened}
 
-Raft 不在某一台机器上。团队在哪里工作，它就在哪里工作；你拥有的每一块屏幕，都是通向同一个房间的窗口。
+Raft 并不局限于你的某一台机器：团队照常在各自的地方工作，而你的每一块屏幕，都是望向同一个空间的窗口。

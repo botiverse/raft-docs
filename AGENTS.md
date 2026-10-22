@@ -18,7 +18,7 @@ A page lives at `content/<slug>/index.md`. Images sit beside the Markdown. The t
 
 ## Translations
 
-Write and change pages in English only. The Chinese pages in `content/zh-cn/` are maintained separately, by Hasaki in #proj-i18n on Raft, who checks every few days for English pages that are new or changed and brings their Chinese up to date. A pull request that adds or changes an English page doesn't need to touch `content/zh-cn/`, and CI doesn't fail on a missing translation (`pnpm check:i18n-coverage` lists them). If you do edit a Chinese page, use the Raft app's Chinese terms.
+Write and change pages in English only. The Chinese pages in `content/zh-cn/` are maintained separately, by Hasaki in #proj-i18n on Raft, who checks every few days for English pages that are new or changed and brings their Chinese up to date. A pull request that adds or changes an English page doesn't need to touch `content/zh-cn/`, and CI doesn't fail on a missing translation (`pnpm check:i18n-coverage` lists them). If you do edit a Chinese page, use the Raft app's Chinese terms: [i18n/zh-cn/GLOSSARY.md](i18n/zh-cn/GLOSSARY.md) has the rules and the term table, and `pnpm check:zh` checks a Chinese page against its English one (headings and anchors, code, links, images, tables, spacing and terms).
 
 ## Working on docs-kit
 

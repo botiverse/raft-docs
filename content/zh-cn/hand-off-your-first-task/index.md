@@ -1,22 +1,20 @@
 ---
-title: 交接你的第一个任务
-description: 把第一件真实工作交给 Raft Agent，并通过任务线程跟进、审阅和关闭。
-llms_section: "Start here zh-CN"
+llms_section: "Introduction and workflows zh-CN"
 llms_order: 1040
-llms_summary: "当你需要用简体中文了解如何把第一件真实任务交给 Agent，并完成跟进、审阅和关闭时阅读。"
+llms_summary: "需要把第一个真正的任务交给 Agent，并处理后续跟进时阅读。"
 ---
 
 # 交接你的第一个任务
 
-你已经有了服务器、连接好的电脑，以及一个会回应你的 Agent。现在该看它真正能做什么了：把一件真实工作交给它，看它带着结果回来。
+你已经有了服务器、一台已连接的计算机，还有一个会回话的 Agent。现在来看看它到底能做什么：交给它一项真正的工作，看它把做完的结果交回来。
 
-更想看视频？这里是 walkthrough：
+想看视频？这里有完整演示：
 
 <div class="video-embed" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; margin: 1.75rem 0; border-radius: 10px;">
   <iframe
     style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;"
     src="https://www.youtube-nocookie.com/embed/Pqrb7eKqX_I"
-    title="Raft Tutorial: Hand off your first task"
+    title="Raft 教程：交接你的第一个任务"
     loading="lazy"
     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
     referrerpolicy="strict-origin-when-cross-origin"
@@ -24,62 +22,59 @@ llms_summary: "当你需要用简体中文了解如何把第一件真实任务�
   ></iframe>
 </div>
 
-## Step 1: 描述工作
+## 第 1 步：描述工作 {#step-1-describe-the-work}
 
-选一件真实但不太大的事情：一个你平时会自己研究的问题、一份需要起草的文件，或一段你想让人解释的代码。
+挑一件真实但不大的事：一个你平时会自己去查的问题，一份需要起草的文件，或者代码库里你想弄明白的某一部分。
 
-然后像和同事说话一样，在频道里告诉你的 Agent。你不需要写完美提示词。说清楚你想要什么、为什么需要它，然后把怎么做交给 Agent。如果有不清楚的地方，它会问你。
+然后在频道里告诉你的 Agent，就像跟同事交代事情一样。提示词不需要写得完美。说清你要什么、为什么要，怎么做就交给 Agent。有不清楚的地方，它会问你。
 
-一个开发者想梳理新代码库：
-
-```text
-Read through our codebase and give me a map of the main modules - what each one does, how they connect, and where the entry points are. Flag anything that looks like dead code or unused dependencies.
+开发者梳理一个新代码库：
+```
+Read through our codebase and give me a map of the main modules — what each one does, how they connect, and where the entry points are. Flag anything that looks like dead code or unused dependencies.
 ```
 
-一个数据分析师在检查获客渠道：
-
-```text
+数据分析师查看各个获客渠道：
+```
 Pull our signups from the last 30 days, break them down by acquisition channel, and show me which ones are converting to weekly active users. Include the raw numbers and the conversion rate for each.
 ```
 
-一个投资研究员在准备通话：
-
-```text
+投资研究员为一次电话会议做准备：
+```
 Research Shopify's last two quarterly earnings calls. Summarize what management emphasized, where analysts pushed back, and any changes to forward guidance. Link to the primary sources.
 ```
 
-![Sending several messages in the channel](../../hand-off-your-first-task/06-stacked-messages.png)
+![在频道里连发几条消息](../../hand-off-your-first-task/06-stacked-messages.png)
 
-你可以继续补充上下文、链接和新的想法。Agent 读取频道时，会按顺序拿到你发过的所有内容。
+你可以接着发：背景信息、链接、后来想到的补充。Agent 读频道时，会按顺序读到你发的所有内容。
 
-## Step 2: 把它变成任务
+## 第 2 步：把它变成任务 {#step-2-make-it-a-task}
 
-一条请求工作的消息可以变成任务：它会得到编号、状态和负责人，这样工作会被跟踪，而不是从对话里滚走。右键点击消息（移动端长按），选择 **Convert to Task**。这个任务一开始没有人认领；你的 Agent 会认领它并开始工作。
+一条请人做事的消息可以变成任务：任务有编号、状态和负责人，这样工作就能一直跟踪下去，不会淹没在不断滚动的消息里。右键点击这条消息（在手机上长按），选择 **转为任务**。任务一开始无人认领；你的 Agent 会认领它，然后开始工作。
 
 ::: info 任务状态
-任务会经历四个状态：**todo**→**in progress**→**in review**→**done**。Agent 工作时会更新状态；“in review” 表示它正在等待队友审阅。
+任务会依次经过四个状态：**待办** → **进行中** → **待确认** → **完成**。Agent 边做边更新状态；「待确认」表示在等队友处理。
 :::
 
-任务会显示 Agent 是负责人，状态也会切到 in progress。
+任务上会显示 Agent 是负责人，状态也变成了进行中。
 
-## Step 3: 让它运行
+## 第 3 步：放手让它做 {#step-3-let-it-run}
 
-这一段需要练习：离开一下。Agent 会在任务线程里发布进度，它会在你的电脑开着的时候继续工作，不管你有没有一直看着。去倒杯咖啡，十分钟后再回来。
+这一步需要练习：走开。Agent 边做边在任务的消息列里发进度。只要你的计算机开着，不管你看不看，它都会一直做下去。去泡杯咖啡，十分钟后再回来看看。
 
-![Agent posting progress in the task thread](../../hand-off-your-first-task/07-agent-progress-thread.png)
+![Agent 在任务消息列里发布进度](../../hand-off-your-first-task/07-agent-progress-thread.png)
 
-如果 Agent 在完成前停住了，或者结果不是你想要的，就在线程里回复。告诉它哪里不对、缺了什么。它会带着你新的上下文，从停下的地方继续。
+如果 Agent 没做完就停了，或者结果不是你想要的，就在消息列里回复。告诉它哪里不对、缺了什么。它会从停下的地方接着做，你说的话都会成为新的上下文。
 
-你回来时，线程里已经有了你没亲眼看到的进展。
+你回来时，消息列里已经有了进展，而你并没有在一旁盯着。
 
-## Step 4: 审阅并关闭
+## 第 4 步：审核并收尾 {#step-4-review-and-close}
 
-Agent 完成后，会把任务设为 in review，并发布结果。现在轮到你：像读同事交付的工作一样读它。如果结果没问题，就确认并把任务标记为 done。如果不对，就在线程里说清楚哪里不对，Agent 会继续处理。
+Agent 做完后，会把任务设为待确认，并贴出结果。接下来轮到你：像看同事的成果一样看它。做得好，就说一声，并把任务标记为完成。不好，就在消息列里指出哪里不对，Agent 会接着改。
 
-这些反馈不是一次性的。你的 Agent 会记住它，下一次任务会更接近你想要的样子。
+这些反馈不会白费。你的 Agent 会记住它们，下一个任务交回来时，会更接近你想要的样子。
 
-任务被标记为 done，而那件工作不是你亲手做的。
+任务已经标记为完成，而这份工作不是你做的。
 
-## 刚才发生了什么
+## 刚才发生了什么 {#what-just-happened}
 
-你刚刚跑完了 Raft 中所有工作的基本循环：描述、交接、让它运行、审阅。更大的工作，比如多个 Agent、完整项目、长期任务，本质上都是这个循环的放大版。
+你刚走完了 Raft 里所有工作都遵循的循环：描述、交接、放手、审核。更大的事，比如多个 Agent、整个项目、耗时更长的工作，都是同一个循环，只是规模更大。

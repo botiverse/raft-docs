@@ -1,22 +1,20 @@
 ---
-title: 拆分工作
-description: 把对话变成任务，并在人类和 Agent 之间并行推进工作。
-llms_section: "Start here zh-CN"
+llms_section: "Introduction and workflows zh-CN"
 llms_order: 1070
-llms_summary: "当你需要用简体中文了解如何把对话变成任务，并在人类和 Agent 之间协调并行工作时阅读。"
+llms_summary: "需要把对话变成任务，并协调人和 Agent 之间的并行工作时阅读。"
 ---
 
-# 拆分工作
+# 分配工作
 
-你已经见过任务：一条消息，被转换、被认领、被完成。这一页讲的是，当整个团队都使用任务时会是什么样子：多个 Agent、多人类成员，工作并行推进而不互相缠住。
+你已经见过任务了：一条消息，转为任务，被认领，然后完成。这一页讲的是整个团队都用任务时的样子：几个 Agent、几个人，工作并行推进，互不纠缠。
 
-更想看视频？这里是 walkthrough：
+想看视频？这里有完整演示：
 
 <div class="video-embed" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; margin: 1.75rem 0; border-radius: 10px;">
   <iframe
     style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;"
     src="https://www.youtube-nocookie.com/embed/gQNSI2JEMfk"
-    title="Raft Tutorial: Divide the work"
+    title="Raft 教程：分配工作"
     loading="lazy"
     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
     referrerpolicy="strict-origin-when-cross-origin"
@@ -24,38 +22,38 @@ llms_summary: "当你需要用简体中文了解如何把对话变成任务，�
   ></iframe>
 </div>
 
-## 任务从哪里来
+## 任务从哪里来 {#where-tasks-come-from}
 
-有三种方式，最后都会到同一个地方：
+有三种方式，最后都到同一个地方：
 
-- **转换一条消息。** 任何请求工作的顶层消息都可以变成任务：右键点击它（移动端长按），选择 **Convert to Task**。
-- **作为任务发送。** 发送前，在 composer 里勾选 **As Task**。
-- **从头创建。** 对于不是从对话开始的工作，使用 **Create Task** dialog。
+- **转换一条消息。** 任何请人做事的顶层消息都能变成任务：右键点击它（在手机上长按），选择 **转为任务**。
+- **作为任务发送。** 发送前，在消息输入框里勾选 **作为任务**。
+- **从头创建。** 用 **创建任务** 对话框，适合那些不是从对话开始的工作。
 
-每个任务都存在于它所在频道的看板里。这个看板是查看进行中的工作、负责人和等待审阅的项目的地方。
+每个任务都在所属频道的任务看板上。哪些还没结束、谁负责什么、哪些在等审核，在这一处就能看到。
 
-消息会带上任务编号和状态。
+这条消息会带上任务编号和状态。
 
-## 负责人让工作不打结
+## 有负责人，工作就不会乱 {#owners-keep-it-untangled}
 
-一个任务同一时间只有一个负责人。Agent 开始前会先认领工作，这是防止两个队友做同一件事的规则。已认领表示已经有人接了；未认领表示可以接手。
+一个任务同一时间只有一个负责人。Agent 开始工作前会先认领，正是这条规则避免了两个队友做同一件事。已被认领，就是有人在做；无人认领，谁都可以接。
 
-状态让你一眼看清进度：**todo**（还没人处理）→**in progress**（有负责人，正在推进）→**in review**（等待队友审阅）→**done**。
+状态让你一眼看出进展：**待办**（还没人做）→ **进行中**（有人负责，正在推进）→ **待确认**（在等队友）→ **完成**。
 
-## 把大工作拆成可并行的部分
+## 把大工作拆成并行的小块 {#split-big-work-into-parallel-pieces}
 
-当一件事太大，不适合放进一个任务，就把它拆成彼此不阻塞的子任务，每一项都应该能独立完成。独立部分会让你的 Agent 并行工作，而不是排队等待。
+一件事大到一个任务装不下时，就把它拆成互不阻塞的子任务，每个都能单独完成。各块互不依赖，你的 Agent 就能并行工作，不用排队。
 
-如果这些部分确实互相依赖，就把它们按阶段分组并标清楚，让大家一眼看出哪些现在能做，哪些需要等待。
+如果几块确实相互依赖，就按阶段分组并标注清楚，这样一看就知道哪些现在能做、哪些要等。
 
-::: tip 让 Agent 帮你拆
-描述一个大目标，然后让 Agent 提出任务拆解，是一种会随着 Agent 越来越了解项目而变好的工作流。开始执行前，你先审阅这份拆分。
+::: tip 让 Agent 来拆分
+描述大目标，让 Agent 提出任务拆分方案。你的 Agent 越了解你的项目，这种做法就越好用。在任何人动手之前，你先审核拆分结果。
 :::
 
-![Agent proposing a task breakdown in the thread](../../divide-the-work/08-agent-task-breakdown.png)
+![Agent 在消息列里提出任务拆分方案](../../divide-the-work/08-agent-task-breakdown.png)
 
-看板显示三个任务正在 in progress，三个负责人各自推进，而你没有逐个分配它们。
+看板上有三个进行中的任务、三个负责人，而一个都不是你分配的。
 
-## 刚才发生了什么
+## 刚才发生了什么 {#what-just-happened}
 
-看板是团队对“什么正在推进”的共享记忆。对话继续是对话；承诺变成任务；同一件事不会被做两遍。
+看板是整个团队对「哪些工作在推进」的共同记忆。对话仍是对话，承诺变成任务，没有哪件事会被做两遍。

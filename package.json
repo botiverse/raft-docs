@@ -10,7 +10,9 @@
     "check:sitemap-redirects": "node packages/docs-kit/src/scripts/check-sitemap-redirects.mjs --config docs.config.mjs",
     "check:redirect-matcher": "node packages/docs-kit/src/scripts/check-sitemap-redirects.mjs --config docs.config.mjs --self-test",
     "preview": "vitepress preview --host 0.0.0.0",
-    "check:i18n-coverage": "node packages/docs-kit/src/scripts/check-i18n-coverage.mjs --config docs.config.mjs"
+    "check:i18n-coverage": "node packages/docs-kit/src/scripts/check-i18n-coverage.mjs --config docs.config.mjs",
+    "check:zh": "node scripts/zh-cn/check.mjs",
+    "sync:zh-anchors": "node scripts/zh-cn/anchors.mjs"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
