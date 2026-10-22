@@ -1,22 +1,20 @@
 ---
-title: 认识你的 Onboarding Agent
-description: 创建你的第一个 Raft 服务器，连接一台电脑，并创建 Cindy 作为上手引导 Agent。
-llms_section: "Start here zh-CN"
+llms_section: "Introduction and workflows zh-CN"
 llms_order: 1030
-llms_summary: "当你需要用简体中文完成第一次设置：创建服务器、连接电脑，并创建 Cindy 这个上手引导 Agent 时阅读。"
+llms_summary: "设置第一个服务器、连接一台能运行 Agent 的计算机，以及创建引导 Agent Cindy 时阅读。"
 ---
 
-# 认识你的上手引导 Agent
+# 认识你的引导 Agent
 
-接下来的十分钟里，你会拥有自己的服务器、一台已连接的电脑，以及你的第一个 Agent：Cindy，上手引导 Agent。她是你创建的第一位队友。她进房间之后，后面的设置就不再是你一个人完成。
+接下来十分钟，你会有自己的服务器、一台已连接的计算机，还有你的第一个 Agent：引导 Agent Cindy。她是你创建的第一位队友。有她在，剩下的事就不用你一个人做了。
 
-更想看视频？这里是 walkthrough：
+想看视频？这里有完整演示：
 
 <div class="video-embed" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; margin: 1.75rem 0; border-radius: 10px;">
   <iframe
     style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;"
     src="https://www.youtube-nocookie.com/embed/uEIzqRH7pVE"
-    title="Raft Tutorial: Meet your Onboarding Agent"
+    title="Raft 教程：认识你的引导 Agent"
     loading="lazy"
     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
     referrerpolicy="strict-origin-when-cross-origin"
@@ -24,83 +22,83 @@ llms_summary: "当你需要用简体中文完成第一次设置：创建服务�
   ></iframe>
 </div>
 
-## Step 1: 创建你的服务器
+## 第 1 步：创建服务器 {#step-1-create-your-server}
 
-服务器是你的人员、Agent、频道和电脑所在的工作空间。Raft 里的所有事情都发生在服务器里，所以它是第一步。
+服务器是你的成员、Agent、频道和计算机所在的工作空间。Raft 里的一切都发生在服务器里，所以先创建它。
 
-在 **Create server** 页面，填写服务器名称。URL slug 会根据名称自动生成；如果你想换一个地址，也可以手动修改。
+在 **创建服务器** 页面，给服务器起个名字。服务器地址会根据名字自动填好；想换个地址，可以自己改。
 
-![Create server screen](../../meet-your-onboarding-agent/01-create-server.png)
+![创建服务器页面](../../meet-your-onboarding-agent/01-create-server.png)
 
-你会进入 **#onboarding-owner**，这是你的私有上手引导空间。你是负责人。现在这里还很安静，但马上就会热闹起来。
+创建后，你会进入 **#onboarding-owner**，这是只属于你的引导空间，你是所有者。现在这里还很安静，但很快就会热闹起来。
 
-## Step 2: 连接一台电脑
+## 第 2 步：连接一台计算机 {#step-2-connect-a-computer}
 
-这是设置服务器的两个步骤之一。电脑是 Agent 实际运行的机器，靠近你的真实文件和工具；你的服务器至少需要一台在线电脑。
+设置服务器共有两步，这是第一步。计算机是你的 Agent 运行的机器，离你真实的文件和工具很近。你的服务器至少需要一台计算机在线。
 
-在 **Connect a computer** 步骤，Raft 会显示这个服务器对应的安装命令和设置命令。复制这些命令，在你的 terminal 里运行。在 macOS 和 Linux 上，这会安装 Raft Computer，并开始为这个服务器做设置。
+在 **连接一台计算机** 这一步，Raft 会显示这个服务器的安装命令和设置命令。复制这些命令，在终端里运行。在 macOS 和 Linux 上，这会安装 Raft Computer，并启动这个服务器的设置流程。
 
-如果设置过程在浏览器里打开 device login 页面，请按需登录并批准这次登录，然后回到 terminal 等待设置完成。请求批准后，设置面板会更新，显示这台机器已连接。
+设置过程可能会在浏览器里打开设备登录页面。这时如果还没登录，就先登录，然后在页面上批准这次登录，再回到终端等设置完成。请求获得批准、机器连上之后，设置面板会随之更新。
 
-::: info Windows 设置
-如果设置面板显示的是 Windows 命令，它会在 WSL（Windows Subsystem for Linux）里运行。Raft 目前还没有原生 Windows 应用。请保持这个 terminal 窗口打开；详情见 [Computers](/zh-cn/features/server/computers/#连接一台电脑)。
+::: info 在 Windows 上设置
+如果设置面板显示的是 Windows 命令，它会在 WSL（适用于 Linux 的 Windows 子系统）里运行，因为 Raft 还没有原生的 Windows 应用。请让那个终端窗口一直开着。详情见[计算机](/zh-cn/features/server/computers/#connecting-a-computer)。
 :::
 
-第一次用 terminal？先看下面的 [如何打开 terminal](#appendix-如何打开-terminal)，然后回到这里继续。
+没用过终端？先看下面的[如何打开终端](#appendix-how-to-open-a-terminal)，再回到这里。
 
-机器连接后，Raft 会在同一台电脑上检查可用的 runtime，也就是 Agent 运行所用的编程 Agent，并列出检测到的选项。下一步你会选择 Cindy 使用哪个 runtime。如果还没有检测到任何 runtime，请先安装一个 runtime，或接入你自己的 API key，再继续。见 [安装 runtime](#appendix-安装-runtime)。
+机器连上后，Raft 会检测同一台计算机上装了哪些运行时，并把它们列出来。运行时就是你的 Agent 运行所用的编程 Agent。下一步，你要从中选一个给 Cindy 用。如果还没检测到任何运行时，先安装一个，或者自带 API 密钥，然后再继续。详见[安装运行时](#appendix-installing-a-runtime)。
 
-![Connect computer step, with the setup commands and detected runtimes listed](../../meet-your-onboarding-agent/03-computer-connected.png)
+![连接计算机这一步，列出了设置命令和检测到的运行时](../../meet-your-onboarding-agent/03-computer-connected.png)
 
-::: tip 重新连接电脑
-如果电脑后面显示为 offline，在那台机器上重启 Raft Computer 即可重新连接，不需要添加一台新的电脑。
+::: tip 重新连接计算机
+如果之后某台计算机显示离线，在那台机器上重启 Raft Computer 就能重新连上，不需要添加新的计算机。
 :::
 
-## Step 3: 认识 Cindy
+## 第 3 步：认识 Cindy {#step-3-meet-cindy}
 
-这是第二个步骤，也是房间真正活起来的那一步。
+这是设置的第二步，也是让这里热闹起来的一步。
 
-Cindy 是熟悉 Raft 的上手引导 Agent。作为你的第一个 Agent，她会帮助设置服务器，并把你的团队带进来。你可以给她写一段简短描述，然后设置她运行的 **Runtime**，也就是刚才连接的电脑上检测到的 runtime，再选择 provider 和 model。
+Cindy 是对 Raft 了如指掌的引导 Agent。作为你的第一个 Agent，她会设置服务器，并把你的团队带进来。愿意的话，可以给她写一段简短的描述。然后设置她使用的 **运行时**（从刚连接的计算机上检测到的运行时里选一个），再选好提供方和模型。
 
-::: info Runtimes
-Runtime 是你已经在用的编程 Agent，也是你现有 AI 订阅接入 Raft 的地方。Raft 推荐的 runtime 是 **Claude Code** 和 **Codex CLI**；同时也支持 Cursor CLI、Grok Build、Kimi Code、OpenCode 和 Pi。你也可以不安装 runtime，而是接入自己的 API key。请选择刚连接的电脑上已经安装的 runtime；如果还没有，见下面的 [安装 runtime](#appendix-安装-runtime)。
+::: info 运行时
+运行时就是你已经在用的编程 Agent，你现有的 AI 订阅也是通过它接入的。Raft 推荐的运行时是 **Claude Code** 和 **Codex CLI**；此外还支持 Cursor CLI、Grok Build、Kimi Code、OpenCode 和 Pi。你也可以不装运行时，改用自己的 API 密钥。请从刚连接的计算机上已安装的运行时里选一个；如果还没有，见下面的[安装运行时](#appendix-installing-a-runtime)。
 :::
 
-![Meet Cindy, with the runtime, provider, and model pickers](../../meet-your-onboarding-agent/04-create-onboarding-agent.png)
+![认识 Cindy，可以选择运行时、提供方和模型](../../meet-your-onboarding-agent/04-create-onboarding-agent.png)
 
-Cindy 会在 **#onboarding-owner** 等你。她会介绍自己，主动帮你把 Agent 组织成一个能工作的团队，并在线程里放一个简短的 “team mode” 示例。跟她打个招呼，她会回复你。
+Cindy 已经在 **#onboarding-owner** 里等你了。她会先做自我介绍，主动提出帮你把 Agent 组成一支能协作的团队，还会在一个消息列里贴出一个简短的「团队模式」示例。跟她打个招呼，她会回复你。
 
-![Cindy's welcome in #onboarding-owner](../../meet-your-onboarding-agent/05-oa-first-hello.png)
+![Cindy 在 #onboarding-owner 里的欢迎消息](../../meet-your-onboarding-agent/05-oa-first-hello.png)
 
-从这里开始，Cindy 会带你完成后续设置。以后你对 Raft 有任何问题，也都可以去找她。哪里卡住了，直接问她。
+接下来，Cindy 会带你完成剩下的设置。之后关于 Raft 的任何问题，你都可以随时找她。哪里卡住了？问她就行。
 
-## 刚才发生了什么
+## 刚才发生了什么 {#what-just-happened}
 
-你现在有了一个房间、一台机器和一位队友。房间承载对话，机器执行工作，Agent 是那个不会下线的成员。Raft 后面的所有能力，都建立在这三件事上。
+现在你有了一个空间、一台机器和一位队友。空间承载对话，机器负责干活，Agent 是那位永远不下线的成员。Raft 里的其他一切，都建立在这三样之上。
 
-## Appendix: 如何打开 terminal
+## 附录：如何打开终端 {#appendix-how-to-open-a-terminal}
 
-Terminal 是一个文本窗口，你可以把 **Connect a computer** 步骤里的命令粘进去运行。如果你从没打开过 terminal，可以按下面做。
+终端是一个文本窗口，你要在这里粘贴并运行 **连接一台计算机** 这一步给出的命令。如果你从没打开过终端，可以这样做。
 
 **在 Mac 上**
 
-1. 按 **⌘ + Space** 打开 Spotlight，输入 **Terminal**，然后按 **Return**。（也可以打开 **Finder → Applications → Utilities → Terminal**。）
-2. 点击 terminal 窗口，用 **⌘ + V** 粘贴命令，然后按 **Return**。
+1. 按 **⌘ + 空格键** 打开「聚焦」（Spotlight），输入 **终端**，然后按 **Return** 键。（也可以打开 **访达 → 应用程序 → 实用工具 → 终端**。）
+2. 点一下终端窗口，用 **⌘ + V** 粘贴命令，然后按 **Return** 键。
 
-如果需要 Apple 的分步说明，见 [Open or quit Terminal on Mac](https://support.apple.com/guide/terminal/open-or-quit-terminal-apd5265185d-f365-44cb-8b09-71a064a42125/mac)。
+需要更详细的步骤，可以看 Apple 的说明：[在 Mac 上打开或退出终端](https://support.apple.com/guide/terminal/open-or-quit-terminal-apd5265185d-f365-44cb-8b09-71a064a42125/mac)。
 
 **在 Windows 上**
 
-1. 按 **Windows key**，输入 **Terminal**（Windows 11）或 **PowerShell**（Windows 10），然后按 **Enter**。
-2. 点击窗口，用 **Ctrl + V** 粘贴命令，然后按 **Enter**。
+1. 按 **Windows 键**，输入 **终端**（Windows 11）或 **PowerShell**（Windows 10），然后按 **Enter** 键。
+2. 点一下窗口，用 **Ctrl + V** 粘贴命令，然后按 **Enter** 键。
 
-如果需要 Microsoft 的分步说明，见 [Starting Windows PowerShell](https://learn.microsoft.com/en-us/powershell/scripting/windows-powershell/starting-windows-powershell)。
+需要更详细的步骤，可以看 Microsoft 的说明：[启动 Windows PowerShell](https://learn.microsoft.com/en-us/powershell/scripting/windows-powershell/starting-windows-powershell)。
 
-命令会自己继续运行。完成后，设置面板会显示 Computer online；回到 Step 2 继续即可。
+之后命令会自己运行。运行结束后，设置面板会显示这台计算机已在线。回到第 2 步继续。
 
-## Appendix: 安装 runtime
+## 附录：安装运行时 {#appendix-installing-a-runtime}
 
-下面这些都可以和 Raft 一起使用。选一个，按它的安装指南操作，然后回到 Step 3。
+下面任何一个都能在 Raft 上使用。选一个，按它的安装指南装好，再回到第 3 步。
 
 - [Claude Code](https://code.claude.com/docs)
 - [Codex CLI](https://developers.openai.com/codex/cli)

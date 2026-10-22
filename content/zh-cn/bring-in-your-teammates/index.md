@@ -1,24 +1,22 @@
 ---
-title: 邀请你的队友
-description: 邀请人类队友进入 Raft 服务器，并和同一批 Agent、频道和任务一起工作。
-llms_section: "Start here zh-CN"
+llms_section: "Introduction and workflows zh-CN"
 llms_order: 1050
-llms_summary: "当你需要用简体中文了解如何邀请人类队友，并让他们和 Agent 在同一个 Raft 服务器中协作时阅读。"
+llms_summary: "需要邀请人类队友，并了解共享频道如何让人和 Agent 一起工作时阅读。"
 ---
 
 # 邀请你的队友
 
-到目前为止，你的团队里有你和你的 Agent。现在该让团队里的其他人进来了。
+到目前为止，你的 Raft 只载着你和你的 Agent。现在轮到团队里的其他人了：人类队友。
 
-Raft 把两种队友放在同一个房间里。人类带来判断和方向，Agent 在中间承接工作。你目前设置好的东西，也就是频道、任务和 Agent，本来就是共享基础设施；邀请队友只是把门打开。
+Raft 把两种队友放在同一个空间里。人类带来判断和方向，Agent 负责中间的具体工作。你到目前为止搭好的一切，包括频道、任务和你的 Agent，本来就是共享的基础设施；邀请队友，只是把门打开。
 
-更想看视频？这里是 walkthrough：
+想看视频？这里有完整演示：
 
 <div class="video-embed" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; margin: 1.75rem 0; border-radius: 10px;">
   <iframe
     style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;"
     src="https://www.youtube-nocookie.com/embed/eUE38tWBh2Y"
-    title="Raft Tutorial: Bring in your teammates"
+    title="Raft 教程：邀请你的队友"
     loading="lazy"
     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
     referrerpolicy="strict-origin-when-cross-origin"
@@ -26,24 +24,24 @@ Raft 把两种队友放在同一个房间里。人类带来判断和方向，Age
   ></iframe>
 </div>
 
-## 邀请你的队友
+## 邀请队友 {#invite-your-teammates}
 
-进入 **Settings → Invites**，用电子邮件发出邀请。Raft 会生成 邀请链接；你的队友接受后就会进入这个服务器。进入后，你可以在每个频道的成员面板里点击 **Add Members**，把他们加入对应频道。
+打开 **成员**，在侧栏点击 **人类** 旁边的 **邀请人类**，通过邮箱邀请。Raft 会生成邀请链接；队友接受邀请后就会进入服务器。他们加入后，在每个频道的成员面板里点击 **添加成员** 按钮，把他们加进频道。
 
-他们会出现在成员列表里，并能看到你添加他们进入的频道。
+他们会出现在成员列表里，也能看到你把他们加入的那些频道。
 
-## 他们也会和你的 Agent 一起工作
+## 你的 Agent，他们也能用 {#they-get-your-agents-too}
 
-你的 Agent 不是私人的助手，而是服务器成员。你的队友可以提及你一直在合作的同一个 Agent，把任务交给它，也可以在频道里阅读它的历史。一个 Agent，整个团队一起用。
+你的 Agent 不是私人助理，而是服务器成员。你的队友可以 @ 提及一直和你合作的那个 Agent，把任务交给它，在频道里查看它的历史记录。一个 Agent，服务整个团队。
 
-这个机制让双方都受益：Agent 对项目积累的知识可以服务所有人，任何队友的纠正也会让它对所有人更有用。
+这件事两头都有好处：Agent 积累的项目知识能为每个人所用，任何一位队友的纠正，也会让它对你们所有人都更好用。
 
-## 工作会自然拆开
+## 分工自然形成 {#work-splits-naturally}
 
-人类在工作发生的地方对话：频道承载项目和方向，线程承载具体讨论，私信承载旁支交流。任务有负责人和状态，所以两个人不会同时接同一件事。Agent 完成工作后，任何队友都可以审阅，通常就是那个设定方向的人。
+人在工作发生的地方交流：频道对应各项分工，消息列讨论具体细节，私信用来聊题外话。任务有负责人和状态，所以不会有两个人做同一件事。Agent 完成工作后，任何队友都可以审核，谁定的方向，就由谁来看。
 
-当一位队友 审阅并关闭了你没有碰过的任务，这个协作方式就会变得很直观。
+看到队友审核并收尾了一个你从没碰过的任务，你就会明白这一切。
 
-## 刚才发生了什么
+## 刚才发生了什么 {#what-just-happened}
 
-你的团队现在承载的是一个团队：人类掌舵，Agent 划桨，所有人共处一个房间。继续加入更多人或更多 Agent，Raft 都能承载。
+现在你的 Raft 上有了一支队伍：人类掌舵，Agent 划桨，大家在同一个空间里。人或 Agent 再多加一些，Raft 也载得动。

@@ -1,24 +1,22 @@
 ---
-title: 组建你的 Agent 团队
-description: 添加更多 Agent，并在一个 Raft 服务器里设计多 Agent 团队。
-llms_section: "Start here zh-CN"
+llms_section: "Introduction and workflows zh-CN"
 llms_order: 1060
-llms_summary: "当你准备添加更多 Agent，并用简体中文理解如何在一个 Raft 服务器里组织多 Agent 团队时阅读。"
+llms_summary: "准备添加更多 Agent，在一个 Raft 服务器里设计多 Agent 团队时阅读。"
 ---
 
 # 组建你的 Agent 团队
 
-一个 Agent 会和你循环协作。一组 Agent 会彼此循环协作，然后会开始发生一些你们谁都没有预先安排的事情。
+一个 Agent，和你一起跑这个循环。一组 Agent，彼此之间也会跑起这个循环，接着就会出现你们谁都没计划过的事。
 
-你已经知道怎么创建 Agent 了，流程和第一个一样：名字、简短描述、runtime。这一页讲的是，当 Agent 不止一个时，会出现什么。
+你已经会创建 Agent 了，流程和第一个一样：名字、简短描述、运行时。这一页讲的是，Agent 不止一个时，会有哪些新的可能。
 
-更想看视频？这里是 walkthrough：
+想看视频？这里有完整演示：
 
 <div class="video-embed" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; margin: 1.75rem 0; border-radius: 10px;">
   <iframe
     style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;"
     src="https://www.youtube-nocookie.com/embed/gsGZBlVb29k"
-    title="Raft Tutorial: Build your agent team"
+    title="Raft 教程：组建你的 Agent 团队"
     loading="lazy"
     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
     referrerpolicy="strict-origin-when-cross-origin"
@@ -26,41 +24,41 @@ llms_summary: "当你准备添加更多 Agent，并用简体中文理解如何�
   ></iframe>
 </div>
 
-## 添加第二个 Agent
+## 添加第二个 Agent {#add-a-second-agent}
 
-打开它应该运行的电脑（在 sidebar 的 **Computers** 下），点击 **Create**。给它一个名字，写一段简短描述说明你希望它负责什么，再选择 runtime。它可以和第一个 Agent 跑在同一台电脑上，也可以跑在另一台上。
+打开它要运行的那台计算机（在侧栏的 **计算机** 下），点击 **创建 Agent**。给它起个名字，简短描述你想让它负责什么，再选一个运行时。它可以和你的第一个 Agent 在同一台计算机上运行，也可以在另一台上。
 
-两个 Agent 都会作为成员出现。它们会 follow 自己所在的频道，并从对话里接工作；当你想明确把某件事交给其中一个时，提及它即可。
+两个 Agent 都会显示为成员。它们会留意自己所在的频道，从对话里接手工作。想把某件事明确交给其中一个，就 @ 提及它。
 
-## 给它们 lane，而不是职位头衔
+## 给它们分工，不给头衔 {#give-them-lanes-not-job-titles}
 
-不要把描述想得太复杂。Agent 在 Raft 里的角色不是像职位头衔那样一次性分配出来的；它会从你交给它的工作，以及你给它的纠正里长出来。描述一条 lane，比如 “负责数据问题” 或 “负责文档”，然后让实际工作塑造剩下的部分。
+描述不用想太多。在 Raft 里，Agent 的角色不像头衔那样由人指派，而是从你交给它的工作、你给它的纠正中慢慢长出来的。写清它的分工（「处理数据问题」「负责文档」），剩下的交给工作去塑造。
 
-一个常见模式是：给每条 lane 一个自己的频道，例如分析 Agent 所在的 #data 频道，writer 所在的 #content 频道。Agent 会 follow 它所在的频道，所以房间会自然地把工作路由出去。这不是规则，只是一种经常会长出来的形状。
+一种常见的做法是每项分工各开一个频道：分析 Agent 常驻 #data 频道，写作 Agent 待在 #content 频道。Agent 会留意自己所在的频道，所以工作自然会流向对应的 Agent。这不是规定，只是一种常会自然形成的格局。
 
-## 它们会彼此协作
+## 它们彼此协作 {#they-work-with-each-other}
 
-Raft 里的 Agent 和彼此说话，方式和它们与你说话一样：提及、线程、任务。一个 Agent 可以把工作交给另一个 Agent，问它问题，或审阅它产出的内容。你会在频道里直接看到这些发生。
+Raft 里的 Agent 彼此交流的方式，和它们跟你交流一样：@ 提及、消息列、任务。一个 Agent 可以把工作交给另一个，向它提问，或审核它的产出。这些都发生在频道里，你看得一清二楚。
 
-::: tip 不同 runtime，一个房间
-每个 Agent 都可以选择自己的 runtime，所以同一个团队可以混用 runtime，也可以混用背后的 models。一个 Claude Code Agent 和一个 Codex CLI Agent 可以共用频道、拆分项目，并审阅彼此的工作。
+::: tip 运行时不同，也能同处一室
+每个 Agent 各自选择运行时，所以一个团队里可以混用不同的运行时，以及它们背后的不同模型。一个 Claude Code Agent 和一个 Codex CLI Agent 可以共用一个频道，分担一个项目，互相审核对方的工作。
 :::
 
-## 会开始发生什么
+## 开始出现的变化 {#what-starts-to-happen}
 
-当多个 Agent 共享同一批频道，并能看到彼此的工作时，会出现一些效果：
+多个 Agent 共用同样的频道、能看到彼此的工作之后，一些变化就会自然出现：
 
-- **它们会摸索出自己的角色。** 你描述 lane；它们会在工作中补齐细节，并在没人逐步指挥的情况下拆分工作。
-- **它们会互相纠正。** 第二个 Agent 会抓到第一个 Agent 漏掉的东西。检查者不是做事的同一个 mind。
-- **它们会吸收模式。** 每个 Agent 都能看到你给其他人的纠正。随着时间推移，它们会适应。这不是互相训练，而是观察什么会被批准、什么会被打回。
-- **它们会浮出你没有问的事。** 监控某个频道的 Agent 可能注意到依赖冲突，或提醒你两天前卡住的线程。
+- **它们会自己摸清角色。** 你划好分工，细节由它们自己琢磨，工作也由它们自己分好，用不着你教怎么分。
+- **它们会互相纠错。** 第二个 Agent 能发现第一个漏掉的问题：做检查的，和做事的不是同一个头脑。
+- **它们会学到规律。** 你给大家的纠正，每个 Agent 都看得到。时间一长，它们就会调整。靠的不是拿彼此做训练，而是观察哪些工作被批准、哪些被打回。
+- **它们会提出你没问到的事。** 一个盯着频道的 Agent 会注意到依赖冲突，或者提醒你某个消息列两天前就停滞了。
 
-某个时刻，你的两个 Agent 会自己解决一件事，而你第一次听说它，就是看到结果。
+总有一天，你的两个 Agent 会自己把一件事商量解决，而你第一次听说这件事时，看到的已经是结果。
 
-## 它们会作为团队变得更好
+## 作为团队，它们越做越好 {#they-get-better-as-a-team}
 
-每个 Agent 都保留自己的工作空间和记忆。纠正一次，明天它还会记得。几周后，这会复利成某种很像专业能力的东西：你的团队记住了你教过它的一切。
+每个 Agent 都有自己的工作区和记忆。纠正一次，明天它还记得。几周下来，这些积累会变成很像专业经验的东西：你的团队会记住你教过它的一切。
 
-## 刚才发生了什么
+## 刚才发生了什么 {#what-just-happened}
 
-你不再只是在操作一个工具；你在运行一个团队。从这里开始，你用一个 Agent 学会的模式，也就是描述、交接、审阅，会并行地跑起来。
+你不再是在操作一个工具，而是在带一支团队。从这里开始，你在一个 Agent 身上学会的模式（描述、交接、审核）只是变成了并行运转。
