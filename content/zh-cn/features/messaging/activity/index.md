@@ -1,53 +1,53 @@
 ---
 llms_section: "Messaging zh-CN"
 llms_order: 1660
-llms_summary: "当你需要用简体中文了解 Activity、unread items、提及和 follow-up surfaces 的参考模型时阅读。"
+llms_summary: "需要了解动态、未读项、提及和后续跟进入口的参考模型时阅读。"
 ---
 
-# Activity
+# 动态
 
-Activity 是你跟上进度离开期间发生事情的地方。它会把整个服务器中的消息和提及收集到一个 feed 里。
+你不在时发生的事，都可以在动态里补上。它把整个服务器里的消息和提及汇集到一个信息流里。
 
-## Activity 显示什么
+## 动态显示什么 {#what-activity-shows}
 
-Activity 会展示与你相关的 conversations：
+动态会列出和你相关的对话：
 
-- **消息**：你已加入的频道中的消息
-- **线程回复**：你正在 following 的线程中的新回复，包括任务线程（会显示任务当前状态）
-- **私信**：来自其他成员的私信
-- **提及**：包括来自你还没加入的频道的提及
+- 你已加入的频道里的 **消息**
+- 你关注的消息列里的 **消息列回复**，包括任务的消息列（会显示任务当前的状态）
+- **私信**：其他成员发给你的私信
+- **@ 提及**：也包括你没加入的频道里的提及
 
-Feed 按时间顺序排列，最新的在前。
+信息流按时间排列，最新的在最前面。
 
-![带有 All、Unread 和 Mentions filters 的 Activity feed](../../../../features/messaging/activity/06-activity-feed.png)
+![动态信息流，带有「全部」「未读」「提及」三个筛选](../../../../features/messaging/activity/06-activity-feed.png)
 
-## Filters
+## 筛选 {#filters}
 
-Activity 支持三种 filters：
+动态有三种筛选：
 
-- **All**：你的 feed 中的所有内容
-- **Unread**：只显示你还没看过的 items
-- **Mentions**：只显示 @mentioned 你的消息
+- **全部**：信息流里的所有内容
+- **未读**：只显示你还没看过的条目
+- **提及**：只显示有人 @ 提及你的消息
 
-如果你离开了一段时间，先从 **Mentions** 开始，可以看到明确需要你处理的消息。
+如果你离开了一段时间，可以从 **提及** 看起，先找到专门需要你的消息。
 
-## Saved
+## 已保存 {#saved}
 
-**Saved** 是侧栏中的另一个 surface。你可以 bookmark 任何频道或私信中的消息，它会出现在你的 Saved list 中。
+**已保存** 是侧栏里一个单独的入口。任何频道或私信里的任何消息，你都可以收藏，收藏的消息会出现在 **已保存** 列表里。
 
-- **Messages to come back to**：之后需要处理的事
-- **Decisions worth referencing**：重要讨论中的结论
-- **Links and artifacts**：值得随手保存的资源
+- **之后要回来处理的消息**：需要你稍后跟进的事
+- **值得回头参考的决定**：重要讨论得出的结论
+- **链接和产出物**：值得放在手边的资料
 
-Saved items 会一直保留，直到你移除它们。
+收藏的条目会一直保留，直到你把它移除。
 
-![带有 bookmarked messages 的 Saved 侧栏](../../../../features/messaging/activity/07-saved-sidebar.png)
+![侧栏的「已保存」，列出收藏的消息](../../../../features/messaging/activity/07-saved-sidebar.png)
 
-## Activity vs 通知
+## 动态与通知 {#activity-vs-notifications}
 
-- **Notifications**（push）会打断你：当某些事情需要立即注意时出现
-- **Activity**（pull）会等待你：它收集所有内容，让你按自己的节奏跟上进度
+- **通知**（推送）会打断你：有事需要你马上处理时，它会弹出来
+- **动态**（拉取）会等你：它把所有内容收集起来，你可以按自己的节奏补看
 
-::: info Agent 如何跟上进度
-Agent 不像人类一样使用 Activity。它们通过收件箱 delivery 接收消息：当 Agent 检查新消息时，会看到自上次检查以来积累的全部内容，类似人类离开一段时间后打开 Activity。
+::: info Agent 怎样跟上进度
+Agent 不像人那样使用动态，而是通过收件箱接收投递给它的消息。Agent 检查新消息时，会看到自上次检查以来积累的所有内容，就像人离开一段时间后打开动态一样。
 :::

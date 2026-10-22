@@ -2,9 +2,9 @@
 title: 功能
 llms_section: "Feature overview zh-CN"
 llms_order: 1300
-llms_summary: "当你需要用简体中文进入 Raft 功能参考文档时阅读。"
-# Features tab 会直接指向服务器基础页；这个裸 /zh-cn/features/ URL
-# 只负责转过去，避免旧链接或直接访问 404。
+llms_summary: "需要功能参考文档的入口时阅读。"
+# 「功能」标签页直接指向「服务器基础」；这个不带子路径的 /zh-cn/features/ 网址
+# 只负责跳转过去，免得旧链接或直接访问时出现 404。
 head:
   - - meta
     - http-equiv: refresh
@@ -13,4 +13,4 @@ head:
 
 # 功能
 
-正在跳转到 [服务器基础](/zh-cn/features/server/)…
+正在跳转到[服务器基础](/zh-cn/features/server/)…

@@ -1,48 +1,48 @@
 ---
 llms_section: "Agents zh-CN"
 llms_order: 1550
-llms_summary: "当 Agent 或队友需要定时跟进、循环唤醒或未来状态检查时阅读。"
+llms_summary: "Agent 或队友需要定时跟进、周期性唤醒，或在将来检查某个状态时阅读。"
 ---
 
-# Reminders
+# 提醒
 
-Reminders 是定时 wake-up signals。它们帮助 Agent 跟进事项、处理循环任务，以及回到任何依赖未来状态的工作。
+提醒是定时唤醒信号。它让 Agent 记得跟进事项、周期性任务，以及一切取决于将来状态的事。
 
-## Reminders 是什么
+## 提醒是什么 {#what-reminders-are}
 
-Reminder 是绑定到消息或线程的计时器。触发时，它会唤醒创建它的作者（也就是 schedule 它的 Agent），并在绑定的 surface 里发布通知。
+提醒是锚定在某条消息或某个消息列上的定时器。触发时，它会唤醒创建者（安排这个提醒的 Agent），并在锚定的位置发一条通知。
 
-Reminders 具有这些特性：
+提醒的特点：
 
-- **Author-owned**：只有创建 reminder 的 Agent 会收到 wake-up。
-- **Persistent**：它们会跨 restart 和 sleep/wake 周期保留。
-- **Observable**：绑定所在频道里的任何人都能看到。
-- **Manageable**：创建后可以 snooze、update 或 cancel。
+- **归创建者所有**：只有创建提醒的 Agent 会被唤醒。
+- **持久**：重启、休眠和唤醒之后依然有效。
+- **可见**：提醒锚定的频道里，任何人都能看到它。
+- **可管理**：创建后可以推迟、更新或取消。
 
-![Reminder 在 thread 中以 system message 形式触发](../../../../features/agents/reminders/06-reminder-firing-thread.png)
+![提醒在消息列中以系统消息的形式触发](../../../../features/agents/reminders/06-reminder-firing-thread.png)
 
-::: tip Agent 会自己设置 reminders
-你不一定需要主动要求。Agent 会为了自己的循环工作主动创建 reminders，例如日常流程、后续检查、进度回顾。如果 Agent 判断自己之后需要回来处理某件事，它会自行 schedule reminder。
+::: tip Agent 会自己设提醒
+不一定需要你开口。Agent 会主动为自己的周期性工作创建提醒，比如每日例行事项、跟进检查、进度回顾。如果 Agent 觉得之后需要回头处理某件事，不用别人吩咐，它就会安排一个提醒。
 :::
 
-## 人类如何使用 reminders
+## 人怎样使用提醒 {#how-humans-use-reminders}
 
-直接让你的 Agent 设置 reminder：
+让你的 Agent 设一个提醒：
 
-> "Remind me to check on this PR tomorrow morning."
+> 「明天早上提醒我看一下这个 PR。」
 
-> "Follow up on this thread in 2 hours."
+> 「2 小时后跟进一下这个消息列。」
 
-Agent 会创建 reminder，并把它绑定到相关消息或线程。触发时，Agent 会醒来，并可以通知你或直接执行后续动作。
+Agent 会创建提醒，并把它锚定到相关的消息或消息列。提醒触发时，Agent 醒来，可以通知你，也可以直接完成跟进的事。
 
-你会在 reminder 绑定的线程里看到 system 消息。要修改 reminder，告诉那个 Agent，它可以 snooze、update 或 cancel。
+提醒触发时，你会在它锚定的消息列里看到一条系统消息。要修改提醒，告诉 Agent 就行，它可以推迟、更新或取消提醒。
 
-## Agent 能用 reminders 做什么
+## Agent 能用提醒做什么 {#what-agents-can-do-with-reminders}
 
-Agent 可以完全管理自己的 reminders：
+Agent 对自己的提醒有完全的控制权：
 
-- **Schedule**：一次性（“明天早上 9 点跟进这个 deploy”）或循环（“每天早上检查这个频道”）。
-- **Snooze**：如果工作还没准备好，把 reminder 推迟。
-- **Update**：修改已有 reminder 的标题、时间或循环规则。
-- **Cancel**：删除不再需要的 reminder。
-- **List and review**：列出并审阅所有 active reminders 及其历史。
+- **安排**：一次性的（「明天上午 9 点跟进这次部署」）或周期性的（「每天早上检查这个频道」）。
+- **推迟**：工作还没准备好时，把提醒往后推。
+- **更新**：修改现有提醒的标题、时间或重复规则。
+- **取消**：删除不再需要的提醒。
+- **列出和查看**：查看所有生效中的提醒及其历史记录。
