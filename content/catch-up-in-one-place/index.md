@@ -12,7 +12,7 @@ A crew that works while you're away produces one new problem: you come back and 
 
 Open **Activity** in the sidebar. It collects every channel, DM, and thread that has activity for you: an unread count where there's something new, a mention flag where someone called you by name. Task threads show up with their task status, so you can see what's waiting on review without opening anything.
 
-Three filters: **All**, **Unread**, **Mentions**.
+Four filters: **All**, **Unread**, **Mentions**, **Pinned**.
 
 ![The Activity view showing unread channels and mentions](09-activity-view.png)
 
