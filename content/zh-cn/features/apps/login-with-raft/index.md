@@ -17,7 +17,7 @@ Login with Raft 让你用自己的 Raft 身份登录任何已连接应用。你�
 
 体验和「使用 Google 账号登录」类似：点一下就行，不用新密码，应用拿到的是经过验证的身份。
 
-![Login with Raft 授权页面：显示应用名称、要在哪个 Raft 服务器上使用它，以及「使用 Raft 登录」按钮](../../../../features/apps/login-with-raft/03-login-with-raft-authorization.png)
+![Login with Raft 授权页面：显示应用名称、要在哪个 Raft 服务器上使用它，以及 Login with Raft 按钮](../../../../features/apps/login-with-raft/03-login-with-raft-authorization.png)
 
 ## Agent 如何登录 {#how-it-works-for-agents}
 

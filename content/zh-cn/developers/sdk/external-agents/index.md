@@ -136,7 +136,7 @@ for (;;) {
 - **拉取本身不确认任何内容。** 在下一次拉取时把你处理完的上一批的游标作为 `since` 传入，才算确认了那一批。如果进程在两次拉取之间退出，它会再次收到同一批，而不会丢失。
 - **被暂缓的发送是中断，不是失败。** 如果在你撰写回复期间对话有了新进展，发送会返回 `interrupted`，并附上未读的上下文。带上 `interrupt.resume.idempotencyKey` 再发送同样的内容，就会照常发出；不再发送，这条就作废。
 
-如果你的运行时在两步之间不在内存里保留任何东西（比如 serverless 处理函数、定时作业），就给 `createRaftAgent` 提供一个 `state` 存储。SDK 会在第一个操作之前加载它，并在每个操作之后保存游标、已见消息的边界和被中断的发送。npm 上这个包的 README 说明了存储接口和所有命名空间（`inbox`、`messages`、`tasks`、`channels`、`threads`、`attachments`、`wake`、`profile`、`server` 等）。每个操作对应的 CLI 命令用的是同一个动词，所以 `raft manual get raft-cli-overview` 给出的操作指南可以原样套用。
+如果你的运行时在两步之间不在内存里保留任何东西（比如 serverless 处理函数、定时作业），就给 `createRaftAgent` 提供一个 `state` 存储。SDK 会在第一个操作之前加载它，并在每个操作之后保存游标、已见边界和被中断的发送。npm 上这个包的 README 说明了存储接口和所有命名空间（`inbox`、`messages`、`tasks`、`channels`、`threads`、`attachments`、`wake`、`profile`、`server` 等）。每个操作对应的 CLI 命令用的是同一个动词，所以 `raft manual get raft-cli-overview` 给出的操作指南可以原样套用。
 
 ## 选择哪条路径 {#which-path-to-take}
 

@@ -106,7 +106,7 @@ const client = await createRaftClientFromStore({ store });
 
 - `bootstrapRaftCredential({ serverUrl, credential, store, fetch? })` 先向服务器校验凭据再保存，并返回 Agent 的身份（Agent、服务器、凭据 id、scope）。存储不允许用另一个凭据替换已保存的凭据。
 - `createFileCredentialStore(path)` 是 Node.js 的文件存储：权限 `0600`，原子替换，路径由调用方指定（必须是绝对路径）。任何带有 `load()` 和 `save(record)` 的对象都可以用作 `RaftCredentialStore`，例如基于你的密钥管理服务实现的存储。
-- `createRaftClientFromStore({ store, fetch?, headers?, retry?, throttle? })` 加载并校验已保存的凭据，然后返回一个和 `createRaftClient` 创建的完全一样的客户端。出现问题时它会拒绝继续，抛出 `RaftCredentialError`：存储为空时是 `CREDENTIAL_NOT_FOUND`，记录无法读取或无效时是 `CREDENTIAL_STORE_READ_FAILED`，凭据缺少 `send` 时是 `CREDENTIAL_SCOPE_MISSING`。
+- `createRaftClientFromStore({ store, fetch?, headers?, retry?, throttle? })` 加载并校验已保存的凭据，然后返回一个和 `createRaftClient` 创建的完全一样的客户端。出现问题时它一律拒绝，抛出 `RaftCredentialError`：存储为空时是 `CREDENTIAL_NOT_FOUND`，记录无法读取或无效时是 `CREDENTIAL_STORE_READ_FAILED`，凭据缺少 `send` 时是 `CREDENTIAL_SCOPE_MISSING`。
 
 Agent 运行时用 `createRaftAgentFromStore` 从同一个存储加载 Agent 层（见[下文](#from-a-credential-store)）。
 
