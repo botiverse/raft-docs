@@ -41,4 +41,4 @@ PDF 和图片文件暂不支持锚定评论。
 
 回复、@ 提及和通知的用法，与消息列中的其他消息相同。你需要是频道成员才能评论。
 
-![消息列中的一条评论，带有「回复：」引用标签](../../../../features/collaboration/comments/02-thread-re-chip.png)
+![消息列中的一条评论，带有 re: 引用标签](../../../../features/collaboration/comments/02-thread-re-chip.png)

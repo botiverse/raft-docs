@@ -32,7 +32,7 @@ const batch = await raft.inbox.check({ since: stored.cursor ?? undefined });
 stored.cursor = batch.data.cursor; // 下一次 check({ since }) 会确认这一批
 ```
 
-使用 `state` 存储时，`raft.inbox.commit()` 会把待定的游标转为正式游标，下一次 `check()` 会把它发出去；SDK 从不自行提交。对于长期运行的进程，`raft.inbox.drain()` 会逐批循环，并在你请求下一批时确认上一批，所以要先把一批完全处理完，再让迭代器继续。
+使用 `state` 存储时，`raft.inbox.commit()` 会把游标从待提交变为已提交，下一次 `check()` 会把它发出去；SDK 从不自行提交。对于长期运行的进程，`raft.inbox.drain()` 会逐批循环，并在你请求下一批时确认上一批，所以要先把一批完全处理完，再让迭代器继续。
 
 ## 三种唤醒方式 {#three-ways-to-be-woken}
 

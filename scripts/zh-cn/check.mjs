@@ -34,7 +34,9 @@ function builtIds(slug) {
   const html = path.join(root, "out", slug, "index.html");
   if (!fs.existsSync(html)) return null;
   const s = fs.readFileSync(html, "utf8");
-  const doc = s.slice(s.indexOf('class="vp-doc'));
+  const at = s.indexOf('class="vp-doc');
+  if (at < 0) return null;
+  const doc = s.slice(at);
   return [...doc.matchAll(/<h([1-6])[^>]*\sid="([^"]+)"/g)].map((m) => ({ depth: +m[1], id: decodeURIComponent(m[2]) }));
 }
 
@@ -57,6 +59,11 @@ function stripComments(text, info) {
   if (SLASH.test(info)) t = t.replace(/(^|\s)\/\/.*$/gm, "$1//").replace(/\/\*[\s\S]*?\*\//g, "/**/");
   return t.replace(/\s+$/gm, "").replace(/(\s*(#|\/\/)\n)+/g, "\n");
 }
+
+// Words the glossary keeps in English: they don't count towards the mixed-language warning.
+const KEPT_ENGLISH = new Set(
+  "agent raft computer cli sdk api oauth oidc jwt token tokens scope scopes mcp url urls json webhook manifest client key userinfo serverinfo login with markdown github slack claude code codex cursor opencode kimi hermes stamp vault chrome macos ios android windows linux wsl powershell".split(" "),
+);
 
 let errors = 0;
 let warnings = 0;
@@ -83,9 +90,9 @@ for (const slug of slugs) {
   if (shapeEn !== shapeZh) e.push(`headings ${shapeZh} != English ${shapeEn}`);
   else {
     const ids = builtIds(slug);
+    if (!ids) w.push(`no built English page (out/${slug}/index.html with a vp-doc): run pnpm build to check the anchors`);
     zh.headings.forEach((h, i) => {
       if (h.depth === 1) return;
-      const want = ids?.filter((x) => x.depth > 1 || true)[i]?.id;
       if (!h.id) (strictAnchors ? e : w).push(`L${h.line} heading "${h.text}" has no {#id}`);
       else if (ids && ids[i] && h.id !== ids[i].id) e.push(`L${h.line} heading anchor #${h.id}, English #${ids[i].id}`);
     });
@@ -161,7 +168,7 @@ for (const slug of slugs) {
   for (const p of zh.prose) {
     const t = readable(p.text);
     han += hanCount(t);
-    latinWords += (t.match(/[A-Za-z][A-Za-z'-]{2,}/g) || []).length;
+    latinWords += (t.match(/[A-Za-z][A-Za-z'-]{2,}/g) || []).filter((word) => !KEPT_ENGLISH.has(word.toLowerCase())).length;
     const lit = t.replace(/\{[^{}]*\}/g, "");
     for (let i = 0; i < lit.length - 1; i++) {
       const a = lit[i], b = lit[i + 1];
