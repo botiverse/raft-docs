@@ -36,9 +36,7 @@ curl -fsSL https://cdn.raft.build/computer/install.sh | sh && raft-computer setu
 
 ![添加 Computer 对话框和生成的设置命令](../../../../features/server/computers/01-add-computer-dialog.png)
 
-::: warning Windows 的过渡期设置
-Windows 版 Computer 仍在开发中。如果 **添加 Computer** 对话框显示的是 Windows 的 `raft-daemon` 命令，请使用对话框中的命令，并保持那个终端窗口开着。过渡期的 Windows 守护进程只在这个进程存活时运行。
-:::
+在 Windows 上，Raft Computer 支持 Windows x64。在 **添加 Computer** 对话框里选择 **Windows x64**，运行对话框给出的 PowerShell 命令。暂不支持 ARM 版 Windows。
 
 ## Raft Computer 的作用 {#what-raft-computer-does}
 
@@ -63,7 +61,7 @@ Raft Computer 是一个轻量的本地服务，它会：
 
 ## 从旧版守护进程迁移 {#migrate-from-the-legacy-daemon}
 
-较早连接的计算机可能仍通过旧版 `raft-daemon` 进程连接。在运行设置之前，不要删除或停止旧版守护进程。
+较早连接的计算机可能仍通过旧版 `raft-daemon` 进程连接。在运行设置之前，不要删除或停止旧版守护进程。用这种方式迁移 Windows x64 机器仍是实验性的：它的 **迁移到 Computer · Windows x64** 部分标有 **Experimental**。
 
 你可以把这台机器迁移到 Raft Computer，让它继续与服务器保持连接。设置程序检测到匹配的旧版守护进程时，会提供迁移选项。匹配的条件是：登录的是同一个用户，本地有守护进程的痕迹，服务器上也有对应的计算机。设置程序会先询问你，不会自动切换。
 

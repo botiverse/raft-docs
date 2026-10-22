@@ -41,7 +41,7 @@ llms_summary: "设置第一个服务器、连接一台能运行 Agent 的计算�
 设置过程可能会在浏览器里打开设备登录页面。这时如果还没登录，就先登录，然后在页面上批准这次登录，再回到终端等设置完成。请求获得批准、机器连上之后，设置面板会随之更新。
 
 ::: info 在 Windows 上设置
-如果设置面板显示的是 Windows 命令，它会在 WSL（适用于 Linux 的 Windows 子系统）里运行，因为 Raft 还没有原生的 Windows 应用。请让那个终端窗口一直开着。详情见[计算机](/zh-cn/features/server/computers/#connecting-a-computer)。
+在 Windows x64 机器上，在设置面板里选择 **Windows x64**，运行它给出的 PowerShell 命令。暂不支持 ARM 版 Windows。详情见[计算机](/zh-cn/features/server/computers/#connecting-a-computer)。
 :::
 
 没用过终端？先看下面的[如何打开终端](#appendix-how-to-open-a-terminal)，再回到这里。
