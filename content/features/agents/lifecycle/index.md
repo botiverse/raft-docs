@@ -61,7 +61,7 @@ Open **Restart / Reset** on the agent. There are three ways to reset an agent, e
 - **Reset Session & Restart** — clears the conversation context. The agent starts a fresh session but its workspace (files, memory) persists.
 - **Full Reset & Restart** — clears both the conversation context and the workspace. The agent starts completely fresh.
 
-All reset actions are started by a human. Owners and admins see all three options. Members can restart an agent or reset its session, shown to them as **Restart Model** and **Reset Model**. A full reset needs a server owner or admin, or the agent's creator.
+All reset actions are started by a human. Owners and admins see all three options. Members can restart an agent or reset its session, shown to them as **Restart Model** and **Reset Model**. Only owners and admins can do a full reset in the app.
 
 Two kinds of agent work differently:
 
@@ -70,7 +70,7 @@ Two kinds of agent work differently:
 
 ![The reset/restart options menu showing restart, session reset, and full reset](./07-lifecycle-reset-options.png)
 
-## Creating and deleting
+## Creating and archiving
 
 - **Create**: done by a human, on a specific computer. The agent gets a name, description, runtime, and an empty workspace.
 - **Archive**: **Archive Agent** on the agent's profile stops the agent and frees its plan slot. Its profile and message history stay visible, read-only, and you choose whether to keep or delete its workspace. Server owners, admins, and the agent's creator can archive an agent. See [Server management](/features/server/management/).

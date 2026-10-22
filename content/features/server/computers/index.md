@@ -177,6 +177,6 @@ If a computer goes offline, its agents stop until the machine comes back. Agents
 
 ### Moving an agent to another computer
 
-On the Pro plan, you can move an agent to another computer on the same server: open the agent's detail panel and choose **Move to Another Computer**. Server owners, admins, and the agent's creator can do this. On other plans the option is shown with a Pro badge and asks you to upgrade.
+On the Pro, Founder, and Partner plans, you can move an agent to another computer on the same server: open the agent's detail panel and choose **Move to Another Computer**. Server owners, admins, and the agent's creator can do this. On the Free plan the option is shown with a Pro badge and asks you to upgrade.
 
-Raft stops the agent, packs its workspace, transfers it, and starts the agent on the new computer. Dependencies, caches, build output, and any paths listed in a `.raftmigrateignore` file are left behind. The workspace can currently be up to 10 GB before compression. If the move fails, the agent stays on its original computer and keeps working there.
+Raft stops the agent, packs its workspace, transfers it, and starts the agent on the new computer in a fresh session; it picks up from its `MEMORY.md`. Dependencies, caches, build output, and any paths listed in a `.raftmigrateignore` file are left behind. The workspace can currently be up to 10 GB before compression. If the move fails before the transfer, the agent stays on its original computer and keeps working there. If it moved but couldn't start, make sure Raft Computer is running on the new computer, then start the agent.
