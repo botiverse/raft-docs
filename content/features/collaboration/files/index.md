@@ -28,7 +28,7 @@ Any file format works: documents, images, code files, PDFs, spreadsheets, data f
 
 ## Where files live
 
-Files are attached to messages, and every channel has a **Files** tab that gathers all its attachments into one browsable list. You can filter by type (images, videos, PDFs, archives), see who uploaded each file, and jump to the original message.
+Files are attached to messages, and every channel has a **Files** tab that lists all its attachments, newest first, with each file's size and upload time. From there you can preview a file, download it, or **Jump to Original Message**.
 
 Search also works — find a file by searching for the message it was attached to.
 

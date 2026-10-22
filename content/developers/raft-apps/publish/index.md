@@ -15,7 +15,7 @@ What you'll have at the end: your app listed in the Marketplace, where the owner
 ## Before you start
 
 - Your app is already registered in a Raft server and login works. If not, start with [Build a Raft App](/developers/raft-apps/build/). There is no separate "marketplace app" to create; the app you registered is the one you publish.
-- You are an owner or admin of the server that registered the app. Members can open **My apps** but cannot request review.
+- You are an owner or admin of the server that registered the app. Members can open **My Apps** but cannot request review.
 - If an agent will do it for you, the agent owns the app (it registered the app, or an owner transferred it) or holds the server's admin role for agents.
 - Your app fails closed when Raft reports it is not available on a server. Review checks this. See [App availability](/developers/login-with-raft/#app-availability).
 - If only one or two specific servers need the app, a private share link does that without review. See [Share a private app with another server](/developers/raft-apps/share/).
@@ -24,7 +24,7 @@ What you'll have at the end: your app listed in the Marketplace, where the owner
 
 Installers see what you registered: the app name, the logo (Raft generates one if you did not upload one), the category, the description, your server's name as the developer, the homepage and callback domains, and the requested scopes and App Notifications groups. Reviewers see the same listing.
 
-- Open **Settings → Applications → My apps** in the server that owns the app, and click **Edit** on the app.
+- Open **Settings → Applications → My Apps** in the server that owns the app, and click **Edit** on the app.
 - Write a description. Review cannot be requested without one; the request is refused with `description is required before requesting marketplace review`.
 - Pick the category that matches what the app does: AI & Automation, Communication, Productivity & Collaboration, Developer Tools, Data & Analytics, Business Ops, Infrastructure, Content & Creative, or Other.
 - Upload a logo if you have one: JPEG, PNG, GIF, or WebP, up to 5 MB.
@@ -43,7 +43,7 @@ raft integration app logo --client <client-key> --file ./logo.png
 - Under **Marketplace publish request**, click **Request publish**. Raft saves your metadata changes first, then files the request.
 - The status badge changes to **Review pending**.
 
-The request card is shown only while the app is Private or Rejected, so there is nothing to click while a request is pending. Running `request-publish` again while a request is pending does not file a second request; it does send the reviewers another notification email.
+While a request is pending, the request card is replaced by a **Publish request** card with a **Withdraw Request** button. Running `request-publish` again while a request is pending does not file a second request; it does send the reviewers another notification email.
 
 From an agent:
 
@@ -77,7 +77,7 @@ Judged by a reviewer:
 While the request is pending:
 
 - You can keep editing the app. Edits do not cancel the request.
-- The only way to withdraw the request is to delete the app, and deleting removes the OAuth client, its secret, and every grant. Do not use it as an undo for the request.
+- To withdraw the request, click **Withdraw Request** in the **Distribution** section. The app goes back to Private and keeps its registration, credentials, and installations, and you can request review again later. Withdrawing is only available in the app editor, not from the CLI.
 - Your own server keeps using the app as before.
 
 To check the status from an agent, run `raft integration app status --client <client-key>`. The `publish status:` line reads `publish_requested` (or `in_review`, shown the same way in the app editor) while the request is pending, then `published` or `rejected`.
@@ -91,7 +91,7 @@ The badge reads **Published**. The app is listed in every server's Marketplace, 
 After publication:
 
 - You can still edit the name, description, category, URLs, logo, and scopes.
-- Delete is no longer offered. To take the app off the Marketplace, open **Danger zone** and click **Request offline** (from an agent: `raft integration app request-unpublish --client <client-key>`). The badge reads **Offline pending** and `publish status:` reads `unpublish_requested`. The app stays listed and installable until Raft approves the removal. If approved, every installed server loses access, your own included, and existing grants and tokens are revoked.
+- Delete is no longer offered. To take the app off the Marketplace, open **Danger zone**, click **Request Offline Review**, and confirm with **Request** (from an agent: `raft integration app request-unpublish --client <client-key>`). The badge reads **Offline pending** and `publish status:` reads `unpublish_requested`. The app stays listed and installable until Raft approves the removal. If approved, the app leaves the Marketplace and returns to Private. Your own server keeps its installation and access; every other server loses its installation, and their grants and tokens are revoked.
 - Adding App Notifications groups or events to a published app goes through review again. Removals take effect at once; additions wait for approval, and the app keeps its previously approved set until then.
 
 ### Rejected
@@ -104,7 +104,7 @@ A rejection changes nothing for servers already using the app. Your own server k
 
 An agent can do Step 1, Step 2, and the status checks. Give it, in one message:
 
-- The app's client key, from **My apps** or `raft integration app list`, and confirmation that the agent owns the app or holds the server's admin role for agents.
+- The app's client key, from **My Apps** or `raft integration app list`, and confirmation that the agent owns the app or holds the server's admin role for agents.
 - The listing decisions: the description, the category from the list above, and a logo file if you have one.
 - This page and [Build a Raft App](/developers/raft-apps/build/). Add the [Login with Raft](/developers/login-with-raft/) contract if the app is still being built.
 - The reference repositories [botiverse/musik](https://github.com/botiverse/musik) and [botiverse/hands](https://github.com/botiverse/hands) if the agent is also writing the app.

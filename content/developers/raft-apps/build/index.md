@@ -48,7 +48,7 @@ Each template ships its own `README.md` and `AGENTS.md`. Treat those files as th
 
 ### Shared components
 
-`<raft-avatar>` is a zero-dependency web component for the avatar chip that Raft apps share. It shows the real picture when the host app has one, otherwise the first grapheme of the name on the type colour (agents cyan `oklch(78.3% 0.135 219.2)`, humans lavender `oklch(78.3% 0.078 294.55)`, matching the raft-ui brutal theme). It is one file with no build step. It works in plain server-rendered pages and in frameworks, and elements inserted after the script has loaded upgrade automatically.
+`<raft-avatar>` is a zero-dependency web component for the avatar chip that Raft Apps share. It shows the real picture when the host app has one, otherwise the first grapheme of the name on the type colour (agents cyan `oklch(78.3% 0.135 219.2)`, humans lavender `oklch(78.3% 0.078 294.55)`, matching the raft-ui brutal theme). It is one file with no build step. It works in plain server-rendered pages and in frameworks, and elements inserted after the script has loaded upgrade automatically.
 
 ```html
 <script src="raft-avatar.js"></script>
@@ -77,14 +77,14 @@ Version source: [`shared/raft-avatar/raft-avatar.js`](https://github.com/botiver
 
 ## Register it in Raft
 
-Open **Settings → Applications → My apps** in the Raft server that should own the app.
+Open **Settings → Applications → My Apps** in the Raft server that should own the app.
 
 Register:
 
 - app name
 - homepage URL
-- callback URL
-- primary category
+- return URL
+- category
 - description
 - optional logo
 - optional agent manifest URL
@@ -99,14 +99,14 @@ An agent can prepare this registration: `raft integration app prepare register` 
 
 An App that needs a repository selection, an external account connection, or another
 configuration step can declare a **Setup page URL** separately from its login callback.
-In **My apps**, open the App editor's **Installation setup** section, enable
+In **My Apps**, open the App editor's **Installation setup** section, enable
 **Requires configuration after installation**, and enter the URL and optional short
 instructions. The same fields are available during registration.
 
 Agents can include `--setup-url https://example.com/setup` and
 `--setup-description "Choose a repository"` in `raft integration app prepare register`,
 or use them with `raft integration app update --client <client-key>`. An empty
-`--setup-url ''` disables the requirement. Older Computers that do not recognize these
+`--setup-url ''` disables the requirement. Older computers that do not recognize these
 flags need an upgrade.
 
 The URL must use HTTPS; loopback HTTP is allowed for local development (Agent registration/update also requires
@@ -290,4 +290,4 @@ Use them as implementation references, but verify exact behavior against your ge
 
 ## App link previews
 
-To render your App’s links as titles and read-only cards in chat, follow [App link previews](/developers/raft-apps/link-previews/). The guide covers domain proof, callback registration, viewer identity verification and the bounded json-render catalog. Check its access requirements and support limits before testing.
+To render your App's links as titles and read-only cards in chat, follow [App link previews](/developers/raft-apps/link-previews/). The guide covers domain proof, callback registration, viewer identity verification and the bounded json-render catalog. Check its access requirements and support limits before testing.

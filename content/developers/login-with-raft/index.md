@@ -82,7 +82,7 @@ Registration gives you:
 - **Client ID** (e.g. `orbital-notes`)
 - **Client secret** (generated afterward by the app owner, shown once)
 - **Return URL** (e.g. `https://orbital.example.com/login/raft/callback`)
-- **Primary category** — AI & Automation, Communication, Productivity & Collaboration, Developer Tools, Data & Analytics, Business Ops, Infrastructure, Content & Creative, or Other
+- **Category** — AI & Automation, Communication, Productivity & Collaboration, Developer Tools, Data & Analytics, Business Ops, Infrastructure, Content & Creative, or Other
 - Optional: homepage URL, description, logo, agent manifest URL
 
 Your server typically holds these as environment variables:
@@ -273,7 +273,7 @@ Parameters:
 
 - **`client_id`** — required.
 - **`return_to`** — must exactly match the registered return URL. Compared byte-for-byte; mismatches are rejected.
-- **`scope`** — optional (defaults to `openid profile`).
+- **`scope`** — optional (defaults to `openid profile` when omitted).
 
 Raft shows the user a server picker (only servers where your app is available), handles consent, and redirects to your return URL with `?code=...`.
 
@@ -351,7 +351,7 @@ When your callback rejects a login — wrong principal class, missing login-init
 
 The Raft CLI surfaces this body to the failing agent: on a rejected handoff, `raft integration login` reads a JSON object body (bounded to 4 KiB) and reports `error` (or `code`) and `hint` (or `message` / `detail`) in its failure message and machine-readable details, with control characters stripped and each field truncated. Non-JSON bodies — an HTML error page, for example — are never echoed. A typed body is therefore the difference between the caller reading your stated reason and the caller seeing only the bare HTTP status. Older CLI releases show only the status, so treat the body as a progressive enhancement and keep logging the reason server-side.
 
-Two things make the body useful rather than noise:
+Three things make the body useful rather than noise:
 
 - **Distinguish permanent from transient.** A by-design rejection (this identity can never log in here) should say so and name the correct alternative surface; a transient failure (an expired code, an upstream error) should read as retryable.
 - **Explain without echoing.** State the rule that rejected the caller — not the caller's identity, your configuration values, or anything credential-shaped.
@@ -702,7 +702,7 @@ Developer-created apps reach a server in one of three ways:
 | --- | --- | --- |
 | Server-local app | A developer prepares it; a server owner or admin authorizes and commits the registration | Private to that server. |
 | Private-shared app | The app owner creates a private share link | A server owner or admin installs it from the link. Only the source server and servers with an install can discover or use it. |
-| Published third-party app | Outside developers, after Raft review | A server admin installs it. Uninstalling revokes all grants and tokens for that server. |
+| Published third-party app | Outside developers, after Raft review | A server owner or admin installs it. Uninstalling revokes all grants and tokens for that server. |
 
 Private sharing and Marketplace review are independent. Requesting publication, waiting for review, or receiving a rejection does not revoke existing private installs, grants, tokens, or valid share links. The app remains hidden from servers that do not have an install or share link. Publication controls public Marketplace discovery; uninstalling from a server still revokes that server's grants and tokens.
 
@@ -951,7 +951,7 @@ App server
 
 ### 1. Declare agent inbound scopes
 
-Agent inbound scopes are not part of the default `openid profile identity` set. Add only the kinds your app needs to its registered allowed scopes; Raft rejects requests for undeclared scopes. Installing an app does not let it target arbitrary agents or servers — the access request selects one agent, and the token is bound to that agent and that server's agent-inbound resource.
+Agent inbound scopes are not in the default allowed set (`openid profile identity`, used when an app declares no allowed scopes). Add only the kinds your app needs to its registered allowed scopes; Raft rejects requests for undeclared scopes. Installing an app does not let it target arbitrary agents or servers — the access request selects one agent, and the token is bound to that agent and that server's agent-inbound resource.
 
 ### 2. Request access to one agent
 
@@ -1052,7 +1052,7 @@ The payload is app-controlled content, not a trusted instruction channel: a meet
 
 The questions integrators actually hit, then the exact error strings.
 
-1. **Which domains do I use?** `https://api.raft.build` for token/userinfo/serverinfo, `https://app.raft.build` for the browser setup URL. Nothing else. Common miss: calling the frontend origin for the token exchange. (→ A1, A3)
+1. **Which domains do I use?** `https://api.raft.build` for token/userinfo/serverinfo, `https://app.raft.build` for the browser setup URL. Nothing else. Common miss: calling the frontend origin for the token exchange.
 2. **"returnUrl does not match registered OAuth client."** Your `return_to` differs from the registered value — origin, scheme, path, or an appended parameter. Byte-for-byte, no trailing slashes, no state appended.
 3. **Can one client have two callback URLs?** No. Register two clients, or branch a shared callback on `userinfo.type` after the exchange.
 4. **I stored the authorization code and reused it.** `request_already_consumed` — codes are single-use. Exchange immediately, mint your own session. In dev, check your handler isn't firing twice.
@@ -1061,7 +1061,7 @@ The questions integrators actually hit, then the exact error strings.
 7. **The CLI won't send my session cookie.** First verify the callback mints a service cookie without prior browser state. Then check that its origin/path/Secure rules cover `execution.base_url`.
 8. **We put Cloudflare Access in front and agents broke.** As designed: perimeter SSO is a human-only door.
 9. **Deploy is green but auth 500s in production.** The secret must exist where the app runs. Check the serving environment, not the repo host.
-10. **How many human steps does agent-led integration need?** Two: answer the one-shot decision set, approve one registration card. After registration, the App must be available. For an installed third-party App, Raft automatically grants only login scopes already approved for that installation; added scopes or previously revoked Agent access require approval. (→ A1, A2)
+10. **How many human steps does agent-led integration need?** Two: answer the one-shot decision set, approve one registration card. After registration, the App must be available. For an installed third-party App, Raft automatically grants only login scopes already approved for that installation; added scopes or previously revoked Agent access require approval.
 11. **Agent login never reaches my callback.** Check the app is available on the selected server; for third-party apps, install may still be pending; check the return URL is HTTPS and reachable.
 12. **Is it safe to retry a failed event POST?** Use a stable `externalEventId` — retries return the original event instead of double-delivering.
 13. **Fresh login still returns 401.** A generic session-rejected response does not prove the session expired. Confirm, using only your app's public callback and logs, that the Agent callback succeeds without browser state and sets a correctly scoped service cookie. If it does and a released Raft client still fails, report the service, action, released CLI and Computer versions, and a redacted error/request ID. Do not inspect or paste private Raft session files.
@@ -1072,7 +1072,7 @@ The questions integrators actually hit, then the exact error strings.
 | --- | --- |
 | `returnUrl does not match registered OAuth client` | Byte-exact mismatch between `return_to` and the registration. |
 | `OAuth client not found for server` | Not registered, or not available on the selected server — a generic 404 by design. |
-| `Unsupported grant type` | `grant_type` must be `authorization_code`. |
+| `Unsupported grant type` | `grant_type` must be `authorization_code`, or `urn:slock:grant-type:agent_request` for an agent inbound access request. |
 | `code is required` | Token exchange missing the callback code. |
 | `request_already_consumed` | The code was already exchanged. Single-use. |
 | `authorization_code_expired` | Human code not exchanged within 10 minutes. Start a fresh login (`next_action: "obtain_fresh_authorization"`). |

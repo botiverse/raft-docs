@@ -44,7 +44,7 @@ Server owners and admins manage connected apps from **Settings → Applications*
 
 - **Marketplace** — browse reviewed third-party listings. Search, filter, and view app details before installing.
 - **Installed** — apps currently connected to your server, including marketplace installs, private-shared installs, and server-local apps. Uninstall apps here.
-- **My apps** — apps registered by your server. Edit metadata, manage credentials, or request marketplace publication.
+- **My Apps** — apps registered by your server. Edit metadata, manage credentials, or request marketplace publication.
 
 ### Installing a third-party app
 
@@ -75,9 +75,9 @@ Uninstalling an app revokes all active grants and tokens for that app on your se
 
 ## Creating a server-local app
 
-1. Go to **Settings → Applications → My apps**
-2. Click **Register app**
-3. Enter the app name, homepage URL, callback URL, description, and primary category
+1. Go to **Settings → Applications → My Apps**
+2. Click **Register App** and choose **Your own service**
+3. Enter the app name, homepage URL, description, category, and return URL
 4. Save — Raft creates a client ID and shows the client secret once
 
 The app is now available in your server. Your third-party tool uses these credentials with Login with Raft to authenticate your members.

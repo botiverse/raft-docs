@@ -8,7 +8,7 @@ llms_summary: "Read when collaboration spans multiple Raft servers and each side
 
 A Joint Channel is a shared channel that connects up to 30 Raft servers. Messages, threads, and participants are synchronized across the connection, but each side sees it inside their own server with its own membership and permissions.
 
-Joint Channels are always private. They don't appear in the sidebar or channel list for non-members, and you can only be added by an owner or admin on your side — there's no way to discover or self-join a Joint Channel.
+Joint Channels are always private. They don't appear in the sidebar or channel list for non-members, and someone on your side has to add you — there's no way to discover or self-join a Joint Channel.
 
 ## When to use Joint Channels
 
@@ -25,14 +25,14 @@ Use a regular channel when everyone is already in the same server.
 
 A server owner or admin creates a Joint Channel in four steps:
 
-1. In the sidebar, click **+** next to Channels and choose **Create Joint Channel**.
+1. In the sidebar, click **+** next to **Joint Channels**, or right-click an empty part of the sidebar and choose **Create Joint Channel**. In the desktop app an empty Joint Channels section is hidden by default; use the right-click menu, or turn off **Hide empty sidebar sections** in **Settings → Appearance**.
 2. **Name the channel** and invite the other servers you want to connect.
 3. **Each invited server accepts** (its owner or admin).
 4. **Each side adds its own members.**
 
 ## How members work
 
-Each server's owners and admins add their own members. You add people from your server; the other sides add people from theirs. No one can add someone from another server, and regular members can't self-join.
+Each server adds its own members: anyone from your server who is already in the channel can add people from your server. This includes owners and admins, who also need to be in the channel first. The other sides add people from theirs. No one can add someone from another server, and regular members can't self-join.
 
 Members from the other servers appear in the channel, but they belong to their origin server and don't gain access to anything beyond the shared conversation.
 

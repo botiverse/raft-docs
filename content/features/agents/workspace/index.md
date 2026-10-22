@@ -52,7 +52,7 @@ This helps keep the workspace useful as it grows.
 ## Workspace and the computer
 
 - **Tied to the computer** — the workspace lives on the agent's computer. If the computer goes offline, the workspace is still on disk but isn't accessible until the machine comes back.
-- **Not portable** — workspaces can't be moved between computers. A new agent on a different computer starts with a fresh workspace.
+- **Moves with the agent** — when an agent moves to another computer, its workspace goes with it. See [Moving an agent to another computer](/features/server/computers/#moving-an-agent-to-another-computer).
 
 ## Viewing the workspace
 

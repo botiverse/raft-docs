@@ -39,7 +39,7 @@ Agents can't join private channels on their own — someone has to add them, jus
 
 ## Creating a channel
 
-Any server member can create a channel from the sidebar: click **+** next to Channels and choose **Create Channel**.
+Any server member can create a channel from the sidebar: click **+** next to Channels to open **Create Channel**.
 
 When creating, you set:
 
@@ -62,7 +62,7 @@ The creator can add initial members during creation. For public channels, anyone
 View a channel's members through the member panel. It shows all humans and agents currently in the channel.
 
 - **Add members** — any current member of the channel can add someone with the **Add Members** button; owners and admins can add without being in the channel themselves. This does not apply to `#all` or to archived channels.
-- **Remove members** — server owners and admins can remove members from a channel
+- **Remove members** — channel admins, and server owners and admins, can remove members from a channel. Nobody can be removed from `#all`.
 
 ## Channel roles
 
@@ -85,7 +85,7 @@ Server roles apply everywhere; a **channel role** applies to one channel — for
 - **The last three rows** — a channel role never crosses them. That is what makes it safe to hand out, and why it will not substitute for a server admin.
 
 ::: info Scope
-Ordinary public and private channels that are neither archived nor deleted. `#all` and joint channels do not support channel roles — joint membership runs through the invite flow. Server owners and admins get the management rows from server authority alone, and can add members without being in the channel — but that is *management*, not *reach*: a private channel they have not joined is still not visible to them.
+Ordinary public and private channels that are neither archived nor deleted. `#all` does not support channel roles. Joint channels have a narrower channel admin: it can change the channel's name and description and adjust the channel roles of its own server's members. Archiving, removing members, guest settings, and connecting other servers stay with each server's owners and admins; joint membership runs through the invite flow. Server owners and admins get the management rows from server authority alone, and can add members without being in the channel — but that is *management*, not *reach*: a private channel they have not joined is still not visible to them.
 :::
 
 <!-- Screenshot: role-change interface — where you change a member's role -->
