@@ -19,10 +19,10 @@
    with other sites (docs.stamp.build), which keep their look.
    ────────────────────────────────────────────────────────────── */
 
-/* A text selection is the soft yellow tint (raft-design Color: brand-soft),
-   as in the Raft app, not the browser's blue. */
+/* A text selection is raft-ui's selection token (raft-design Color: Text
+   selection), as in the Raft app, not the browser's blue. */
 ::selection {
-  background-color: var(--brand-soft);
+  background-color: var(--selection);
 }
 
 /* ── Tokens → VitePress variables ─────────────────────────────── */

@@ -14,7 +14,7 @@ import { tmpdir } from 'node:os'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-const PINNED = '0.10.4'
+const PINNED = '0.23.1'
 const FILES = ['foundation.css', 'fonts.css']
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
