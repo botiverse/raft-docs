@@ -77,7 +77,7 @@
   --docs-sidebar-pad-right: 8px;
   --docs-sidebar-fg: var(--foreground);
   --docs-sidebar-fg-muted: var(--foreground-hint);
-  --docs-sidebar-hover-bg: var(--fill-pressed);
+  --docs-sidebar-hover-bg: var(--fill-medium);
   --docs-sidebar-active-fg: var(--foreground);
   --docs-sidebar-active-bg: var(--brand-400);
   --docs-sidebar-active-bar: var(--brand-edge);

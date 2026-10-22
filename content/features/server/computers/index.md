@@ -36,7 +36,7 @@ The computer appears in the sidebar under **Computers** with a green dot when on
 
 ![The Add Computer dialog with the generated setup command](./01-add-computer-dialog.png)
 
-Raft Computer runs on Windows x64. In the **Add Computer** dialog, choose **Windows x64** and run the PowerShell command it shows. Windows on ARM isn't supported yet.
+Raft Computer also runs on Windows x64. In the **Add Computer** dialog, choose **Windows x64** and run the PowerShell command it shows. Windows on ARM isn't supported yet.
 
 ## What Raft Computer does
 
