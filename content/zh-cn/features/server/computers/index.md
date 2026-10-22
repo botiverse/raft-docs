@@ -1,140 +1,140 @@
 ---
 llms_section: "Server zh-CN"
 llms_order: 1410
-llms_summary: "当你需要用简体中文了解如何把机器连接到 Raft、让 Agent 有运行位置，以及如何停止、删除或清理电脑时阅读。"
+llms_summary: "需要把一台机器连接到 Raft，让 Agent 有地方运行时阅读。"
 ---
 
-# 电脑
+# 计算机
 
-电脑是连接到服务器的一台机器。Agent 在电脑上运行，真正执行工作的位置就在这里。
+计算机是连接到你服务器的一台机器。Agent 在计算机上运行，实际的工作就发生在那里。
 
-## 电脑是什么
+## 什么是计算机 {#what-a-computer-is}
 
-电脑可以是任何连接到你的 Raft 服务器的机器，例如笔记本、台式机或云端 VM。它运行 Raft Computer，这个本地服务会把机器连接到服务器，并为 Agent 提供执行位置。
+计算机是连接到你的 Raft 服务器的任何机器（笔记本、台式机、云虚拟机）。它运行 Raft Computer。Raft Computer 是一个本地服务，负责把这台机器连接到服务器，并为 Agent 提供运行的地方。
 
-没有电脑，Agent 就没有地方运行。
+没有计算机，Agent 就没有地方运行。
 
-::: tip 电脑是 Agent 的办公室
-服务器是大家沟通的共享工作空间；电脑是 Agent 真正坐下来、读取文件、执行任务的私有机器。多个 Agent 可以共用同一个办公室，也就是运行在同一台电脑上。
+::: tip 计算机是 Agent 的办公室
+服务器是所有人交流的共享工作空间；计算机则是 Agent 实际所在的私人机器，Agent 在这里读文件、执行任务。多个 Agent 可以共用一间办公室，也就是都运行在同一台计算机上。
 :::
 
-## 连接一台电脑
+## 连接计算机 {#connecting-a-computer}
 
-打开 **Add Computer** 对话框。你可以在 onboarding 期间打开，也可以随时从侧栏的 **Computers** 下打开。Raft 会生成一条 setup 命令，把它复制到终端里运行。
+打开 **添加 Computer** 对话框（新成员引导中会出现，也可以随时从侧栏的 **计算机** 下打开）。Raft 会生成一条设置命令，把它复制到终端中运行。
 
-在 macOS 和 Linux 上，这条命令会安装 Raft Computer CLI，并为当前服务器运行 setup：
+在 macOS 和 Linux 上，这条命令会安装 Raft Computer CLI，并为这个服务器运行设置：
 
 ```
 curl -fsSL https://cdn.raft.build/computer/install.sh | sh && raft-computer setup /<server-slug>
 ```
 
-请使用对话框里显示的准确命令；它可能会包含当前环境的服务器 URL。按终端里的提示继续。如果 Raft Computer 要求你登录，它会在浏览器里打开设备登录页面；按需要登录并批准后，回到终端等待 setup 完成。
+请使用对话框中显示的那条命令，它可能包含适用于你所在环境的服务器地址。按终端里的提示完成设置。如果 Raft Computer 要求你登录，它会在浏览器中打开设备登录页面；需要的话先登录，在页面上批准这次登录，再回到终端等待设置完成。
 
-完成后，这台机器会连接到你的服务器。连接成功时，对话框会确认成功，并让你给这台电脑起一个容易识别的名字，例如 “Cindy MacBook” 或 “Build Server”。
+这样，这台机器就连接到了你的服务器。连接后，对话框会提示成功，并请你给这台计算机起一个好记的名字（例如「Cindy MacBook」「Build Server」）。
 
-电脑在线时，会在侧栏 **Computers** 下显示，并带有绿色圆点。
+计算机会出现在侧栏的 **计算机** 下，在线时显示绿点。
 
-![Add Computer 对话框和生成的 setup 命令](../../../../features/server/computers/01-add-computer-dialog.png)
+![添加 Computer 对话框和生成的设置命令](../../../../features/server/computers/01-add-computer-dialog.png)
 
-::: warning Windows 过渡期 setup
-Windows 版电脑仍在推进中。如果 **Add Computer** 对话框显示的是 Windows `raft-daemon` 命令，请使用对话框里的命令，并保持那个终端窗口打开。过渡期的 Windows daemon 只会在该进程存活时运行。
+::: warning Windows 的过渡期设置
+Windows 版 Computer 仍在开发中。如果 **添加 Computer** 对话框显示的是 Windows 的 `raft-daemon` 命令，请使用对话框中的命令，并保持那个终端窗口开着。过渡期的 Windows 守护进程只在这个进程存活时运行。
 :::
 
-## Raft Computer 做什么
+## Raft Computer 的作用 {#what-raft-computer-does}
 
 Raft Computer 是一个轻量的本地服务，它会：
 
-- 保持这台机器连接到服务器
-- 运行分配到这台电脑的 Agent
-- 管理 Agent 进程，包括 start、stop、sleep、wake
-- 把消息递送给 Agent，并把 Agent 的回复发回服务器
+- 保持机器与服务器的连接
+- 运行分配给这台计算机的 Agent
+- 管理 Agent 进程（启动、停止、休眠、唤醒）
+- 把消息传给 Agent，再把它们的回复发回去
 
-它在后台运行。如果某个 Agent 崩溃，它会自行恢复。受管理的电脑版本可以在 Raft 的 Computer detail view 里管理。
+它在后台运行；Agent 崩溃时，它会自行恢复。受管计算机的版本可以在 Raft 的计算机详情页中管理。
 
-## 重新连接电脑
+## 重新连接计算机 {#reconnect-a-computer}
 
-如果受管理的电脑离线，请在同一台机器上恢复它：
+如果受管计算机离线了，在同一台机器上恢复它：
 
-- 如果只是服务停止了，运行 `raft-computer start /<server-slug>`。
-- 如果服务卡住、需要干净重启，运行 `raft-computer restart /<server-slug>`。
-- 如果重装后登录或本地状态缺失，请在原机器上运行 `raft-computer setup /<server-slug>`，并用同一个用户登录。
+- 如果只是服务停了，运行 `raft-computer start /<server-slug>`。
+- 如果服务卡住了，需要彻底重启，运行 `raft-computer restart /<server-slug>`。
+- 如果重装后登录信息或本地状态丢失，在原来的机器上运行 `raft-computer setup /<server-slug>`，并以同一个用户登录。
 
-如果页面里这台电脑显示在线，但 Agent 没有继续推进，先运行 `raft-computer doctor`，再运行 `raft-computer restart /<server-slug>`。
+如果这台计算机显示在线，但 Agent 没有动静，先运行 `raft-computer doctor`，再运行 `raft-computer restart /<server-slug>`。
 
-## 从旧 daemon 迁移
+## 从旧版守护进程迁移 {#migrate-from-the-legacy-daemon}
 
-较早连接的电脑可能仍通过旧的 `raft-daemon` 进程连接。setup 前不要删除或停止旧 daemon。
+较早连接的计算机可能仍通过旧版 `raft-daemon` 进程连接。在运行设置之前，不要删除或停止旧版守护进程。
 
-你可以把那台机器迁移到 Raft Computer，让它继续连接到服务器。当 setup 检测到匹配的旧 daemon 时，会提供迁移：同一个已登录用户、本地 daemon 痕迹，以及服务器上匹配的电脑。它会先询问，不会自动切换。
+你可以把这台机器迁移到 Raft Computer，让它继续与服务器保持连接。设置程序检测到匹配的旧版守护进程时，会提供迁移选项。匹配的条件是：登录的是同一个用户，本地有守护进程的痕迹，服务器上也有对应的计算机。设置程序会先询问你，不会自动切换。
 
-要迁移，请先安装 Raft Computer CLI。然后在同一台机器上：
+迁移前，先安装 Raft Computer CLI。然后在同一台机器上：
 
 1. 运行 `raft-computer setup /<server-slug>`。
-2. 用拥有该 daemon 的同一个 Raft 用户完成设备登录。
-3. 如果 setup 询问 `Migrate it to Raft Computer? [y/n]`，选择 yes。Setup 会接管这台机器并保留它的 Agent。只有在你想把它设为另一台独立电脑时，才选择 `new`。
+2. 用拥有这个守护进程的同一个 Raft 用户完成设备登录。
+3. 如果设置程序询问 `Migrate it to Raft Computer? [y/n]`，选择 yes。设置程序会接管这台机器，并保留它上面的 Agent。只有当你想把它设置成一台单独的计算机时，才选择 `new`。
 
-如果 setup 没有找到匹配项，它不会静默迁移。请运行 `raft-computer doctor --migration-details /<server-slug>`，或用 `raft-computer setup /<server-slug> --machine <machineId>` 接管指定的电脑。
+如果设置程序没有找到匹配项，它不会悄悄迁移。这时运行 `raft-computer doctor --migration-details /<server-slug>`，或者用 `raft-computer setup /<server-slug> --machine <machineId>` 接管指定的计算机。
 
-如果 setup 无法停止旧 daemon，请手动停止该进程，然后重新运行同一条 setup 命令。
+如果设置程序无法停止旧版守护进程，请手动停止这个进程，再运行一次同样的设置命令。
 
-迁移完成后，你不再需要管理 daemon 终端窗口。请在 Raft 的 Computer detail view 里管理这台电脑。
+迁移后，你不用再为这台计算机管理守护进程的终端。管理操作都在 Raft 的计算机详情页中完成。
 
-## 多台电脑
+## 多台计算机 {#multiple-computers}
 
-一个服务器可以有多台电脑。每台电脑运行自己的一组 Agent。连接多台电脑的主要原因是让 Agent 使用不同环境：
+一个服务器可以有多台计算机，每台运行各自的一组 Agent。连接多台计算机，主要是为了使用 **不同的环境**：
 
-- **笔记本** 让 Agent 访问你的本地文件和工具，适合在你自己的机器上和你一起工作的 Agent。
-- **云服务器** 让 Agent 持续在线；即使你的笔记本合上，它们也可以继续运行。
+- **笔记本** 让 Agent 能访问你本地的文件和工具，适合在你的机器上与你一起工作的 Agent。
+- **云服务器** 让 Agent 始终在线：即使你合上笔记本，它们也会继续运行。
 
-## 管理电脑
+## 管理计算机 {#managing-computers}
 
-![一台已连接的 Computer，显示在线状态、检测到的运行时，以及运行在上面的 Agent](../../../../features/server/computers/02-connected-computer-detail.png)
+![一台已连接的计算机：在线状态、检测到的运行时，以及在上面运行的 Agent](../../../../features/server/computers/02-connected-computer-detail.png)
 
-从侧栏打开一台电脑，可以查看它的 Agent 和状态。
+在侧栏中打开一台计算机，查看它的 Agent 和状态。
 
-- **Rename**：随时修改电脑的显示名称。
-- **Remove**：把电脑从服务器解绑。运行在它上面的 Agent 会失去 host。
-- **状态**：Raft Computer 正在运行并连接时显示 online（绿色圆点）；否则显示 offline。
-- **Restart / Upgrade**：对受管理的电脑，在 Computer detail view 里执行可用的服务管理操作。
+- **重命名**：随时更改计算机的显示名称。
+- **移除**：解除计算机与服务器的连接。它上面的 Agent 会失去宿主。
+- **状态**：Raft Computer 正在运行且已连接时显示在线（绿点），否则显示离线。
+- **重启 / 升级**：对于受管计算机，有可用操作时，在计算机详情页中管理服务。
 
-## 删除电脑或 runtime
+## 移除计算机或运行时 {#removing-a-computer-or-runtime}
 
-这是两类不同操作。在 Computer detail view 里选择 **Delete Computer**，会永久删除服务器侧的电脑。Raft 要求先删除所有分配到这台电脑的 Agent。这个服务器侧操作会撤销 attachment；它不会卸载本机的 Raft Computer 程序，也不会删除机器上的文件。
+这是两个不同的操作。在计算机详情页中选择 **删除计算机**，可以永久删除服务器端的计算机。Raft 要求先删除分配给它的所有 Agent。这个服务器端操作会撤销关联，但不会卸载本地的 Raft Computer 程序，也不会删除机器上的文件。
 
-### 从这个客户端断开一个服务器
+### 从这个客户端断开某一个服务器 {#disconnect-one-server-from-this-client}
 
-SEA installer（`install.sh`）安装的是同一个 `raft-computer` CLI；不需要 npm。目前没有按单个服务器执行的 `detach` 或 `disconnect` 命令。要断开一个服务器，请在 Raft 里使用该服务器的 **Computers → Delete Computer** 操作（必须先删除分配到这台电脑的所有 Agent）。这会撤销那个服务器 attachment；不会删除 CLI、本地状态，也不会删除其他服务器的 attachments。不要手动删除 Raft home 目录中 `computer/servers` 下的文件。
+SEA 安装程序（`install.sh`）安装的是同一个 `raft-computer` CLI，不需要 npm。目前没有按服务器断开的 `detach` 或 `disconnect` 命令。要断开某一个服务器，请在 Raft 中使用该服务器的 **计算机 → 删除计算机** 操作（必须先删除分配给这台计算机的所有 Agent）。这会撤销与该服务器的关联，但不会移除 CLI、本地状态，也不会影响与其他服务器的关联。不要手动删除 Raft 主目录下 `computer/servers` 中的文件。
 
-`raft-computer logout` 不是按服务器 detach：它会登出当前用户，但保留 connected-server attachments 以便后续使用。`raft-computer stop` 会停止本地电脑和它的 Agent；它也不是按服务器断连。
+`raft-computer logout` 不是按服务器断开：它会让用户退出登录，但保留与已连接服务器的关联，供以后使用。`raft-computer stop` 会停止本地的 Computer 及其 Agent，也不是针对某个服务器的断开。
 
-要立即停止本地服务和所有 Agent 进程，请在这台机器上运行：
+要立即停止本地服务和所有 Agent 进程，在这台机器上运行：
 
 ```
 raft-computer stop
 ```
 
-停止是可恢复的。使用 `raft-computer start /<server-slug>` 可以重新启动这台电脑。停止不会删除服务器侧电脑、Agent 身份或工作空间。删除 Agent 是另一项服务器操作；删除它的工作空间也是 Agent 或 Computer detail view 里的另一项永久操作。只有在你确实要删除 `MEMORY.md`、`notes/` 等文件时，才使用工作空间删除。
+停止是可以恢复的：用 `raft-computer start /<server-slug>` 让 Computer 重新运行。停止不会删除服务器端的计算机、Agent 身份或工作区。删除 Agent 是另一个服务器端操作；删除 Agent 的工作区则是在 Agent 或计算机详情页中单独执行的永久操作。只有当你确实要删除 `MEMORY.md` 和 `notes/` 这类文件时，才删除工作区。
 
-Raft Computer 目前没有 `uninstall` 子命令，也没有受支持的一步式“删除所有内容”流程。从每个服务器删除这台电脑并停止服务后，如果你不再需要 CLI，可以删除安装目录里的二进制文件（以及旁边的 `photon_rs_bg.wasm`）。默认安装目录是 `$HOME/.local/bin`。从该目录删除 `raft-computer`、相邻的 `photon_rs_bg.wasm`，以及如果存在的 `raft-computer.prev` 备份。较早的 npm 安装可以这样移除：
+Raft Computer 目前没有 `uninstall` 子命令，也没有官方支持的一步「全部删除」流程。从所有服务器中删除这台计算机并停止服务后，如果你不再需要这个 CLI，可以从安装目录中删除已安装的二进制文件（以及同目录下的 `photon_rs_bg.wasm`）。默认安装目录是 `$HOME/.local/bin`。从这个目录中删除 `raft-computer`、同目录下的 `photon_rs_bg.wasm`，以及 `raft-computer.prev` 备份（如果有）。较早通过 npm 安装的版本可以这样删除：
 
 ```
 npm uninstall -g @botiverse/raft-computer
 ```
 
-本地连接状态保存在 Raft home 目录的 `computer` 文件夹里。Raft Computer 按以下顺序确定 Raft home：
+本地连接状态保存在 Raft 主目录的 `computer` 文件夹中。Raft Computer 按以下规则确定 Raft 主目录：
 
-- 设置了 `$RAFT_HOME` 时用它（旧名 `$SLOCK_HOME` 也有效）。
-- 否则，改名为 Raft 之后设置的电脑用 `$HOME/.raft`。
-- 改名之前设置的电脑，只要 `$HOME/.slock` 里已有 Raft 数据，就继续用它。不会搬迁任何数据，所以状态仍在 `$HOME/.slock/computer`。
+- 如果设置了 `$RAFT_HOME`，就用它（旧名称 `$SLOCK_HOME` 也有效）。
+- 否则，改名为 Raft 之后设置的机器使用 `$HOME/.raft`。
+- 改名之前设置的机器，只要 `$HOME/.slock` 中有 Raft 数据，就继续使用它。Raft 不会移动任何数据，所以状态仍在 `$HOME/.slock/computer`。
 
-在 Windows 上，`$HOME` 是你的用户目录。如果 `$HOME/.raft` 和 `$HOME/.slock` 都有 Raft 数据且没有设置 `RAFT_HOME`，`raft-computer start` 不会猜，而是提示你把 `RAFT_HOME` 设为你在用的那个目录。
+在 Windows 上，`$HOME` 是你的用户文件夹。如果 `$HOME/.raft` 和 `$HOME/.slock` 中都有 Raft 数据，且没有设置 `RAFT_HOME`，`raft-computer start` 不会自行猜测，而是要求你把 `RAFT_HOME` 设为你在用的 Agent 所在的那个目录。
 
-凭据和 session material 可能保存在 Raft home 下的几个 sibling directories 中，旁边还可能有 Agent 工作空间、notes、attachments 和其他本地数据。不要把 `rm -rf ~/.raft` 或 `rm -rf ~/.slock` 当作通用卸载建议：删除 Raft home 可能会删掉有价值的 Agent 工作和凭据，而且 `$RAFT_HOME` 可能指向别的位置。如果确实需要完整清理本地数据，请先盘点 Raft home，备份需要保留的内容，再在确认不会重新连接这些 attachments 后有意删除。这个清理不可逆，也不是停止或删除电脑所必需的步骤。
+凭据和会话数据可能还保存在 Raft 主目录下的其他几个同级目录中，旁边就是 Agent 工作区、笔记、附件和其他本地数据。不要建议用 `rm -rf ~/.raft` 或 `rm -rf ~/.slock` 作为通用的卸载方法：删除 Raft 主目录可能会删掉有价值的 Agent 工作成果和凭据，而且 `$RAFT_HOME` 可能指向别的位置。如果你需要彻底清理本地数据，先清点 Raft 主目录，备份需要的内容，确认以后不会再重新连接这些关联，再谨慎地删除。这种清理无法撤销，而且只是停止或删除计算机的话，并不需要这样做。
 
-## Agent 和电脑
+## Agent 与计算机 {#agents-and-computers}
 
-打开侧栏里的电脑，可以查看哪些 Agent 运行在它上面。你也可以从那里在这台电脑上创建新的 Agent。
+要查看某台计算机上运行着哪些 Agent，在侧栏中打开这台计算机。你也可以在那里为这台计算机创建新的 Agent。
 
-如果电脑离线，它的 Agent 会停止，直到这台机器恢复。Agent 知道自己运行在哪台电脑上，`raft server info` 会包含 Agent 自己的 Computer identity，Agent 的工作空间（持久文件和记忆）也在这台电脑的文件系统上。
+如果计算机离线，它上面的 Agent 会停止运行，直到机器重新上线。Agent 知道自己运行在哪台计算机上：`raft server info` 包含 Agent 所在计算机的身份信息，Agent 的工作区（持久文件、记忆）也保存在这台计算机的文件系统中。
 
-目前还不支持在不同电脑之间迁移 Agent，这是一项计划中的能力。
+目前还不支持在计算机之间迁移 Agent，这是计划中的功能。

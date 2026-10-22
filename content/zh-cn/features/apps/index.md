@@ -1,89 +1,89 @@
 ---
 llms_section: "Connected Apps zh-CN"
 llms_order: 1800
-llms_summary: "当你需要用简体中文了解 Connected Apps、应用安装模型，以及应用登录会从 Raft 收到什么时阅读。"
+llms_summary: "需要了解公开的已连接应用，以及应用通过登录能从 Raft 获得哪些信息时阅读。"
 ---
 
-# Connected Apps <Badge type="warning" text="Experimental" />
+# 已连接应用 <Badge type="warning" text="实验性" />
 
-Connected Apps 会把外部工具和服务带进你的 Raft 服务器。应用连接后，成员可以用自己的 Raft identity 登录它，不需要单独创建账号。
+已连接应用把外部工具和服务接入你的 Raft 服务器。应用连接后，成员可以用自己的 Raft 身份登录它，不需要另建账户。
 
-## Connected App 是什么
+## 什么是已连接应用 {#what-connected-apps-are}
 
-Connected App 是任何注册为可以与 Raft 服务器协作的外部工具或服务。连接后，这个服务器里的人类和 Agent 都可以通过 **Login with Raft** 使用它（见 [Login with Raft](/zh-cn/features/apps/login-with-raft/)）。
+已连接应用是指注册到某个 Raft 服务器、可以和它配合使用的外部工具或服务。连接后，这个服务器里的人和 Agent 都可以通过 **Login with Raft** 使用它（见 [Login with Raft](/zh-cn/features/apps/login-with-raft/)）。
 
-应用会收到你的 Raft identity 和服务器上下文，但不会获得你的消息、频道或文件访问权。
+应用拿到的是你的 Raft 身份和服务器上下文，而不是你的消息、频道或文件的访问权限。
 
-## App 类型
+## 应用类型 {#types-of-apps}
 
-Connected App 有三种可用方式：
+已连接应用可以通过三种方式提供给服务器使用：
 
-### Server-local apps
+### 服务器本地应用 {#server-local-apps}
 
-Server-local app 由服务器负责人或管理员在 **设置 → 应用**（Settings → Applications）下注册。它们只属于这个服务器。
+服务器本地应用由服务器的所有者或管理员在 **设置 → 应用** 中注册，只属于这个服务器。
 
-内部工具适合做成 server-local app，例如团队 dashboard、content calendar，或任何希望团队用 Raft identity 登录而不是单独建账号的自定义工具。
+服务器本地应用适合内部工具，比如团队仪表盘、内容日历，或者任何你希望团队用 Raft 身份登录、而不是另开账户的自建工具。
 
-如果创建者希望让其他服务器也能使用，server-local app 可以 **发布到 marketplace**。在应用公开列出之前，需要先经过 Raft 审核。
+如果创建者想让其他服务器也能使用，可以把服务器本地应用 **发布到市场**。应用公开上架前，需要先通过 Raft 的审核。
 
-### Private-shared apps
+### 私有共享应用 {#private-shared-apps}
 
-App 负责人可以直接把一个 app 分享给另一个服务器，而不把它列入公开 marketplace。服务器负责人或管理员通过 private share link 安装它。只有源服务器和已安装的服务器可以发现或使用这个 app。具体步骤见 [把私有应用分享给另一个服务器](/zh-cn/developers/raft-apps/share/)。
+应用的所有者可以把应用直接分享给另一个服务器，而不在公开市场上架。对方服务器的所有者或管理员通过私有共享链接安装它。具体步骤见 [把私有应用分享给另一个服务器](/zh-cn/developers/raft-apps/share/)。只有来源服务器和已安装它的服务器能发现或使用它。
 
-Private install 独立于 Marketplace 审核。申请发布或收到拒绝不会移除现有安装，也不会让 app 变成公开。已安装的服务器会保留访问权，直到卸载它；没有安装或有效 share link 的服务器仍然无法发现它。
+私有安装与市场审核互不影响。申请发布或被驳回，都不会移除已有的安装，也不会让应用公开。已安装的服务器在卸载之前一直保有访问权限；没有安装、也没有有效共享链接的服务器，仍然发现不了它。
 
-### Third-party marketplace apps
+### 第三方市场应用 {#third-party-marketplace-apps}
 
-Third-party app 由外部开发者构建，经 Raft 审核后发布到 marketplace。服务器负责人或管理员需要先安装它，成员才能使用。
+第三方应用由外部开发者构建，经 Raft 审核后发布到市场。服务器所有者或管理员安装之后，成员才能使用。
 
-同一个 app 可以被很多服务器安装，但每个服务器的连接都是独立的。在一个服务器安装它，不会影响另一个服务器。
+同一个应用可以安装到很多服务器上，但每个服务器的连接相互独立：在一个服务器上安装，不会影响其他服务器。
 
-## Marketplace
+## 市场 {#the-marketplace}
 
-服务器负责人和管理员从 **设置 → 应用**（Settings → Applications）管理 connected apps。这里有三个 tab：
+服务器所有者和管理员在 **设置 → 应用** 中管理已连接应用。这里有三个标签页：
 
-- **市场**（Marketplace）：浏览已审核的 third-party listings。安装前可以搜索、过滤并查看 app detail。
-- **已安装**（Installed）：当前连接到服务器的 apps，包括 marketplace installs、private-shared installs 和 server-local apps。可以在这里卸载 app。
-- **我的应用**（My apps）：你的服务器注册的 apps。可以编辑 metadata、管理 credentials，或申请 marketplace publication。
+- **市场**：浏览经过审核的第三方应用。安装前可以搜索、筛选和查看应用详情。
+- **已安装**：当前连接到你服务器的应用，包括从市场安装的应用、通过私有共享安装的应用，以及服务器本地应用。可以在这里卸载应用。
+- **我的应用**：你的服务器注册的应用。可以在这里编辑元数据、管理凭据，或申请发布到市场。
 
-### 安装 third-party app
+### 安装第三方应用 {#installing-a-third-party-app}
 
-1. 打开 **设置 → 应用 → 市场**（Settings → Applications → Marketplace）
-2. 找到 app 并打开 detail view
-3. 查看 publisher、homepage 和请求的数据访问权
-4. 点击 **Install to this server**
+1. 打开 **设置 → 应用 → 市场**
+2. 找到应用，打开它的详情
+3. 查看发布者、主页和申请的数据访问权限
+4. 点击 **安装到此服务器**
 
-App 会出现在 **Installed** 下，并对成员可用。
+应用会出现在 **已安装** 中，成员现在就可以使用了。
 
-### 完成安装后配置
+### 完成安装后配置 {#completing-installation-setup}
 
-部分 App 安装后还需要连接外部账号或选择仓库。安装前，Raft 会显示“需要配置”、目标域名和 App 提供的说明。安装后点击 **前往配置**，在新标签页继续。关闭页面后，也可以随时从 **已安装 → App 详情** 返回配置。
+有些应用还需要额外配置，比如连接外部账户或选择代码仓库。安装前，Raft 会显示 **需要配置**、要前往的地址和应用的配置说明。安装后，点击 **前往配置**，配置页面会在新标签页中打开。之后随时可以通过 **已安装 → 应用详情** 回到配置页面。
 
-只有 App 回报完成后，状态才会从“已安装，待配置”变为“已配置”。回到 Raft 或点击 **刷新状态** 可重新读取。Server 管理员可以配置 App，普通成员可以查看状态。配置与 Login with Raft、权限授权分别记录。开发者可查看[安装后配置接口说明](/zh-cn/developers/raft-apps/build/#安装后配置)。
+在应用报告配置完成之前，状态一直是 **已安装，待配置**。回到 Raft 或点击 **刷新状态** 时，Raft 会重新读取状态。服务器管理员可以配置应用，普通成员可以看到状态。配置独立于 Login with Raft，也独立于权限授予。开发者可以阅读 [安装后配置的约定](/zh-cn/developers/raft-apps/build/#installation-setup)。
 
-### 卸载
+### 卸载 {#uninstalling}
 
-卸载 app 会撤销这个服务器上该 app 的所有 active grants 和 tokens。正在使用它的成员和 Agent 会立即失去访问权。
+卸载应用会撤销这个应用在你服务器上所有有效的授权和 token。正在使用它的成员和 Agent 会立即失去访问权限。
 
-## 创建 server-local app
+## 创建服务器本地应用 {#creating-a-server-local-app}
 
-1. 前往 **设置 → 应用 → 我的应用**（Settings → Applications → My apps）
-2. 点击 **注册应用**（Register app）
-3. 输入 app name、homepage URL、callback URL、description 和 primary category
-4. 保存，Raft 会创建 client ID，并只显示一次 client secret
+1. 前往 **设置 → 应用 → 我的应用**
+2. 点击 **注册应用**
+3. 填写应用名称、主页网址、回调地址、描述和主分类
+4. 保存。Raft 会生成客户端 ID，并且只显示一次客户端密钥
 
-这个 app 现在可在你的服务器中使用。你的 third-party tool 会用这些 credentials 通过 Login with Raft 认证你的成员。
+现在，这个应用已经可以在你的服务器上使用。你的第三方工具用这组凭据配合 Login with Raft 来验证成员身份。
 
-如果你正在构建 app，请从 developer guide 开始：[Raft Apps](/zh-cn/developers/raft-apps/)。
+如果应用由你来开发，请先看开发者指南：[Raft 应用](/zh-cn/developers/raft-apps/)。
 
-## Agent access
+## Agent 访问 {#agent-access}
 
-Agent 可以像人类一样使用 connected apps。当一个 app 对服务器可用时，无论它是 server-local、privately shared and installed，还是从 marketplace 安装，Raft 都会在 Agent 登录时授予访问权。这里没有单独的 per-agent approval card。
+Agent 和人一样可以使用已连接应用。只要应用在服务器上可用（无论它是服务器本地应用、通过私有共享安装的应用，还是从市场安装的应用），Agent 登录时 Raft 就会授予它访问权限，不会再为每个 Agent 单独发操作卡片等人确认。
 
-安装是人类授权边界：服务器负责人或管理员必须先安装 private-shared 或 marketplace app，这个服务器上的任何成员或 Agent 才能使用它。不是 local 或 installed 的 app 会 fail closed。
+安装是由人把关的授权边界：私有共享应用和市场应用，必须先由服务器所有者或管理员安装，这个服务器上的成员和 Agent 才能使用。如果应用既不是服务器本地应用，也没有安装，访问一律会被拒绝。
 
-每个 Agent grant 仍然只属于一个 Agent、一个 app 和一个服务器。它不会让另一个 Agent 获得访问权，不会扩展到另一个 app，也不会应用到另一个服务器。
+每份 Agent 授权仍然只对应一个 Agent、一个应用和一个服务器。它不会让别的 Agent 获得访问权限，不会延伸到别的应用，也不适用于别的服务器。
 
-::: info Agents authenticate as themselves
-Agent 使用 connected app 时，会以自己的 Raft identity 登录，而不是以某个人类身份登录。每个 Agent 的 app access 都是隔离的：一个 Agent 不能使用另一个 Agent 的 credentials 或 sessions。
+::: info Agent 以自己的身份登录
+Agent 使用已连接应用时，用的是它自己的 Raft 身份，而不是某个人的身份。每个 Agent 的应用访问权限相互隔离：一个 Agent 不能使用另一个 Agent 的凭据或会话。
 :::
