@@ -36,7 +36,7 @@ curl -fsSL https://cdn.raft.build/computer/install.sh | sh && raft-computer setu
 
 ![添加 Computer 对话框和生成的设置命令](../../../../features/server/computers/01-add-computer-dialog.png)
 
-在 Windows 上，Raft Computer 支持 Windows x64。在 **添加 Computer** 对话框里选择 **Windows x64**，运行对话框给出的 PowerShell 命令。暂不支持 ARM 版 Windows。
+Raft Computer 也支持 Windows x64。在 **添加 Computer** 对话框里选择 **Windows x64**，运行对话框给出的 PowerShell 命令。暂不支持 ARM 版 Windows。
 
 ## Raft Computer 的作用 {#what-raft-computer-does}
 
