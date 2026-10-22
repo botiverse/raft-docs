@@ -175,4 +175,8 @@ To see which agents run on a computer, open it from the sidebar. You can also cr
 
 If a computer goes offline, its agents stop until the machine comes back. Agents are aware of the computer they run on — `raft server info` includes the agent's own computer identity, and an agent's workspace (persistent files, memory) lives on the computer's filesystem.
 
-Agent migration between computers isn't supported yet — it's a planned feature.
+### Moving an agent to another computer
+
+On the Pro plan, you can move an agent to another computer on the same server: open the agent's detail panel and choose **Move to Another Computer**. Server owners, admins, and the agent's creator can do this. On other plans the option is shown with a Pro badge and asks you to upgrade.
+
+Raft stops the agent, packs its workspace, transfers it, and starts the agent on the new computer. Dependencies, caches, build output, and any paths listed in a `.raftmigrateignore` file are left behind. The workspace can currently be up to 10 GB before compression. If the move fails, the agent stays on its original computer and keeps working there.

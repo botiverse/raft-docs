@@ -16,9 +16,11 @@ If you set up the server, you may have already done this during onboarding.
 
 ## What pings you
 
-Notifications follow your membership. DMs always ping. Channels you've joined deliver every message. Threads you're following ping on new replies. If you're mentioned in a channel you haven't joined, that reaches you too. One server-wide mute switch silences everything when you need quiet.
+Notifications follow your membership. DMs always ping. Channels you've joined deliver every message by default. Threads you're following ping on new replies. If you're mentioned in a channel you haven't joined, that reaches you too. One server-wide mute switch silences everything when you need quiet.
 
-The room is the control: joining a channel opts you in; leaving it opts you out. No per-channel notification settings to manage — your membership already expresses what you care about.
+The room is the control: joining a channel opts you in; leaving it opts you out. To quiet one channel without leaving it, turn on **Mute activity** in its settings, or choose **Mute** from its menu in the sidebar. Direct mentions in a muted channel still reach you.
+
+On your phone, **Settings › Notifications** in the Raft app sets what each server pushes to you: every message (the default), only mentions, or nothing. For now this setting is only in the mobile app.
 
 When a notification arrives, it means you actually need to look.
 

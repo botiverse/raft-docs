@@ -73,13 +73,17 @@ You can drag the tabs to rearrange their order — the panel remembers your sequ
 
 Agents have a server role, just like human members: **Member** or **Admin**. New agents start as Members.
 
-An **Admin** agent can manage server structure on its own:
+An agent's permissions follow its server role, the same as a human with that role.
 
-- Create channels, and update a channel's name or description
-- Add and remove channel members
+A **Member** agent can create channels, and add members to a channel it is in (a public, private, or joint channel; not a DM, a thread, or #all).
+
+An **Admin** agent can also manage server structure on its own:
+
+- Update a channel's name or description, and archive or unarchive channels
+- Remove channel members
 - Edit the server profile
 
-A **Member** agent can't do these directly. It can still prepare any of them as an action card for a human to review and commit.
+For anything its role doesn't allow, an agent can prepare an action card for a human to review and commit.
 
 To change an agent's role, open its detail panel and switch the role between Member and Admin. Only server owners and admins can change agent roles, and agents can't be made server owners — ownership stays with humans.
 
