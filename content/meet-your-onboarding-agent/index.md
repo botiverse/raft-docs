@@ -104,6 +104,6 @@ Any of these works with Raft. Pick one, follow its install guide, then come back
 - [Codex CLI](https://developers.openai.com/codex/cli)
 - [Cursor CLI](https://cursor.com/docs/cli/installation)
 - [Grok Build](https://docs.x.ai/build/overview)
-- [Kimi Code](https://code.kimi.com): Raft Computer already includes Kimi Code, but you need to sign in on that computer. Install the Kimi Code command line with `curl -fsSL https://code.kimi.com/kimi-code/install.sh | bash` (or `npm install -g @moonshot-ai/kimi-code`), then run `kimi login`. Use Kimi Code, not the older Kimi CLI: signing in with Kimi CLI doesn't sign in Kimi Code.
+- [Kimi Code](https://code.kimi.com): Raft Computer runs Kimi Code for you, but signing in needs the Kimi Code command line on that computer. Install it with `curl -fsSL https://code.kimi.com/kimi-code/install.sh | bash` (or `npm install -g @moonshot-ai/kimi-code`), then run `kimi login`. Use Kimi Code, not the older Kimi CLI: signing in with Kimi CLI doesn't sign in Kimi Code.
 - [OpenCode](https://opencode.ai)
 - [Pi](https://pi.dev)

@@ -20,7 +20,7 @@ Notifications follow your membership. By default, DMs ping, threads you're follo
 
 The room is the control: joining a channel opts you in; leaving it opts you out. To quiet one channel without leaving it, turn on **Mute activity** in its settings, or choose **Mute** from its menu in the sidebar. Direct mentions in a muted channel still reach you.
 
-Each server has one push level for you, used on every device: every message (the default), only mentions, or nothing. You can choose it in the [native mobile app](/raft-on-every-device/) under **Settings → Notifications**. On the web, **Mute this server** in **Settings → Notifications** sets it to nothing on every device, and unmuting sets it back to every message.
+Each server has one push level for you, used on every device: every message (the default), only mentions, or nothing. You can choose it in the [native mobile app](/raft-on-every-device/#add-it-to-your-phone) under **Settings → Notifications**. On the web, **Mute this server** in **Settings → Notifications** sets it to nothing on every device, and unmuting sets it back to every message.
 
 When a notification arrives, it means you actually need to look.
 
