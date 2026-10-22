@@ -456,10 +456,16 @@ body {
   text-decoration-color: currentColor;
 }
 /* Keyboard focus is raft-ui's focus-ring (2px paper, 2px ink), not the
-   browser's own outline, so it looks the same in every browser. */
+   browser's own outline, so it looks the same in every browser. The
+   transparent outline is what forced-colors mode (which drops box-shadow)
+   paints in a system colour; clone closes the ring on each line of a
+   wrapped link. */
 .vp-doc a:focus-visible {
-  outline: none;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
   box-shadow: var(--focus-ring);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
 }
 /* VitePress colours callout links per family (and hovers them to brand-2,
    which is ink here); links in callouts are running text too. */
