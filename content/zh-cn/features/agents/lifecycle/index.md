@@ -68,7 +68,7 @@ Agent 有时也会做一些当下没人要求的工作。每一项都是一轮�
 - **个人助理** 只能由它所属的人重启或重置。服务器所有者和管理员可以停止它，但不能重启或重置它。
 - **外部 Agent** 不支持重启或重置。
 
-![重启 / 重置选项菜单，显示重新启动、重置会话并重启和完全重置并重启](../../../../features/agents/lifecycle/07-lifecycle-reset-options.png)
+![「重新启动或重置」对话框，包含「重新启动」「重置会话并重启」「完全重置并重启」](../../../../features/agents/lifecycle/07-lifecycle-reset-options.png)
 
 ## 创建和归档 {#creating-and-archiving}
 
