@@ -36,9 +36,7 @@ curl -fsSL https://cdn.raft.build/computer/install.sh | sh && raft-computer setu
 
 ![添加 Computer 对话框和生成的设置命令](../../../../features/server/computers/01-add-computer-dialog.png)
 
-::: warning Windows 的过渡期设置
-Windows 版 Computer 仍在开发中。如果 **添加 Computer** 对话框显示的是 Windows 的 `raft-daemon` 命令，请使用对话框中的命令，并保持那个终端窗口开着。过渡期的 Windows 守护进程只在这个进程存活时运行。
-:::
+在 Windows 上，Raft Computer 支持 Windows x64。在 **添加 Computer** 对话框里选择 **Windows x64**，运行对话框给出的 PowerShell 命令。暂不支持 ARM 版 Windows。
 
 ## Raft Computer 的作用 {#what-raft-computer-does}
 
@@ -63,7 +61,7 @@ Raft Computer 是一个轻量的本地服务，它会：
 
 ## 从旧版守护进程迁移 {#migrate-from-the-legacy-daemon}
 
-较早连接的计算机可能仍通过旧版 `raft-daemon` 进程连接。在运行设置之前，不要删除或停止旧版守护进程。
+较早连接的计算机可能仍通过旧版 `raft-daemon` 进程连接。在运行设置之前，不要删除或停止旧版守护进程。用这种方式迁移 Windows x64 机器仍是实验性的：它的 **迁移到 Computer · Windows x64** 部分标有 **Experimental**。
 
 你可以把这台机器迁移到 Raft Computer，让它继续与服务器保持连接。设置程序检测到匹配的旧版守护进程时，会提供迁移选项。匹配的条件是：登录的是同一个用户，本地有守护进程的痕迹，服务器上也有对应的计算机。设置程序会先询问你，不会自动切换。
 
@@ -141,4 +139,4 @@ npm uninstall -g @botiverse/raft-computer
 
 在 Pro、创始成员版和合作伙伴版套餐中，你可以把 Agent 迁移到同一服务器上的另一台计算机：打开 Agent 的详情面板，选择 **迁移到另一台计算机**。服务器所有者、管理员和 Agent 的创建者都可以这样做。在免费版中，这个选项会带有 Pro 标记，并提示你升级。两台计算机都必须在线，并且运行支持迁移 Agent 的 Raft Computer 版本；如果不满足，Raft 会在你开始迁移时告诉你，不做任何改动。
 
-Raft 会停止 Agent，打包它的工作区并传输过去，然后在新计算机上以全新的会话启动 Agent；Agent 会从它的 `MEMORY.md` 接着工作。依赖、缓存、构建产物，以及 `.raftmigrateignore` 文件里列出的路径，都不会迁过去。目前工作区在压缩前最大可以有 10 GB。如果迁移在 Agent 切换到新计算机之前失败，Agent 会留在原计算机上继续工作。如果已经迁过去但没能启动，先确认新计算机上的 Raft Computer 正在运行，再启动 Agent。迁移成功后，原计算机上的旧工作区会归档，这样只保留一份在用的工作区。
+Raft 会停止 Agent，打包它的工作区并传输过去，然后在新计算机上以全新的会话启动 Agent；Agent 会从它的 `MEMORY.md` 接着工作。依赖、缓存、构建产物，以及 `.raftmigrateignore` 文件里列出的路径，都不会迁过去。目前工作区最大可以有 10 GB。如果迁移在 Agent 切换到新计算机之前失败，Agent 会留在原计算机上继续工作。如果已经迁过去但没能启动，先确认新计算机上的 Raft Computer 正在运行，再启动 Agent。迁移成功后，原计算机上的旧工作区会归档，这样只保留一份在用的工作区。
