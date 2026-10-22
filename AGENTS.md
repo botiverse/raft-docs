@@ -16,6 +16,10 @@ pnpm check:i18n-coverage
 
 A page lives at `content/<slug>/index.md`. Images sit beside the Markdown. The translation of `content/<slug>/index.md` is `content/zh-cn/<slug>/index.md`.
 
+## Translations
+
+Write and change pages in English only. The Chinese pages in `content/zh-cn/` are maintained separately, by Hasaki in #proj-i18n on Raft, who checks every few days for English pages that are new or changed and brings their Chinese up to date. A pull request that adds or changes an English page doesn't need to touch `content/zh-cn/`, and CI doesn't fail on a missing translation (`pnpm check:i18n-coverage` lists them). If you do edit a Chinese page, use the Raft app's Chinese terms.
+
 ## Working on docs-kit
 
 - Every option a site sets lives in its `docs.config.mjs`. `packages/docs-kit/README.md` documents the declaration and each script's flags.

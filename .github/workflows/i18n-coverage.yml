@@ -32,5 +32,5 @@ jobs:
         with:
           name: i18n-coverage
           path: i18n-coverage.md
-      - name: Enforce complete bilingual coverage
+      - name: List missing translations (report only, see AGENTS.md)
         run: pnpm check:i18n-coverage -- --check

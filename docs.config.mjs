@@ -32,7 +32,9 @@ export default defineDocsConfig({
     headerNav: [{ label: 'Open Raft', href: 'https://app.raft.build', primary: true }],
   },
   search: true,
-  coverage: { baseline: 'scripts/i18n-coverage-baseline.txt', mode: 'enforce' },
+  // Chinese is maintained separately (AGENTS.md, Translations), so a missing
+  // translation is reported, not a failure.
+  coverage: { baseline: 'scripts/i18n-coverage-baseline.txt', mode: 'report' },
   redirects: { file: 'content/public/_redirects', selfTest: true },
   output: { contentDir: 'content', outDir: 'out' },
 })
