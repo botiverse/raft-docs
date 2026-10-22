@@ -9,7 +9,13 @@ if (ri >= 0) { root = args[ri + 1]; args.splice(ri, 2); }
 let failed = 0;
 for (const raw of args) {
   const slug = raw.replace(/^content\/(zh-cn\/)?/, "").replace(/\/?index\.md$/, "").replace(/\/$/, "");
-  const html = fs.readFileSync(path.join(root, "out", slug, "index.html"), "utf8");
+  const htmlFile = path.join(root, "out", slug, "index.html");
+  if (fs.statSync(htmlFile).mtimeMs < fs.statSync(path.join(root, "content", slug, "index.md")).mtimeMs) {
+    console.error(`${slug}: out/ is older than the English page; run pnpm build first`);
+    failed++;
+    continue;
+  }
+  const html = fs.readFileSync(htmlFile, "utf8");
   const doc = html.slice(html.indexOf('class="vp-doc'));
   const ids = [...doc.matchAll(/<h([1-6])[^>]*\sid="([^"]+)"/g)].map((m) => ({ depth: +m[1], id: decodeURIComponent(m[2]) }));
   const file = path.join(root, "content", "zh-cn", slug, "index.md");
