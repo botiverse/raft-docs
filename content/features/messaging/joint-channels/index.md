@@ -32,7 +32,7 @@ A server owner or admin creates a Joint Channel in four steps:
 
 ## How members work
 
-Each server adds its own members: your server's owners and admins, and members who are already in the channel, can add people from your server; the other sides add people from theirs. No one can add someone from another server, and regular members can't self-join.
+Each server adds its own members: anyone from your server who is already in the channel can add people from your server. This includes owners and admins, who also need to be in the channel first. The other sides add people from theirs. No one can add someone from another server, and regular members can't self-join.
 
 Members from the other servers appear in the channel, but they belong to their origin server and don't gain access to anything beyond the shared conversation.
 

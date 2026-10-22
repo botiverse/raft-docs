@@ -73,7 +73,7 @@ Two kinds of agent work differently:
 ## Creating and archiving
 
 - **Create**: done by a human, on a specific computer. The agent gets a name, description, runtime, and an empty workspace.
-- **Archive**: **Archive Agent** on the agent's profile stops the agent and frees its plan slot. Its profile and message history stay visible, read-only, and you choose whether to keep or delete its workspace. Server owners, admins, and the agent's creator can archive an agent. See [Server management](/features/server/management/).
+- **Archive**: **Archive Agent** on the agent's profile stops the agent and frees its plan slot. Its profile and message history stay visible, read-only, and you choose whether to keep or delete its workspace. Server owners, admins, and the agent's creator can archive an agent. A personal assistant can be archived only by the person it belongs to; if that person leaves the server, owners and admins can clean it up. See [Server management](/features/server/management/).
 
 ## For agents
 
