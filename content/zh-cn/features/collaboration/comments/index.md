@@ -1,44 +1,44 @@
 ---
 llms_section: "Collaboration zh-CN"
 llms_order: 1730
-llms_summary: "当你需要用简体中文了解如何在上下文中审阅文件，并把反馈锚定到特定行、row、region 或 moment 时阅读。"
+llms_summary: "需要结合上下文审阅文件，并把反馈锚定到具体的某一行文字、某一行数据、某个区域或某个时间点时阅读。"
 ---
 
-# Comments on files
+# 文件评论
 
-Comment 是锚定到文件中特定位置的线程 reply。它像其他消息一样存在于文件线程中，并且指向它所讨论的确切 section、lines、region 或 moment。
+评论是一条消息列回复，锚定在文件中的某个具体位置。它和其他消息一样，留在这个文件的消息列里，并指回它所针对的那一节、那几行、那个区域或那个时间点。
 
-## 什么时候使用 comments
+## 什么时候用评论 {#when-to-use-comments}
 
-- 审阅文档、dataset 或 web page，而不用离开对话
-- 把队友指向你所说的确切 line、row 或 region
-- 把关于文件的反馈保留在文件自己的线程里，而不是散落在多条消息中
+- 不离开对话，就能审阅文档、数据集或网页
+- 向同事准确指出你说的是哪一行文字、哪一行数据或哪个区域
+- 把关于文件的反馈留在文件自己的消息列里，而不是散落在各处的消息中
 
-## 在文件上评论
+## 评论文件 {#commenting-on-a-file}
 
 1. 从消息中打开文件。
-2. 点击 top bar 中的 **Comment**。Comments panel 会打开。
-3. 选择你要评论的内容：高亮文档中的文字、选择 code file 中的 lines 或 CSV 中的 rows、选择 HTML page 的一个 region，或把 video 暂停在正确的 moment。
-4. 写下 comment 并发送。它会发布到文件线程中，并锚定到你的选择。
+2. 点击顶栏中的 **评论**，打开评论面板。
+3. 选中你要评论的内容：在文档里高亮一段文字，在代码文件里选几行，在 CSV 文件里选几行数据，在 HTML 页面上框选一个区域，或者把视频暂停在合适的时刻。
+4. 写下评论并发送。评论会发到文件的消息列中，锚定在你选中的内容上。
 
-![文件预览打开了 Comment panel，composer 中有一条 anchored comment](../../../../features/collaboration/comments/01-file-comments-panel-anchor.png)
+![打开了评论面板的文件预览，消息输入框中有一条已锚定的评论](../../../../features/collaboration/comments/01-file-comments-panel-anchor.png)
 
-## 可以评论什么
+## 可以评论哪些内容 {#what-you-can-comment-on}
 
-| File type | Comment anchors to |
+| 文件类型 | 评论锚定在 |
 | --- | --- |
-| Markdown documents | 选中的 passage，并锚定到所在 section |
-| Text and code files | 一行或多行 |
-| CSV files | 一行或多行 |
-| HTML files | rendered page 上的一个 region |
-| Video | timeline 上的一个 moment |
+| Markdown 文档 | 选中的一段文字，锚定到它所在的小节 |
+| 文本和代码文件 | 一行或多行 |
+| CSV 文件 | 一行或多行数据 |
+| HTML 文件 | 渲染后页面上的一个区域 |
+| 视频 | 时间轴上的一个时间点 |
 
-PDF 和 image files 还不支持 anchored comments。
+PDF 和图片文件暂不支持锚定评论。
 
-## Comments live in the 线程
+## 评论在消息列中 {#comments-live-in-the-thread}
 
-每条 comment 都是文件线程中的普通消息。在频道里，comment 旁边会显示一个 **re:** reference；点击 reference 可以跳回它所讨论的文件确切位置。
+每条评论都是文件消息列中的一条普通消息。在频道里，评论旁边会显示一个 **回复：** 引用；点击它，就能跳回文件中评论所针对的确切位置。
 
-Replies、提及和通知与其他线程消息一样工作。你需要是频道成员才能评论。
+回复、@ 提及和通知的用法，与消息列中的其他消息相同。你需要是频道成员才能评论。
 
-![线程中的 comment，显示 re: reference chip](../../../../features/collaboration/comments/02-thread-re-chip.png)
+![消息列中的一条评论，带有「回复：」引用标签](../../../../features/collaboration/comments/02-thread-re-chip.png)

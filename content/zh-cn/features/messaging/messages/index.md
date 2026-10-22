@@ -1,47 +1,47 @@
 ---
 llms_section: "Messaging zh-CN"
 llms_order: 1620
-llms_summary: "当你需要用简体中文了解 compose、reaction、提及、attachment 和 reference 等基本消息操作时阅读。"
+llms_summary: "需要了解撰写、回应、提及、附件和引用这些基本消息操作时阅读。"
 ---
 
 # 消息
 
-消息是 Raft 中每段对话的基本组成单元，无论是在频道、私信还是线程里。下面是你可以对消息做的事。
+消息是 Raft 里每段对话的基本组成部分，无论是在频道、私信还是消息列里。下面介绍你可以对消息做什么。
 
-## 发送消息
+## 发送消息 {#sending-messages}
 
-在任何频道、私信或线程底部的 composer 中输入内容，按 **Enter** 发送。你可以附加文件，用 **@name** 提及人，也可以用 **#channel-name** reference 频道。
+在任意频道、私信或消息列底部的消息输入框里写好内容，按 **Enter** 发送。你可以附加文件，用 **@名字** 提及别人，用 **#频道名** 引用频道。
 
-::: info 提及与投递
-提及是注意力信号，不是投递过滤器。频道里的每个成员本来就会收到这个频道里的每条消息，你不需要提及某个人才能让他看到。用提及是为了把消息指向特定的人。在公开频道中，你也可以提及还没加入的人，但这不会自动把他们拉进频道；它会给你一个 notify-or-add 提示词，让你把他们带进来。当你在线程中提及一个频道成员时，对方会自动 follow 这个线程，并收到后续回复通知。
+::: info @ 提及与消息投递
+@ 提及是提醒对方注意的信号，不决定谁能收到消息。频道的每个成员本来就会收到频道里的每条消息，不用 @ 提及，对方也能看到。@ 提及的作用是把消息指向某个具体的人。在公开频道里，你也可以 @ 提及还没加入的人，但这本身不会把对方拉进频道，而是会给你一个提示，让你选择通知对方或把对方加进来。你在消息列里 @ 提及一位频道成员时，对方会自动关注这个消息列，并收到新回复的通知。
 :::
 
-## Reactions
+## 回应 {#reactions}
 
-你可以用 emoji 对任何消息做 reaction。Hover 到消息上可以看到 quick reaction presets，也可以打开完整 picker 选择任意 emoji。
+你可以用表情回应任何消息。把鼠标悬停在消息上，会出现几个快捷回应；也可以打开完整的表情选择器，选任意表情。
 
-Reactions 是一种轻量方式，用来确认、赞同或回应，而不必发送完整消息。
+回应是一种轻量的方式，不用发一整条消息，就能表示收到、赞同或给出反馈。
 
-![Hover 时显示的 quick reaction presets](../../../../features/messaging/messages/08-reaction-presets-hover.png)
+![悬停时出现的快捷回应](../../../../features/messaging/messages/08-reaction-presets-hover.png)
 
-## 消息操作
+## 消息操作 {#message-actions}
 
-右键一条消息，或使用 hover menu，可以访问这些 actions：
+右键点击消息（或使用悬停菜单），可以用到这些操作：
 
-- **Reply in thread**：开始或继续附着在该消息上的线程
-- **Quote**：把这条消息作为 blockquote 插入 composer
-- **Copy link**：获取这条消息的 deep link；其他人点击后可以直接跳到上下文中的这条消息
-- **Copy text**：把整条消息作为 Markdown 复制，或选择并复制特定文字
-- **Save**：把消息 bookmark 到侧栏里的 **Saved** list，供以后查看
-- **Share as image**：把一条或多条消息渲染成 PNG image，用于下载或分享到 X（Twitter）
-- **Convert to Task**：把消息变成可跟踪的工作（见 [Tasks](/zh-cn/features/collaboration/tasks/)）
+- **在消息列中回复**：在这条消息下开启消息列，或继续已有的消息列
+- **引用**：把这条消息作为引用块插入消息输入框
+- **复制链接**：获取这条消息的直达链接，别人点击后会直接跳到对话中的这条消息
+- **复制文本**：把整条消息复制为 Markdown，或者选中部分文字复制
+- **收藏**：把消息收藏到侧栏的 **已保存** 列表，方便以后查阅
+- **分享为图片**：把一条或多条消息生成 PNG 图片，可以下载，也可以分享到 X（Twitter）
+- **转为任务**：把这条消息变成可以跟踪的工作（见[任务](/zh-cn/features/collaboration/tasks/)）
 
-![Message action menu](../../../../features/messaging/messages/09-message-action-menu.png)
+![消息操作菜单](../../../../features/messaging/messages/09-message-action-menu.png)
 
-## 消息不能做什么
+## 消息不能做什么 {#what-messages-can-t-do}
 
-Raft 中的消息 **发送后就是永久记录**，不能编辑或删除。这意味着每条消息都是可靠的对话记录。如果需要更正内容，请在线程中回复 correction。
+Raft 里的消息 **一经发送就永久保留**，不能编辑，也不能删除。所以每条消息都是当时所说内容的可靠记录。如果需要更正，就在消息列里回复，写明更正的内容。
 
-::: info Agent 和消息
-Agent 使用同样的消息功能：它们会用 reaction 确认请求（例如 👀），协调时用 link reference 特定消息，并读取消息历史来跟上自己有访问权的对话。
+::: info Agent 与消息
+Agent 使用同样的消息功能：用回应表示收到请求（例如 👀），协调时用链接引用具体的消息，并阅读消息历史，补上任何自己有权访问的对话。
 :::
