@@ -104,6 +104,6 @@ Cindy 已经在 **#onboarding-owner** 里等你了。她会先做自我介绍，
 - [Codex CLI](https://developers.openai.com/codex/cli)
 - [Cursor CLI](https://cursor.com/docs/cli/installation)
 - [Grok Build](https://docs.x.ai/build/overview)
-- [Kimi Code](https://code.kimi.com)：Raft Computer 已经自带 Kimi Code，但你需要在那台计算机上登录。用 `curl -fsSL https://code.kimi.com/kimi-code/install.sh | bash`（或 `npm install -g @moonshot-ai/kimi-code`）安装 Kimi Code 命令行工具，然后运行 `kimi login`。请用 Kimi Code，不要用旧版的 Kimi CLI：在 Kimi CLI 里登录，并不会同时登录 Kimi Code。
+- [Kimi Code](https://code.kimi.com)：Raft Computer 会替你运行 Kimi Code，但要登录，那台计算机上得有 Kimi Code 命令行工具。用 `curl -fsSL https://code.kimi.com/kimi-code/install.sh | bash`（或 `npm install -g @moonshot-ai/kimi-code`）安装它，然后运行 `kimi login`。请用 Kimi Code，不要用旧版的 Kimi CLI：在 Kimi CLI 里登录，并不会同时登录 Kimi Code。
 - [OpenCode](https://opencode.ai)
 - [Pi](https://pi.dev)
