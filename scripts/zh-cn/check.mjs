@@ -33,6 +33,8 @@ const slugs = args.length ? args.map((s) => s.replace(/^content\/(zh-cn\/)?/, ""
 function builtIds(slug) {
   const html = path.join(root, "out", slug, "index.html");
   if (!fs.existsSync(html)) return null;
+  // A build older than the English page would report its old anchors as wrong.
+  if (fs.statSync(html).mtimeMs < fs.statSync(path.join(content, slug, "index.md")).mtimeMs) return "stale";
   const s = fs.readFileSync(html, "utf8");
   const at = s.indexOf('class="vp-doc');
   if (at < 0) return null;
@@ -89,8 +91,9 @@ for (const slug of slugs) {
   const shapeZh = zh.headings.map((h) => h.depth).join(",");
   if (shapeEn !== shapeZh) e.push(`headings ${shapeZh} != English ${shapeEn}`);
   else {
-    const ids = builtIds(slug);
-    if (!ids) w.push(`no built English page (out/${slug}/index.html with a vp-doc): run pnpm build to check the anchors`);
+    let ids = builtIds(slug);
+    if (ids === "stale") { w.push(`out/${slug}/index.html is older than the English page: run pnpm build to check the anchors`); ids = null; }
+    else if (!ids) w.push(`no built English page (out/${slug}/index.html with a vp-doc): run pnpm build to check the anchors`);
     zh.headings.forEach((h, i) => {
       if (h.depth === 1) return;
       if (!h.id) (strictAnchors ? e : w).push(`L${h.line} heading "${h.text}" has no {#id}`);
