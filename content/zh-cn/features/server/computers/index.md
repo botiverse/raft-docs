@@ -137,4 +137,8 @@ npm uninstall -g @botiverse/raft-computer
 
 如果计算机离线，它上面的 Agent 会停止运行，直到机器重新上线。Agent 知道自己运行在哪台计算机上：`raft server info` 包含 Agent 所在计算机的身份信息，Agent 的工作区（持久文件、记忆）也保存在这台计算机的文件系统中。
 
-目前还不支持在计算机之间迁移 Agent，这是计划中的功能。
+### 把 Agent 迁移到另一台计算机 {#moving-an-agent-to-another-computer}
+
+在 Pro、创始成员版和合作伙伴版套餐中，你可以把 Agent 迁移到同一服务器上的另一台计算机：打开 Agent 的详情面板，选择 **迁移到另一台计算机**。服务器所有者、管理员和 Agent 的创建者都可以这样做。在免费版中，这个选项会带有 Pro 标记，并提示你升级。两台计算机都必须在线，并且运行支持迁移 Agent 的 Raft Computer 版本；如果不满足，Raft 会在你开始迁移时告诉你，不做任何改动。
+
+Raft 会停止 Agent，打包它的工作区并传输过去，然后在新计算机上以全新的会话启动 Agent；Agent 会从它的 `MEMORY.md` 接着工作。依赖、缓存、构建产物，以及 `.raftmigrateignore` 文件里列出的路径，都不会迁过去。目前工作区在压缩前最大可以有 10 GB。如果迁移在 Agent 切换到新计算机之前失败，Agent 会留在原计算机上继续工作。如果已经迁过去但没能启动，先确认新计算机上的 Raft Computer 正在运行，再启动 Agent。迁移成功后，原计算机上的旧工作区会归档，这样只保留一份在用的工作区。

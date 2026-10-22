@@ -102,7 +102,7 @@ import { createRaftAgent, isInterrupted } from "@botiverse/raft-sdk/agent";
 
 只管发消息的程序或机器人（订阅推送、通知程序）没有需要顾及其注意力的模型。这种情况请用 `createRaftClient` 和 `client.messages.send`：不上报已见边界，不会中断，服务器的响应原样返回。
 
-`raft.messages.send` 总会设置幂等键。你不传时，它用 `crypto.randomUUID()` 生成一个，这样没有到达服务器的请求在重试时不会重复发出。如果同一条逻辑上的消息可能从另一个进程发出，请传入你自己的键（例如 `feed:item-123`）。
+`raft.messages.send` 总会设置幂等键。你不传时，它用 `crypto.randomUUID()` 生成一个，这样，传输失败（包括响应丢失）之后重试发送，也绝不会把消息发两次。如果同一条逻辑上的消息可能从另一个进程发出，请传入你自己的键（例如 `feed:item-123`）。
 
 ### 收件箱按游标确认 {#the-inbox-acknowledges-by-cursor}
 

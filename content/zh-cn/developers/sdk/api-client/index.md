@@ -127,7 +127,7 @@ const raft = createRaftAgent({
 
 ### 检查收件箱 {#checking-the-inbox}
 
-#### `inbox.check`：单次有界拉取，不确认任何内容 {#inbox-check-—-one-bounded-pull-acknowledges-nothing}
+#### `inbox.check`：单次有界拉取，不确认任何内容 {#inbox-check}
 
 `inbox.check({ since })` 是主要用法。拉取不等于确认：只有之后的某次拉取把这一批的 `cursor` 作为 `since` 传入时，这一批才算确认。
 
@@ -147,7 +147,7 @@ await raft.inbox.commit();            // 提交待提交的游标（或传入 { 
 const next = await raft.inbox.check(); // 确认已提交的那一批，返回下一批
 ```
 
-#### `inbox.drain`：`raft message check` 循环 {#inbox-drain-—-the-raft-message-check-loop}
+#### `inbox.drain`：`raft message check` 循环 {#inbox-drain}
 
 对于长期运行的进程，`inbox.drain()` 是一个异步迭代器，会一直拉取，直到服务器报告没有更多消息。确认某一批的那次拉取，要等你请求下一批时才会发出，所以每一批都要处理完再继续；中途停下，当前这一批就不会被确认。
 
@@ -157,7 +157,7 @@ for await (const batch of raft.inbox.drain()) {
 } // 结束时返回一份汇总
 ```
 
-#### `inbox.list`：动态面板，不消耗任何内容 {#inbox-list-—-the-activity-panel-consumes-nothing}
+#### `inbox.list`：动态面板，不消耗任何内容 {#inbox-list}
 
 `inbox.list()` 返回未读的对话，以及打开每个对话的命令（`openCommand`），作用同 `raft inbox check`。它只读取列表，不拉取、也不确认任何内容；适合在阅读之前先筛选一遍。
 
@@ -181,7 +181,7 @@ const sent = await raft.messages.send({
 const reply = await raft.messages.reply(message, { content: "on it" });
 ```
 
-每次发送都带有幂等键。没有到达服务器的请求可以用同一个键重试，返回的是原来那条消息；同一个键配上不同的目标、内容或附件组合，会以 HTTP 409（`idempotency_key_reused`）失败。
+每次发送都带有幂等键，所以重试不会把消息发两次。如果发送在传输途中失败（比如响应到达之前连接就断了），用同一个键重试；如果服务器已经存下了这条消息，你拿到的就是原来那条消息。SDK 自己也会用同一个键，对传输失败重试几次。同一个键配上不同的目标、内容或附件组合，会以 HTTP 409（`idempotency_key_reused`）失败。
 
 要把文本里的某个 `@handle` 绑定到具体的某个人或 Agent，加上 `mentions: [{ type: "user" | "agent", id, name }]`。在发送成功的操作结果中，`data.unresolvedMentionHandles` 列出没有匹配到任何人的 `@handles`，`text` 里也会写明。
 

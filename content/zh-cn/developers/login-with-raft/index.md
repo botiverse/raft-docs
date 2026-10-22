@@ -228,7 +228,7 @@ https://app.raft.build/login-with-raft/setup?client_id=<client_id>&return_to=<re
 
 - **`client_id`**：必填。
 - **`return_to`**：必须与注册的返回网址完全一致。按字节逐一比较，不一致就拒绝。
-- **`scope`**：可选（默认为 `openid profile`）。
+- **`scope`**：可选（省略时默认为 `openid profile`）。
 
 Raft 会给用户显示服务器选择器（只列出你的应用可用的服务器），处理用户的授权同意，然后带着 `?code=...` 重定向到你的返回网址。
 
@@ -300,7 +300,7 @@ CLI 交接完成，不等于建立了已认证的应用会话。较新的 CLI �
 
 Raft CLI 会把这个响应体转给登录失败的 Agent：交接被拒绝时，`raft integration login` 会读取 JSON 对象形式的响应体（上限 4 KiB），在失败信息和机器可读的详情里报告 `error`（或 `code`）和 `hint`（或 `message` / `detail`），并去掉控制字符、截断每个字段。非 JSON 的响应体（比如 HTML 错误页）一律不会回显。所以，有没有带类型的响应体，决定了调用方能读到你说明的原因，还是只能看到 HTTP 状态码本身。旧版 CLI 只显示状态码，因此把响应体当作渐进增强，服务端照常记录拒绝原因。
 
-以下几点能让响应体真正有用，而不是噪音：
+以下三点能让响应体真正有用，而不是噪音：
 
 - **区分永久性和暂时性失败**。设计上就会拒绝的情况（这个身份永远无法在这里登录），要直接说明，并指出应该改用哪个入口；暂时性失败（授权码过期、上游出错）要让人看出可以重试。
 - **说明原因，但不回显**。说出是哪条规则拒绝了调用方，不要写出调用方的身份、你的配置值，或任何像凭据的东西。
@@ -651,7 +651,7 @@ granted scopes ∩ server role ∩ app availability ∩ your own policy
 | --- | --- | --- |
 | 服务器本地应用 | 由开发者准备，服务器所有者或管理员授权并提交注册 | 仅供该服务器私有使用。 |
 | 私有共享应用 | 应用所有者创建私有共享链接 | 服务器所有者或管理员通过链接安装。只有来源服务器和已安装的服务器能发现或使用它。 |
-| 已发布的第三方应用 | 外部开发者，经 Raft 审核后 | 由服务器管理员安装。卸载会撤销该服务器上的全部授权和 token。 |
+| 已发布的第三方应用 | 外部开发者，经 Raft 审核后 | 由服务器所有者或管理员安装。卸载会撤销该服务器上的全部授权和 token。 |
 
 私有共享和市场审核互不影响。申请发布、等待审核或被驳回，都不会撤销已有的私有安装、授权、token 或有效的共享链接。没有安装、也没有共享链接的服务器，仍然看不到这个应用。发布只决定能否在公开市场中被发现；从某个服务器卸载，照样会撤销该服务器的授权和 token。
 
@@ -847,7 +847,7 @@ App server
 
 ### 1. 声明 Agent 入站 scope {#_1-declare-agent-inbound-scopes}
 
-Agent 入站 scope 不在默认的 `openid profile identity` 集合里。只把应用需要的类型加入它注册的允许 scope；如果请求未声明的 scope，Raft 会拒绝。安装应用并不意味着它可以把任意 Agent 或服务器作为目标：访问请求只选定一个 Agent，token 也绑定到这个 Agent 和该服务器的 Agent 入站资源。
+Agent 入站 scope 不在默认的允许 scope 集合里（即 `openid profile identity`，应用没有声明允许 scope 时使用这个集合）。只把应用需要的类型加入它注册的允许 scope；如果请求未声明的 scope，Raft 会拒绝。安装应用并不意味着它可以把任意 Agent 或服务器作为目标：访问请求只选定一个 Agent，token 也绑定到这个 Agent 和该服务器的 Agent 入站资源。
 
 ### 2. 申请访问某个 Agent {#_2-request-access-to-one-agent}
 
@@ -941,7 +941,7 @@ Raft 把来源标记为 `type=third_party_app`，并投递应用身份、事件�
 
 先列出集成时实际会遇到的问题，再列出确切的错误字符串。
 
-1. **该用哪些域名**？token、userinfo、serverinfo 用 `https://api.raft.build`，浏览器的登录入口 URL 用 `https://app.raft.build`。没有别的。常见错误：拿前端的源去做 token 兑换。（→ A1、A3）
+1. **该用哪些域名**？token、userinfo、serverinfo 用 `https://api.raft.build`，浏览器的登录入口 URL 用 `https://app.raft.build`。没有别的。常见错误：拿前端的源去做 token 兑换。
 2. **报错「returnUrl does not match registered OAuth client.」怎么办**？你的 `return_to` 与注册值不一致：源、协议、路径不同，或者附加了参数。必须逐字节一致，不能多出结尾的斜杠，也不能附加 state 参数。
 3. **一个客户端能有两个回调地址吗**？不能。注册两个客户端，或者共用一个回调，在兑换之后根据 `userinfo.type` 分别处理。
 4. **我把授权码存了下来，又用了一次**。会报 `request_already_consumed`：授权码只能用一次。拿到就立即兑换，签发你自己的会话。在开发环境中，检查处理程序是不是触发了两次。
@@ -950,7 +950,7 @@ Raft 把来源标记为 `type=third_party_app`，并投递应用身份、事件�
 7. **CLI 不发送我的会话 cookie**。先确认回调在没有事先浏览器状态的情况下也会签发服务 cookie，再检查它的 origin、path、Secure 规则是否覆盖 `execution.base_url`。
 8. **我们在前面加了 Cloudflare Access，Agent 就用不了了**。这是设计如此：边界 SSO 是只给人类走的门。
 9. **部署成功，但生产环境的认证报 500**。密钥必须存在于应用运行的地方。检查线上运行环境，而不是代码托管平台。
-10. **由 Agent 主导的集成，需要人做几步**？两步：一次性回答需要决定的事项，批准一张注册应用的操作卡片。注册之后，应用必须可用。对于已安装的第三方应用，Raft 只会自动授予该安装已批准的登录 scope；新增的 scope，或之前被撤销的 Agent 访问，都需要批准。（→ A1、A2）
+10. **由 Agent 主导的集成，需要人做几步**？两步：一次性回答需要决定的事项，批准一张注册应用的操作卡片。注册之后，应用必须可用。对于已安装的第三方应用，Raft 只会自动授予该安装已批准的登录 scope；新增的 scope，或之前被撤销的 Agent 访问，都需要批准。
 11. **Agent 登录始终到不了我的回调**。检查应用在所选服务器上是否可用；第三方应用可能还在等待安装；检查返回网址是否为 HTTPS 且可以访问。
 12. **事件 POST 失败了，可以放心重试吗**？使用稳定的 `externalEventId`，重试会返回原来的事件，不会重复投递。
 13. **重新登录后仍然返回 401**。笼统的会话被拒响应，并不能证明会话已过期。只借助你应用的公开回调和日志，确认 Agent 回调在没有浏览器状态时也能成功，并设置了作用范围正确的服务 cookie。如果确实如此，而正式发布的 Raft 客户端仍然失败，就报告服务、操作、正式版 CLI 和 Raft Computer 的版本号，以及脱敏后的错误 ID 或请求 ID。不要查看或粘贴 Raft 的私有会话文件。
@@ -961,7 +961,7 @@ Raft 把来源标记为 `type=third_party_app`，并投递应用身份、事件�
 | --- | --- |
 | `returnUrl does not match registered OAuth client` | `return_to` 与注册值不是逐字节一致。 |
 | `OAuth client not found for server` | 未注册，或在所选服务器上不可用。这是刻意设计的笼统 404。 |
-| `Unsupported grant type` | `grant_type` 必须是 `authorization_code`。 |
+| `Unsupported grant type` | `grant_type` 必须是 `authorization_code`；Agent 入站访问请求则用 `urn:slock:grant-type:agent_request`。 |
 | `code is required` | token 兑换请求缺少回调中的授权码。 |
 | `request_already_consumed` | 这个授权码已经兑换过。只能使用一次。 |
 | `authorization_code_expired` | 人类登录的授权码没有在 10 分钟内兑换。请重新发起登录（`next_action: "obtain_fresh_authorization"`）。 |
