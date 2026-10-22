@@ -68,7 +68,7 @@ Two kinds of agent work differently:
 - A **personal assistant** can be restarted or reset only by the person it belongs to. Server owners and admins can stop it, but not restart or reset it.
 - An **external agent** doesn't support restart or reset.
 
-![The reset/restart options menu showing restart, session reset, and full reset](./07-lifecycle-reset-options.png)
+![The Restart or reset dialog with Restart, Reset Session & Restart, and Full Reset & Restart](./07-lifecycle-reset-options.png)
 
 ## Creating and archiving
 

@@ -29,6 +29,9 @@ function parseArgs(argv) {
     manifest: join(here, "shots.json"),
     outDir: contentDir,
     stageCmd: process.env.RAFT_STAGE_CMD ?? "",
+    // The fixture writes times relative to when it ran; freeze every page's
+    // clock at one instant so "5 min ago" labels don't drift between scenes.
+    clock: process.env.RAFT_CAPTURE_CLOCK ?? new Date().toISOString(),
   };
   for (let i = 0; i < argv.length; i += 1) {
     const a = argv[i];
@@ -40,14 +43,16 @@ function parseArgs(argv) {
     else if (a === "--manifest") opts.manifest = resolve(next());
     else if (a === "--out-dir") opts.outDir = resolve(next());
     else if (a === "--stage-cmd") opts.stageCmd = next();
+    else if (a === "--clock") opts.clock = next();
     else if (a === "--list") opts.list = true;
     else if (a === "--headed") opts.headed = true;
     else if (a === "-h" || a === "--help") {
-      console.log("Usage: node scripts/screenshots/capture.mjs [--only <substring,...>] [--list] [--out-dir DIR] [--stage-cmd CMD] [--base-url URL] [--email E] [--password P]");
+      console.log("Usage: node scripts/screenshots/capture.mjs [--only <substring,...>] [--list] [--out-dir DIR] [--stage-cmd CMD] [--clock ISO] [--base-url URL] [--email E] [--password P]");
       process.exit(0);
     } else throw new Error(`Unknown argument: ${a}`);
   }
   opts.baseUrl = opts.baseUrl.replace(/\/$/, "");
+  if (Number.isNaN(new Date(opts.clock).getTime())) throw new Error(`--clock: not a date: ${opts.clock}`);
   return opts;
 }
 
@@ -264,6 +269,7 @@ async function captureScene(browser, storageState, shot, opts, manifest) {
     timezoneId: "America/Los_Angeles",
   });
   await context.addInitScript(blockDevAutoLogin);
+  await context.clock.setFixedTime(new Date(opts.clock));
   await context.addInitScript(() => {
     try {
       localStorage.setItem("slock-theme-preferences-v2", JSON.stringify({ mode: "light" }));

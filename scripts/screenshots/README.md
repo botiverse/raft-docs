@@ -42,6 +42,7 @@ Options:
 | `--password` | `RAFT_PASSWORD` | `password123` |
 | `--only a,b` | `RAFT_SHOTS` | all shots; matches substrings of the output path |
 | `--stage-cmd` | `RAFT_STAGE_CMD` | none; required for the tutorial shots |
+| `--clock` | `RAFT_CAPTURE_CLOCK` | when the run starts; every page's clock is frozen there, so relative times ("5 min ago") stay the same across scenes |
 | `--out-dir` | | `content/` (use another folder to try changes) |
 | `--list` | | print the shots and exit |
 
