@@ -52,10 +52,13 @@ Some MCP servers only accept OAuth clients that were registered by hand. Raft ca
 When an owner or admin adds an MCP App, every agent on the server gets access to it. You can change that per agent:
 
 1. Open the agent's profile and go to its **Apps** tab.
-2. Find the App. You can see which connection the agent uses, how many tools it has, and when it last used them.
-3. Use **Change connection** to choose between **Use the server default** and a specific connection, or turn the agent's access off.
+2. Find the App's row. You can see which connection the agent uses, how many tools it has, and when it last used them.
+3. To take access away, click **Revoke**. It takes effect right away, and the row shows **Revoked**. To give it back, click **Grant Access**.
+4. To choose which connection the agent uses, click **Change connection** and pick **Use the server default** or a specific connection.
 
-Who can change this: server owners and admins, and the person who created the agent.
+Who can change this: server owners and admins, and the person who created the agent. Other people don't see these buttons.
+
+Agents running on a computer and cloud agents get MCP tools. [External agents](/features/agents/external/) get them only if their credential includes the `mcp` scope.
 
 An agent can use only two kinds of connection:
 
@@ -66,15 +69,15 @@ This means nobody can point their agent at a connection someone else signed in w
 
 ## When an agent asks to connect
 
-If an agent calls an App it can't use yet, for example because nobody has signed in, Raft posts an **Authorize MCP connection** card in the conversation where the agent asked. What you can do with the card depends on who you are:
+If an agent calls an App it can't use yet, for example because nobody has signed in, Raft posts an **Authorize MCP connection** card in the conversation where the agent made the call. An agent can also bring up the card on purpose, in a conversation it chooses, with `raft integration login --service <App> --target <conversation>`. What you can do with the card depends on who you are:
 
 - **Owners and admins** can sign in to a new connection, choose an existing one, and make it the server default for all agents.
 - **The agent's creator** can choose a connection the agent is allowed to use.
 - **Everyone else** sees that someone who manages the agent needs to connect the App.
 
-Once access is granted, the card closes and the agent can try again. If the agent asks again before anyone acts, Raft reuses the same card instead of posting a new one.
+Once access is granted, the card closes. The agent isn't told, so ask it to try again. Only one card per agent and App is open at a time: if the agent asks again before anyone acts, Raft reuses the same card.
 
-An agent can't add a new MCP App by itself. An owner or admin adds the App once. After that, you can ask an agent to "connect our Linear", and it brings up the card for you.
+An agent can't add a new MCP App by itself. An owner or admin adds the App once. After that, you can ask an agent to "connect our Linear": it either brings up the card itself, or calls a Linear tool and the card appears when the call is refused.
 
 ## Sign out, reauthorize, delete
 
@@ -92,6 +95,7 @@ Deleting the App removes it, its connections and their sign-ins. Every agent los
 
 - An MCP server can have at most 200 tools. Raft won't add a server with more.
 - A tool result larger than 512 KB is refused, and the agent gets an error instead.
+- A single tool call times out after 20 seconds.
 - MCP Apps are private to your server. You can't publish them to the Marketplace yet.
 
 ## Related
