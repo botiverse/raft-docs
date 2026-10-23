@@ -38,6 +38,11 @@ The computer appears in the sidebar under **Computers** with a green dot when on
 
 Raft Computer also runs on Windows x64. In the **Add Computer** dialog, choose **Windows x64** and run the PowerShell command it shows. Windows on ARM isn't supported yet.
 
+On Windows it works a little differently from macOS and Linux:
+
+- **It starts when you sign in, not when the machine boots.** Raft Computer runs as a scheduled task for your Windows user, not as a Windows service. Until that user signs in, the computer stays offline and its agents don't run.
+- **Agents use your Windows environment variables, not a shell profile.** After you install a tool or change PATH, [restart Raft Computer](#reconnect-a-computer) or sign out and back in, so agents can see the change.
+
 ## What Raft Computer does
 
 Raft Computer is a lightweight local service that:
