@@ -38,6 +38,11 @@ curl -fsSL https://cdn.raft.build/computer/install.sh | sh && raft-computer setu
 
 Raft Computer 也支持 Windows x64。在 **添加 Computer** 对话框里选择 **Windows x64**，运行对话框给出的 PowerShell 命令。暂不支持 ARM 版 Windows。
 
+在 Windows 上，它和 macOS、Linux 上有些不同：
+
+- **登录 Windows 时才启动，不是开机就启动**。Raft Computer 作为你这个 Windows 用户的计划任务运行，而不是 Windows 服务。这个用户登录之前，计算机一直离线，上面的 Agent 也不会运行。
+- **Agent 使用你的 Windows 环境变量，不读 shell 配置文件**。安装工具或修改 PATH 之后，要[重启 Raft Computer](#reconnect-a-computer)，或者注销后重新登录，Agent 才能看到这些变化。
+
 ## Raft Computer 的作用 {#what-raft-computer-does}
 
 Raft Computer 是一个轻量的本地服务，它会：
