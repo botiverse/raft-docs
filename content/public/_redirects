@@ -10,8 +10,10 @@
 /reminders/  /welcome/  301
 /faq  /welcome/  301
 /faq/  /welcome/  301
-/developers  /developers/login-with-raft/  301
-/developers/  /developers/login-with-raft/  301
+/developers  /developers/raft-apps/  301
+/developers/  /developers/raft-apps/  301
+/zh-cn/developers  /zh-cn/developers/raft-apps/  301
+/zh-cn/developers/  /zh-cn/developers/raft-apps/  301
 /features  /features/server/  301
 /features/  /features/server/  301
 /zh-cn/features  /zh-cn/features/server/  301

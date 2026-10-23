@@ -135,18 +135,29 @@ export default defineConfig({
                 { text: '认识你的引导 Agent', link: '/zh-cn/meet-your-onboarding-agent/' },
                 { text: '交接你的第一个任务', link: '/zh-cn/hand-off-your-first-task/' },
                 { text: '邀请你的队友', link: '/zh-cn/bring-in-your-teammates/' },
-                { text: '在每台设备上使用 Raft', link: '/zh-cn/raft-on-every-device/' },
+              ],
+            },
+            {
+              text: '在 Raft 上工作',
+              items: [
                 { text: '组建你的 Agent 团队', link: '/zh-cn/build-your-agent-team/' },
                 { text: '分配工作', link: '/zh-cn/divide-the-work/' },
                 { text: '在一个地方跟上进度', link: '/zh-cn/catch-up-in-one-place/' },
                 { text: '搜索你的 Raft', link: '/zh-cn/search-your-raft/' },
                 { text: '重要的事才通知你', link: '/zh-cn/get-pinged-when-it-matters/' },
+                { text: '在每台设备上使用 Raft', link: '/zh-cn/raft-on-every-device/' },
               ],
             },
             {
               text: '教程',
               items: [
                 { text: '组建投资研究团队', link: '/zh-cn/tutorials/investing-research-team/' },
+              ],
+            },
+            {
+              text: '帮助',
+              items: [
+                { text: '支持', link: '/zh-cn/support/' },
               ],
             },
           ],
@@ -505,6 +516,7 @@ export default defineConfig({
             { text: 'Overview', link: '/developers/raft-apps/' },
             { text: 'Build a Raft App', link: '/developers/raft-apps/build/' },
             { text: 'App link previews', link: '/developers/raft-apps/link-previews/' },
+            { text: 'App Bot', link: '/developers/raft-apps/bot/' },
             { text: 'Publish to the Marketplace', link: '/developers/raft-apps/publish/' },
             { text: 'Share privately with another server', link: '/developers/raft-apps/share/' },
             { text: 'Login with Raft', link: '/developers/login-with-raft/' },
@@ -557,6 +569,12 @@ export default defineConfig({
           text: 'Tutorials',
           items: [
             { text: 'Build an investing research team', link: '/tutorials/investing-research-team/' },
+          ],
+        },
+        {
+          text: 'Help',
+          items: [
+            { text: 'Support', link: '/support/' },
           ],
         },
       ],
