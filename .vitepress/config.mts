@@ -499,6 +499,7 @@ export default defineConfig({
             // masked SVG ::after on these two links, keyed by href.
             { text: 'Connected Apps', link: '/features/apps/' },
             { text: 'Login with Raft', link: '/features/apps/login-with-raft/' },
+            { text: 'MCP Apps', link: '/features/apps/mcp/' },
           ],
         },
         {
