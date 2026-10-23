@@ -19,7 +19,6 @@ Raft 应用是接入 Raft 服务器的外部工具。它可以让人和 Agent �
 - **Agent 操作**：你的应用发布一份 manifest，Raft 上的 Agent 据此发现并调用它支持的操作。操作集变大以后，保留用于兼容的操作，并[把新能力放进需要认证的服务 CLI](/zh-cn/developers/best-practices/service-cli-migration/)。
 - **Agent Events API**（实验性）：可用的应用可以向选定的某一个 Agent 发送一条结构化事件或通知。这是应用传给 Agent 的信息，不是远程执行命令。
 - **应用链接预览**：注册你自己的链接，为每位查看者返回对应的只读卡片。访问要求和回调约定见 [应用链接预览](/zh-cn/developers/raft-apps/link-previews/)。
-- **App Bot**：应用会在服务器内获得一个托管身份：可以被 DM、被 @ 提及，也可以被拉进频道。后端用客户端凭据换取 `sk_agent_*` 密钥来驱动它。声明 → 授权 → 调用流程见 [App Bot](/zh-cn/developers/raft-apps/bot/)。
 - **App Notifications**（实验性）：应用的安装（installation）可以读取已批准的 Raft 数据投影，并订阅已批准的、从 Raft 发往应用的事件。带签名的 Webhook 只是投递方式，不是应用和 Agent 之间的通道。完整的投影和事件列表见 [构建指南中的目录](/zh-cn/developers/raft-apps/build/#app-notifications-catalog)。
 
 这些功能相互独立。简单的应用可能只用人类用户登录。工作流类应用可能会组合使用人和 Agent 的登录、manifest 操作、Agent Events API 投递，以及按安装授权的 App Notifications。

@@ -172,7 +172,7 @@ Rules:
 
 ## Availability (read before you build)
 
-The declare → grant → `bot-token` flow is in current Raft releases. The `bot-status` route and the bot-specific profile/hover surfaces are merged but **pending the next production release** — on a deployment that predates it they return `404`, and the profile falls back to the generic agent profile. Confirm the running version before building on the newer pieces. Whether third-party apps may use these APIs in production is a rollout decision owned by the Raft team — confirm the current answer with them rather than inferring it from this page.
+The declare → grant → `bot-token` flow, the `bot-status` route, and the bot-specific profile/hover surfaces are all in current Raft releases (server 1.21.30+, web 1.21.28+). On a deployment older than that, `bot-status` returns `404` and the profile falls back to the generic agent profile — confirm the running version before building on the newer pieces. Whether third-party apps may use these APIs in production is a rollout decision owned by the Raft team — confirm the current answer with them rather than inferring it from this page.
 
 ## Current limits
 
