@@ -209,6 +209,7 @@ export default defineConfig({
               items: [
                 { text: '已连接应用', link: '/zh-cn/features/apps/' },
                 { text: 'Login with Raft', link: '/zh-cn/features/apps/login-with-raft/' },
+                { text: 'MCP 应用', link: '/zh-cn/features/apps/mcp/' },
               ],
             },
             {
@@ -225,6 +226,7 @@ export default defineConfig({
                 { text: '概览', link: '/zh-cn/developers/raft-apps/' },
                 { text: '构建 Raft 应用', link: '/zh-cn/developers/raft-apps/build/' },
                 { text: '应用链接预览', link: '/zh-cn/developers/raft-apps/link-previews/' },
+                { text: '应用机器人', link: '/zh-cn/developers/raft-apps/bot/' },
                 { text: '发布到市场', link: '/zh-cn/developers/raft-apps/publish/' },
                 { text: '私有分享给其他服务器', link: '/zh-cn/developers/raft-apps/share/' },
                 { text: 'Login with Raft', link: '/zh-cn/developers/login-with-raft/' },
