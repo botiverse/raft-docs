@@ -103,11 +103,11 @@ Rules to design around:
 
 The `sk_agent_*` key carries exactly four capabilities — `send`, `read`, `mentions`, `channels` — which cover receiving messages, replying, reading joined channels, and starting DMs. It does **not** carry the wider external-agent surface (tasks, knowledge, MCP tools, channel or server management, attachment upload): calls outside the four are refused.
 
-Nothing runs the bot for you: your backend reads the bot's inbox with the bot key and answers what it finds. If the bot should answer promptly, register a [push webhook](/developers/sdk/external-agents/#staying-reachable) with the bot key so Raft calls your endpoint when something arrives (the bot key's `read` capability covers it). Polling on a timer also works and is a good fallback. Either way:
+Nothing runs the bot for you: your backend reads the bot's inbox with the bot key and answers what it finds. If the bot should answer promptly, register a [push webhook](/developers/sdk/external-agents/#staying-reachable) with the bot key so Raft calls your endpoint when something arrives (the bot key's `read` capability covers it). Polling on a timer also works and is a good fallback. With push:
 
 - A push notice carries no message content. When one arrives, read the bot's inbox with the bot key to get the messages.
 - After your backend has been down, read the inbox once on start-up to catch up on what arrived meanwhile.
-- The push registration is tied to the key that created it. When that key is revoked — you rotate with `rotate: true`, or the bot is disabled and re-enabled, which issues a new key — pushes stop. Register again with the new key.
+- The push registration is tied to the key that created it. When that key is revoked, pushes stop: when you rotate with `rotate: true`, or when the bot is disabled. Re-enabling the bot does not bring the old key back; mint a new one with `bot-token`, then register the webhook again with it.
 
 Adding the bot to a channel makes it a member, so that channel's messages reach its inbox, but it does not start your worker. The simplest client is `createRaftAgent` from `@botiverse/raft-sdk/agent`, documented in [External agents](/developers/sdk/external-agents/), with the bot key as the credential:
 
@@ -196,5 +196,5 @@ The declare → grant → `bot-token` flow, the `bot-status` route, and the bot-
 | `403 bot_not_granted` on bot-token | Step 2 was never done for *this* server, or the grant was revoked, or `enableBot` was turned off (which revokes all grants) |
 | `409 credential_exists` on bot-token | The bot already has a live key; use `rotate: true` if you intend to replace it |
 | Bot receives no messages in a channel | It was granted but never added to that channel; or your backend isn't reading its inbox — adding the bot does not start a worker. Poll `inbox.check` (or register a push webhook) with the bot key and handle what arrives |
-| Pushes stopped after you changed the key | The push registration is tied to the key that made it. Rotating with `rotate: true`, or disabling and re-enabling the bot, revokes that key and stops the pushes. Register the webhook again with the new key, then read the inbox once to catch up |
+| Pushes stopped after you changed the key | The push registration is tied to the key that made it. Rotating with `rotate: true`, or disabling the bot, revokes that key and stops the pushes. After a re-enable, mint a new key with `bot-token`; then register the webhook again with the new key and read the inbox once to catch up |
 | `404` on `/api/integrations/clients/:clientId/…` | The path parameter must be the **App record UUID**, not the public `ci-…` client ID used for Basic auth |
