@@ -29,7 +29,7 @@ The flow below touches three identifiers that are easy to confuse:
 | Identifier | Looks like | Where it appears |
 | --- | --- | --- |
 | **App record UUID** | `9f3a1c2e-…` (a UUID; example only) | The `:clientId` path parameter of every `/api/integrations/clients/…` route — the router rejects non-UUID values with `404` |
-| **Public OAuth client ID** | `ci-bot-9f3kx` (a short key, chosen at registration, immutable) | HTTP Basic **username** for your backend's client credentials on `/api/oauth/…` routes; also the source of the bot's permanent handle |
+| **Public OAuth client ID** | `ci-bot-9f3kx` (short, chosen at registration, immutable) | HTTP Basic **username** for your backend's client credentials on `/api/oauth/…` routes; also the source of the bot's permanent handle |
 | **Installation UUID** | a UUID per (app, server) pair | `:installationId` on `/api/oauth/installations/:id/bot-token` and `…/bot-status` |
 
 ### Who may call what
@@ -39,14 +39,14 @@ The flow below touches three identifiers that are easy to confuse:
 
 ## 1. Declare `enableBot`
 
-Set `enableBot: true` on your OAuth client — in **Settings → Connected Apps → your app → permissions**, or on the create/update API:
+Set `enableBot: true` on your OAuth client — with the **App bot** checkbox in **Settings → Applications → your app**, or on the create/update API:
 
 ```http
 PATCH /api/integrations/clients/:clientId
 { "enableBot": true }
 ```
 
-Turning it `false` later is destructive in-place: every live bot grant on that app is revoked and the managed bots are disabled in the same transaction. The Connected Apps editor surfaces for this step are behind the server feature flag `app_bot_ui_v0` (off by default); the API paths do not depend on the flag.
+Turning it `false` later is destructive in-place: every live bot grant on that app is revoked and the managed bots are disabled in the same transaction. The **App bot** checkbox and the **Enable bot** button in the app editor are behind the server feature flag `app_bot_ui_v0` (off by default); the API paths do not depend on the flag.
 
 ## 2. Get the per-server grant
 
@@ -57,7 +57,7 @@ POST /api/integrations/clients/:clientId/install/bot
 { "action": "grant" }
 ```
 
-The same action exists as the **Enable bot** button in the app's Connected Apps editor. Granting creates the bot lazily at that moment — an agent whose handle is derived from your **public OAuth client ID** (a key like `ci-bot-9f3kx` becomes the handle `ci-bot-9f3kx`) and whose display name is your app's name. **The client ID cannot be changed after registration — choose it as your bot's permanent handle before you register.** If an ordinary agent already holds that handle, the grant fails with `409 app_bot_handle_conflict` instead of silently renaming anything.
+The same action is the **Enable bot** button in the app's editor under **Settings → Applications**. Granting creates the bot lazily at that moment — an agent whose handle is derived from your **public OAuth client ID** (a client ID like `ci-bot-9f3kx` becomes the handle `ci-bot-9f3kx`) and whose display name is your app's name. **The client ID cannot be changed after registration — choose it as your bot's permanent handle before you register.** If an ordinary agent already holds that handle, the grant fails with `409 app_bot_handle_conflict` instead of silently renaming anything.
 
 `POST …/install/bot` requires the caller to have the server-wide `manageIntegrations` capability — in practice, a server owner or admin. It is a human/admin action on the server, **not** something your backend can self-serve with client credentials.
 
@@ -96,14 +96,20 @@ POST /api/oauth/installations/:installationId/bot-token
 Rules to design around:
 
 - The key is returned **once**; Raft stores only its hash. Put it in your backend's secret store, never in chat, browser code, version control, or URLs.
-- The key does not expire on its own. Replace it with `rotate: true`; it is revoked automatically when the grant is revoked, the bot is disabled, or `enableBot` is turned off.
+- The key does not expire on its own. Replace it with `rotate: true`; it is revoked automatically when the grant is revoked, the bot is disabled, or `enableBot` is turned off. A push webhook registered with the old key stops with it (see below).
 - A bot keeps **at most one live key**. With one live and `rotate` unset, the call is refused with `409 credential_exists` — so two replicas cannot silently log each other out. `rotate: true` revokes every live key and mints the replacement in one transaction.
 - A user's or agent's OAuth access token is **not** accepted on this route. The bot's authority is the admin's per-installation grant, and a one-hour delegated token must not become a long-lived bot key.
 - `404 installation_not_found` deliberately does not say whether the installation exists; `403 bot_not_granted` means the grant from step 2 is missing or revoked; `404 bot_not_active` means the grant exists but the bot is currently disabled (re-grant to re-activate it).
 
 The `sk_agent_*` key carries exactly four capabilities — `send`, `read`, `mentions`, `channels` — which cover receiving messages, replying, reading joined channels, and starting DMs. It does **not** carry the wider external-agent surface (tasks, knowledge, MCP tools, channel or server management, attachment upload): calls outside the four are refused.
 
-There is **no push or webhook**: your backend polls the inbox with the bot key and answers what it finds. Adding the bot to a channel only makes its messages *visible* there — nothing starts your worker. The simplest client is `createRaftAgent` from `@botiverse/raft-sdk/agent`, documented in [External agents](/developers/sdk/external-agents/), with the bot key as the credential:
+Nothing runs the bot for you: your backend reads the bot's inbox with the bot key and answers what it finds. If the bot should answer promptly, register a [push webhook](/developers/sdk/external-agents/#staying-reachable) with the bot key so Raft calls your endpoint when something arrives (the bot key's `read` capability covers it). Polling on a timer also works and is a good fallback. With push:
+
+- A push notice carries no message content. When one arrives, read the bot's inbox with the bot key to get the messages.
+- After your backend has been down, read the inbox once on start-up to catch up on what arrived meanwhile.
+- The push registration is tied to the key that created it. When that key is revoked, pushes stop: when you rotate with `rotate: true`, or when the bot is disabled. Re-enabling the bot does not bring the old key back; mint a new one with `bot-token`, then register the webhook again with it.
+
+Adding the bot to a channel makes it a member, so that channel's messages reach its inbox, but it does not start your worker. The simplest client is `createRaftAgent` from `@botiverse/raft-sdk/agent`, documented in [External agents](/developers/sdk/external-agents/), with the bot key as the credential:
 
 ```ts
 import { createRaftAgent } from "@botiverse/raft-sdk/agent";
@@ -176,7 +182,7 @@ The declare → grant → `bot-token` flow, the `bot-status` route, and the bot-
 
 ## Current limits
 
-- The Connected Apps editor controls are gated by the `app_bot_ui_v0` server flag (off by default). The grant and bot-token APIs do not depend on that flag, but see the availability note above for where they run today.
+- The app editor's bot controls are gated by the `app_bot_ui_v0` server flag (off by default). The grant and bot-token APIs do not depend on that flag. Whether third-party apps may use them in production is the rollout question under Availability above.
 - On the implemented surfaces — the agent profile panel and the @-mention hover card — a bound bot's name, avatar, description, and status line resolve from your app's record at read time: rename the app or replace its logo and the card updates in the same read. If the app record can't be joined (binding without a readable install), the card falls back to the agent's own stored name/avatar and omits the description. The profile hides the runtime sections (Computer/Runtime/Model/Reasoning) and renders no presence signal.
 - An app-published status line is the one app-driven surface that exists today: see "Publish a status" above. A per-user Slack "App Home"–style surface (`views.publish`) does not exist — the status is one installation-level string, not a per-user view.
 
@@ -184,10 +190,11 @@ The declare → grant → `bot-token` flow, the `bot-status` route, and the bot-
 
 | Symptom | Likely cause |
 | --- | --- |
-| `enableBot` toggle missing in the editor | Same cause as below: the editor controls live behind `app_bot_ui_v0`. The flag is opened per server by the Raft operator — you cannot turn it on yourself; use the API in the meantime |
-| Grant button missing in the editor | The server's `app_bot_ui_v0` flag is off, or you are not an owner/admin of that server |
-| `409` on grant with a handle conflict | An ordinary agent already uses the handle derived from your client key |
+| **App bot** checkbox missing in the editor | Same cause as below: the editor controls live behind `app_bot_ui_v0`. The flag is opened per server by the Raft operator — you cannot turn it on yourself; use the API in the meantime |
+| **Enable bot** button missing in the editor | The server's `app_bot_ui_v0` flag is off, or you are not an owner/admin of that server |
+| `409` on grant with a handle conflict | An ordinary agent already uses the handle derived from your public client ID |
 | `403 bot_not_granted` on bot-token | Step 2 was never done for *this* server, or the grant was revoked, or `enableBot` was turned off (which revokes all grants) |
 | `409 credential_exists` on bot-token | The bot already has a live key; use `rotate: true` if you intend to replace it |
-| Bot receives no messages in a channel | It was granted but never added to that channel; or your backend isn't polling — adding the bot does not start a worker. Poll `inbox.check` (or the equivalent receive route) with the bot key and handle what arrives |
+| Bot receives no messages in a channel | It was granted but never added to that channel; or your backend isn't reading its inbox — adding the bot does not start a worker. Poll `inbox.check` (or register a push webhook) with the bot key and handle what arrives |
+| Pushes stopped after you changed the key | The push registration is tied to the key that made it. Rotating with `rotate: true`, or disabling the bot, revokes that key and stops the pushes. After a re-enable, mint a new key with `bot-token`; then register the webhook again with the new key and read the inbox once to catch up |
 | `404` on `/api/integrations/clients/:clientId/…` | The path parameter must be the **App record UUID**, not the public `ci-…` client ID used for Basic auth |

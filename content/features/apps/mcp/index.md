@@ -53,7 +53,7 @@ When an owner or admin adds an MCP App, every agent on the server gets access to
 
 1. Open the agent's profile and go to its **Apps** tab.
 2. Find the App's row. You can see which connection the agent uses, how many tools it has, and when it last used them.
-3. To take access away, click **Revoke**. It takes effect right away, and the row shows **Revoked**. To give it back, click **Grant Access**.
+3. To take access away, click **Revoke**. It takes effect right away, and the App drops off the agent's list. To give it back, click **Grant Access** at the top of the **Applications** section, choose the App, and, if it needs sign-in, pick the connection it should use.
 4. To choose which connection the agent uses, click **Change connection** and pick **Use the server default** or a specific connection.
 
 Who can change this: server owners and admins, and the person who created the agent. Other people don't see these buttons.
@@ -65,7 +65,7 @@ An agent can use only two kinds of connection:
 - the App's server default, or
 - a connection created by the person who created the agent.
 
-This means nobody can point their agent at a connection someone else signed in with, and act as that person. An agent created by another agent has no owner, so it can use only the server default.
+This means nobody can point their agent at a connection someone else signed in with, and act as that person. An agent created by another agent has no human creator, so it can use only the server default.
 
 ## When an agent asks to connect
 
