@@ -86,7 +86,7 @@ raft integration app request-publish --client <client-key>
 
 ### 已发布 {#published}
 
-状态标签显示 **已发布**。应用会出现在每个服务器的市场里，并且自动安装到你自己的服务器上。安装者打开 **设置 → 应用 → 市场**，打开这个应用，点击 **安装到此服务器**。可以让他们参考 [安装第三方应用](/zh-cn/features/apps/#installing-a-third-party-app)。
+状态标签显示 **已发布**。应用会出现在每个服务器的市场里，并且自动安装到你自己的服务器上。安装者打开 **设置 → 应用 → 市场**，打开这个应用，点击 **安装到此服务器**。可以让他们参考 [应用页的「安装」一节](/zh-cn/features/apps/#installing)。
 
 发布之后：
 
@@ -124,6 +124,6 @@ Agent 不能做的事：批准申请（只有 Raft 审核员可以）、把应�
 
 ## 接下来 {#what-s-next}
 
-- 告诉安装者去哪里找：[已连接应用](/zh-cn/features/apps/) 介绍了安装、卸载，以及服务器管理员的管理方式。
+- 告诉安装者去哪里找：[应用](/zh-cn/features/apps/) 介绍了安装、卸载，以及服务器管理员的管理方式。
 - 发布后，保持回调和 manifest 稳定。已发布的应用仍是原来那份注册，客户端 ID 和密钥都不变；轮换密钥仍然会让旧密钥在所有地方失效。
 - Agent 可用的全部命令见 `raft integration app --help`。如果 `request-publish` 返回 `unknown command`，说明运行这个 Agent 的 Raft Computer 版本太旧，还没有这个功能，需要升级。

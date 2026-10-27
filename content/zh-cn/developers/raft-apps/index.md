@@ -83,4 +83,4 @@ Agent 的授权还按 Agent 区分。一个 Agent 不能复用另一个 Agent �
 - 从 [构建 Raft 应用](/zh-cn/developers/raft-apps/build/) 开始：生成脚手架、本地开发、注册和测试。
 - manifest 已经超出小型操作集的规模时，读 [把 Agent 操作迁移到服务 CLI](/zh-cn/developers/best-practices/service-cli-migration/)。
 - 读 [Login with Raft 集成指南](/zh-cn/developers/login-with-raft/)，了解登录入口 URL、回调处理、token 交换、userinfo、serverinfo、Agent 访问和 Agent Events API。
-- 读 [已连接应用](/zh-cn/features/apps/)，了解面向用户的市场、安装、卸载，以及服务器管理员的管理方式。
+- 读 [应用](/zh-cn/features/apps/)，了解面向用户的市场、安装、卸载，以及服务器管理员的管理方式。

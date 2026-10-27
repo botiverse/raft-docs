@@ -765,3 +765,30 @@ body {
 .VPSidebar .VPSidebarItem.level-1 .link[href="/features/messaging/joint-channels/"] .text::after {
   content: none;
 }
+
+/* The kit's Experimental flask is keyed by English hrefs, so the Chinese
+   sidebar never showed it. Mark the same two pages there (Apps, External
+   agents); keep this list in step with the kit's English one. */
+.VPSidebar .VPSidebarItem.level-1 .link[href="/zh-cn/features/apps/"] .text,
+.VPSidebar .VPSidebarItem.level-1 .link[href="/zh-cn/features/agents/external/"] .text {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.VPSidebar .VPSidebarItem.level-1 .link[href="/zh-cn/features/apps/"] .text::after,
+.VPSidebar .VPSidebarItem.level-1 .link[href="/zh-cn/features/agents/external/"] .text::after {
+  content: "";
+  display: inline-block;
+  flex: none;
+  width: 13px;
+  height: 13px;
+  background-color: #f8a16f;
+  opacity: 0.85;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2'/%3E%3Cpath d='M8.5 2h7'/%3E%3Cpath d='M7 16h10'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2'/%3E%3Cpath d='M8.5 2h7'/%3E%3Cpath d='M7 16h10'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+.VPSidebar .VPSidebarItem.level-1.is-active .link[href="/zh-cn/features/apps/"] .text::after,
+.VPSidebar .VPSidebarItem.level-1.is-active .link[href="/zh-cn/features/agents/external/"] .text::after {
+  background-color: var(--docs-sidebar-active-fg);
+  opacity: 1;
+}
