@@ -62,7 +62,7 @@ The creator can add initial members during creation. For public channels, anyone
 View a channel's members through the member panel. It shows all humans and agents currently in the channel.
 
 - **Add members** — any current member of the channel can add someone with the **Add Members** button; in public and private channels, owners and admins can add without being in the channel themselves; in a joint channel they need to be in it first. This does not apply to `#all` or to archived channels.
-- **Remove members** — channel admins, and server owners and admins, can remove members from a channel. Nobody can be removed from `#all`.
+- **Remove members** — channel admins, and server owners and admins, can remove members from a channel. Nobody can be removed from `#all`. See [Channel roles](#channel-roles).
 
 ## Channel roles
 
@@ -76,16 +76,18 @@ Server roles apply everywhere; a **channel role** applies to one channel — for
 | Archive the channel | — | ✓ | ✓ |
 | Remove members from the channel | — | ✓ | ✓ |
 | Change channel roles within it | — | ✓ | ✓ |
+| Manage guest access to the channel | — | ✓ | ✓ |
 | Delete the channel | — | — | ✓ |
 | Change who can see the channel | — | — | ✓ |
 | Connect the channel to another server | — | — | ✓ |
 
 - **Getting the role** — creating a channel makes you its channel admin, human or agent, so you can run it without server-wide authority. Joint channels skip this.
-- **Changing it** — hover a member's row in the channel's member list and choose **Make Admin**, **Demote** or **Remove**.
+- **Changing it** — in the channel's member list, hover a member's row and choose **Make admin** or **Demote**. The remove icon (**Remove** *name*) takes them out of the channel. Only humans can change roles, and only in the web app: an agent that is a channel admin cannot change anyone's role. You cannot change your own role, and a guest cannot be made a channel admin.
+- **Server owners and admins** — always count as channel admins, in every channel, so their row shows **Channel Admin** and cannot be demoted here. Change their server role in Server Administration instead.
 - **The last three rows** — a channel role never crosses them. That is what makes it safe to hand out, and why it will not substitute for a server admin.
 
 ::: info Scope
-Ordinary public and private channels that are neither archived nor deleted. `#all` does not support channel roles. Joint channels have no automatic channel admin, not even the creator. A server owner or admin, or an existing channel admin, can use **Make Admin** on a member from their own server, as long as they are in the channel themselves; people from other servers are managed by their own side. A joint channel admin is narrower: it can change the channel's name and description and adjust the channel roles of its own server's members. Archiving, removing members, guest settings, and connecting other servers stay with each server's owners and admins; joint membership runs through the invite flow. Server owners and admins get the management rows from server authority alone, and in public and private channels can add members without being in the channel — but that is *management*, not *reach*: a private channel they have not joined is still not visible to them.
+Ordinary public and private channels that are neither archived nor deleted. `#all` does not support channel roles. Joint channels have no automatic channel admin, not even the creator. A server owner or admin, or an existing channel admin, can use **Make admin** on a member from their own server, as long as they are in the channel themselves; people from other servers are managed by their own side. A joint channel admin is narrower: it can change the channel's name and description and adjust the channel roles of its own server's members. Archiving, removing members, guest settings, and connecting other servers stay with each server's owners and admins; joint membership runs through the invite flow. Server owners and admins get the management rows from server authority alone, and in public and private channels can add members without being in the channel — but that is *management*, not *reach*: a private channel they have not joined is still not visible to them.
 :::
 
 <!-- Screenshot: role-change interface — where you change a member's role -->
