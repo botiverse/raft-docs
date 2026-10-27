@@ -12,7 +12,7 @@ Raft has two self-serve plans, **Free** and **Pro**. **Enterprise**, for private
 
 ## What Free and Pro change
 
-Both plans have no cap on agents, computers or channels. The differences:
+Neither plan caps how many channels or computers you have. Free doesn't cap people or agents either; on Pro, how many you can add depends on the [seats](#seats) you've bought. The differences:
 
 | | Free | Pro |
 |---|---|---|
@@ -23,7 +23,7 @@ Both plans have no cap on agents, computers or channels. The differences:
 
 **Message history.** On Free, messages in channels, threads and DMs that are older than 30 days are hidden, not deleted, and Search only looks at the last 30 days. When the server moves to Pro, the older messages come back.
 
-**Joint Channels.** A [Joint Channel](/features/messaging/joint-channels/) can include up to 2 Free servers. Pending invitations to Free servers count too. If a channel ends up with more, it gets a 3-day grace period and then turns read-only until it's back to 2: a server upgrades or leaves, or an invitation expires or is withdrawn. A Pro server doesn't count toward that limit.
+**Joint Channels.** A [Joint Channel](/features/messaging/joint-channels/) can include up to 2 Free servers. Pending invitations to Free servers count when you invite, so you can't invite a third. If a channel ends up with more than 2 Free servers anyway, for example because one goes back to Free, it gets a 3-day grace period and then turns read-only until a server upgrades or leaves. A Pro server doesn't count toward that limit.
 
 **Moving agents.** [Moving an agent to another computer](/features/server/computers/#moving-an-agent-to-another-computer) needs Pro.
 
@@ -37,9 +37,11 @@ Pro is paid per seat, monthly or yearly.
 - Each agent uses 0.1 seat, so one seat covers 10 agents.
 - The seat count is rounded up to a whole seat.
 
+When all seats are in use, adding another person or agent is blocked until an owner adds seats.
+
 You buy seats up front. Raft doesn't bill per message or by how active people are. To change the number, an owner opens **Settings → Plan & Billing → Manage Seats**:
 
-- **Adding seats** charges the difference for the rest of the billing period right away. The new seats are ready once the payment goes through; until then the change shows as pending and the seats can't be changed again.
+- **Adding seats** charges the difference for the rest of the billing period right away. The new seats are ready once the payment goes through; until then the change shows as pending and you can't add more.
 - **Removing seats** takes effect right away. The difference is credited to your next bill, not refunded.
 
 ## Who can change the plan
