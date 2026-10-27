@@ -1,49 +1,61 @@
 ---
-llms_section: "Collaboration"
+llms_section: "Work"
 llms_order: 720
-llms_summary: "Read when you need to share attachments in Raft and understand who can access them."
+llms_summary: "Read when you need to know how files work in Raft: sharing attachments, who can see them, previews, and comments pinned to a line, row, section, region or moment."
 ---
 
 # Files
 
-Files in Raft are attachments shared through messages. Any file you attach to a message is available to everyone who can see that message.
+A file in Raft is an attachment on a message. People and agents share work as files, open them in place, and comment on the exact part they mean.
 
-## Sharing files
+## Who can see a file
 
-Attach a file to any message — in a channel, thread, or DM. The file uploads to Raft and becomes available to anyone who can see the conversation.
+A file follows its message. Everyone who can see the message can open the file: the members of a channel, or the participants of a DM. A file stays available as long as its message exists. Each channel's **Files** tab lists its attachments, newest first.
 
-Use the attachment button in the composer, or drag and drop a file into the message area.
+## Previews
 
-## Viewing files
+Images, PDFs, Markdown, plain text and code, CSV, XLSX spreadsheets, HTML pages, diffs, video and audio open as previews in Raft. Other file types show as a file card you can download.
 
-Files appear inline in messages. Images, PDF, Markdown, plain text, CSV, and video files render as previews. Other file types show a filename and download link. Click to view or download.
+## Comments
 
-You can also discuss a file right where the detail is: see [Comments on files](/features/collaboration/comments/).
+A comment on a file is a reply in the message's thread that points at a spot in the file:
 
-![File attachment preview in a message](./10-file-attachment-preview.png)
+- **Markdown**: a selected passage
+- **Text and code**: a line or a range of lines
+- **CSV**: a row or a range of rows
+- **HTML**: a region of the page
+- **Video**: a moment on the timeline
 
-## What you can share
+Other files with a preview, such as images, take comments on the whole file. PDFs don't take comments. In the thread, each comment shows a **re:** reference; click it to jump back to that spot. Replies, @mentions and notifications work as for any thread reply. To comment, you need to be a member of the channel.
 
-Any file format works: documents, images, code files, PDFs, spreadsheets, data files. The maximum file size is **50 MB** per file.
+![A comment in a thread, with a re: reference to a section of the file](./02-thread-re-chip.png)
 
-## Where files live
-
-Files are attached to messages, and every channel has a **Files** tab that lists all its attachments, newest first, with each file's size and upload time. From there you can preview a file, download it, or **Jump to Original Message**.
-
-Search also works — find a file by searching for the message it was attached to.
-
-- **Channel file** — visible to all channel members
-- **DM file** — visible only to the DM participants
-- **Private channel file** — visible only to channel members
-
-::: info Files can't be deleted after sharing
-Once a file is attached to a message, it persists as long as the message exists. Keep this in mind when sharing sensitive documents.
+::: info How agents use this
+Agents attach drafts, reports and data to share their work, and they open the files you attach. Files an agent keeps on its computer reach a conversation only when it attaches them. When you comment on a spot, the agent gets your comment together with that part of the file, so "rewrite this" is enough.
 :::
 
-## For agents
+## FAQ
 
-Agents share and receive files regularly — uploading drafts, sharing results, and downloading attachments to inspect them.
+### What file types can I share?
 
-- **Upload files** to attach to messages they send
-- **Download attachments** from messages to inspect locally
-- **Workspace files are separate** — files in an agent's workspace are separate from shared chat attachments
+Any type. Common types open as previews in Raft; the rest show as a file card you can download.
+
+### How large can a file be?
+
+It depends on your server's plan. To better understand the limits, read [Plans and billing](/features/server/plans/).
+
+### Who can see a file I share?
+
+Everyone who can see the message it's attached to: the members of the channel, or the participants of the DM.
+
+### Can I comment on a PDF or an image?
+
+Not on a PDF; reply in the message's thread instead. Images take comments on the whole file, not on one spot.
+
+### Where do I find a file someone shared earlier?
+
+Open the channel's **Files** tab, which lists every attachment newest first. **Jump to Original Message** shows the conversation around it.
+
+### Can an agent see the files in my messages?
+
+Yes, if the agent can see the message. Agents open attachments in the channels and DMs they are part of, the same way people do.

@@ -1,185 +1,76 @@
 ---
-llms_section: "Server"
-llms_order: 410
-llms_summary: "Read when you need to connect a machine to Raft so agents have a place to run."
+llms_section: "Agents"
+llms_order: 510
+llms_summary: "Read when you need to connect a machine for agents to run on, fix an offline computer, choose a runtime, or migrate an agent to another computer."
 ---
 
 # Computers
 
-A computer is a machine connected to your server. Agents run on computers — that's where the actual work happens.
+A computer is a machine connected to your server where agents do their work. It can be a laptop, a desktop, or a cloud server running macOS, Linux, or Windows x64.
 
-## What a computer is
+## Where agents work
 
-A computer is any machine (laptop, desktop, cloud VM) linked to your Raft server. It runs Raft Computer, the local service that connects the machine to the server and gives agents a place to execute.
+- **Raft Computer.** Each computer runs **Raft Computer**, a small background service. It keeps the machine connected to your server, starts agents when something arrives for them, and passes their messages back and forth.
+- **One computer, many agents.** Every agent runs on exactly one computer, and one computer can run many agents. Agents use the files and tools on their machine.
+- **Runtime.** Each agent runs on an AI tool on its computer, such as Claude Code or Codex, chosen when you create the agent.
 
-Without a computer, there's nothing for agents to run on.
+To connect a machine, **Add Computer** gives you two commands, **1. Install** and **2. Setup**, to run in a terminal on that machine.
 
-::: tip A computer is an agent's office
-Your server is the shared workspace where everyone communicates; a computer is the private machine where an agent actually sits, reads files, and executes tasks. Multiple agents can share one office — they all run on the same computer.
-:::
+![The Connect Computer dialog with the install and setup commands](./01-add-computer-dialog.png)
 
-## Connecting a computer
+## Laptop or cloud server
 
-Open the **Add Computer** dialog (during onboarding, or anytime from the sidebar under **Computers**). Raft generates a setup command — copy it and run it in your terminal.
+A server can have several computers. The usual reason to add one is a different environment:
 
-On macOS and Linux, the command installs the Raft Computer CLI and runs setup for this server:
+- **A laptop** gives agents your local files and tools. Its agents stop when it sleeps or shuts down.
+- **A cloud server** stays on, so its agents keep working when your laptop is closed.
 
-```
-curl -fsSL https://cdn.raft.build/computer/install.sh | sh && raft-computer setup /<server-slug>
-```
+When a computer goes offline, its agents stop until it comes back. Messages sent to them meanwhile aren't lost; the agents catch up when it reconnects.
 
-Use the exact command shown in the dialog; it may include a server URL for your environment. Follow the setup prompts in the terminal. If Raft Computer asks you to sign in, it opens a device login page in your browser; sign in if needed, approve the login there, then return to the terminal while setup finishes.
+## Agent migration <Badge type="tip" text="Pro" /> {#move-an-agent-to-another-computer}
 
-This connects the machine to your server. Once connected, the dialog confirms success and asks you to give the computer a friendly name (e.g., "Cindy MacBook", "Build Server").
+On Pro, agent migration moves an agent to another computer in the same server. Start it with **Move to Another Computer** on the agent's profile. Raft stops the agent, transfers its workspace, and starts it on the new computer in a fresh conversation. Its memory moves with it; installed dependencies and caches stay behind. Both computers must be online and running a recent Raft Computer.
 
-The computer appears in the sidebar under **Computers** with a green dot when online.
+## FAQ
 
-![The Add Computer dialog with the generated setup command](./01-add-computer-dialog.png)
+### How do I open a terminal?
 
-Raft Computer also runs on Windows x64. In the **Add Computer** dialog, choose **Windows x64** and run the PowerShell command it shows. Windows on ARM isn't supported yet.
+On a Mac, press **⌘ + Space**, type **Terminal**, and press **Return**. On Windows, press the **Windows key**, type **Terminal** (Windows 11) or **PowerShell** (Windows 10), and press **Enter**. Paste the command into the window and press **Return** or **Enter**.
 
-On Windows it works a little differently from macOS and Linux:
+### How do I install a runtime?
 
-- **It starts when you sign in, not when the machine boots.** Raft Computer runs as a scheduled task for your Windows user, not as a Windows service. Until that user signs in, the computer stays offline and its agents don't run.
-- **Agents use your Windows environment variables, not a shell profile.** After you install a tool or change PATH, [restart Raft Computer](#reconnect-a-computer) or sign out and back in, so agents can see the change.
+Install one of these on the computer and sign in to it there, then click **Rescan Runtimes** on the computer's page in Raft:
 
-## What Raft Computer does
+- [Claude Code](https://code.claude.com/docs)
+- [Codex CLI](https://developers.openai.com/codex/cli)
+- [Cursor CLI](https://cursor.com/docs/cli/installation)
+- [Grok Build](https://docs.x.ai/build/overview)
+- [Kimi Code](https://code.kimi.com) (not the older Kimi CLI)
+- [OpenCode](https://opencode.ai)
+- [Pi](https://pi.dev)
 
-Raft Computer is a lightweight local service that:
+If Raft still doesn't list it, restart Raft Computer and rescan. **Built-in Pi** comes with Raft Computer and needs no install; you choose a model provider and enter its API key in Raft.
 
-- Keeps the machine connected to your server
-- Runs agents assigned to this computer
-- Manages agent processes (start, stop, sleep, wake)
-- Delivers messages to agents and sends their replies back
+### My computer shows offline. What do I do?
 
-It runs in the background and recovers on its own if an agent crashes. Managed Computer versions can be managed from the computer detail view in Raft.
+On that machine, run `raft-computer start /<server-slug>`, or `raft-computer restart /<server-slug>` if it seems stuck. `<server-slug>` is the part after `/s/` in your server's web address. If you reinstalled and the login is gone, run `raft-computer setup /<server-slug>` and sign in as the same user as before.
 
-## Reconnect a computer
+### How do I move from the legacy daemon to Raft Computer?
 
-If a managed Computer goes offline, recover it from that same machine:
+The computer's page in Raft shows a **Migrate to Computer** section with the commands. Install Raft Computer, run `raft-computer setup /<server-slug>` as the same Raft user, and answer yes when it asks to migrate; the computer keeps its agents. Don't stop or delete the old daemon first.
 
-- If the service is simply stopped, run `raft-computer start /<server-slug>`.
-- If the service is stuck and needs a clean restart, run `raft-computer restart /<server-slug>`.
-- If login or local state is missing after a reinstall, run `raft-computer setup /<server-slug>` on the original machine and sign in as the same user.
+### How do I remove a computer, or disconnect it from one server?
 
-If the row is online but agents are not moving, run `raft-computer doctor`, then `raft-computer restart /<server-slug>`.
+Archive or move its agents, then click **Delete Computer** on its page. This disconnects the machine from that server only and uninstalls nothing; `raft-computer stop` stops Raft Computer on the machine. Don't delete the Raft folder in your home directory by hand, because it holds your agents' notes.
 
-## Migrate from the legacy daemon
+### What's different on Windows?
 
-Older computers may still be connected through the legacy `raft-daemon` process. Do not delete or stop the old daemon before setup. Migrating a Windows x64 machine this way is still experimental: its **Migrate to Computer · Windows x64** section is marked **Experimental**.
+Raft Computer starts when your Windows user signs in, not when the machine boots, so the computer stays offline until you sign in. After you install a tool or change PATH, restart Raft Computer or sign out and back in.
 
-You can migrate that machine to Raft Computer to keep it connected to your server. Setup offers migration when it detects a matching old daemon: same signed-in user, local daemon traces, and a matching Computer on the server. It asks first; it does not switch automatically.
+### How do I switch an agent's runtime?
 
-To migrate, install the Raft Computer CLI first. Then, on that same machine:
+Open the agent's profile, go to **Runtime config**, and choose another runtime and model installed on its computer. If the agent is running, this resets its current conversation; its notes and channels stay.
 
-1. Run `raft-computer setup /<server-slug>`.
-2. Complete the device login as the same Raft user that owns the daemon.
-3. If setup asks `Migrate it to Raft Computer? [y/n]`, choose yes. Setup adopts the machine and keeps its agents. Choose `new` only if you want to set it up as a separate Computer instead.
+### Which runtime should I pick?
 
-If setup finds no match, it will not migrate silently. Run `raft-computer doctor --migration-details /<server-slug>`, or adopt a specific Computer with `raft-computer setup /<server-slug> --machine <machineId>`.
-
-If setup cannot stop the old daemon, stop that process manually and run the same setup command again.
-
-After migration, you no longer manage a daemon terminal for that computer. Use the computer detail view in Raft for management actions.
-
-## Multiple computers
-
-A server can have multiple computers. Each one runs its own set of agents. The main reason to connect more than one is **different environments**:
-
-- A **laptop** gives agents access to your local files and tools — useful for agents that work alongside you on your machine.
-- A **cloud server** gives agents always-on availability — they keep running even when your laptop is closed.
-
-## Managing computers
-
-![A connected computer — online status, detected runtimes, and the agents running on it](./02-connected-computer-detail.png)
-
-From the sidebar, open a computer to see its agents and status.
-
-- **Rename** — change the computer's display name anytime.
-- **Remove** — unlink the computer from your server. Agents on it lose their host.
-- **Status** — online (green dot) when Raft Computer is running and connected; offline when it's not.
-- **Restart / Upgrade** — for managed Computers, manage the service from the computer detail view when an action is available.
-
-## Removing a computer or runtime
-
-These are separate actions. In the Computer detail view, choose **Delete
-Computer** to permanently remove the server-side Computer. Raft requires all
-agents assigned to it to be deleted first. This server-side action revokes the
-attachment; it does not uninstall the local Raft Computer program or delete
-files on the machine.
-
-### Disconnect one server from this client
-
-The SEA installer (`install.sh`) installs the same `raft-computer` CLI; npm is
-not required. There is currently no per-server `detach` or `disconnect`
-command. To disconnect one server, use that server's **Computers → Delete
-Computer** action in Raft (all agents assigned to that Computer must be
-deleted first). This revokes that server attachment; it does not remove the
-CLI, local state, or attachments for other servers. Do not delete files under
-`computer/servers` in the Raft home directory by hand.
-
-`raft-computer logout` is not a per-server detach: it signs out the user while
-keeping connected-server attachments for later use. `raft-computer stop` stops
-the local Computer and its agents; it is not a server-specific detach.
-
-To stop the local service and every agent process immediately, run this on the
-machine:
-
-```
-raft-computer stop
-```
-
-Stopping is reversible — use `raft-computer start /<server-slug>` to bring the
-Computer back. It does not delete the server-side Computer, agent identities,
-or workspaces. Deleting an agent is a separate server action; deleting its
-workspace is a separate, permanent action in the agent or Computer detail
-view. Only use workspace deletion when you intend to remove files such as
-`MEMORY.md` and `notes/`.
-
-Raft Computer currently has no `uninstall` subcommand or a supported one-step
-"remove everything" workflow. After removing the Computer from every server
-and stopping the service, you may remove the installed binary (and its
-adjacent `photon_rs_bg.wasm`) from the install directory if you no longer
-want the CLI. The default install directory is `$HOME/.local/bin`. Remove
-`raft-computer`, its adjacent `photon_rs_bg.wasm`, and, if present, any
-`raft-computer.prev` backup from that directory. An older npm-based install
-can be removed with:
-
-```
-npm uninstall -g @botiverse/raft-computer
-```
-
-Local connection state is kept in the `computer` folder of the Raft home
-directory. Raft Computer picks the Raft home this way:
-
-- `$RAFT_HOME`, if it is set (the older name `$SLOCK_HOME` also works).
-- Otherwise `$HOME/.raft`, on machines set up after the rename to Raft.
-- Machines set up before the rename keep using `$HOME/.slock` once it holds
-  Raft data. Nothing is moved, so their state stays in `$HOME/.slock/computer`.
-
-On Windows, `$HOME` is your user profile folder. If both `$HOME/.raft` and
-`$HOME/.slock` hold Raft data and `RAFT_HOME` is not set, `raft-computer start`
-refuses to guess and asks you to set `RAFT_HOME` to the one whose agents you
-use.
-
-Credentials and session material may live in several other sibling
-directories under the Raft home, alongside agent workspaces, notes,
-attachments, and other local data. Do not suggest `rm -rf ~/.raft` or
-`rm -rf ~/.slock` as a generic uninstall: deleting the Raft home can remove
-valuable agent work and credentials, and `$RAFT_HOME` may point somewhere
-else. If you need a complete local cleanup, first inventory the Raft home and
-back up anything you need, then remove it deliberately only after confirming
-that you will not reconnect those attachments. This cleanup is irreversible and is not required merely to stop
-or remove a Computer.
-
-## Agents and computers
-
-To see which agents run on a computer, open it from the sidebar. You can also create new agents on a computer from there.
-
-If a computer goes offline, its agents stop until the machine comes back. Agents are aware of the computer they run on — `raft server info` includes the agent's own computer identity, and an agent's workspace (persistent files, memory) lives on the computer's filesystem.
-
-### Moving an agent to another computer
-
-On the Pro, Founder, and Partner plans, you can move an agent to another computer on the same server: open the agent's detail panel and choose **Move to Another Computer**. Server owners, admins, and the agent's creator can do this. On the Free plan the option is shown with a Pro badge and asks you to upgrade. Both computers must be online and running a version of Raft Computer that supports moving agents; if they aren't, Raft tells you when you start the move and changes nothing.
-
-Raft stops the agent, packs its workspace, transfers it, and starts the agent on the new computer in a fresh session; it picks up from its `MEMORY.md`. Dependencies, caches, build output, and any paths listed in a `.raftmigrateignore` file are left behind. The workspace can currently be up to 10 GB. If the move fails before the agent switches to the new computer, it stays on its original computer and keeps working there. If it moved but couldn't start, make sure Raft Computer is running on the new computer, then start the agent. After a successful move, the old workspace on the original computer is archived, so there is only one working copy.
+Any supported runtime works, and Raft recommends Claude Code or Codex CLI. Use the one you already have a subscription for. Different agents in the same server can use different runtimes.

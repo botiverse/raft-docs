@@ -448,66 +448,56 @@ export default defineConfig({
       // appearance toggle (absolute rightmost). See .vitepress/theme/index.ts.
     ],
     sidebar: {
-      // Features tab — reference tree. Server + Agents + Messaging +
-      // Collaboration are live; Connected Apps remains a placeholder.
+      // Features tab — reference tree, grouped by what you're doing.
       '/features/': [
         {
-          text: 'Server',
+          text: 'Server and people',
           items: [
-            { text: 'Server Basics', link: '/features/server/' },
-            { text: 'Computers', link: '/features/server/computers/' },
-            { text: 'Members', link: '/features/server/members/' },
-            { text: 'Server Management', link: '/features/server/management/' },
-            { text: 'Plans and limits', link: '/features/server/plans/' },
+            { text: 'Servers', link: '/features/server/' },
+            { text: 'Members and roles', link: '/features/server/members/' },
           ],
         },
         {
           text: 'Agents',
           items: [
-            { text: 'Agent Basics', link: '/features/agents/' },
-            { text: 'Runtime', link: '/features/agents/runtime/' },
-            { text: 'External Agents', link: '/features/agents/external/' },
-            { text: 'Workspace', link: '/features/agents/workspace/' },
-            { text: 'Lifecycle', link: '/features/agents/lifecycle/' },
+            { text: 'Agents', link: '/features/agents/' },
+            { text: 'Computers', link: '/features/server/computers/' },
+            { text: 'Agent status', link: '/features/agents/lifecycle/' },
             { text: 'Reminders', link: '/features/agents/reminders/' },
-            { text: 'Troubleshooting', link: '/features/agents/troubleshooting/' },
+            // Experimental: a colored flask icon is appended after the name via
+            // CSS (docs-kit theme/custom.css), keyed by href.
+            { text: 'External agents', link: '/features/agents/external/' },
+            { text: 'Agent troubleshooting', link: '/features/agents/troubleshooting/' },
           ],
         },
         {
-          text: 'Messaging',
+          text: 'Conversations',
           items: [
-            { text: 'Messaging Basics', link: '/features/messaging/' },
-            { text: 'Channels', link: '/features/messaging/channels/' },
-            { text: 'Messages', link: '/features/messaging/messages/' },
-            { text: 'Threads', link: '/features/messaging/threads/' },
-            { text: 'DMs', link: '/features/messaging/dms/' },
-            { text: 'Joint Channels', link: '/features/messaging/joint-channels/' },
-            { text: 'Activity', link: '/features/messaging/activity/' },
+            { text: 'Channels and DMs', link: '/features/messaging/channels/' },
+            { text: 'Activity and notifications', link: '/features/messaging/activity/' },
+            { text: 'Joint channels', link: '/features/messaging/joint-channels/' },
+            { text: 'Search', link: '/features/messaging/search/' },
           ],
         },
         {
-          text: 'Collaboration',
+          text: 'Work',
           items: [
-            { text: 'Collaboration Basics', link: '/features/collaboration/' },
             { text: 'Tasks', link: '/features/collaboration/tasks/' },
             { text: 'Files', link: '/features/collaboration/files/' },
-            { text: 'Comments', link: '/features/collaboration/comments/' },
           ],
         },
         {
-          text: 'Apps & Integrations',
+          text: 'Apps',
           items: [
-            // Experimental: a colored flask icon is appended after the name via
-            // CSS (theme/custom.css) — sidebar text is plain, so the icon is a
-            // masked SVG ::after on these two links, keyed by href.
-            { text: 'Connected Apps', link: '/features/apps/' },
-            { text: 'Login with Raft', link: '/features/apps/login-with-raft/' },
+            { text: 'Apps', link: '/features/apps/' },
             { text: 'MCP Apps', link: '/features/apps/mcp/' },
           ],
         },
         {
-          text: 'Account',
+          text: 'Billing and management',
           items: [
+            { text: 'Plans and billing', link: '/features/server/plans/' },
+            { text: 'Server settings', link: '/features/server/management/' },
             { text: 'Account', link: '/features/account/' },
           ],
         },
@@ -521,8 +511,13 @@ export default defineConfig({
             { text: 'Build a Raft App', link: '/developers/raft-apps/build/' },
             { text: 'App link previews', link: '/developers/raft-apps/link-previews/' },
             { text: 'App Bot', link: '/developers/raft-apps/bot/' },
-            { text: 'Publish to the Marketplace', link: '/developers/raft-apps/publish/' },
-            { text: 'Share privately with another server', link: '/developers/raft-apps/share/' },
+            {
+              text: 'Marketplace',
+              items: [
+                { text: 'Publish to the Marketplace', link: '/developers/raft-apps/publish/' },
+                { text: 'Share privately with another server', link: '/developers/raft-apps/share/' },
+              ],
+            },
             { text: 'Login with Raft', link: '/developers/login-with-raft/' },
           ],
         },
@@ -549,36 +544,27 @@ export default defineConfig({
       // Introduction tab (default) — the guided journey from a fresh signup.
       '/': [
         {
-          text: 'Getting Started',
+          text: 'Get started',
           items: [
-            { text: 'Welcome to Raft', link: '/welcome/' },
-            { text: 'Meet your Onboarding Agent', link: '/meet-your-onboarding-agent/' },
-            { text: 'Hand off your first task', link: '/hand-off-your-first-task/' },
-            { text: 'Bring in your teammates', link: '/bring-in-your-teammates/' },
+            { text: 'Welcome', link: '/welcome/' },
+            { text: 'Set up your server', link: '/meet-your-onboarding-agent/' },
+            { text: 'Your first task', link: '/hand-off-your-first-task/' },
+            { text: 'Invite teammates', link: '/bring-in-your-teammates/' },
+            { text: 'Raft on your phone', link: '/raft-on-every-device/' },
           ],
         },
         {
-          // Keep the public CTA aligned with the renamed Raft docs branding.
-          text: 'Work on Raft',
+          text: 'Work with your team',
           items: [
             { text: 'Build your agent team', link: '/build-your-agent-team/' },
-            { text: 'Divide the work', link: '/divide-the-work/' },
-            { text: 'Catch up in one place', link: '/catch-up-in-one-place/' },
-            { text: 'Search your raft', link: '/search-your-raft/' },
-            { text: 'Get pinged when it matters', link: '/get-pinged-when-it-matters/' },
-            { text: 'Raft on every device', link: '/raft-on-every-device/' },
+            { text: 'Stay on top of things', link: '/stay-on-top-of-things/' },
+            { text: 'Close the loop', link: '/close-the-loop/' },
           ],
         },
         {
-          text: 'Tutorials',
+          text: 'Examples',
           items: [
-            { text: 'Build an investing research team', link: '/tutorials/investing-research-team/' },
-          ],
-        },
-        {
-          text: 'Help',
-          items: [
-            { text: 'Support', link: '/support/' },
+            { text: 'Investing research team', link: '/tutorials/investing-research-team/' },
           ],
         },
       ],

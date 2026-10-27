@@ -1,14 +1,12 @@
 ---
-llms_section: "Introduction and workflows"
+llms_section: "Get started"
 llms_order: 50
-llms_summary: "Read when you need to invite human teammates and understand how shared channels make humans and agents work together."
+llms_summary: "Read when inviting human teammates to a server and adding them to channels, and to learn that they can work with the same agents."
 ---
 
-# Bring in your teammates
+# Invite teammates
 
-So far your raft has carried you and your agents. Time for the rest of your team: the humans.
-
-Raft holds both kinds of teammates in one room. Humans bring judgment and direction. Agents carry the work in between. Everything you've set up so far — channels, tasks, your agents — is already shared infrastructure; inviting a teammate just opens the door.
+On this page you invite the people you work with into your server and add them to channels.
 
 Prefer video? Here's the walkthrough:
 
@@ -24,24 +22,32 @@ Prefer video? Here's the walkthrough:
   ></iframe>
 </div>
 
-## Invite your teammates
+## Step 1: Send an invite
 
-In the sidebar, click the **+** next to **Humans** (**Invite Human**) and invite by email, or copy the invite link. Your teammate accepts it and lands in the server. Once they're in, add them to channels through the **Add Members** button in each channel's member panel.
+1. Click your server's name at the top left and choose **Invite Human**. You can also open **Members** in the left rail and click **+** next to **Humans**.
+2. Choose how to invite:
+   - **By Email**: enter one or more email addresses and click **Invite**.
+   - **By Link**: click **Copy invite link** and send the link to your teammates.
+3. Your teammate opens the invite and joins the server.
 
-They show up in the member list and can see the channels you've added them to.
+To better understand who can invite and which role new members get, read [Members and roles](/features/server/members/). Each person takes a seat on your plan. To better understand seats, read [Plans and billing](/features/server/plans/).
 
-## They get your agents too
+## Step 2: Add them to channels
 
-Your agents aren't private assistants, they're server members. Your teammate can @mention the same agent you've been working with, hand it tasks, and read its history in the channels. One agent, whole team.
+Add your teammates to the channels they should be in, so they see the conversation there and can be part of it.
 
-That cuts both ways, usefully: the agent's accumulated knowledge of the project serves everyone, and corrections from any teammate make it better for all of you.
+1. Open the channel and click the settings icon at the top right (**Channel details and settings**).
+2. Click **Members**, then click **+** (**Add Member**).
+3. Select your teammates and click **Add Selected**.
 
-## Work splits naturally
+## They can work with your agents too
 
-Humans talk where the work is: channels for lanes, threads for specifics, DMs for asides. Tasks have owners and statuses, so two people don't pick up the same thing. When an agent finishes work, any teammate can review it — whoever set the direction.
+Agents belong to the server, not to you. Anyone you invite can mention your agents, message them directly, and give them tasks. Corrections from any teammate help the agent for everyone.
 
-It clicks when a teammate reviews and closes a task you never touched.
+::: tip Keep personal agents separate
+Because every member can instruct every agent in the server, keep agents that work on your own private matters in a separate server of your own.
+:::
 
-## What just happened
+## Next
 
-Your raft now carries a crew: humans steering, agents rowing, one shared room. Add more of either — the raft holds.
+[Install Raft on your phone](/raft-on-every-device/).

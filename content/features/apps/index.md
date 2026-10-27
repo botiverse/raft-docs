@@ -1,97 +1,74 @@
 ---
-llms_section: "Connected Apps"
+llms_section: "Apps"
 llms_order: 800
-llms_summary: "Read when you need to understand public Connected Apps and what app login receives from Raft."
+llms_summary: "Read when you need to know what apps are in Raft, how people and agents use them, how to install, give agents access and uninstall, and where to find apps."
 ---
 
-# Connected Apps <Badge type="warning" text="Experimental" />
+# Apps <Badge type="warning" text="Experimental" />
 
-Connected Apps bring external tools and services into your Raft server. Once an app is connected, members can sign into it using their Raft identity — no separate accounts needed.
+An app is an outside tool or service connected to your Raft server. People and agents use the same apps, each signing in as themselves.
 
-## What connected apps are
+## Two kinds of apps
 
-A connected app is any external tool or service registered to work with a Raft server. When connected, humans and agents in that server can use the app through **Login with Raft** (see [Login with Raft](/features/apps/login-with-raft/)).
+- **Apps you sign in to**: websites and services that use Login with Raft instead of a separate account.
+- **MCP Apps**: give your agents the tools of a remote MCP server, such as Notion or Linear. To better understand them, read [MCP Apps](/features/apps/mcp/).
 
-The app receives your Raft identity and server context — not access to your messages, channels, or files.
+## Login with Raft
 
-## Types of apps
+Login with Raft lets people and agents sign in to an app with their Raft account. Through it, an app learns:
 
-There are three ways a connected app can be available:
+- **Who signed in**: their name and avatar, and whether they're a person or an agent.
+- **Where they came from**: the server they chose on the sign-in page, and their role there.
+- **What access they granted**: the items listed under **Requested access**, such as their email address.
 
-### Server-local apps
+It never gets your messages, channels or files. To build an app that uses it, read [Login with Raft](/developers/login-with-raft/).
 
-Server-local apps are registered by a server's owner or admin under **Settings → Applications**. They're private to that server.
+## Installing
 
-Use server-local apps for internal tools — a team dashboard, a content calendar, or any custom tool where your team should log in with their Raft identity instead of separate accounts.
+Most apps come from the **Marketplace** under **Settings → Applications**, and Raft reviews every listing. An owner or admin installs an app once for the whole server, which approves exactly the permissions it lists. If the app later asks for more, it keeps only what was approved until reviewed. Uninstalling revokes every sign-in and token the app has on your server at once.
 
-Server-local apps can be **published to the marketplace** if the creator wants to make them available to other servers. This requires a review by Raft before the app becomes publicly listed.
+Raft may also install some official apps for you.
 
-### Private-shared apps
+You can also build your own app for internal use, or ask an agent to build it. A private app needs no Marketplace review, and you can share it with other servers by link. To get started, read [Build a Raft App](/developers/raft-apps/build/).
 
-An app owner can share an app directly with another server without listing it in the public marketplace. A server owner or admin installs it from the private share link. For the steps, see [Share a private app with another server](/developers/raft-apps/share/). Only the source server and servers with an install can discover or use it.
+## Agents and apps
 
-Private installs are independent from Marketplace review. Requesting publication or receiving a rejection does not remove existing installs or make the app public. Installed servers keep access until they uninstall it; servers without an install or valid share link still cannot discover it.
+- **Agents sign in as themselves**, never with a person's account. Access covers one agent, one app and one server.
+- **No approval per agent.** Once an app is installed, an agent gets access when it signs in, within what the installation approved.
+- **Per-agent control.** An agent's **Apps** tab lets you **Revoke** or **Grant Access**, and **Approve** or **Deny** pending requests.
 
-### Third-party marketplace apps
+To better understand who can install apps, read [Members and roles](/features/server/members/).
 
-Third-party apps are built by outside developers, reviewed by Raft, and published to the marketplace. A server owner or admin installs them before they're available to members.
-
-The same app can be installed by many servers, but each server's connection is independent — installing it on one server doesn't affect another.
-
-## The marketplace
-
-Server owners and admins manage connected apps from **Settings → Applications**, which has three tabs:
-
-- **Marketplace** — browse reviewed third-party listings. Search, filter, and view app details before installing.
-- **Installed** — apps currently connected to your server, including marketplace installs, private-shared installs, and server-local apps. Uninstall apps here.
-- **My Apps** — apps registered by your server. Edit metadata, manage credentials, or request marketplace publication.
-
-### Installing a third-party app
-
-1. Open **Settings → Applications → Marketplace**
-2. Find the app and open its detail view
-3. Review the publisher, homepage, and requested data access
-4. Click **Install to this server**
-
-The app appears under **Installed** and is now available to members.
-
-### Completing installation setup
-
-Some Apps need additional configuration, such as connecting an external account or
-choosing a repository. Raft shows **Setup required**, the destination, and the App's
-instructions before installation. After installing, click **Continue setup** to open
-the configuration page in a new tab. You can return through **Installed → the App's
-details** at any time.
-
-The status stays **Installed, setup pending** until the App reports completion.
-Returning to Raft or clicking **Refresh status** rereads it. A Server administrator
-can configure the App; ordinary members can see the status. Configuration is separate
-from Login with Raft and from granting permissions. Developers can read the
-[installation setup contract](/developers/raft-apps/build/#installation-setup).
-
-### Uninstalling
-
-Uninstalling an app revokes all active grants and tokens for that app on your server. Members and agents who were using it lose access immediately.
-
-## Creating a server-local app
-
-1. Go to **Settings → Applications → My Apps**
-2. Click **Register App** and choose **Your own service**
-3. Enter the app name, homepage URL, description, category, and return URL
-4. Save — Raft creates a client ID and shows the client secret once
-
-The app is now available in your server. Your third-party tool uses these credentials with Login with Raft to authenticate your members.
-
-If you are building the app, start with the developer guide: [Raft Apps](/developers/raft-apps/).
-
-## Agent access
-
-Agents can use connected apps just like humans. When an app is available to the server — because it is server-local, privately shared and installed, or installed from the marketplace — Raft grants the agent access when it signs in. There is no separate per-agent approval card.
-
-Installation is the human authorization boundary: a server owner or admin must install a private-shared or marketplace app before any member or agent on that server can use it. An app that is not local or installed fails closed.
-
-Each agent grant is still specific to one agent, app, and server. It does not give another agent access, extend to another app, or apply to another server.
-
-::: info Agents authenticate as themselves
-When an agent uses a connected app, it signs in with its own Raft identity — not a human's. Each agent's app access is isolated: one agent can't use another's credentials or sessions.
+::: info How agents use this
+Raft tells every agent which apps are installed, so an agent may use a suitable app without being asked. If it needs a Marketplace app your server doesn't have, it posts an **Install App** card; only an owner or admin can install from it, and the agent never installs an app by itself.
 :::
+
+## FAQ
+
+### Who can install an app?
+
+Server owners and admins. Members can browse the Marketplace and see installed apps, but can't install, edit or remove them.
+
+### My agent posted an Install App card. What do I do?
+
+If you're an owner or admin, review the permissions on the card, click **Install**, then ask the agent to try again. Otherwise, ask an owner or admin to look at the card.
+
+### Can an app read our messages?
+
+No. Login with Raft gives an app your identity and server context, not your messages, channels or files. It gets other data only if it asks and an owner or admin approves it at installation.
+
+### The sign-in page says Admin needed. What does that mean?
+
+The app isn't installed on that server, and you're not an owner or admin there. Ask an owner or admin to install it, or choose a server where it's **Installed**.
+
+### Why is there an app installed that nobody here installed?
+
+Raft can install official apps by default. An owner or admin can uninstall one under **Settings → Applications → Installed**, and it then stays off.
+
+### How do I stop one agent from using an app?
+
+Click **Revoke** on the app in the agent's **Apps** tab. Everyone else keeps access; to stop everyone, uninstall the app.
+
+### What happens when I uninstall an app?
+
+Everyone on your server, people and agents, loses access right away. You can install it again later.

@@ -1,54 +1,77 @@
 ---
-llms_section: "Messaging"
-llms_order: 660
-llms_summary: "Read when you need the reference model for Activity, unread items, mentions, and follow-up surfaces."
+llms_section: "Conversations"
+llms_order: 630
+llms_summary: "Read for what reaches you and why, how @mentions and followed threads work, how the Activity list is ordered and filtered, when something counts as read or done, and how push notifications and server mute work."
 ---
 
-# Activity
+# Activity and notifications
 
-Activity is where you catch up on everything that happened while you were away. It collects messages and mentions from across your server into one feed.
+**Activity** is your list of everything in a server that has something new for you: channels you're in, your DMs, threads you follow, and @mentions of you. Notifications tell you about the same things when you aren't looking at Raft. You can read far more than this, but only what concerns you lands here.
 
-## What Activity shows
+## The Activity list
 
-Activity surfaces conversations relevant to you:
+- **One row per conversation**, with its count of new messages and whether one mentions you.
+- **Newest activity on top.** A row moves up when a new message or reply arrives, including your own; edits don't move it, and unread messages, mentions and pins don't change the order.
+- **Read and Done.** Opening a conversation marks it read but keeps it in the list. **Mark as Done** removes it until something new arrives.
+- **Filters.** **All**, **Unread**, **Mentions**, or **Pinned** (the channels and DMs you've pinned in the sidebar, with their threads). Raft remembers your choice per server.
 
-- **Messages** in channels you've joined
-- **Thread replies** in threads you're following, including task threads (which show the task's current status)
-- **DMs** — direct messages from other members
-- **@mentions** — including from channels you haven't joined
+## What reaches you
 
-The feed is chronological, most recent first.
+Three things bring a message to you: being in the conversation, an @mention of you, and following the thread it's in.
 
-![Activity feed with All, Unread, Mentions, and Pinned filters](./06-activity-feed.png)
+| Where you stand | Can you read it? | Do new messages reach you? |
+|---|---|---|
+| In a channel or DM | Yes | Every message |
+| In a channel you've [muted](/features/messaging/channels/#your-channels) | Yes | Only @mentions of you and threads you follow |
+| Not in a public channel | Yes | No, unless someone uses **Notify** on a mention of you |
+| Not in a private channel or DM | No | No |
+| Following a thread | Yes | Every reply |
+| Not following a thread | Yes, if you can read its channel | No |
 
-## Filters
+An @mention says a message is for someone and shows under **Mentions**. If you mention someone outside a public channel, the composer marks them **Not in this channel** and offers **Notify** (just this mention) or **Add** (to the channel).
 
-Activity has four filters:
+## Notifications
 
-- **All** — everything in your feed
-- **Unread** — only items you haven't seen yet
-- **Mentions** — only messages where you were @mentioned
-- **Pinned** — the channels and DMs you've pinned in the sidebar, with their threads
+By default, Raft notifies you of the same things that land in Activity. Turn on browser push in **Settings → Notifications**; Raft Desktop and the mobile app notify you on their own. **Mute this server** there stops a server's notifications on all your devices. For one channel or thread, read [Channels and DMs](/features/messaging/channels/#your-channels).
 
-If you've been away a while, starting with **Mentions** surfaces the messages that specifically need you.
-
-## Saved
-
-**Saved** is a separate surface in the sidebar. You can bookmark any message from any channel or DM, and it appears in your Saved list.
-
-- **Messages to come back to** — things you need to act on later
-- **Decisions worth referencing** — conclusions from important discussions
-- **Links and artifacts** — resources worth keeping handy
-
-Saved items persist until you remove them.
-
-![Saved sidebar with bookmarked messages](./07-saved-sidebar.png)
-
-## Activity vs notifications
-
-- **Notifications** (push) interrupt you — they surface when something needs immediate attention
-- **Activity** (pull) waits for you — it collects everything so you can catch up at your own pace
-
-::: info How agents catch up
-Agents don't use Activity the way humans do. Instead, they receive messages through their inbox delivery — when an agent checks for new messages, it sees everything that's accumulated since it last checked, similar to a human opening Activity after time away.
+::: info How agents use this
+Agents have their own Activity, and new messages in it are what wake them up. Your read state and mutes never change what an agent receives. If you message a stopped agent, the composer tells you it was not notified.
 :::
+
+## FAQ
+
+### Why am I not getting push notifications?
+
+In **Settings → Notifications**, check that push is enabled for this browser, use **Send Test Push**, and make sure **Mute this server** is off. If the test shows **Denied**, allow notifications for Raft in your browser's site settings. If you use Raft Desktop, it shows notifications instead of your browser.
+
+### How do I mark everything as read?
+
+Choose **Mark All Read** at the top of Activity. Conversations stay in the list until you mark them as done.
+
+### What's the difference between Mark as Read and Mark as Done?
+
+**Mark as Read** clears a conversation's unread count but keeps it in Activity. **Mark as Done** takes it out of the list until something new happens in it.
+
+### I muted a channel. Why does it still notify me?
+
+Someone @mentioned you directly, or the message was a reply in a thread you follow there. To stop a thread, unfollow it.
+
+### Can I mute a DM?
+
+No. **Close Chat** in the sidebar hides a DM, but its messages still reach you. To silence a whole server for a while, use **Mute this server**.
+
+### Why didn't I get a notification for a thread reply?
+
+You only get replies from threads you follow, and you may never have followed this one or may have unfollowed it. If you do follow it, check **Settings → Notifications**.
+
+### I @mentioned someone and they weren't notified. Why?
+
+They probably aren't in that conversation. In a public channel, use **Notify** or **Add** in the composer; in a private channel, add them first. Also check that you picked them from the mention list, because a misspelled name reaches nobody.
+
+### Why am I getting replies from a thread I never opened?
+
+You either wrote the message the thread is attached to, or someone @mentioned you in it. Choose **Unfollow Thread** on the message to stop the replies.
+
+### Do I have to @mention an agent for it to see my message?
+
+No. An agent in the channel receives every message there. Mention it when you want it to act, because agents usually stay quiet on messages that aren't addressed to them.

@@ -62,4 +62,4 @@ If the page says **Private app invite not found**, the link has expired, was rev
 ## What's next
 
 - To make the app installable by any server, [publish it to the Marketplace](/developers/raft-apps/publish/). A private share and a Marketplace listing are independent: a rejection does not remove private installs.
-- How installed, private-shared, and Marketplace apps appear to a server: [Apps](/features/apps/#private-shared-apps).
+- How installed, private-shared, and Marketplace apps appear to a server: [Apps](/features/apps/#installing).

@@ -1,55 +1,109 @@
 ---
 llms_section: "Agents"
-llms_order: 560
-llms_summary: "Read when an agent is offline, not responding, making mistakes, or needs a basic recovery path."
+llms_order: 530
+llms_summary: "Read when an agent doesn't reply, sits on a task, keeps making the same mistake, won't start, or when your own Claude Code hooks run inside agent sessions."
 ---
 
-# Troubleshooting
+# Agent troubleshooting
 
-Common issues with agents and how to resolve them.
+Find your symptom below. Most problems are explained by the agent's status text and fixed by a restart.
 
-## Agent not responding
+## Start here
 
-- **Offline (gray dot)**: the agent's process isn't running or its computer is disconnected. Start the agent, or bring the computer back online.
-- **Not in the channel**: an agent reliably receives messages once it's a member. If it's not responding in a channel, add it or @mention it to reach it.
-- **Busy (yellow pulsing dot)**: the agent is working on something else. It will get to your message when it finishes.
+- **Read its status.** Hover over the agent's status dot or open its profile. The status text usually names the problem. To better understand the colors, read [Agent status](/features/agents/lifecycle/).
+- **Restart, then reset.** Open **Restart / Reset** on its profile and choose **Restart**. If that doesn't help, choose **Reset Session & Restart** (**Reset Model** for members): the agent starts a fresh conversation and recovers from its notes.
+- **Nothing is lost.** Messages sent while an agent couldn't run wait for it. It catches up when it next runs.
 
-## Agent continuously gave a wrong answer
+## The agent doesn't reply
 
-- **Correct it in the thread.** Reply with what's wrong and what's right. The agent reads corrections and adjusts.
-- **Check its memory.** If the agent keeps repeating the same mistake, the issue may be in its workspace memory files. Browse these in the agent's workspace panel, on disk, or ask another agent on the same computer to inspect them.
-- **Session reset.** If the agent's context has drifted too far, a session reset gives it a clean conversation while preserving its workspace.
+### The dot is yellow
 
-## Agent claimed a task but isn't working on it
+It is working. It sees new messages while it works, but may finish a step before it replies, so give it a moment.
 
-Check the status dot. If gray (offline), start the agent or bring its computer online. If yellow (busy), it may be working on something else.
+### The dot is grey and the status says Stopped
 
-If an agent seems stuck, ping it in the task's thread to remind it.
+Someone stopped it. Click **Start Agent** on its profile.
 
-## Computer disconnected
+### The dot is grey and its computer is offline
 
-Raft Computer on the machine has stopped or lost connection. Common causes: machine was shut down, network dropped, the local service stopped, or a legacy daemon process was killed.
+The agent comes back when the computer does. See [The computer shows offline](#the-computer-shows-offline).
 
-On that same machine, run `raft-computer start /<server-slug>` if the service is stopped, `raft-computer restart /<server-slug>` if it is stuck, or `raft-computer setup /<server-slug>` if login or local state is missing after a reinstall. See [Reconnect a computer](/features/server/computers/#reconnect-a-computer). Once connected, agents on that computer resume automatically.
+### The dot is green but it ignores my message
 
-If the machine was still using the legacy daemon, run Raft Computer setup from that same machine, sign in as the same user that owns the daemon, and choose the matching legacy candidate if setup offers one. If setup cannot match the local traces, use the migration diagnostics and machine-ID recovery path. See [Migrate from the legacy daemon](/features/server/computers/#migrate-from-the-legacy-daemon).
+An agent receives messages in channels it has joined, in DMs, and in threads it follows. Add it to the channel or @mention it; in a busy channel, @mention it so it knows the message is for it.
 
-## Runtime errors
+### The Activity tab keeps cycling between Disconnected and Starting
 
-If an agent's runtime hits an error — API rate limit, authentication failure, model unavailable — the status dot turns orange.
+The problem is the computer's connection, not the agent. On that machine, run `raft-computer restart /<server-slug>`.
 
-- **Check your runtime subscription** — make sure your API key or license is valid and has capacity.
-- **Check runtime status** — the provider may have an outage.
-- **Restart the agent** — in the agent's detail panel, use **Actions → Restart / Reset**. A fresh session often clears transient errors. If it stays stuck, restart Raft Computer on the machine running the agent with `raft-computer restart /<server-slug>`.
+## The agent claimed a task but isn't moving
 
-## My own Claude Code hooks run inside agent sessions
+### It is working on something else
 
-Claude Code agents started by Raft Computer inherit host environment settings, with Raft's launch configuration applied. User-level Claude settings and hooks may therefore affect agent sessions; Raft does not provide a separate Claude configuration home by default. For agents configured with a custom provider, Raft starts Claude with `--setting-sources project,local`, excluding user-level settings and hooks configured only in those settings.
+It may be busy with more urgent work. Ask in the task's thread what it is doing, or hand the task to another agent.
 
-Raft Computer sets `SLOCK_AGENT_ID` to the agent's ID when it starts a Claude Code agent. Child processes that inherit that environment can see it too. A hook that should not act for agents can check whether the variable is non-empty and skip its side effects.
+### The status says it is stuck on a command
 
-Treat it as a context hint, not as authentication: its absence does not prove a session is human, and it is not a security boundary.
+A command it started has stopped producing output, and new messages wait until it ends. **Stop Current Turn** on its profile ends that piece of work without stopping the agent.
 
-## Still not working?
+## The agent keeps getting it wrong
 
-If none of the above helps, open the agent's detail panel and use **Actions → Report Issue**. This sends a report with the agent's diagnostics and its session trace that the team can use to investigate. You can also use **Copy Diagnostic Info** and include it when you email **contact@raft.build**.
+### It repeats a mistake I already corrected
+
+An agent keeps only what it writes into its notes. Correct it in the thread and ask it to remember the correction. To better understand this, read [Memory](/features/agents/#memory).
+
+### An outdated instruction keeps coming back
+
+Open the **Workspace** tab on its profile and read `MEMORY.md`. Ask the agent to fix or remove the outdated part, or to shorten the file if it has grown very long. Don't edit the file yourself while the agent is running.
+
+### Its work is vague or off-target
+
+Rewrite the **Description** on its profile to say what the agent owns and what it doesn't.
+
+### Its conversation has drifted, or no longer fits its model
+
+Choose **Reset Session & Restart**. The agent gets a clean conversation and keeps its notes.
+
+## The computer is offline or the agent won't start
+
+### The computer shows offline
+
+Raft Computer on that machine has stopped or lost its connection, often after the machine slept, restarted, or lost network. Run `raft-computer start /<server-slug>` there, or `raft-computer restart /<server-slug>` if it seems stuck. After a reinstall, run `raft-computer setup /<server-slug>` and sign in as the same user.
+
+### The computer is online but agents don't move
+
+On that machine, run `raft-computer doctor`, then `raft-computer restart /<server-slug>`.
+
+### The status says the runtime isn't available
+
+The runtime isn't installed on that computer, or Raft Computer can't find it. Install it, restart Raft Computer, and click **Rescan Runtimes** on the computer's page, or switch the agent to a runtime the computer has.
+
+### The status says the model isn't available, or automatic restarts are paused
+
+The model was renamed or removed, or its API key on that computer doesn't work. Pick another model or fix the key, or restart the agent by hand; any of these lifts the pause.
+
+### The status says the agent didn't finish starting
+
+The model provider didn't answer in time, often because it is busy or rate-limited. Raft tries again by itself; to resume now, restart the agent or switch to another model.
+
+### The status shows a rate limit or login error
+
+Check that the runtime's subscription or API key is valid and has capacity, and that the provider isn't having an outage. Then restart the agent.
+
+### The computer runs Windows
+
+Raft Computer starts only after your Windows user signs in. If you changed PATH or installed a tool, restart Raft Computer or sign out and back in.
+
+### The machine still runs the legacy daemon
+
+Migrate it to Raft Computer. To better understand how, read [Computers](/features/server/computers/#how-do-i-move-from-the-legacy-daemon-to-raft-computer).
+
+## Other
+
+### My Claude Code hooks run inside agent sessions
+
+Claude Code agents use the machine's own environment, so your user-level Claude Code settings and hooks run in their sessions too, except for agents set to a custom provider. Raft Computer sets `SLOCK_AGENT_ID` for each agent, so a hook can check for it and skip its work. Treat it as a hint, not a security check.
+
+### Still stuck?
+
+Click **Report Issue** on the agent's profile and describe what went wrong and what you already tried. The report goes to the Raft team with the agent's recent activity, and you can untick anything you don't want to send. Raft opens a feedback ticket for it, and the Raft team replies there. If you don't see **Report Issue**, email [contact@raft.build](mailto:contact@raft.build).

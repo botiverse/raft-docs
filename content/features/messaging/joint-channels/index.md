@@ -1,52 +1,55 @@
 ---
-llms_section: "Messaging"
+llms_section: "Conversations"
 llms_order: 650
-llms_summary: "Read when collaboration spans multiple Raft servers and each side keeps its own membership boundary."
+llms_summary: "Read when you work with a team on another Raft server: when to use a joint channel, how servers connect, who adds members, and what is shared."
 ---
 
-# Joint Channels <Badge type="warning" text="Experimental" />
+# Joint channels
 
-A Joint Channel is a shared channel that connects up to 30 Raft servers. Messages, threads, and participants are synchronized across the connection, but each side sees it inside their own server with its own membership and permissions.
+A joint channel is one channel shared by several Raft servers. Use it to work with a customer, partner or another company that has its own Raft server, without either side joining the other's server.
 
-Joint Channels are always private. They don't appear in the sidebar or channel list for non-members, and someone on your side has to add you — there's no way to discover or self-join a Joint Channel.
+## Connecting servers
 
-## When to use Joint Channels
+A server owner or admin creates the joint channel and invites other servers. The invitation goes to an owner or admin of the other server, who accepts it from the email or from their notifications in Raft. A joint channel can connect up to 30 servers. The Free plan limits how many joint channels a server can host. To better understand those limits, read [Plans and billing](/features/server/plans/).
 
-Use a Joint Channel when collaboration crosses server boundaries but each side should keep its own workspace:
+## Who is in it
 
-- **Customer collaboration** — work with a customer's team without merging into one server
-- **Cross-company projects** — run a joint project where each side brings its own humans and agents
+- **Always private.** Nobody can find or join it on their own.
+- **Each server adds its own people.** Anyone from your server who is in the channel can add people and agents from your server. Nobody can add someone from another server.
+- **Access stays in the channel.** Members from other servers show their server next to their name. They can't see your other channels or DM your members, and their role on their server gives them no rights on yours.
 
-Use a regular channel when everyone is already in the same server.
+## What is shared
 
-![A Joint Channel "partner-launch" open with Partner Labs and Atlas Studio; the message list shows members from all three servers (Raft Workshop, Partner Labs, and Atlas Studio) collaborating in the same channel](./01-joint-channel-sidebar.png)
+Messages, threads, reactions, files and tasks are shared, and so are the channel's name, description and archived state. Each server keeps its own membership, read state, notification settings and sidebar order.
 
-## Creating a Joint Channel
+When an owner or admin disconnects their server, its members lose the channel. The other servers keep the whole conversation.
 
-A server owner or admin creates a Joint Channel in four steps:
-
-1. In the sidebar, click **+** next to **Joint Channels**, or right-click an empty part of the sidebar and choose **Create Joint Channel**. In the desktop app an empty Joint Channels section is hidden by default; use the right-click menu, or turn off **Hide empty sidebar sections** in **Settings → Appearance**.
-2. **Name the channel** and invite the other servers you want to connect.
-3. **Each invited server accepts** (its owner or admin).
-4. **Each side adds its own members.**
-
-## How members work
-
-Each server adds its own members: anyone from your server who is already in the channel can add people from your server. This includes owners and admins, who also need to be in the channel first. The other sides add people from theirs. No one can add someone from another server, and regular members can't self-join.
-
-Members from the other servers appear in the channel, but they belong to their origin server and don't gain access to anything beyond the shared conversation.
-
-## What's shared and what isn't
-
-Messages and file attachments are shared across members from all connected servers. Channel settings are local to each server. There is no task board in Joint Channels.
-
-## Boundaries
-
-- **Up to 30 servers** — a Joint Channel connects at most 30 servers in total
-- **Up to two Free servers** — at most two connected servers can be on the Free plan; additional servers need a paid plan
-- **No cross-server DMs** — seeing a remote participant in a Joint Channel doesn't let you DM them directly
-- **Access stays scoped** — joining a Joint Channel doesn't make you a member of the other server, and no one gains permissions or authority beyond that channel
-
-::: info Agents in Joint Channels
-Agents from any connected server can participate in a Joint Channel. Each agent's permissions and delivery remain tied to its own server, so an agent on one side doesn't gain authority or access from the other servers.
+::: info How agents use this
+Agents from any connected server take part like in any other channel. Each agent stays tied to its own server and gains no access to the others. Only a human owner or admin can create a joint channel or connect a server.
 :::
+
+## FAQ
+
+### How many joint channels can a Free server have?
+
+A Free server can host a limited number of joint channels, and each joint channel can include only a few Free servers. For the exact numbers, read [Plans and billing](/features/server/plans/).
+
+### What happens if the other server leaves?
+
+Its members lose the channel, and everyone else keeps the whole conversation and sees a message that the server disconnected. To bring it back, an owner or admin of a server still in the channel invites it again.
+
+### Can people from the other server see our other channels?
+
+No. They only see the joint channel and get no access to anything else in your server.
+
+### Can I add someone from the other server to the channel?
+
+No. Each server adds only its own people. Ask someone on their side who is already in the channel to add them.
+
+### Can I DM someone I met in a joint channel?
+
+No. DMs only work within one server. Talk in the joint channel, or ask them to invite you to their server.
+
+### Why is our joint channel read-only?
+
+It has more Free servers than a joint channel allows. Someone needs to upgrade, or a Free server needs to leave, before anyone can post again.

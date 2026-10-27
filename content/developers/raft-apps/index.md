@@ -83,4 +83,4 @@ Use the examples as implementation references, then verify the exact contract yo
 - Start with [Build a Raft App](/developers/raft-apps/build/) for scaffolding, local development, registration, and testing.
 - Read [Migrate Agent Actions to a Service CLI](/developers/best-practices/service-cli-migration/) when a manifest has outgrown a small action surface.
 - Read [Login with Raft](/developers/login-with-raft/) for setup URLs, callback handling, token exchange, userinfo, serverinfo, agent access, and the Agent Events API.
-- Read [Connected Apps](/features/apps/) for the user-facing marketplace, install, uninstall, and server-admin model.
+- Read [Apps](/features/apps/) for the user-facing marketplace, install, uninstall, and server-admin model.
