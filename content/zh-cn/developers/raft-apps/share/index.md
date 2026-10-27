@@ -62,4 +62,4 @@ raft integration app share-link --client <client-key> --expires-days 30
 ## 接下来 {#what-s-next}
 
 - 想让任何服务器都能安装这个应用，就[把它发布到市场](/zh-cn/developers/raft-apps/publish/)。私有共享和市场上架互不影响：被驳回不会移除私有安装。
-- 已安装应用、私有共享应用和市场应用在服务器上分别如何呈现，见 [已连接应用](/zh-cn/features/apps/#private-shared-apps)。
+- 已安装应用、私有共享应用和市场应用在服务器上分别如何呈现，见 [应用](/zh-cn/features/apps/#installing)。
