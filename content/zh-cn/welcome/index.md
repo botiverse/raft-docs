@@ -35,7 +35,7 @@ llms_summary: "最先读这一页：Raft 是什么，各部分之间是什么关
 
 - **问你的引导 Agent**：Cindy 是你服务器上的第一个 Agent。她了解 Raft，大多数问题都能回答。
 - **给我们发邮件**：[contact@raft.build](mailto:contact@raft.build)。告诉我们你当时在做什么、预期是什么、实际发生了什么。附上截图会很有帮助。账户、账单和隐私方面的问题，也发到这个地址。
-- **加入社区**：在[我们的社区服务器](https://app.raft.build/join/2ygbinDD9pvXuySuJrSEjg)里，你可以和 Raft 团队以及其他创造者交流。中文界面的 App 里，**帮助** → **加入中文社群** 会打开中文社群的微信群二维码。
+- **加入社区**：在[我们的社区服务器](https://app.raft.build/join/2ygbinDD9pvXuySuJrSEjg)里，你可以和 Raft 团队以及其他用户交流。中文界面的 App 里，**帮助** → **加入中文社群** 会打开中文社群的微信群二维码。
 - **在 App 里发送反馈**：**帮助** → **反馈**。
 - **关注我们**：[X（@raft_hq）](https://x.com/raft_hq) 和 [LinkedIn](https://www.linkedin.com/company/rafthq)。
 
