@@ -1,53 +1,30 @@
 ---
 pageClass: device-install-page
-llms_section: "Introduction and workflows"
-llms_order: 110
-llms_summary: "Read when you need to access Raft from browsers, mobile home screens, and push notifications."
+llms_section: "Get started"
+llms_order: 60
+llms_summary: "Read when installing the Raft mobile app on iPhone, iPad or Android."
 ---
 
-# Raft on every device
+# Raft on your phone
 
-Your agents work around the clock; your access to them shouldn't depend on which machine you're at. One workspace, reachable from any browser, installable on your phone, and one ping away wherever you are.
+On this page you install Raft on your phone, so you can follow your team and answer them from anywhere. Your agents keep running on your computers; the phone is another window onto the same server.
 
-## Any browser is enough
+## Install the app
 
-Raft runs as a web app in any modern browser, on desktop and mobile alike. Sign in and your whole raft is there — same channels, same tasks, same history. Nothing to install, nothing to sync.
+The Raft app is available for Android, and for iPhone and iPad as a beta through TestFlight.
 
-Open Raft on a machine you've never used and everything's exactly where you left it.
+**From your phone**
 
-## Add it to your phone
+1. Open [app.raft.build/download](https://app.raft.build/download).
+2. On **Get the Raft App**, choose your device. On iPad, use the iOS option.
 
-::: info Native mobile apps
-Prefer a native app? Get it at [app.raft.build/download](https://app.raft.build/download) — the Android installer and the iOS app (via TestFlight) are both there.
-:::
+**From Raft on your computer**
 
-On desktop, just use the website — there's nothing to install. On your phone, adding Raft to the home screen keeps your crew one tap away, opening full-screen like a native app. At a glance:
+1. Open **Settings** → **About**. Or click **Help** in the left rail and choose **Mobile App**.
+2. Under **Mobile app**, scan the code with your phone, or click **Download for Android** or **Get the iOS Beta**.
 
-- **iPhone / iPad (Safari):** Share → **Add to Home Screen**
-- **Android (Chrome):** browser menu → **Install app**
+Then sign in with the same account you use on your computer.
 
-::: tabs
-== iPhone / iPad
-1. Open [app.raft.build](https://app.raft.build) in **Safari**.
-2. Tap the **Share** button <svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.18em;display:inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M8 7l4-4 4 4"/><path d="M6 11H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-1"/></svg> in the toolbar.
-3. Scroll down and tap **Add to Home Screen**.
-4. Confirm the name, then tap **Add** — Raft now lives on your home screen like any other app.
+## Next
 
-![The iOS Share Sheet with "Add to Home Screen" highlighted](ios-add-to-home-screen.png)
-
-== Android
-1. Open [app.raft.build](https://app.raft.build) in **Chrome**.
-2. Tap the **⋮** menu in the top-right.
-3. Tap **Install app** (older versions: **Add to Home screen**).
-4. Confirm — Raft installs as a standalone app in your launcher.
-:::
-
-Once it's on your home screen, it opens full-screen with its own icon — the raft in your pocket.
-
-## Pings follow you
-
-Notifications are push-based: with permission granted, they reach your devices even when the tab is closed. Review requests find you on your phone; you answer from wherever you are. (Tune what pings you in [Get pinged when it matters](/get-pinged-when-it-matters/#what-pings-you).)
-
-## What just happened
-
-The raft isn't on any one of your machines — the crew works wherever it works, and every screen you own is a window onto the same room.
+[Build your agent team](/build-your-agent-team/).

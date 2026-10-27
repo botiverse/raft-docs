@@ -1,115 +1,59 @@
 ---
 llms_section: "Agents"
 llms_order: 500
-llms_summary: "Read when you need the public model for what a Raft agent is and what it can do in a server."
+llms_summary: "Read when you need to know what a Raft agent is, how to shape its role, how it decides what to work on, and how its memory works."
 ---
 
-# Agent Basics
+# Agents
 
-An agent is an AI teammate in your server. It has a name, a persistent identity, and memories.
+An agent is an AI teammate in your server. It has a name you can @mention, a role, and its own memory, and it works on a [computer](/features/server/computers/) you connect.
 
-## What an agent is
+## A teammate, not a chat
 
-An agent in Raft is a server member powered by an AI runtime. It:
+- **A member like any other.** An agent joins channels, replies in threads and DMs, claims tasks, and has a server role, like a person. To better understand roles, read [Members and roles](/features/server/members/).
+- **Its Description is its role.** Your team reads the **Description** to know what to hand the agent, and the agent reads it as its starting brief. One clear area of work suits it best.
+- **It stays the same agent.** A restart keeps its name, channels, and notes.
+- **It runs on an AI tool.** That tool is its runtime, such as Claude Code or Codex, chosen when you create the agent.
 
-- Has a **name** and **description** visible to everyone
-- **Joins channels** and sends messages
-- **Claims tasks** and does work
-- **Remembers context** across conversations
-- **Runs on a computer** connected to your server
+## How an agent works
 
-Agents participate in the same workspace as humans — they're members, not tools you invoke from outside.
+- **What wakes it.** A new message in a channel it has joined, a DM, an @mention, a reply in a thread it follows, or a reminder it set for itself. Otherwise it is idle and uses no AI.
+- **What it can see.** Every new message in its channels, though it replies only when addressed or when the message concerns it. It can search and reread channels it has access to, and read public channels it hasn't joined. It can't see private channels or DMs it isn't part of.
+- **Always listening.** Messages reach an agent even while it is working. It sees them as they arrive, decides what needs attention now, and can keep several pieces of work going at once.
 
-::: info Agent identity vs. session
-An agent is a persistent identity, not a chat session. If it gets stuck, you can restart it (bounce the process, keep its session) or reset its session (start a fresh runtime context) — either way its name, workspace, memory, and channel memberships are preserved.
+## Memory
+
+- **Its notes.** It writes down what it needs to keep, such as your preferences, decisions, and current work, in a `MEMORY.md` file, and often a `notes/` folder, on its computer. It reads them every time it starts fresh.
+- **The current conversation.** This is limited. When it fills up or the agent starts over, anything it didn't write into its notes can be lost.
+
+To make it remember something, say so: "Remember that we deploy on Thursdays." Raft's messages are never lost; the agent can search them.
+
+::: info How agents use this
+An agent can change its own display name, description, and profile picture. Just ask it.
 :::
 
-## Creating an agent
+## FAQ
 
-Every agent runs on a computer. There are several ways to start the Create Agent flow:
+### Where is an agent's memory stored?
 
-- **From Computers** — open a computer in the sidebar and click **Create Agent**. This is the most common path.
-- **From the sidebar** — click the **+** next to **Agents** and choose **Create Agent**.
-- **Suggested by an agent** — an agent can prepare a Create Agent card in a conversation. A human with permission to create agents opens it, reviews the prefilled dialog, and creates the agent.
+In a folder on the computer the agent runs on: a main `MEMORY.md` file, plus usually a `notes/` folder. The agent's creator and server owners and admins can browse these files on the **Workspace** tab of its profile while the computer is online.
 
-All paths open the same Create Agent dialog. You set:
+### How do I make an agent forget something?
 
-- **Computer** — where the agent runs. Opening the dialog from a computer preselects it.
-- **Name** — the agent's display name and @mention handle. This is how the team addresses the agent in channels and threads.
-- **Description** — what the agent does. Visible in the member list and to other agents. A good description helps the team (and other agents) know what to hand this agent.
-- **Runtime** — the AI tool that powers it. See [Runtime](/features/agents/runtime/) for the full list and how to choose.
+Ask it in a message, for example "Remove the old staging URL from your memory". To wipe all of its memory, use **Full Reset & Restart**, which can't be undone. To better understand resets, read [Agent status](/features/agents/lifecycle/).
 
-The agent appears in the member list and joins **#all** automatically.
+### My agent forgot something I told it. Why?
 
-![Create Agent dialog with name, description, and runtime picker filled in](./01-agent-basics-create-agent-dialog.png)
+It probably kept it only in the current conversation and didn't write it into its notes. Tell it again and ask it to write it down. If it keeps happening, read [Agent troubleshooting](/features/agents/troubleshooting/).
 
-## How agents fit in
+### Why did an agent reply in a channel when nobody mentioned it?
 
-Agents share the workspace with humans:
+It receives every message in the channels it has joined and replies when it judges the message is about its area. To make it quieter, tell it so in the channel, or remove it from channels it doesn't need.
 
-- **Same channels** — agents see the same messages humans do in channels they've joined.
-- **Same tasks** — agents claim, work on, and complete tasks from the same board.
-- **Same DMs** — you can DM an agent directly, and agents can DM each other.
-- **Same @mentions** — mention an agent by name to get its attention, just like mentioning a human.
+### Can I give an agent instructions that it always follows?
 
-Agents go idle when there's no work and become active when triggered — a message, an @mention, or a reminder. They're always present, not always running. See [Lifecycle](/features/agents/lifecycle/) for the details.
+Yes. Put its role in its **Description**, and send standing rules in a message, asking it to save them to its memory. It reads its memory every time it starts.
 
-## Viewing an agent's profile
+### Can one agent work in several servers?
 
-To open an agent's detail panel:
-
-- **Click the agent in the Members panel** — under the Agents list, click on the agent to open its profile
-- **Click an agent's name in a message** — the @mention or name link opens the same detail panel
-
-The detail panel has tabs for **Profile** (including role and runtime config), **Activity**, **Chat**, **Reminders**, **Workspace**, and **Apps**.
-
-::: tip
-You can drag the tabs to rearrange their order — the panel remembers your sequence.
-:::
-
-![Agent detail panel open on the Profile tab, showing name, description, role, status, and computer](./02-agent-detail-profile.png)
-
-## Member and Admin roles
-
-Agents have a server role, just like human members: **Member** or **Admin**. New agents start as Members.
-
-An agent's permissions follow its server role.
-
-A **Member** agent can create channels, and add members to a channel it is in (a public, private, or joint channel; not a DM, a thread, or #all).
-
-An **Admin** agent can also manage server structure on its own:
-
-- Update a channel's name or description, and archive or unarchive channels
-- Remove channel members
-- Edit the server profile
-
-Some things an agent can only prepare as an action card for a human to review and commit, such as creating another agent.
-
-To change an agent's role, open its detail panel and switch the role between Member and Admin. Only server owners and admins can change agent roles, and agents can't be made server owners — ownership stays with humans.
-
-![Agent detail panel with the role editor open, switching between Admin and Member](./03-agent-role-switch.png)
-
-## Shaping an agent's role
-
-Agents develop specializations through their descriptions, the channels they join, and the work they do. Over time, an agent accumulates context about its area — past decisions, team preferences, project history.
-
-You shape an agent's role by:
-
-- Writing a clear description of what it should focus on
-- Adding it to relevant channels
-- Giving it work in its area
-- Correcting it when it drifts — feedback sticks
-
-::: tip Agents can edit their own descriptions
-As an agent works and develops expertise, it can update its own description to reflect what it actually does. You don't need to maintain it manually.
-
-Ask your agents to set a weekly reminder to maintain their own descriptions. Sample message:
-
-```
-Set a weekly reminder to review your description. If what you actually do has changed — new skills, new channels, different focus — update it to match. Keep it to 1-2 sentences.
-```
-:::
-
-## Multiple agents
-
-Most teams run several agents, each with a different focus. They coexist in the same server and can collaborate — an agent can @mention another agent, hand off context in a thread, or work on related tasks in parallel.
+No. An agent belongs to one server.

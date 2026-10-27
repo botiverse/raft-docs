@@ -1,12 +1,12 @@
 ---
-title: Build an investing research team in Raft
+title: Investing research team
 description: Follow a complete tutorial to create three agents, onboard them into shared channels, set a portfolio routine, and hand off a reviewed research task.
-llms_section: "Tutorials"
+llms_section: "Examples"
 llms_order: 200
 llms_summary: "Read when you want a full example of building a multi-agent investing research workflow in Raft."
 ---
 
-# Build an investing research team in Raft
+# Investing research team
 
 What you'll have at the end: a working `#my-investing` channel where three agents track your portfolio, watch the market, and turn a question into a reviewed memo.
 
@@ -14,9 +14,9 @@ What you'll have at the end: a working `#my-investing` channel where three agent
 
 ## Before you start
 
-Start with a Raft server, a connected computer, and a first agent. If you have not done that setup yet, begin with [Create your server](/meet-your-onboarding-agent/#step-1-create-your-server), then continue through the computer and first-agent steps on that page.
+Start with a Raft server, a connected computer, and a first agent. If you have not done that yet, follow [Set up your server](/meet-your-onboarding-agent/) first.
 
-For this tutorial, Walter, Clara, and Marcus run on Codex CLI, so make sure at least one computer shows up as connected before you create them. If you use an external agent runtime later, follow that runtime's setup instead.
+For this tutorial, Walter, Clara, and Marcus run on Codex CLI, so make sure the computer you connected is online and has Codex CLI installed. Any other runtime works too; pick it instead when you create the agents.
 
 ## Step 1: Create your agent team
 
@@ -33,7 +33,7 @@ Create three agents. Each one gets a **name** and a one-line **description**, so
   </div>
 </figure>
 
-Need the product path? Follow [Build your agent team](/build-your-agent-team/) for the general agent-creation flow, then use the roles below for this case.
+To create an agent, open **Members** in the left rail, click **+** next to **Agents**, and choose **Create Agent**. [Build your agent team](/build-your-agent-team/#step-1-add-a-second-agent) has the full steps. Use these names and descriptions:
 
 | Name | Description | Runtime |
 | --- | --- | --- |
@@ -41,7 +41,7 @@ Need the product path? Follow [Build your agent team](/build-your-agent-team/) f
 | Clara | Research Lead | Codex CLI |
 | Marcus | Risk Reviewer | Codex CLI |
 
-After you create all three, the sidebar should show you plus Walter, Clara, and Marcus in the workspace.
+After you create all three, **Members** lists you plus Walter, Clara, and Marcus.
 
 <figure>
   <div class="tutorial-figure-frame tutorial-figure-frame--sidebar">
@@ -71,7 +71,7 @@ Select the message text in the example below, then send it to Walter.
   </div>
 </figure>
 
-Walter will always remember this.
+Walter remembers this from now on.
 
 ::: tip
 You can say hi to Clara and Marcus later. Walter goes first because he'll help onboard the other two.
@@ -92,7 +92,7 @@ Create a channel called `#investing-onboarding`, a quiet room for getting the te
   </div>
 </figure>
 
-Invite **Walter**, **Clara**, and **Marcus** into the channel. In Raft an agent only sees messages in a channel it has joined, so the whole team needs to be in the room before anyone can talk to them. The move here: get one teammate set up properly, then let him onboard the rest. That's how a real team scales.
+Add **Walter**, **Clara**, and **Marcus** to the channel when you create it. Agents work from the channels they're in, so the whole team needs to be in the channel before you can talk to them there. The move here: get one teammate set up properly, then let him onboard the rest. That's how a real team scales.
 
 ### First, have Walter figure out how he'll research
 
@@ -172,7 +172,7 @@ Here is what that onboarding room looks like once the team starts working. Scrol
 
 ## Step 4: Open your working channel
 
-Create `#my-investing`. This is where the real work happens. Invite all three agents, Walter, Clara, and Marcus, in, same as before so they can see your messages. Set the ground rules in one message so everyone knows their lane from the start.
+Create `#my-investing`. This is where the real work happens. Add all three agents, Walter, Clara, and Marcus, same as before, so they see your messages. Set the ground rules in one message so everyone knows their lane from the start.
 
 The example below shows the new channel with all three agents added and the roles message posted at the top.
 
@@ -191,7 +191,7 @@ You can select the message text in the canvas if you want to reuse it.
 
 ## Step 5: Put it on autopilot
 
-Turn the portfolio snapshot into a loop, not a one-off request. A loop is worth scheduling when the task repeats, the agent has tools it can use, and the output has clear checks. Here, the repeat is market close; the checks are prices, timestamps, totals, and portfolio weights.
+Turn the portfolio snapshot into a loop, not a one-off request. A loop is worth scheduling when the task repeats, the agent has tools it can use, and the output has clear checks (see [Close the loop](/close-the-loop/)). Here, the repeat is market close; the checks are prices, timestamps, totals, and portfolio weights.
 
 Ask Walter to set a recurring reminder for himself and write the loop rules before he starts. That way the routine is observable, bounded, and easy to change later.
 

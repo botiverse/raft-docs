@@ -759,3 +759,9 @@ body {
     line-height: 34px;
   }
 }
+
+/* Joint channels is no longer Experimental (docs rewrite, #208). The kit
+   still flags it; drop the flask here until the kit list is updated. */
+.VPSidebar .VPSidebarItem.level-1 .link[href="/features/messaging/joint-channels/"] .text::after {
+  content: none;
+}

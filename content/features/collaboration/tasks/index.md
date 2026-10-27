@@ -1,91 +1,63 @@
 ---
-llms_section: "Collaboration"
+llms_section: "Work"
 llms_order: 710
-llms_summary: "Read when you need the public task model, statuses, ownership, and thread-based work tracking."
+llms_summary: "Read when you need to know how tasks work: where they come from, who owns them, how status moves, the task board, and why agents claim tasks."
 ---
 
 # Tasks
 
-Tasks are messages with tracking metadata: a number, a status, and an owner. They turn conversations into commitments.
+A task is a message that someone has to act on. It gets a number, a status and one owner.
 
-## What a task is
+## Where tasks come from
 
-A task is a message in a channel that has been marked as trackable work. It gets:
+Usually agents create tasks themselves as the conversation moves. When you ask an agent for something that needs more than a reply, it claims your message, turning it into a task assigned to that agent. If you prefer to control it yourself, use **Convert to Task** on a message, or tick **As Task** before you send.
 
-- **A number** — sequential within the channel (task #1, #2, #3...)
-- **A status** — where the work stands
-- **An owner** (optional) — who's responsible
+The task keeps its place in the chat. Its thread is where the work is discussed, and every status change is posted there.
 
-Tasks live in the channel where they were created. They appear on the channel's **task board** — a view that shows all tasks grouped by status.
+## One owner at a time
 
-## Creating tasks
+- **Claim** makes you the **Assignee** and moves the task to **In Progress**. If someone already holds it, the claim fails, so no two members start the same work.
+- **Assignee** can also be set to hand a task to someone without starting it.
+- **To split work**, create separate tasks, each with its own owner.
 
-There are several ways to create a task:
+## Status
 
-**Convert a message** — any top-level channel message can become a task. Right-click the message and pick **Convert to Task**. The message keeps its content and gains task metadata.
+The usual path is **Todo** → **In Progress** → **In Review** → **Done**. **Closed** means the work won't be done. Nothing moves on its own: every change is made by a person or an agent. When the result looks right, set the task to **Done** yourself, or ask the agent to mark it done.
 
-![Convert to Task in the message context menu](./11-convert-to-task-context-menu.png)
+Each channel's **Tasks** tab shows its tasks as a **Board** or a **List**. **Tasks** in the left rail shows tasks from every channel you can see.
 
-**Send as a task** — tick **As Task** in the composer before sending. The message is born as a task.
+![The server-wide task board with status columns and the Assignee filter open](./13-task-board.png)
 
-![Composer with the As Task toggle visible](./12-as-task-composer-toggle.png)
-
-**Create from scratch** — use the **Create Task** button for work that doesn't start as a conversation. You write the task title directly.
-
-::: info Only top-level messages
-Only top-level channel or DM messages can be tasks. Messages inside threads are discussion context — they can't be converted to tasks.
+::: info How agents use this
+An agent claims a task before it starts and moves it to **In Review** when it finishes, for you to check. An agent works through several tasks one at a time, so to get work done in parallel, give the tasks to different agents.
 :::
 
-## Task statuses
+## FAQ
 
-Every task moves through these statuses:
+### Who can change a task's status?
 
-- **Todo** — not started yet
-- **In Progress** — someone has claimed it and is working
-- **In Review** — the work is done and waiting for review
-- **Done** — reviewed and complete
-- **Closed** — cancelled or won't-do; reversible — a closed task can be reopened
+Anyone who can post in the task's channel, not only the assignee, along the usual steps. Server owners and admins can set any status directly. To better understand roles, read [Members and roles](/features/server/members/).
 
-Status updates are visible to everyone in the channel.
+### Who closes a finished task?
 
-## Claiming and owning
+Nobody does it automatically. Check the result in the task's thread, then set the task to **Done** or ask the agent to, or send it back to **In Progress** if it needs more work.
 
-A task has one owner at a time. Claiming a task means taking responsibility for it.
+### Why did my message turn into a task?
 
-- **Prevents duplicate work** — once claimed, other members know it's taken
-- **One owner at a time** — if a task is claimed, others move on to unclaimed work
-- **Unclaiming releases it** — the task becomes available for someone else
+An agent decided the work needed tracking. Agents turn a message into a task on their own when they take on work, whether or not you asked, which shows everyone who is doing it and stops a second agent from starting the same work.
 
-## Task threads
+### What's the difference between Done and Closed?
 
-Every task has a thread (the task message is the anchor). Work discussion, progress updates, and results go in the thread. This keeps the main channel clean — the task message shows the status; the thread holds the details.
+**Done** means the work was finished. **Closed** means it was dropped and won't be done. Both can be reopened.
 
-## The task board
+### How do I reopen a task?
 
-Each channel has a task board: a view that shows all tasks in that channel, organized by status. Switch to the **Tasks** tab to see it.
+Change its status. A **Done** task can go back to **Todo**, **In Progress** or **In Review**; a **Closed** task can go back with **Reopen to Todo**.
 
-The board shows what's happening at a glance:
+### Can a task have more than one owner?
 
-- What's **open and unclaimed** (**Todo**)
-- What's **being worked on** and by whom (**In Progress**)
-- What's **waiting for review** (**In Review**)
-- What's **complete** (**Done**)
-- What's been **cancelled** (**Closed**)
+No. A task has one assignee at a time. To split the work, create separate tasks.
 
-![Task board grouped by status columns](./13-task-board.png)
+### Can I set a due date on a task?
 
-## For agents
-
-Tasks are central to how agents work. An agent's typical workflow:
-
-1. See an unclaimed task or receive a request
-2. Claim the task
-3. Post progress updates in the task's thread
-4. Set status to **In Review** when done
-5. Set to **Done** after human approval
-
-Agents can also create new tasks — for example, breaking down a larger task into subtasks for parallel work.
-
-::: tip Agents claim tasks automatically
-When an agent receives a message that requires action, it claims the task before starting. If the claim fails (someone else took it), the agent moves on. You don't need to assign tasks manually — agents coordinate through the claim system.
-:::
+No. Tasks have no date field. To be reminded at a certain time, set a [reminder](/features/agents/reminders/).

@@ -1,56 +1,57 @@
 ---
-llms_section: "Server"
+llms_section: "Server and people"
 llms_order: 400
-llms_summary: "Read when you need the public model for a Raft server and the objects it contains."
+llms_summary: "Read for what a Raft server is, why one person can be in several servers, when to create another one, and what is shared between servers and what isn't."
 ---
 
-# Server Basics
+# Servers
 
-A server is where your team works. Every channel, agent, computer, task, and file lives inside one.
+A server is your team's space in Raft. Everything your team does in Raft happens inside a server.
 
-## What a server is
+![A server: its channels and direct messages in the sidebar, other servers in the strip at the top](./01-server-overview.png)
 
-A server is the top-level container in Raft. It holds:
+## One team, one server
 
-- **Channels** — public and private spaces for conversations. #all is there from the start; create more as your team grows.
-- **Direct Messages** — private conversations with any member.
-- **Agents** — the AI teammates in your server.
-- **Humans** — the people in your server.
-- **Computers** — the machines linked to your server. Agents run on these.
+A server's people, agents, channels and work all belong to it. Every server has #all, a channel for everyone in it.
 
-One team, one server. Everyone inside shares the same workspace.
+The person who creates a server is its owner. You can rename a server at any time, but its address, `app.raft.build/s/<slug>`, can't be changed after it is created.
 
-Your server's sidebar organizes these into sections, and the far-left rail gives you quick access to **Search**, **Chat**, **Tasks**, **Members**, **Computers**, and **Settings**.
+## One person, several servers
 
-![Server overview — what lives in a Raft server](./01-server-overview.png)
+With one Raft [account](/features/account/) you can be in several servers: your team's, a client's, a side project's. You have a separate role in each, so you might own one server and be a plain member in another.
 
-## Creating a server
+Only your account travels with you: your name, avatar, sign-in and personal settings. Everything else stays in its own server, including the agents, the apps and the bill.
 
-On the **Create server** screen, you set two things:
+## When to use another server
 
-- **Server name** — the display name your team sees (e.g., "Acme Engineering").
-- **URL slug** — auto-fills from the name. This becomes your server's address: `app.raft.build/s/your-slug`. You can edit the slug before creating, but it's locked after that — it can't be changed later.
+- **A different team or company.** Each gets its own members, agents and plan.
+- **Client work.** Invite the client into their own server without showing them your other work.
+- **Work and personal.** Keep your own projects and agents out of your employer's server and its billing.
 
-The server starts with one channel: **#all**. Every member joins it automatically.
+If the same people and agents work together, stay in one server and split topics into channels. If two servers need to work on one thing, connect them with a [joint channel](/features/messaging/joint-channels/).
 
-The person who creates the server is the **owner**.
+::: info How agents use this
+An agent belongs to the server it was created in and sees nothing from your other servers. To get the same help in two servers, create an agent in each; they don't share what they remember.
+:::
 
-## Switching servers
+## FAQ
 
-If you're in multiple servers, click the server icon in the far-left rail to switch between them. Each server is independent — its channels, members, agents, and data are separate.
+### How do I create a second server?
 
-## Server settings
+Open the server menu, choose **Switch or Create Server**, then **+ Create New Server**. You become the owner of the new server, and your other servers aren't affected.
 
-Open **Settings** in the sidebar to view and change your server's configuration. The two main tabs for server management:
+### Is my account shared between servers?
 
-**Server Profile** — edit your server's name, view the slug (read-only), and access the Danger Zone (delete server) at the bottom.
+Yes. Your username, display name and avatar are the same in every server. Your role, channels, agents and files are separate in each.
 
-**Administration** — manage member roles, invites, join links, pre-join agreement, and onboarding agent configuration.
+### Can I move an agent, channel or file from one server to another?
 
-Other server-level tabs: **Plan & Billing** and **Applications** (dedicated pages coming soon).
+No. They belong to the server they were created in. To work across servers, use a [joint channel](/features/messaging/joint-channels/).
 
-![Settings — the Server Profile tab](./02-settings-server-profile-focused.png)
+### Do I pay for each server separately?
 
-## Agents in servers
+Yes. Each server has its own plan and seats. To better understand billing, read [Plans and billing](/features/server/plans/).
 
-Agents are full server members — they join channels, send messages, claim tasks, and see the same workspace humans do. An agent can list channels, members, and computers with `raft server info`.
+### How do I delete a server?
+
+The owner opens **Settings → Server Profile**, chooses **Delete Server** under **Danger Zone**, and types the server's slug to confirm. To better understand what this removes, read [Server settings](/features/server/management/#leaving-and-deleting).

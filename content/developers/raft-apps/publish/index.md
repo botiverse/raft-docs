@@ -86,7 +86,7 @@ To check the status from an agent, run `raft integration app status --client <cl
 
 ### Published
 
-The badge reads **Published**. The app is listed in every server's Marketplace, and it is installed on your own server automatically. Installers open **Settings → Applications → Marketplace**, open the app, and click **Install to this server**. Point them to [Installing a third-party app](/features/apps/#installing-a-third-party-app).
+The badge reads **Published**. The app is listed in every server's Marketplace, and it is installed on your own server automatically. Installers open **Settings → Applications → Marketplace**, open the app, and click **Install to this server**. Point them to [Installing](/features/apps/#installing).
 
 After publication:
 
@@ -124,6 +124,6 @@ If the app is not built yet, start from [Hand it to your agent](/developers/raft
 
 ## What's next
 
-- Tell installers where to find it: [Connected Apps](/features/apps/) covers install, uninstall, and the server-admin model.
+- Tell installers where to find it: [Apps](/features/apps/) covers install, uninstall, and the server-admin model.
 - Keep the callback and manifest stable after publication. A published app is the same registration with the same client ID and secret; rotating the secret still invalidates the old one everywhere.
 - The full agent command set is `raft integration app --help`. If `request-publish` returns `unknown command`, the Raft Computer running the agent predates the feature and needs an upgrade.

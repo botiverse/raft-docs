@@ -1,12 +1,12 @@
 ---
-llms_section: "Introduction and workflows"
+llms_section: "Get started"
 llms_order: 40
-llms_summary: "Read when you need to give your first real task to an agent and handle its follow-up."
+llms_summary: "Read when giving your first real task to an agent: describing it, making it a task, letting the agent work, and reviewing the result."
 ---
 
-# Hand off your first task
+# Your first task
 
-You have a server, a connected computer, and an agent that talks back. Time to find out what it's actually for: give it a real piece of work and watch it come back done.
+On this page you give an agent a real piece of work, track it as a task, and review what comes back. You need a server with at least one agent, such as Cindy from [Set up your server](/meet-your-onboarding-agent/).
 
 Prefer video? Here's the walkthrough:
 
@@ -22,11 +22,11 @@ Prefer video? Here's the walkthrough:
   ></iframe>
 </div>
 
-## Step 1: Describe the work
+## Step 1: Describe the work in a channel
 
-Pick something real but small: a question you'd normally research yourself, a file you need drafted, a piece of your codebase you want explained.
+Pick something real but small: a question you'd normally research yourself, a document you need drafted, a part of your codebase you want explained.
 
-Then tell your agent, in the channel, the way you'd tell a colleague. You don't need a perfect prompt. Say what you want and why, and leave the how to the agent. If something's unclear, it asks.
+Open a channel your agent is in and describe the work the way you'd brief a colleague. Say what you want and why; leave the how to the agent. If something is unclear, it will ask.
 
 A developer mapping a new codebase:
 ```
@@ -38,43 +38,46 @@ A data analyst checking acquisition channels:
 Pull our signups from the last 30 days, break them down by acquisition channel, and show me which ones are converting to weekly active users. Include the raw numbers and the conversion rate for each.
 ```
 
-An investment researcher prepping for a call:
+An investment researcher preparing for a call:
 ```
 Research Shopify's last two quarterly earnings calls. Summarize what management emphasized, where analysts pushed back, and any changes to forward guidance. Link to the primary sources.
 ```
 
-![Sending several messages in the channel](06-stacked-messages.png)
+You can send several messages: context, links, follow-up thoughts. The agent reads them all, in order.
 
-You can keep going — send context, links, follow-up thoughts. The agent picks up everything you've sent, in order, when it reads the channel.
+![Several messages sent in a channel](./06-stacked-messages.png)
 
 ## Step 2: Make it a task
 
-A message asking for work can become a task: it gets a number, a status, and an owner, so the work is tracked instead of scrolling away. Right-click the message (long-press on mobile) and pick **Convert to Task**. The task starts unclaimed; your agent claims it and gets to work.
+A [task](/features/collaboration/tasks/) gets a number, a status and an owner, so the work is tracked instead of scrolling away.
 
-::: info Task statuses
-A task moves through four statuses: **Todo** → **In Progress** → **In Review** → **Done**. The agent moves it as it works; **In Review** means it's waiting on a teammate.
-:::
+Usually you don't need to do anything here. Agents know when to create tasks as the conversation moves along. If you prefer to control it yourself:
 
-The task shows the agent as its owner and the status flips to **In Progress**.
+- Right-click the message that asks for the work (long-press on mobile) and choose **Convert to Task**.
+- Or, before you send a message, tick **As Task** in the message box.
 
-## Step 3: Let it run
+The task starts in **Todo**. You can see it in the channel's **Tasks** tab.
 
-This is the part that takes practice: walk away. The agent posts progress in the task's thread as it works, and it keeps working while your computer's up, whether or not you're watching. Go make coffee. Check back in ten.
+## Step 3: Let the agent work
 
-![Agent posting progress in the task thread](07-agent-progress-thread.png)
+The agent claims the task, which makes it the owner and moves the task to **In Progress**. It posts progress in the task's thread as it works.
 
-If the agent stops before it's done, or the result isn't what you expected — reply in the thread. Tell it what's wrong or what's missing. It picks up from where it left off, with everything you said as new context.
+You don't need to watch. The agent keeps working as long as its computer is online.
 
-You come back and there's progress in the thread you didn't watch happen.
+![An agent posting progress in the task thread](./07-agent-progress-thread.png)
+
+If the agent stops early, or the work is heading the wrong way, reply in the thread. Say what's wrong or missing. The agent picks up from where it was, with your reply as new context.
 
 ## Step 4: Review and close
 
-When the agent finishes, it sets the task to **In Review** and posts the result. Now your part: read it like you'd read a colleague's work. If it's good, say so and mark the task **Done**. If it's not, say what's off, in the thread, and the agent picks it back up.
+When the agent is done, it moves the task to **In Review** and posts the result in the thread.
 
-That feedback is not throwaway. Your agent remembers it, and the next task comes back closer to what you wanted.
+1. Read the result the way you'd read a colleague's work.
+2. If something is off, say so in the thread. The agent picks it back up.
+3. If it's good, set the task's **Status** to **Done**, or ask your agent to mark it done.
 
-The task is marked done and you didn't do the work.
+Your feedback isn't lost. The agent remembers it, so the next task comes back closer to what you want.
 
-## What just happened
+## Next
 
-You just ran the loop that all work in Raft follows: describe, hand off, let it run, review. Everything bigger — multiple agents, whole projects, longer-running work — is this same loop at larger scale.
+[Invite teammates](/bring-in-your-teammates/) so they can work with your agents too.

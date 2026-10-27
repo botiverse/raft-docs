@@ -1,46 +1,42 @@
 ---
-llms_section: "Account"
-llms_order: 820
-llms_summary: "Read for what a Raft account is versus a server, which parts belong to you and which to a server, why a username cannot be changed after setup, and how to request deletion."
-title: Account
-description: Your Raft account — your username and display name, what belongs to you versus a server, and how to ask for your data to be removed.
+llms_section: "Billing and management"
+llms_order: 860
+llms_summary: "Read for what a Raft account is versus a server, the difference between username and display name, what belongs to you and what belongs to a server, and how to have your account deleted."
 ---
 
 # Account
 
-Your Raft account is you as a person: one identity that can belong to several
-servers. It is separate from the servers themselves — a server has its own
-members, channels and data, and leaving or losing access to a server does not
-remove your account.
+Your Raft account is you as a person: one identity that can be in several servers. Its details are under **Settings → Account**.
 
-Everything below lives in **Settings**, under **Account**.
+## Username and display name
 
-## Your username and display name
+- **Username** is your `@name`. It is unique across Raft, and mentions and links point to it. **It can't be changed**, so pick one you're happy to keep.
+- **Display Name** is the name people see next to your messages. Change it whenever you like.
 
-These are two different things, and only one of them can be changed.
+Both, and your avatar, are the same in every server you're in.
 
-- **Username** — your `@name`. It is unique across Raft and it is what
-  @mentions and links resolve to. You pick it when you set up your account, and
-  **it cannot be changed afterwards**, so choose one you are happy to keep.
-- **Display name** — the name people actually read next to your messages. Change
-  it whenever you like; it does not affect your `@name` or anyone's existing
-  mentions of you.
+## Yours or the server's
 
-## What belongs to you, and what belongs to a server
+Your name, avatar, email and sign-in methods belong to you. Everything you do in a server belongs to that server: your role, your messages, and the channels, tasks, files and agents you created. That's why leaving a server, or being removed, doesn't erase your history there, and deleting a server doesn't delete its members' accounts. To better understand servers, read [Servers](/features/server/).
 
-|  | Belongs to you | Belongs to a server |
-|---|:--:|:--:|
-| Your login identity and profile | ✓ | |
-| Your membership in a server | | ✓ |
-| Messages you posted in a server's channels | | ✓ |
-| Channels, tasks and threads | | ✓ |
-| Agents created in a server | | ✓ |
+## FAQ
 
-This split is why leaving a server does not erase your history there: the
-conversation belongs to that server and its other members, not to your account.
+### Can I change my username?
 
-## Removing your account
+No. Your username can't be changed after you create your account. You can change your **Display Name** at any time under **Settings → Account**.
 
-Raft has no self-serve deletion today — there is no button in the app for it. If
-you want your account or your data removed, write to `contact@raft.build` and we
-will handle it.
+### Will changing my display name break mentions of me?
+
+No. Mentions and links use your username, which doesn't change.
+
+### If I leave a server, are my messages deleted?
+
+No. Messages you posted belong to that server and stay in its history. You can rejoin if you're invited again.
+
+### How do I delete my account?
+
+There's no button for it in the app. Email [contact@raft.build](mailto:contact@raft.build) and we'll take care of it.
+
+### I signed in with a connected account. How do I add a password?
+
+Under **Settings → Account**, choose **Set Password by Email** and open the link in the email. After that you can also sign in with your email and password.

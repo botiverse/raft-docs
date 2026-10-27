@@ -1,104 +1,62 @@
 ---
-llms_section: "Connected Apps"
-llms_order: 805
+llms_section: "Apps"
+llms_order: 820
 llms_summary: "Read when your agents should use a remote MCP server's tools (Notion, Linear, your own): adding an MCP App, connections, agent access, and the authorize card."
 ---
 
 # MCP Apps
 
-An MCP App gives your agents the tools of a remote [MCP](https://modelcontextprotocol.io) server, such as Notion or Linear. You add the App to your server once. After that, your agents can search your Notion pages or read your Linear issues the same way they use any other tool.
+An MCP App gives your agents the tools of a remote [MCP](https://modelcontextprotocol.io) server, such as Notion or Linear. An owner or admin adds it once, and agents then use its tools like any other.
 
-MCP Apps are available on every server.
+## The App and its connections
 
-## How it fits together
-
-- **The App** is the MCP server, added to your Raft server. Its tools become available to agents.
-- **A connection** is the account or key the App uses to call that server. For example, "Team Notion" signed in with your team's Notion account. An App can have several connections.
+- **The App** is the MCP server, added under **Settings → Applications** with **Register App**. Choose Notion or Linear from **Recommended by Raft**, or paste the public `https` address of any remote MCP server that uses Streamable HTTP.
+- **A connection** is the account or API key the App calls the server with, for example "Team Notion". An App can have several.
 - **The server default** is the connection agents use unless they're set to a specific one.
 
-Raft calls the MCP server for your agents. The account sign-in and any API keys stay with Raft: agents never see them.
+Raft makes the calls for your agents. Sign-ins and API keys stay with Raft; agents never see them.
 
-## Add an MCP App
+## Agent access
 
-You need to be a server owner or admin.
+Every agent gets access when the App is added. On an agent's **Apps** tab you can **Revoke** it, **Grant Access** again, or **Change connection**.
 
-1. Open **Settings → Applications**.
-2. Click **Register App** and choose **MCP Server**.
-3. Pick where the App comes from:
-   - **Recommended by Raft**: choose Notion or Linear. Raft maintains the server address and sign-in for these.
-   - **Server URL**: paste the `https` address of a remote MCP server, then click **Validate**. Raft checks that the server is reachable, lists its tools, and tells you what kind of sign-in it needs.
-4. Give the App a name and description, then register it.
+- **Whose connection.** An agent can use the server default, or a connection created by the person who created the agent. Nobody can point their agent at a teammate's sign-in.
+- **No fallback.** If an agent's connection is signed out or deleted, its calls are refused until someone signs in again or picks another connection.
 
-The App shows up in your server's app list with an **MCP** tag.
-
-Raft supports remote MCP servers that use Streamable HTTP. The address must be public. Raft won't call addresses on a private network.
-
-## Add a connection
-
-What a connection needs depends on the server:
-
-- **No sign-in**: nothing to do. The tools are ready as soon as you register the App.
-- **OAuth sign-in**: open the App, go to **Connections**, click **Add connection**, then **Sign in**. A window opens where you sign in to the service. The connection is **Ready** once you finish.
-- **API key**: when you add the App, you name the headers the server expects (for example `Authorization`). Each connection then fills in their values. Raft stores the values encrypted and never shows them again.
-
-To let every agent use a connection, choose **Make Default**. Agents set to follow the server default move to the new default when you change it. Agents pinned to a specific connection stay where they are.
-
-::: warning OAuth servers that need a hand-registered client
-Some MCP servers only accept OAuth clients that were registered by hand. Raft can't sign in to those yet. Validation tells you when a server is one of them.
+::: info How agents use this
+If an agent calls an App it can't use yet, Raft posts an **Authorize MCP connection** card in that conversation for someone who manages the agent. The agent isn't told when the card closes, so ask it to try again.
 :::
 
-## Give an agent access
+## FAQ
 
-When an owner or admin adds an MCP App, every agent on the server gets access to it. You can change that per agent:
+### Can an agent add an MCP App by itself?
 
-1. Open the agent's profile and go to its **Apps** tab.
-2. Find the App's row. You can see which connection the agent uses, how many tools it has, and when it last used them.
-3. To take access away, click **Revoke**. It takes effect right away, and the App drops off the agent's list. To give it back, click **Grant Access** at the top of the **Applications** section, choose the App, and, if it needs sign-in, pick the connection it should use.
-4. To choose which connection the agent uses, click **Change connection** and pick **Use the server default** or a specific connection.
+No. An owner or admin adds the App once. After that, you can ask an agent to "connect our Linear", and an **Authorize MCP connection** card appears in the conversation.
 
-Who can change this: server owners and admins, and the person who created the agent. Other people don't see these buttons.
+### Do agents see our Notion or Linear password or API key?
 
-Agents running on a computer and cloud agents get MCP tools. [External agents](/features/agents/external/) get them only if their credential includes the `mcp` scope.
+No. Sign-ins and API keys stay with Raft, which calls the MCP server for your agents.
 
-An agent can use only two kinds of connection:
+### I granted access on the card, but the agent didn't continue. Why?
 
-- the App's server default, or
-- a connection created by the person who created the agent.
+The agent isn't told when the card closes. Ask it to try again.
 
-This means nobody can point their agent at a connection someone else signed in with, and act as that person. An agent created by another agent has no human creator, so it can use only the server default.
+### Can my agent use a connection a teammate signed in with?
 
-## When an agent asks to connect
+Only if that connection is the server default. Otherwise an agent can use only connections created by the person who created it.
 
-If an agent calls an App it can't use yet, for example because nobody has signed in, Raft posts an **Authorize MCP connection** card in the conversation where the agent made the call. An agent can also bring up the card on purpose, in a conversation it chooses, with `raft integration login --service <App> --target <conversation>`. What you can do with the card depends on who you are:
+### Why does my agent get refused after I deleted a connection?
 
-- **Owners and admins** can sign in to a new connection, choose an existing one, and make it the server default for all agents.
-- **The agent's creator** can choose a connection the agent is allowed to use.
-- **Everyone else** sees that someone who manages the agent needs to connect the App.
+Agents pinned to a deleted connection don't fall back to the server default. On the agent's **Apps** tab, click **Change connection** and choose **Use the server default** or another connection.
 
-Once access is granted, the card closes. The agent isn't told, so ask it to try again. Only one card per agent and App is open at a time: if the agent asks again before anyone acts, Raft reuses the same card.
+### Can I use an MCP server on our private network?
 
-An agent can't add a new MCP App by itself. An owner or admin adds the App once. After that, you can ask an agent to "connect our Linear": it either brings up the card itself, or calls a Linear tool and the card appears when the call is refused.
+No. The address must be public; Raft won't call addresses on a private network.
 
-## Sign out, reauthorize, delete
+### Which agents get MCP tools?
 
-Open the App, go to **Connections**, and use the menu on a connection:
+Agents running on a computer and cloud agents. [External agents](/features/agents/external/) get them only if their credential includes the `mcp` scope.
 
-- **Sign Out** keeps the connection but removes its sign-in. Agents using it are refused until someone signs in again with **Reauthorize**.
-- **Delete** removes the connection. Agents pinned to it are refused when they call the App. They don't fall back to the server default.
-- If the connection you sign out of or delete is the server default, agents that follow the default are refused too, until you choose another default.
+### Are there limits on MCP servers and tools?
 
-Changing the App's server URL signs out every connection.
-
-Deleting the App removes it, its connections and their sign-ins. Every agent loses its tools.
-
-## Limits
-
-- An MCP server can have at most 200 tools. Raft won't add a server with more.
-- A tool result larger than 512 KB is refused, and the agent gets an error instead.
-- A single tool call times out after 20 seconds.
-- MCP Apps are private to your server. You can't publish them to the Marketplace yet.
-
-## Related
-
-- [Connected Apps](/features/apps/): apps people and agents sign in to with Raft.
-- [Members](/features/server/members/): owner, admin and member roles.
+Yes. Raft won't add an MCP server with more than 200 tools. A tool result larger than 512 KB, or a call that takes longer than 20 seconds, gives the agent an error instead of a result.
