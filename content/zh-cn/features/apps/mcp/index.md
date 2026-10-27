@@ -1,104 +1,62 @@
 ---
-llms_section: "Connected Apps zh-CN"
-llms_order: 1805
-llms_summary: "想让 Agent 使用远程 MCP 服务器（Notion、Linear 或你自己的服务器）提供的工具时阅读：添加 MCP 应用、连接、Agent 的访问权限，以及授权卡片。"
+llms_section: "Apps zh-CN"
+llms_order: 1820
+llms_summary: "想让 Agent 使用远程 MCP 服务器（Notion、Linear 或你自己的服务器）的工具时阅读：添加 MCP 应用、连接、Agent 的访问权限，以及授权卡片。"
 ---
 
 # MCP 应用
 
-MCP 应用把远程 [MCP](https://modelcontextprotocol.io) 服务器（比如 Notion 或 Linear）的工具交给你的 Agent 使用。应用只需要添加到你的服务器一次。之后，Agent 搜索你的 Notion 页面、读取你的 Linear 工单，就和使用其他工具一样。
+MCP 应用把远程 [MCP](https://modelcontextprotocol.io) 服务器（比如 Notion 或 Linear）的工具交给你的 Agent 使用。所有者或管理员添加一次，之后 Agent 就能像使用其他工具一样使用它的工具。
 
-所有服务器都可以使用 MCP 应用。
+## 应用及其连接 {#the-app-and-its-connections}
 
-## 各部分的关系 {#how-it-fits-together}
+- **应用** 就是这个 MCP 服务器，在 **设置 → 应用** 中通过 **注册应用** 添加。你可以从 **Raft 推荐** 里选择 Notion 或 Linear，也可以粘贴任何使用 Streamable HTTP 的远程 MCP 服务器的公网 `https` 地址。
+- **连接** 是应用调用服务器时使用的账户或 API 密钥，例如「团队 Notion」。一个应用可以有多个连接。
+- **服务器默认连接** 是未单独指定连接的 Agent 所使用的连接。
 
-- **应用**：添加到你的 Raft 服务器上的 MCP 服务器。它的工具可供 Agent 使用。
-- **连接**：应用调用这个 MCP 服务器时使用的账户或密钥。例如「团队 Notion」，用你们团队的 Notion 账户登录。一个应用可以有多个连接。
-- **服务器默认连接**：没有单独指定连接的 Agent 都使用它。
+Raft 代替你的 Agent 发起调用。登录信息和 API 密钥都留在 Raft，Agent 永远看不到。
 
-Raft 代替 Agent 调用 MCP 服务器。登录的账户和所有 API 密钥都留在 Raft，Agent 永远看不到。
+## Agent 的访问权限 {#agent-access}
 
-## 添加 MCP 应用 {#add-an-mcp-app}
+应用添加后，每个 Agent 都会获得访问权限。在 Agent 的 **应用** 标签页，你可以 **撤销** 访问权限、再次 **授予访问权限**，或者 **更换连接**。
 
-只有服务器所有者或管理员可以添加。
+- **用谁的连接。** Agent 可以使用服务器默认连接，或者由这个 Agent 的创建者创建的连接。谁都不能让自己的 Agent 使用队友登录的连接。
+- **不会自动改用别的连接。** 如果 Agent 的连接已退出登录或已删除，它的调用会被拒绝，直到有人重新登录或选择另一个连接。
 
-1. 打开 **设置 → 应用**。
-2. 点击 **注册应用**，选择 **MCP 服务器**。
-3. 选择应用的来源：
-   - **Raft 推荐**：选择 Notion 或 Linear。这两个应用的服务器地址和登录方式由 Raft 维护。
-   - **服务器地址**：粘贴远程 MCP 服务器的 `https` 地址，然后点击 **验证**。Raft 会检查服务器能否访问，列出它的工具，并告诉你它需要哪种登录方式。
-4. 填写应用的名称和描述，然后注册。
-
-应用会出现在服务器的应用列表中，带有 **MCP** 标签。
-
-Raft 支持使用 Streamable HTTP 的远程 MCP 服务器。地址必须是公网地址，Raft 不会调用私有网络中的地址。
-
-## 添加连接 {#add-a-connection}
-
-连接需要什么，取决于 MCP 服务器：
-
-- **无需登录**：什么都不用做。注册应用后，工具马上可以使用。
-- **OAuth 登录**：打开应用，进入 **连接**，点击 **添加连接**，再点击 **登录**。在打开的窗口中登录该服务。完成后，连接状态变为 **就绪**。
-- **API 密钥**：添加应用时，填写服务器需要的请求头名称（例如 `Authorization`）。之后每个连接各自填写这些请求头的值。Raft 会加密保存这些值，之后不会再显示。
-
-要让所有 Agent 都使用某个连接，选择 **设为默认**。更改服务器默认连接后，跟随默认连接的 Agent 会改用新的默认连接；固定使用某个连接的 Agent 保持不变。
-
-::: warning 需要手动注册客户端的 OAuth 服务器
-有些 MCP 服务器只接受手动注册的 OAuth 客户端，Raft 暂时无法登录这类服务器。验证时，Raft 会告诉你服务器是否属于这一类。
+::: info Agent 如何使用
+如果 Agent 调用了一个它还不能使用的应用，Raft 会在那段对话中发出一张 **授权 MCP 连接** 卡片，交给管理这个 Agent 的人处理。卡片关闭时 Agent 不会收到通知，所以请让它再试一次。
 :::
 
-## 为 Agent 授予访问权限 {#give-an-agent-access}
+## 常见问题 {#faq}
 
-所有者或管理员添加 MCP 应用后，服务器上的每个 Agent 都可以访问它。你可以按 Agent 单独调整：
+### Agent 能自己添加 MCP 应用吗？ {#can-an-agent-add-an-mcp-app-by-itself}
 
-1. 打开 Agent 的资料页，进入 **应用** 标签页。
-2. 找到这个应用所在的行。这里显示 Agent 使用哪个连接、有多少个工具，以及上次使用工具的时间。
-3. 要收回访问权限，点击 **撤销**。撤销立即生效，这个应用会从 Agent 的列表中消失。要恢复访问权限，点击 **应用** 这一节顶部的 **授予访问权限**，选择这个应用；如果它需要登录，再选择 Agent 要使用的连接。
-4. 要选择 Agent 使用哪个连接，点击 **更换连接**，然后选择 **使用服务器默认连接** 或某个具体的连接。
+不能。应用要由所有者或管理员添加一次。之后，你可以让 Agent「连接我们的 Linear」，对话中就会出现一张 **授权 MCP 连接** 卡片。
 
-可以做这些更改的人：服务器所有者和管理员，以及 Agent 的创建者。其他人看不到这些按钮。
+### Agent 能看到我们 Notion 或 Linear 的密码或 API 密钥吗？ {#do-agents-see-our-notion-or-linear-password-or-api-key}
 
-运行在计算机上的 Agent 和云端 Agent 都能使用 MCP 工具。[外部 Agent](/zh-cn/features/agents/external/) 只有在凭据包含 `mcp` 权限范围（scope）时才能使用。
+看不到。登录信息和 API 密钥都留在 Raft，由 Raft 代替你的 Agent 调用 MCP 服务器。
 
-Agent 只能使用两种连接：
+### 我在卡片上授予了访问权限，但 Agent 没有继续，为什么？ {#i-granted-access-on-the-card-but-the-agent-didn-t-continue-why}
 
-- 应用的服务器默认连接，或者
-- Agent 的创建者自己创建的连接。
+卡片关闭时，Agent 不会收到通知。请让它再试一次。
 
-这样，谁都不能把自己的 Agent 指向别人登录的连接，冒用那个人的身份。由另一个 Agent 创建的 Agent 没有人类创建者，所以只能使用服务器默认连接。
+### 我的 Agent 能使用队友登录的连接吗？ {#can-my-agent-use-a-connection-a-teammate-signed-in-with}
 
-## Agent 请求连接时 {#when-an-agent-asks-to-connect}
+只有当那个连接是服务器默认连接时才可以。否则，Agent 只能使用它的创建者所创建的连接。
 
-如果 Agent 调用了一个它还不能使用的应用（比如还没有人登录），Raft 会在 Agent 发起调用的对话里发出一张 **授权 MCP 连接** 卡片。Agent 也可以主动在它选定的对话里发出这张卡片，用的命令是 `raft integration login --service <App> --target <conversation>`。你能对卡片做什么，取决于你的身份：
+### 为什么我删除连接后，Agent 的调用被拒绝了？ {#why-does-my-agent-get-refused-after-i-deleted-a-connection}
 
-- **所有者和管理员**：可以登录一个新连接、选择已有的连接，并把它设为所有 Agent 的服务器默认连接。
-- **Agent 的创建者**：可以从这个 Agent 有权使用的连接中选一个。
-- **其他人**：会看到提示，需要由管理这个 Agent 的人来连接应用。
+固定使用某个连接的 Agent，在这个连接删除后不会改用服务器默认连接。在 Agent 的 **应用** 标签页中，点击 **更换连接**，然后选择 **使用服务器默认连接** 或另一个连接。
 
-授予访问权限后，卡片会关闭。Agent 不会收到通知，所以请让它再试一次。同一个 Agent 和同一个应用，同一时间只会有一张卡片：如果在有人处理之前 Agent 再次请求，Raft 会沿用原来那张卡片。
+### 可以使用我们私有网络里的 MCP 服务器吗？ {#can-i-use-an-mcp-server-on-our-private-network}
 
-Agent 不能自己添加新的 MCP 应用。应用要由所有者或管理员添加一次。之后，你就可以让 Agent「连接我们的 Linear」：它要么自己发出卡片，要么调用某个 Linear 工具，调用被拒绝时卡片就会出现。
+不可以。地址必须是公网地址，Raft 不会调用私有网络中的地址。
 
-## 退出登录、重新授权和删除 {#sign-out-reauthorize-delete}
+### 哪些 Agent 能使用 MCP 工具？ {#which-agents-get-mcp-tools}
 
-打开应用，进入 **连接**，使用连接上的菜单：
+运行在计算机上的 Agent 和云端 Agent。[外部 Agent](/zh-cn/features/agents/external/) 只有在凭据包含 `mcp` 权限范围（scope）时才能使用。
 
-- **退出登录**：保留连接，但移除它的登录状态。使用这个连接的 Agent 会被拒绝，直到有人通过 **重新授权** 再次登录。
-- **删除**：移除这个连接。固定使用它的 Agent 调用这个应用时会被拒绝，不会改用服务器默认连接。
-- 如果你退出登录或删除的是服务器默认连接，跟随默认连接的 Agent 也会被拒绝，直到你选择另一个默认连接。
+### MCP 服务器和工具有限制吗？ {#are-there-limits-on-mcp-servers-and-tools}
 
-更改应用的服务器地址，会让所有连接退出登录。
-
-删除应用会移除应用本身、它的所有连接，以及这些连接的登录信息。所有 Agent 都会失去它的工具。
-
-## 限制 {#limits}
-
-- 一个 MCP 服务器最多只能有 200 个工具。超过这个数量的服务器，Raft 不会添加。
-- 大于 512 KB 的工具结果会被拒绝，Agent 会收到错误。
-- 单次工具调用超过 20 秒就会超时。
-- MCP 应用只在你的服务器内可用，暂时不能发布到市场。
-
-## 相关页面 {#related}
-
-- [已连接应用](/zh-cn/features/apps/)：人和 Agent 用 Raft 身份登录的应用。
-- [成员](/zh-cn/features/server/members/)：所有者、管理员和成员三种角色。
+有。工具超过 200 个的 MCP 服务器，Raft 不会添加。工具结果大于 512 KB，或者一次调用耗时超过 20 秒，Agent 拿到的都是错误，而不是结果。
