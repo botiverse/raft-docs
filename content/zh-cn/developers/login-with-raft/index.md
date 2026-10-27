@@ -202,7 +202,7 @@ GET https://api.raft.build/api/oauth/authorize
 
 `state` 和 `nonce` 由客户端生成，也应由客户端校验。支持使用 `S256` 的 PKCE；使用时，要把对应的 `code_verifier` 发给 token 端点。如果授权请求里没有 PKCE challenge，就完全不要带 `code_verifier`：只要带了，哪怕是空字符串，也会返回 `invalid_grant`。这一点同样适用于原始的 Agent 交接授权码和 `urn:slock:grant-type:agent_request` 兑换。Agent CLI 的交接不会生成标准 OIDC 客户端所需的待定状态或 PKCE cookie。
 
-要预先选定某个 Raft 服务器，加上 `server=<server-id-or-slug>`。它只会缩小授权页上可选的服务器范围；真正的安全边界仍是 OAuth 客户端与所在服务器的绑定。
+要把登录固定在某个 Raft 服务器上，用这个服务器专属的 issuer 配置客户端：发现文档在 `https://api.raft.build/oidc/<server-id-or-slug>/.well-known/openid-configuration`。这样授权页只会提供这个服务器，这个 issuer 下的 token 端点会拒绝在别的服务器上授予的授权码，ID token 的 `iss` 也会写明这个服务器。授权端点已不再接受查询参数 `server`：带了它的请求会被拒绝，返回 `invalid_request`。
 
 Raft 会把浏览器重定向到 Login with Raft 的登录入口；用户同意后，再带着 `code` 和原来的 `state`，跳回注册时填写的那个回调地址。用注册得到的客户端凭据（推荐用 HTTP Basic）在 `https://api.raft.build/api/oauth/token` 兑换这个一次性授权码，并发送同一个 `redirect_uri`（使用 PKCE 时再加上 `code_verifier`）。响应里有一个 bearer access token 和一个带签名的 `id_token`。在创建应用会话之前，用发现文档给出的 JWKS 校验 ID token 的 issuer、audience、过期时间、nonce（如果发送过）和 ES256 签名。用 bearer token 访问 `/api/oauth/userinfo`，获取当前身份；只有授予了 `email` scope，响应里才会有 `email` 和 `email_verified`。发现文档没有声明 refresh token 流程，所以 access token 过期后，要重新发起授权。
 
@@ -210,9 +210,9 @@ Raft 会把浏览器重定向到 Login with Raft 的登录入口；用户同意�
 
 Raft 里的 scope 有两种不同的含义。OAuth 的 `scope` 参数控制 claim 和能力，比如 `openid`、`profile` 和 `email`。**服务器范围**则是租户边界：每个 OAuth 客户端都注册在某一个服务器的 **服务器设置 → 应用** 里，而不是注册在全平台共用的客户端登记处。
 
-授权时选定的服务器，就是授权码、access token、ID token 和 userinfo 响应所属的上下文。身份响应里带有 `server_id`、`server_slug`，以及（如果有的话）`server_role`。不要接受调用方传入的 `server_id` 来切换这个上下文。后端依据客户端在该服务器上的注册和 token 绑定来守住这条边界；查询参数 `server=<server-id-or-slug>` 只是为了用户体验，缩小授权页上可选的服务器范围。
+授权时选定的服务器，就是授权码、access token、ID token 和 userinfo 响应所属的上下文。身份响应里带有 `server_id`、`server_slug`，以及（如果有的话）`server_role`。不要接受调用方传入的 `server_id` 来切换这个上下文。这条边界由后端守住：token 只对签发它的服务器有效，而且只在你的应用在那里仍然可用时有效。
 
-如果一个应用需要访问多个服务器，就在每个服务器上分别注册 OAuth 客户端，各自的客户端凭据和回调注册也分开保管。用同一个 bearer token 调用 `/api/oauth/serverinfo`，可以读取当前绑定服务器的最新元数据；它不会选择别的服务器，也不需要额外的 scope。
+一个应用要在多个服务器上使用，仍然只是一个 OAuth 客户端。在它的来源服务器上注册一次，再安装到其他每个服务器上：通过[市场](/zh-cn/developers/raft-apps/publish/)，或通过[私有共享链接](/zh-cn/developers/raft-apps/share/)。这样，同一个人可以在每个服务器上各有一个登录，各有自己的 token。你的应用用 `server_id` 区分这些登录；这个人的 `sub` 在所有登录里都相同。用同一个 bearer token 调用 `/api/oauth/serverinfo`，可以读取当前绑定服务器的最新元数据；它不会选择别的服务器，也不需要额外的 scope。
 
 ## 发起登录与回调约定 {#starting-a-login-and-the-callback-contract}
 
@@ -532,7 +532,7 @@ async function upsertAccountFromRaft(userinfo: RaftUserinfo) {
 
 ### 你的账户模型 {#your-account-model}
 
-唯一键不能只用 `sub`，要这样组合：
+唯一键是 `sub` 加 `server_id`。同一个人在每个服务器上的 `sub` 都相同，而每个登录只绑定一个服务器，所以要靠 `server_id` 区分是哪一个登录：
 
 ```text
 (provider = "raft", provider_subject = sub, server_id = server_id)
@@ -551,7 +551,7 @@ async function upsertAccountFromRaft(userinfo: RaftUserinfo) {
 | `server_avatar_url` | 使用 serverinfo 的 `picture`，不要用服务器原始的 `avatar_url` |
 | `raw_profile` | 完整 JSON，用于调试和应对日后 claim 的变化 |
 
-token 只在一个服务器范围内有效。同一个用户在多个服务器上，会产生多个相互独立的登录。
+token 只在一个服务器范围内有效。同一个人在多个服务器上，每个服务器各有一个登录，`sub` 都相同。
 
 ### 面向 Agent 的 cookie 规则 {#cookie-rule-for-agents}
 
@@ -567,7 +567,7 @@ Raft CLI 只会把应用的服务 cookie 发送到符合 origin、path、Secure 
 
 | 字段 | 说明 |
 | --- | --- |
-| `sub` | 稳定的主体 ID（UUID），在一个服务器内唯一 |
+| `sub` | 稳定的主体 ID（UUID）。对人来说，它就是这个人的 Raft 账户，在每个服务器上都相同；Agent 的 `sub` 是这个 Agent 自己的 ID |
 | `type` | `"human"` 或 `"agent"` |
 | `server_id` + `server_slug` | 这次登录所属的 Raft 服务器 |
 | `server_role` | 人类或 Agent 主体在 token 绑定服务器中的当前角色。Raft 每次处理 userinfo 请求时，都会根据实时的服务器成员关系得出它。 |

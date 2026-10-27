@@ -219,9 +219,13 @@ the token endpoint. If authorization did not include a PKCE challenge, omit
 `urn:slock:grant-type:agent_request` exchange. The Agent CLI handoff does not
 create a standard OIDC client's pending state or PKCE cookies.
 
-To preselect one Raft Server, add
-`server=<server-id-or-slug>`. This only narrows the consent picker; the
-server-local OAuth client binding remains the security boundary.
+To pin the login to one Raft Server, configure the client with that Server's
+issuer: discovery at
+`https://api.raft.build/oidc/<server-id-or-slug>/.well-known/openid-configuration`.
+The consent page then offers only that Server, the token endpoint under that
+issuer refuses a code granted on another Server, and the ID token's `iss` names
+that Server. The authorization endpoint no longer accepts a `server` query
+parameter: a request that sends one is refused with `invalid_request`.
 
 Raft redirects the browser to its Login with Raft setup flow and, after
 consent, back to the exact registered callback with `code` and the original
@@ -249,15 +253,18 @@ The Server selected during authorization becomes the context for the
 authorization code, access token, ID token, and userinfo response. Identity
 responses carry `server_id`, `server_slug`, and (when available)
 `server_role`. Do not accept a caller-supplied `server_id` as a way to switch
-that context. The backend enforces the boundary from the server-local client
-registration and token binding; a `server=<server-id-or-slug>` query parameter
-only narrows the consent picker for user experience.
+that context. The backend enforces the boundary: a token works only for the
+Server it was issued on, and only while your app is available there.
 
-If an app needs access in several Servers, register a separate OAuth client in
-each Server and keep those client credentials and callback registrations
-separate. Use `/api/oauth/serverinfo` with the same bearer token to read the
-currently bound Server's current metadata; it does not select another Server
-or require a second scope.
+An app used on several Servers is still one OAuth client. Register it once, on
+its source Server, and have it installed on each other Server, from the
+[Marketplace](/developers/raft-apps/publish/) or through a
+[private share link](/developers/raft-apps/share/). One person can then hold
+one login per Server, each with its own token. Your app tells those logins
+apart by `server_id`; the person's `sub` is the same in all of them. Use
+`/api/oauth/serverinfo` with the same bearer token to read the currently bound
+Server's current metadata; it does not select another Server or require a
+second scope.
 
 ## Starting a login, and the callback contract
 
@@ -583,7 +590,9 @@ async function upsertAccountFromRaft(userinfo: RaftUserinfo) {
 
 ### Your account model
 
-Unique key — `sub` alone is not enough:
+Unique key: `sub` plus `server_id`. A person's `sub` is the same on every
+Server, and each login is bound to one Server, so `server_id` says which login
+this is:
 
 ```text
 (provider = "raft", provider_subject = sub, server_id = server_id)
@@ -602,7 +611,7 @@ Unique key — `sub` alone is not enough:
 | `server_avatar_url` | Use serverinfo `picture`, not raw server `avatar_url` |
 | `raw_profile` | Full JSON, for debugging and future claim changes |
 
-Tokens are scoped to one server. A user on multiple servers produces separate logins.
+Tokens are scoped to one server. A person on multiple servers produces one login per server, all with the same `sub`.
 
 ### Cookie rule for agents
 
@@ -618,7 +627,7 @@ The Raft CLI only sends an app's service cookie to action base URLs that match t
 
 | Claim | Description |
 | --- | --- |
-| `sub` | Stable subject ID (UUID), unique within a server |
+| `sub` | Stable subject ID (UUID). For a person it is their Raft account, the same on every Server; an agent's `sub` is the agent's own ID |
 | `type` | `"human"` or `"agent"` |
 | `server_id` + `server_slug` | The Raft server this login is scoped to |
 | `server_role` | The human or agent principal's current role in the token-bound server. Raft resolves it from live server membership on each userinfo request. |
