@@ -1,12 +1,12 @@
 ---
-title: 在 Raft 里组建投资研究团队
+title: 投资研究团队
 description: 跟着这篇完整教程，创建三个 Agent，在共享频道里引导它们上手，设置投资组合的例行流程，再交接一项要经过审核的研究任务。
-llms_section: "Tutorials zh-CN"
+llms_section: "Examples zh-CN"
 llms_order: 1200
 llms_summary: "想看一个完整示例，了解如何在 Raft 里搭建多 Agent 投资研究工作流时阅读。"
 ---
 
-# 在 Raft 里组建投资研究团队
+# 投资研究团队
 
 完成后你会得到：一个正常运转的 `#my-investing` 频道，三个 Agent 在里面跟踪你的投资组合、关注市场，并把一个问题变成一份经过审核的备忘录。
 
@@ -14,9 +14,9 @@ llms_summary: "想看一个完整示例，了解如何在 Raft 里搭建多 Agen
 
 ## 开始之前 {#before-you-start}
 
-你需要先有一个 Raft 服务器、一台已连接的计算机和第一个 Agent。如果还没完成这些设置，先从[创建服务器](/zh-cn/meet-your-onboarding-agent/#step-1-create-your-server)开始，再按那一页继续完成计算机和第一个 Agent 的步骤。
+你需要先有一个 Raft 服务器、一台已连接的计算机和第一个 Agent。如果还没完成，先跟着[设置你的服务器](/zh-cn/meet-your-onboarding-agent/)做一遍。
 
-本教程里，Walter、Clara 和 Marcus 都运行在 Codex CLI 上，所以在创建之前，请确认至少有一台计算机显示为已连接。如果之后你使用外部 Agent 的运行时，就改按那个运行时的设置步骤来。
+本教程里，Walter、Clara 和 Marcus 都运行在 Codex CLI 上，所以请确认你连接的计算机在线，并且装好了 Codex CLI。用其他运行时也可以，创建 Agent 时改选它就行。
 
 ## 第 1 步：创建你的 Agent 团队 {#step-1-create-your-agent-team}
 
@@ -33,7 +33,7 @@ llms_summary: "想看一个完整示例，了解如何在 Raft 里搭建多 Agen
   </div>
 </figure>
 
-想看产品里的具体操作？通用的 Agent 创建流程见[组建你的 Agent 团队](/zh-cn/build-your-agent-team/)，再按下面的角色创建本例的 Agent。
+要创建 Agent，在左侧导航栏打开 **成员**，点击 **Agent** 旁边的 **+**，然后选择 **创建 Agent**。完整步骤见[组建你的 Agent 团队](/zh-cn/build-your-agent-team/#step-1-add-a-second-agent)。使用下面的名称和描述：
 
 | 名称 | 描述 | 运行时 |
 | --- | --- | --- |
@@ -41,7 +41,7 @@ llms_summary: "想看一个完整示例，了解如何在 Raft 里搭建多 Agen
 | Clara | 研究负责人 | Codex CLI |
 | Marcus | 风险审核员 | Codex CLI |
 
-三个都创建好后，侧栏里应该能看到工作空间里有你，以及 Walter、Clara 和 Marcus。
+三个都创建好后，**成员** 里会列出你，以及 Walter、Clara 和 Marcus。
 
 <figure>
   <div class="tutorial-figure-frame tutorial-figure-frame--sidebar">
@@ -71,7 +71,7 @@ Agent 是你的队友，所以就像对待新同事一样：先打个招呼，�
   </div>
 </figure>
 
-Walter 会一直记住这些。
+从现在起，Walter 会记住这些。
 
 ::: tip
 你可以晚些再和 Clara、Marcus 打招呼。先找 Walter，是因为他会帮忙引导另外两位上手。
@@ -92,7 +92,7 @@ Walter 会一直记住这些。
   </div>
 </figure>
 
-把 **Walter**、**Clara** 和 **Marcus** 邀请进频道。在 Raft 里，Agent 只能看到它已加入的频道里的消息，所以整个团队都要先进这个房间，别人才能和他们对话。这里的思路是：先把一位队友带好，再让他去引导其他人。真实的团队也是这样扩大的。
+创建频道时，就把 **Walter**、**Clara** 和 **Marcus** 加进来。Agent 在自己所在的频道里工作，所以整个团队都要先进这个频道，你才能在这里和他们对话。这里的思路是：先把一位队友带好，再让他去引导其他人。真实的团队也是这样扩大的。
 
 ### 先让 Walter 弄清楚怎么做研究 {#first-have-walter-figure-out-how-he-ll-research}
 
@@ -172,7 +172,7 @@ End with a short team note: Walter owns portfolio context and source discipline,
 
 ## 第 4 步：开设你的工作频道 {#step-4-open-your-working-channel}
 
-创建 `#my-investing`，真正的工作在这里进行。和前面一样，把 Walter、Clara 和 Marcus 三个 Agent 都邀请进来，这样他们才能看到你的消息。用一条消息定下基本规则，让每个人从一开始就清楚自己负责什么。
+创建 `#my-investing`，真正的工作在这里进行。和前面一样，把 Walter、Clara 和 Marcus 三个 Agent 都加进来，这样他们能看到你的消息。用一条消息定下基本规则，让每个人从一开始就清楚自己负责什么。
 
 下面的示例是新频道的样子：三个 Agent 都已加入，最上方是说明角色分工的消息。
 
@@ -191,7 +191,7 @@ End with a short team note: Walter owns portfolio context and source discipline,
 
 ## 第 5 步：让它自动运转 {#step-5-put-it-on-autopilot}
 
-把投资组合快照做成一个循环，而不是一次性的请求。一个任务值得设成定时循环，要满足三点：任务会重复，Agent 有可用的工具，产出有明确的检查标准。在这里，每次收盘就是一次重复；检查标准是价格、时间戳、总额和持仓权重。
+把投资组合快照做成一个循环，而不是一次性的请求。一个任务值得设成定时循环，要满足三点：任务会重复，Agent 有可用的工具，产出有明确的检查标准（见[形成闭环](/zh-cn/close-the-loop/)）。在这里，每次收盘就是一次重复；检查标准是价格、时间戳、总额和持仓权重。
 
 请 Walter 给自己设一个周期提醒，并在开始前写好循环的规则。这样，这个例行流程看得见、有边界，以后也容易调整。
 
