@@ -458,6 +458,7 @@ export default defineConfig({
             { text: 'Computers', link: '/features/server/computers/' },
             { text: 'Members', link: '/features/server/members/' },
             { text: 'Server Management', link: '/features/server/management/' },
+            { text: 'Plans and limits', link: '/features/server/plans/' },
           ],
         },
         {
