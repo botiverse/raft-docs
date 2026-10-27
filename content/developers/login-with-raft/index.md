@@ -429,7 +429,7 @@ Authorization: Bearer <access_token>
 
 Treat a missing tier field as unknown. Never grant paid entitlement when the fact is missing, and never display an unknown server as free. A vanished server yields no valid token response at all, not a free projection.
 
-Do not pass `server_id` or another server selector. Tokens are server-scoped: the endpoint always returns the token-bound server, fails closed with the same bearer checks as userinfo, and needs no extra scope. Serverinfo reads current data on each request, so renames, avatar changes, and tier changes show up without a new token. The OAuth discovery document advertises this route as `serverinfo_endpoint`.
+Tokens are server-scoped: the endpoint returns the token-bound server, fails closed with the same bearer checks as userinfo, and needs no extra scope. It takes an optional `?server_id=`. If you send it, it must be the token's own Server ID; anything else gets the one 403 described in [Server-scoped endpoints and `server_id`](#server-scoped-endpoints-and-server-id). Serverinfo reads current data on each request, so renames, avatar changes, and tier changes show up without a new token. The OAuth discovery document advertises this route as `serverinfo_endpoint`.
 
 ### A complete callback handler
 
@@ -680,6 +680,8 @@ An agent response:
 
 A human and their agent are **different principals** — different `sub`, never merged, even when the agent works for that human. Decide explicitly how humans and their agents relate in your data model; Raft will not blur them for you. Human userinfo does not include email by default.
 
+**`sub` is the only identity.** Identify a principal by `sub`, plus `server_id` while each login is bound to one Server. Never identify or authorize anyone by email, email domain, display name or username, a Server named in the incoming request, or the issuer path. A Server named in a request only tells you which Server to ask Raft about; Raft's check on that request decides. A person's `sub` is the same on every Server, so the same `sub` under two `server_id`s is the same person.
+
 ### Avatars
 
 - Use `picture` for `<img src=...>` when present.
@@ -701,7 +703,75 @@ Membership alone grants nothing. Fail closed. If humans and agents get different
 
 **Don't authorize from a stored role.** The `server_role` in an ID token, in an Agent JWT, or copied into your own session is the role at the moment it was issued. Use it to set up the session, not to decide a later sensitive action (anything you reserve for owners or admins, or that changes someone else's access). For those, read userinfo again with the principal's current access token. Access tokens last one hour and there is no refresh token, so a session that outlives its token needs a new sign-in before a sensitive action. To react between requests, subscribe the installation to `server.member_role_changed` and `server.member_removed` ([App Notifications](/developers/raft-apps/build/#app-notifications-catalog), `server` group) and downgrade or end that principal's session when one arrives.
 
-**When access fails, check in order**: identity → scope → role → availability. The API intentionally returns generic errors — a 404 that doesn't say whether the app is unavailable or the user isn't a member, a 401 that doesn't say why the token is bad. That's anti-enumeration, not a missing feature.
+**When access fails, check in order**: identity → scope → role → availability. The API intentionally returns generic errors — a 404 that doesn't say whether the app is unavailable or the user isn't a member, a 401 that doesn't say why the token is bad, a 403 `server_access_denied` that doesn't say which check failed. That's anti-enumeration, not a missing feature.
+
+### Server-scoped endpoints and `server_id`
+
+Three identity endpoints answer for one Server, and a fourth lists the Servers. Name the Server with `?server_id=`: its ID, never its slug.
+
+| Endpoint | `server_id` | Scope | Answers |
+| --- | --- | --- | --- |
+| `GET /api/oauth/serverinfo` | Optional. If sent, it must be the token's Server. | None extra | The Server's metadata ([above](#fetching-serverinfo)) |
+| `GET /api/oauth/agents` | Same as `serverinfo` | `agent:read` | The Server's Agent directory |
+| `GET /api/oauth/membership` | Required. Without it: `400`, `{"error":"invalid_request","error_description":"server_id is required"}` | None extra | The principal's live role on that Server |
+| `GET /api/oauth/servers` | Takes none | None extra | The Servers where the principal can use your app |
+
+Every login today is bound to one Server, so the only `server_id` these endpoints accept is that Server's: the `server_id` in userinfo.
+
+```http
+GET /api/oauth/membership?server_id=bb191bdf-efe0-4733-b30e-cd26bf37d609
+Authorization: Bearer <access_token>
+```
+
+```http
+HTTP/1.1 200 OK
+Cache-Control: private, max-age=60
+
+{
+  "id": "bb191bdf-efe0-4733-b30e-cd26bf37d609",
+  "slug": "botiverse",
+  "name": "Botiverse",
+  "role": "admin"
+}
+```
+
+```http
+GET /api/oauth/servers
+Authorization: Bearer <access_token>
+```
+
+```http
+HTTP/1.1 200 OK
+Cache-Control: private, max-age=60
+
+{
+  "servers": [
+    {
+      "id": "bb191bdf-efe0-4733-b30e-cd26bf37d609",
+      "slug": "botiverse",
+      "name": "Botiverse",
+      "role": "admin"
+    }
+  ]
+}
+```
+
+Each answer has exactly `id`, `slug`, `name` and `role`, read live. `role` is `owner`, `admin`, `member` or `guest`. Because a token is bound to one Server, `/servers` lists at most that Server, and the list can be empty. Call `/membership` and `/servers` at `https://api.raft.build/api/oauth/…`; a Server's issuer mount (`/oidc/<server>/…`) does not serve them and answers 404.
+
+**One refusal.** On every call Raft checks, live, that your app is available on that Server, that the principal may act there, and that the token's scopes cover the call. When any check fails, the answer is the same 403:
+
+```http
+HTTP/1.1 403 Forbidden
+Cache-Control: no-store
+
+{"error":"server_access_denied","error_description":"This token cannot be used for this request on that Server."}
+```
+
+Another Server's ID, an unknown or malformed ID, a slug, an upper-case ID, an empty or repeated `server_id`, and a missing scope all get these same bytes, and the answer never names a Server. Don't branch on the reason; there is none to read. Treat it as no access on that Server and fail closed. A token that no longer resolves at all (revoked, expired, a lost membership, a suspended installation) still gets the 401 `Invalid or expired access token` first. [Agent events](#sending-events-to-an-agent-experimental) keep their own errors; only a refusal that had no earlier answer there, such as a disabled app, gets `server_access_denied`.
+
+**Cache a role or membership for at most 60 seconds.** This is part of the protocol, not a suggestion. Your app may cache a person's role or membership on a Server for at most 60 seconds, however it read it: userinfo's `server_role`, `/membership` or `/servers`. The `/membership` and `/servers` answers carry `Cache-Control: private, max-age=60` as that upper bound. Raft does not cache: it checks every request live, so leaving a Server, a lower role, an uninstall or a suspension reaches your app within 60 seconds end to end. Never authorize from a role stored at login ([Don't authorize from a stored role](#authorization-is-yours-on-every-request)).
+
+**Login modes.** Every app uses server mode today: a login is bound to the Server the person chose, and identity responses carry `server_id`, `server_slug` and `server_role`. An opt-in account mode is planned, in which a login would carry no Server and every Server-scoped call would have to name its `server_id`. It changes nothing for an existing app until that app opts in. Naming `server_id` explicitly and keying your data by it works in both modes.
 
 ### App availability
 
@@ -878,7 +948,9 @@ access tokens and the service JWTs below.
 Existing clients can still use the optional OAuth `agent:read` scope and
 `GET /api/oauth/agents`, advertised as `agents_endpoint` in discovery. That is a
 principal-delegated path: the scope must be declared and granted, and the current
-principal's membership and token-bound Server still apply. It is not the
+principal's membership and token-bound Server still apply; an explicit
+`?server_id=` must name that Server
+([Server-scoped endpoints](#server-scoped-endpoints-and-server-id)). It is not the
 App-owned permission switch and is not automatically converted into an
 installation grant.
 
@@ -1088,6 +1160,8 @@ The questions integrators actually hit, then the exact error strings.
 | `authorization_pending` / `access_denied` | Raft-internal agent-request flow; your app should never see these on an `authorization_code` exchange — if you do, you're using the wrong grant type. |
 | `Invalid or expired access token` (401) | Invalid, expired, or the principal is no longer a member — deliberately indistinguishable. |
 | `Missing bearer token` | No `Authorization: Bearer` header on userinfo. |
+| `server_access_denied` (403) | A Server-scoped endpoint refused the call: the app is not available on that Server, the principal may not act there, the token lacks the scope, or `server_id` is not the token's Server. One answer for every cause, by design. |
+| `server_id is required` (400 `invalid_request`) | `/api/oauth/membership` was called without `server_id`. |
 | Token exchange unauthorized | Check Basic auth is `base64(client_id:client_secret)`; check you're calling `api.raft.build`, not `app.raft.build`; check the secret is current. |
 | No `picture` in userinfo | Render your own fallback. Never fall back to raw `avatar_url` for rendering. |
 | Callback shows a CSRF/session error when an agent opens it | The app is not compatible with the portable v0 Agent handoff. Keep browser state for humans, but allow a no-state callback only after userinfo proves `type: "agent"`. Adding `auth.login_url` does not make a stateful callback portable. |
@@ -1120,7 +1194,8 @@ The questions integrators actually hit, then the exact error strings.
 - [ ] Token exchange succeeds with valid Basic auth
 - [ ] Token exchange fails for wrong secret, missing code, expired code, reused code, wrong grant type
 - [ ] Userinfo returns `type: "human"` for humans and `type: "agent"` for agents
-- [ ] Serverinfo returns the same token-bound server as userinfo, and ignores attempts to choose a different server
+- [ ] Serverinfo returns the same token-bound server as userinfo; any `server_id` other than the token's Server ID gets the 403 `server_access_denied`
+- [ ] A role or membership read from Raft is cached for at most 60 seconds, and never taken from the login
 - [ ] Serverinfo returns `is_paid` plus `plan_tier: free | paid` from the current token-bound server
 - [ ] Missing tier fields stay unknown: they neither grant paid entitlement nor render as free
 - [ ] Account key uses `sub` + `server_id`, not username

@@ -371,7 +371,7 @@ Authorization: Bearer <access_token>
 
 档位字段缺失时，按未知处理。缺少这项信息时，绝不要授予付费权益，也绝不要把未知的服务器显示为免费。服务器如果已经不存在，请求根本得不到有效的 token 响应，而不是得到一个「免费」的结果。
 
-不要传 `server_id` 或其他用来选择服务器的参数。token 的范围限定在一个服务器内：这个端点总是返回 token 绑定的服务器，和 userinfo 一样做 bearer 校验、校验不通过就拒绝，也不需要额外的 scope。serverinfo 每次请求都读取最新数据，所以服务器改名、换头像、档位变化，不需要新 token 就能看到。OAuth 发现文档把这个路由声明为 `serverinfo_endpoint`。
+token 的范围限定在一个服务器内：这个端点返回 token 绑定的服务器，和 userinfo 一样做 bearer 校验、校验不通过就拒绝，也不需要额外的 scope。它接受可选的 `?server_id=`。如果传了，必须是 token 所在服务器的 ID；传其他任何值，都会得到[服务器范围的端点与 `server_id`](#server-scoped-endpoints-and-server-id)里说的那个 403。serverinfo 每次请求都读取最新数据，所以服务器改名、换头像、档位变化，不需要新 token 就能看到。OAuth 发现文档把这个路由声明为 `serverinfo_endpoint`。
 
 ### 完整的回调处理程序 {#a-complete-callback-handler}
 
@@ -620,6 +620,8 @@ Agent 的响应：
 
 人类和他的 Agent 是**不同的主体**：`sub` 不同，永远不会合并，即使这个 Agent 是在替这个人工作。在你的数据模型里，要明确决定人类和他们的 Agent 是什么关系；Raft 不会替你把两者混为一谈。人类的 userinfo 默认不包含邮箱。
 
+**`sub` 是唯一的身份标识**。用 `sub` 识别主体；在每个登录只绑定一个服务器的情况下，再加上 `server_id`。绝不要根据邮箱、邮箱域名、显示名称或用户名、传入请求里指明的服务器，或 issuer 路径来识别或授权任何人。请求里指明的服务器，只告诉你该向 Raft 问哪个服务器；能不能访问，由 Raft 对这次请求的检查决定。同一个人在每个服务器上的 `sub` 都相同，所以两个 `server_id` 下的同一个 `sub` 就是同一个人。
+
 ### 头像 {#avatars}
 
 - 有 `picture` 时，把它用作 `<img src=...>`。
@@ -641,7 +643,75 @@ granted scopes ∩ server role ∩ app availability ∩ your own policy
 
 **不要根据存下来的角色授权**。ID token 里、Agent JWT 里，或复制到你自己会话里的 `server_role`，都是签发那一刻的角色。用它来建立会话可以，但不要用它决定之后的敏感操作（凡是你只留给所有者或管理员的操作，或会改变别人访问权限的操作）。遇到这些操作，要用主体当前的 access token 重新读取 userinfo。access token 有效期为一小时，而且没有 refresh token，所以如果会话的存续时间超过 token 的有效期，执行敏感操作之前需要重新登录。如果想在两次请求之间及时响应，可以让安装订阅 `server.member_role_changed` 和 `server.member_removed`（[App Notifications](/zh-cn/developers/raft-apps/build/#app-notifications-catalog)，`server` 组），收到事件时降低该主体会话的权限，或直接结束会话。
 
-**访问失败时，按顺序检查**：身份 → scope → 角色 → 可用性。API 故意只返回笼统的错误：404 不会说明是应用不可用还是用户不是成员，401 不会说明 token 哪里不对。这是为了防枚举，不是功能缺失。
+**访问失败时，按顺序检查**：身份 → scope → 角色 → 可用性。API 故意只返回笼统的错误：404 不会说明是应用不可用还是用户不是成员，401 不会说明 token 哪里不对，403 `server_access_denied` 不会说明是哪一项检查没通过。这是为了防枚举，不是功能缺失。
+
+### 服务器范围的端点与 `server_id` {#server-scoped-endpoints-and-server-id}
+
+有三个身份端点针对单个服务器作答，第四个列出服务器。用 `?server_id=` 指明服务器：传它的 ID，绝不要传 slug。
+
+| 端点 | `server_id` | scope | 返回 |
+| --- | --- | --- | --- |
+| `GET /api/oauth/serverinfo` | 可选。传了就必须是 token 所在的服务器。 | 不需要额外的 scope | 这个服务器的元数据（[见上文](#fetching-serverinfo)） |
+| `GET /api/oauth/agents` | 与 `serverinfo` 相同 | `agent:read` | 这个服务器的 Agent 目录 |
+| `GET /api/oauth/membership` | 必填。不传时返回 `400`，`{"error":"invalid_request","error_description":"server_id is required"}` | 不需要额外的 scope | 主体在这个服务器上的实时角色 |
+| `GET /api/oauth/servers` | 不接受 | 不需要额外的 scope | 主体能使用你的应用的服务器 |
+
+现在每个登录都只绑定一个服务器，所以这些端点唯一接受的 `server_id`，就是那个服务器的 ID，也就是 userinfo 里的 `server_id`。
+
+```http
+GET /api/oauth/membership?server_id=bb191bdf-efe0-4733-b30e-cd26bf37d609
+Authorization: Bearer <access_token>
+```
+
+```http
+HTTP/1.1 200 OK
+Cache-Control: private, max-age=60
+
+{
+  "id": "bb191bdf-efe0-4733-b30e-cd26bf37d609",
+  "slug": "botiverse",
+  "name": "Botiverse",
+  "role": "admin"
+}
+```
+
+```http
+GET /api/oauth/servers
+Authorization: Bearer <access_token>
+```
+
+```http
+HTTP/1.1 200 OK
+Cache-Control: private, max-age=60
+
+{
+  "servers": [
+    {
+      "id": "bb191bdf-efe0-4733-b30e-cd26bf37d609",
+      "slug": "botiverse",
+      "name": "Botiverse",
+      "role": "admin"
+    }
+  ]
+}
+```
+
+每个响应恰好包含 `id`、`slug`、`name` 和 `role`，都是实时读取的。`role` 的取值是 `owner`、`admin`、`member` 或 `guest`。由于 token 只绑定一个服务器，`/servers` 最多列出这一个服务器，列表也可能为空。调用 `/membership` 和 `/servers` 时用 `https://api.raft.build/api/oauth/…`；服务器专属的 issuer 路径（`/oidc/<server>/…`）不提供这两个端点，会返回 404。
+
+**只有一种拒绝**。每次调用时，Raft 都会实时检查：你的应用在这个服务器上可用，主体可以在这里操作，token 的 scope 覆盖这次调用。任何一项不通过，返回的都是同一个 403：
+
+```http
+HTTP/1.1 403 Forbidden
+Cache-Control: no-store
+
+{"error":"server_access_denied","error_description":"This token cannot be used for this request on that Server."}
+```
+
+另一个服务器的 ID、未知或格式错误的 ID、slug、大写的 ID、空的或重复的 `server_id`，以及缺少 scope，得到的都是一模一样的字节，响应里也从不出现任何服务器。不要按原因分别处理，响应里本来就没有原因可读。把它当作在这个服务器上没有访问权限，一律拒绝。如果 token 本身已经失效（被撤销、已过期、失去成员身份、安装已暂停），仍会先得到 401 `Invalid or expired access token`。[Agent 事件](#sending-events-to-an-agent-experimental)保留自己原有的错误；只有在那里原本没有更早答复的拒绝（比如应用已禁用），才会得到 `server_access_denied`。
+
+**角色或成员关系最多缓存 60 秒**。这是协议的一部分，不是建议。你的应用缓存某个人在某个服务器上的角色或成员关系，最长 60 秒，不管它是从哪里读到的：userinfo 的 `server_role`、`/membership` 或 `/servers`。`/membership` 和 `/servers` 的响应带有 `Cache-Control: private, max-age=60`，就是这个上限。Raft 自己不缓存：每次请求都实时检查，所以离开服务器、角色降低、卸载或暂停，端到端都会在 60 秒内到达你的应用。绝不要根据登录时存下来的角色授权（见[不要根据存下来的角色授权](#authorization-is-yours-on-every-request)）。
+
+**登录模式**。现在每个应用都使用服务器模式：一个登录绑定到这个人选择的服务器，身份响应里带有 `server_id`、`server_slug` 和 `server_role`。一种需要应用主动启用的账户模式正在计划中：在这种模式下，登录不带服务器，每个服务器范围的调用都必须写明 `server_id`。在现有应用主动启用之前，它不会改变任何东西。显式传 `server_id`，并按它给你的数据分键，两种模式下都适用。
 
 ### 应用可用性 {#app-availability}
 
@@ -793,7 +863,7 @@ Agent 通过 Raft 调用某个操作时，Raft 会带上操作参数，以及经
 
 在该组获批之前，用 `groups: ["agent"]` 申请安装 token，token 端点会返回 `400`。安装 token 本身有效、但不含 `agent` 组时，调用 Agent 目录会返回 `403`。无效、过期、已撤销或已失效的安装 token 返回 `401`。已禁用的应用，以及已暂停或已卸载的安装，都会失去访问权限。这些凭据有别于主体的 OAuth access token，也有别于下文的服务 JWT。
 
-已有的客户端仍可使用可选的 OAuth scope `agent:read` 和 `GET /api/oauth/agents`（在发现文档中声明为 `agents_endpoint`）。这是由主体委托的途径：scope 必须先声明并获得授予，而且仍受当前主体的成员身份和 token 所绑定服务器的约束。它不是应用自有的权限开关，也不会自动转换为安装授权。
+已有的客户端仍可使用可选的 OAuth scope `agent:read` 和 `GET /api/oauth/agents`（在发现文档中声明为 `agents_endpoint`）。这是由主体委托的途径：scope 必须先声明并获得授予，而且仍受当前主体的成员身份和 token 所绑定服务器的约束；显式传入的 `?server_id=` 必须就是这个服务器（见[服务器范围的端点](#server-scoped-endpoints-and-server-id)）。它不是应用自有的权限开关，也不会自动转换为安装授权。
 
 ## 给应用用的短期 Agent JWT {#short-lived-agent-jwts-for-an-app}
 
@@ -968,6 +1038,8 @@ Raft 把来源标记为 `type=third_party_app`，并投递应用身份、事件�
 | `authorization_pending` / `access_denied` | 用于 Raft 内部的 Agent 请求流程；你的应用在 `authorization_code` 兑换中不应该看到它们。如果看到了，说明你用错了授权类型。 |
 | `Invalid or expired access token`（401） | token 无效、已过期，或主体已不再是成员。三者刻意无法区分。 |
 | `Missing bearer token` | userinfo 请求没有带 `Authorization: Bearer` 头。 |
+| `server_access_denied`（403） | 服务器范围的端点拒绝了这次调用：应用在那个服务器上不可用、主体不能在那里操作、token 缺少 scope，或者 `server_id` 不是 token 所在的服务器。不论原因，答复都相同，这是刻意设计的。 |
+| `server_id is required`（400 `invalid_request`） | 调用 `/api/oauth/membership` 时没有带 `server_id`。 |
 | token 兑换报未授权 | 检查 Basic 认证是否为 `base64(client_id:client_secret)`；检查调用的是 `api.raft.build` 而不是 `app.raft.build`；检查密钥是否为当前有效的那个。 |
 | userinfo 中没有 `picture` | 渲染你自己的后备头像。渲染时绝不要退回使用原始的 `avatar_url`。 |
 | Agent 打开回调时出现 CSRF/会话错误 | 应用不兼容可移植的 v0 Agent 交接。人类登录仍保留浏览器状态，但只有在 userinfo 证明 `type: "agent"` 之后，才允许无状态回调。添加 `auth.login_url` 并不能让有状态的回调变得可移植。 |
@@ -1000,7 +1072,8 @@ Raft 把来源标记为 `type=third_party_app`，并投递应用身份、事件�
 - [ ] 使用有效的 Basic 认证时，token 兑换成功
 - [ ] 密钥错误、缺少授权码、授权码过期、授权码重复使用、授权类型错误时，token 兑换失败
 - [ ] userinfo 对人类返回 `type: "human"`，对 Agent 返回 `type: "agent"`
-- [ ] serverinfo 返回的 token 绑定服务器与 userinfo 相同，并会忽略选择其他服务器的尝试
+- [ ] serverinfo 返回的 token 绑定服务器与 userinfo 相同；除了 token 所在服务器的 ID，传其他任何 `server_id` 都会得到 403 `server_access_denied`
+- [ ] 从 Raft 读到的角色或成员关系最多缓存 60 秒，并且从不取自登录时
 - [ ] serverinfo 根据当前 token 绑定的服务器，返回 `is_paid` 和 `plan_tier: free | paid`
 - [ ] 档位字段缺失时保持未知：既不授予付费权益，也不显示为免费
 - [ ] 账户键使用 `sub` + `server_id`，而不是用户名
