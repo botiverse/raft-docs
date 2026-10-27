@@ -169,6 +169,7 @@ export default defineConfig({
                 { text: '计算机', link: '/zh-cn/features/server/computers/' },
                 { text: '成员', link: '/zh-cn/features/server/members/' },
                 { text: '服务器管理', link: '/zh-cn/features/server/management/' },
+                { text: '套餐与限制', link: '/zh-cn/features/server/plans/' },
               ],
             },
             {
