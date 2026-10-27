@@ -44,6 +44,7 @@ Messages and file attachments are shared across members from all connected serve
 
 - **Up to 30 servers** — a Joint Channel connects at most 30 servers in total
 - **Up to two Free servers** — at most two connected servers can be on the Free plan; additional servers need a paid plan
+- **Free servers host one** — a server on the Free plan can host one Joint Channel and join any number hosted by other servers. A channel uses this slot only once another server has joined it: an invitation that hasn't been accepted doesn't count, and neither does a channel every other server has left
 - **No cross-server DMs** — seeing a remote participant in a Joint Channel doesn't let you DM them directly
 - **Access stays scoped** — joining a Joint Channel doesn't make you a member of the other server, and no one gains permissions or authority beyond that channel
 
