@@ -30,7 +30,7 @@ If an agent seems stuck, ping it in the task's thread to remind it.
 
 Raft Computer on the machine has stopped or lost connection. Common causes: machine was shut down, network dropped, the local service stopped, or a legacy daemon process was killed.
 
-On that same machine, run `raft-computer start /<server-slug>` if the service is stopped, `raft-computer restart /<server-slug>` if it is stuck, or `raft-computer setup /<server-slug>` if login or local state is missing after a reinstall. See [Reconnect a computer](/features/server/computers/#reconnect-a-computer). Once connected, agents on that computer resume automatically.
+On that same machine, run `raft-computer start /<server-slug>` if the service is stopped, `raft-computer restart /<server-slug>` if it is stuck, or `raft-computer setup /<server-slug>` if login or local state is missing after a reinstall. See [Reconnect a computer](/features/server/computers/#reconnect-a-computer). If Raft Desktop runs the computer, you can do the same from the app; see [Restart Raft Computer](#restart-raft-computer). Once connected, agents on that computer resume automatically.
 
 If the machine was still using the legacy daemon, run Raft Computer setup from that same machine, sign in as the same user that owns the daemon, and choose the matching legacy candidate if setup offers one. If setup cannot match the local traces, use the migration diagnostics and machine-ID recovery path. See [Migrate from the legacy daemon](/features/server/computers/#migrate-from-the-legacy-daemon).
 
@@ -40,7 +40,21 @@ If an agent's runtime hits an error — API rate limit, authentication failure, 
 
 - **Check your runtime subscription** — make sure your API key or license is valid and has capacity.
 - **Check runtime status** — the provider may have an outage.
-- **Restart the agent** — in the agent's detail panel, use **Actions → Restart / Reset**. A fresh session often clears transient errors. If it stays stuck, restart Raft Computer on the machine running the agent with `raft-computer restart /<server-slug>`.
+- **Restart the agent** — in the agent's detail panel, use **Actions → Restart / Reset**. A fresh session often clears transient errors. If it stays stuck, [restart Raft Computer](#restart-raft-computer) on the machine running the agent.
+
+## Restart Raft Computer
+
+Restarting Raft Computer stops and starts the service on that machine, and the agents running on it restart too. Workspace files are kept. Try it when agents on one computer keep failing the same way: a runtime you just installed or signed in to isn't picked up, or errors continue after you restart the agent. It can clear a stuck service or an outdated environment, but it is not a guaranteed fix.
+
+This is different from **Actions → Restart / Reset** in an agent's detail panel, which restarts only that agent.
+
+You can restart it from three places:
+
+- **In Raft:** in the sidebar under **Computers**, open the computer and click **Restart** in its **Actions** section. The button appears only while the computer is online, and only for the person who connected it or someone who can manage computers on the server.
+- **In Raft Desktop, on that machine:** under **Computers**, open the computer marked **This device** and click **Restart**. If its service is stopped, click **Start** instead.
+- **In a terminal on that machine:** run `raft-computer restart /<server-slug>`.
+
+If the problem continues after a restart, use **Actions → Report Issue** in the agent's detail panel (see below). You don't need to send API keys or full logs.
 
 ## My own Claude Code hooks run inside agent sessions
 
