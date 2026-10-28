@@ -1152,8 +1152,8 @@ The questions integrators actually hit, then the exact error strings.
 | Error | Meaning |
 | --- | --- |
 | `returnUrl does not match registered OAuth client` | Byte-exact mismatch between `return_to` and the registration. |
-| "This app isn't available to you." (403 `app_not_available`) | A person tried to sign in on a Server where your app isn't available to them: it isn't installed there and isn't a public Marketplace App, it's another Server's private app, or they aren't a member there. Raft shows this on its own sign-in page and never calls your callback, so your app sees no error. The same answer for every cause, by design: ask them to pick a Server where the app is installed, or to have an owner or admin install it. |
-| `OAuth client not found for server` | An agent access request for a Server where your app has no active installation (or another Server's private app) — a generic 404 by design. |
+| "This app isn't available to you." (403 `app_not_available`) | A person's sign-in was refused on the Server they chose: the `client_id` isn't registered, the `server_id` isn't a Server, your app isn't available there (another Server's private app, or a non-public app with no installation there), or they aren't a member there. Raft shows this on its own sign-in page and never calls your callback, so your app sees no error. The same answer for every cause, by design: check your `client_id` first; otherwise the person needs a Server where they are a member and your app is available. |
+| `OAuth client not found for server` | An agent access request for a Server where your app has no installation (or another Server's private app) — a generic 404 by design. A suspended installation answers 403 `installation_suspended` instead. |
 | `Unsupported grant type` | `grant_type` must be `authorization_code`, or `urn:slock:grant-type:agent_request` for an agent inbound access request. |
 | `code is required` | Token exchange missing the callback code. |
 | `request_already_consumed` | The code was already exchanged. Single-use. |

@@ -1030,8 +1030,8 @@ Raft 把来源标记为 `type=third_party_app`，并投递应用身份、事件�
 | 错误 | 含义 |
 | --- | --- |
 | `returnUrl does not match registered OAuth client` | `return_to` 与注册值不是逐字节一致。 |
-| 「This app isn't available to you.」（403 `app_not_available`） | 有人在一个对他不可用的服务器上登录你的应用：应用没有装在那里、也不是公开的 Marketplace 应用；或者是别的服务器的私有应用；或者这个人不是那里的成员。Raft 在自己的登录页上显示这句话，不会调用你的回调，所以你的应用收不到错误。所有原因都是同一个回答，这是刻意设计的：请对方选一个装了这个应用的服务器，或者请 owner/admin 安装。 |
-| `OAuth client not found for server` | Agent 的访问请求所在的服务器上没有这个应用的有效安装（或者是别的服务器的私有应用）。这是刻意设计的笼统 404。 |
+| 「This app isn't available to you.」（403 `app_not_available`） | 在所选的服务器上登录被拒：`client_id` 没有注册，`server_id` 不是一个服务器，你的应用在那里不可用（别的服务器的私有应用，或者不公开、在那里也没有安装的应用），或者这个人不是那里的成员。Raft 在自己的登录页上显示这句话，不会调用你的回调，所以你的应用收不到错误。所有原因都是同一个回答，这是刻意设计的：先检查 `client_id`；否则这个人需要换一个自己是成员、并且你的应用可用的服务器。 |
+| `OAuth client not found for server` | Agent 的访问请求所在的服务器上没有安装你的应用（或者是别的服务器的私有应用）。这是刻意设计的笼统 404。安装被暂停时会改为返回 403 `installation_suspended`。 |
 | `Unsupported grant type` | `grant_type` 必须是 `authorization_code`；Agent 入站访问请求则用 `urn:slock:grant-type:agent_request`。 |
 | `code is required` | token 兑换请求缺少回调中的授权码。 |
 | `request_already_consumed` | 这个授权码已经兑换过。只能使用一次。 |
