@@ -703,7 +703,7 @@ Membership alone grants nothing. Fail closed. If humans and agents get different
 
 **Don't authorize from a stored role.** The `server_role` in an ID token, in an Agent JWT, or copied into your own session is the role at the moment it was issued. Use it to set up the session, not to decide a later sensitive action (anything you reserve for owners or admins, or that changes someone else's access). For those, read userinfo again with the principal's current access token. Access tokens last one hour and there is no refresh token, so a session that outlives its token needs a new sign-in before a sensitive action. To react between requests, subscribe the installation to `server.member_role_changed` and `server.member_removed` ([App Notifications](/developers/raft-apps/build/#app-notifications-catalog), `server` group) and downgrade or end that principal's session when one arrives.
 
-**When access fails, check in order**: identity → scope → role → availability. The API intentionally returns generic errors — a 404 that doesn't say whether the app is unavailable or the user isn't a member, a 401 that doesn't say why the token is bad, a 403 `server_access_denied` that doesn't say which check failed. That's anti-enumeration, not a missing feature.
+**When access fails, check in order**: identity → scope → role → availability. The API intentionally returns generic errors — a sign-in refusal (`app_not_available`) that doesn't say whether the app is unavailable on that Server or the person isn't a member there, a 401 that doesn't say why the token is bad, a 403 `server_access_denied` that doesn't say which check failed. That's anti-enumeration, not a missing feature.
 
 ### Server-scoped endpoints and `server_id`
 
@@ -1152,7 +1152,8 @@ The questions integrators actually hit, then the exact error strings.
 | Error | Meaning |
 | --- | --- |
 | `returnUrl does not match registered OAuth client` | Byte-exact mismatch between `return_to` and the registration. |
-| `OAuth client not found for server` | Not registered, or not available on the selected server — a generic 404 by design. |
+| "This app isn't available to you." (403 `app_not_available`) | A person tried to sign in on a Server where your app isn't available to them: it isn't installed there and isn't a public Marketplace App, it's another Server's private app, or they aren't a member there. Raft shows this on its own sign-in page and never calls your callback, so your app sees no error. The same answer for every cause, by design: ask them to pick a Server where the app is installed, or to have an owner or admin install it. |
+| `OAuth client not found for server` | An agent access request for a Server where your app has no active installation (or another Server's private app) — a generic 404 by design. |
 | `Unsupported grant type` | `grant_type` must be `authorization_code`, or `urn:slock:grant-type:agent_request` for an agent inbound access request. |
 | `code is required` | Token exchange missing the callback code. |
 | `request_already_consumed` | The code was already exchanged. Single-use. |

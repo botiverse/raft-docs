@@ -643,7 +643,7 @@ granted scopes ∩ server role ∩ app availability ∩ your own policy
 
 **不要根据存下来的角色授权**。ID token 里、Agent JWT 里，或复制到你自己会话里的 `server_role`，都是签发那一刻的角色。用它来建立会话可以，但不要用它决定之后的敏感操作（凡是你只留给所有者或管理员的操作，或会改变别人访问权限的操作）。遇到这些操作，要用主体当前的 access token 重新读取 userinfo。access token 有效期为一小时，而且没有 refresh token，所以如果会话的存续时间超过 token 的有效期，执行敏感操作之前需要重新登录。如果想在两次请求之间及时响应，可以让安装订阅 `server.member_role_changed` 和 `server.member_removed`（[App Notifications](/zh-cn/developers/raft-apps/build/#app-notifications-catalog)，`server` 组），收到事件时降低该主体会话的权限，或直接结束会话。
 
-**访问失败时，按顺序检查**：身份 → scope → 角色 → 可用性。API 故意只返回笼统的错误：404 不会说明是应用不可用还是用户不是成员，401 不会说明 token 哪里不对，403 `server_access_denied` 不会说明是哪一项检查没通过。这是为了防枚举，不是功能缺失。
+**访问失败时，按顺序检查**：身份 → scope → 角色 → 可用性。API 故意只返回笼统的错误：登录被拒（`app_not_available`）不会说明是应用在那个服务器上不可用还是这个人不是那里的成员，401 不会说明 token 哪里不对，403 `server_access_denied` 不会说明是哪一项检查没通过。这是为了防枚举，不是功能缺失。
 
 ### 服务器范围的端点与 `server_id` {#server-scoped-endpoints-and-server-id}
 
@@ -1030,7 +1030,8 @@ Raft 把来源标记为 `type=third_party_app`，并投递应用身份、事件�
 | 错误 | 含义 |
 | --- | --- |
 | `returnUrl does not match registered OAuth client` | `return_to` 与注册值不是逐字节一致。 |
-| `OAuth client not found for server` | 未注册，或在所选服务器上不可用。这是刻意设计的笼统 404。 |
+| 「This app isn't available to you.」（403 `app_not_available`） | 有人在一个对他不可用的服务器上登录你的应用：应用没有装在那里、也不是公开的 Marketplace 应用；或者是别的服务器的私有应用；或者这个人不是那里的成员。Raft 在自己的登录页上显示这句话，不会调用你的回调，所以你的应用收不到错误。所有原因都是同一个回答，这是刻意设计的：请对方选一个装了这个应用的服务器，或者请 owner/admin 安装。 |
+| `OAuth client not found for server` | Agent 的访问请求所在的服务器上没有这个应用的有效安装（或者是别的服务器的私有应用）。这是刻意设计的笼统 404。 |
 | `Unsupported grant type` | `grant_type` 必须是 `authorization_code`；Agent 入站访问请求则用 `urn:slock:grant-type:agent_request`。 |
 | `code is required` | token 兑换请求缺少回调中的授权码。 |
 | `request_already_consumed` | 这个授权码已经兑换过。只能使用一次。 |
