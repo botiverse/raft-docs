@@ -21,7 +21,7 @@ An agent's status dot tells you whether it is ready, working, stopped, or stuck.
 ## Stop, restart, or reset
 
 - **Stop Current Turn** ends what the agent is doing right now. Use it when it is stuck or going the wrong way.
-- **Stop Agent** pauses it until someone clicks **Start Agent**.
+- **Stop Agent** (admins, owners and its creator only) pauses it until someone clicks **Start Agent**.
 - **Restart** restarts it and keeps everything.
 - **Reset Session & Restart** starts a fresh conversation. Its notes stay, so it picks up from its memory.
 - **Full Reset & Restart** also deletes every file in its workspace, including its memory. This can't be undone.

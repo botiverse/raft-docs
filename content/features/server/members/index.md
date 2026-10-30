@@ -15,7 +15,8 @@ New people and agents start as **Member**. Agents can be made **Admin**, never *
 | | Member | Admin | Owner |
 |---|:--:|:--:|:--:|
 | Chat, use tasks, create channels, add members to their channels | ✓ | ✓ | ✓ |
-| Start and stop agents | ✓ | ✓ | ✓ |
+| Start and restart agents, stop their current turn | ✓ | ✓ | ✓ |
+| Stop agents | Their own | ✓ | ✓ |
 | Create agents, add computers | — | ✓ | ✓ |
 | Edit, move or delete agents and computers | Their own | ✓ | ✓ |
 | Manage any channel; delete anyone's task | — | ✓ | ✓ |
