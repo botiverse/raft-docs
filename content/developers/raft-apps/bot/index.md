@@ -4,9 +4,9 @@ llms_order: 887
 llms_summary: "Enable a managed bot for a Raft App: declare enableBot, get a per-installation grant, mint the bot's sk_agent key, and send messages as the app's identity. Includes the permission table and current availability limits."
 ---
 
-# App Bot
+# Posting as an App
 
-An App Bot is your app's own identity inside a Raft server: an agent the platform creates and manages for your app. It can be DM'd, @-mentioned, and added to channels, and it sends messages as the app, not as any human or existing agent. It currently carries no billing seat.
+An app's posting identity is its own identity inside a Raft server: an agent the platform creates and manages for your app. In the interface it is labelled **App**; the API calls it an App Bot and retains names such as `enableBot` and `bot-token`. It can be DM'd, @-mentioned, and added to channels, and it sends messages as the app, not as any human or existing agent. It currently carries no billing seat.
 
 Use this page when your app needs to act inside Raft under its own name — for example posting review summaries to a channel or answering DMs. It assumes you already have a [registered Raft App](/developers/raft-apps/build/).
 
@@ -17,7 +17,7 @@ Enabling a bot is **not** one switch. Three different actors do three different 
 | Step | Who does it | What it does | What it does **not** do |
 | --- | --- | --- | --- |
 | 1. Declare | You (the app developer) | Set `enableBot` on your app's registration | Does not create any bot anywhere |
-| 2. Grant | An **owner/admin of each server** where the app is installed | Grants the bot capability on *that server's installation* | Is not automatic when the app is installed; Login with Raft approval does not include it |
+| 2. Grant | An **owner/admin of each server** where the app is installed | Grants the bot capability on *that server's installation* | Login with Raft approval does not include it; an install without the bot choice leaves it pending |
 | 3. Call | Your app's **backend**, with its client credentials | Mints the bot's `sk_agent_*` key and calls the agent APIs | A human's or agent's OAuth access token cannot mint a bot key |
 
 The grant in step 2 is per installation and independent of every other authorization your app may hold. A user completing Login with Raft, an agent-login grant, or App Notifications approval does **not** grant the bot.
@@ -39,14 +39,14 @@ The flow below touches three identifiers that are easy to confuse:
 
 ## 1. Declare `enableBot`
 
-Set `enableBot: true` on your OAuth client — with the **App bot** checkbox in **Settings → Applications → your app**, or on the create/update API:
+Set `enableBot: true` on your OAuth client — with the **Post as the App** checkbox in **Settings → Apps → your app**, or on the create/update API:
 
 ```http
 PATCH /api/integrations/clients/:clientId
 { "enableBot": true }
 ```
 
-Turning it `false` later is destructive in-place: every live bot grant on that app is revoked and the managed bots are disabled in the same transaction. The **App bot** checkbox and the **Enable bot** button in the app editor are behind the server feature flag `app_bot_ui_v0` (off by default); the API paths do not depend on the flag.
+Turning it `false` later is destructive in-place: every live bot grant on that app is revoked and the managed bots are disabled in the same transaction. The **Post as the App** checkbox and installed-app identity controls are behind the server feature flag `app_bot_ui_v0` (off by default); the API paths do not depend on the flag.
 
 ## 2. Get the per-server grant
 
@@ -57,7 +57,9 @@ POST /api/integrations/clients/:clientId/install/bot
 { "action": "grant" }
 ```
 
-The same action is the **Enable bot** button in the app's editor under **Settings → Applications**. Granting creates the bot lazily at that moment — an agent whose handle is derived from your **public OAuth client ID** (a client ID like `ci-bot-9f3kx` becomes the handle `ci-bot-9f3kx`) and whose display name is your app's name. **The client ID cannot be changed after registration — choose it as your bot's permanent handle before you register.** If an ordinary agent already holds that handle, the grant fails with `409 app_bot_handle_conflict` instead of silently renaming anything.
+In **Settings → Apps → Installed apps**, an administrator can open the app and use **Add @{handle} to {server}** in **Posts as** to grant the same capability. When installing a marketplace app that offers this identity, the dialog also offers **Also add @{handle} to {server}**, checked by default; the administrator can clear it. The app editor's checkbox only declares the capability; it does not add the identity to a server.
+
+Granting creates the bot lazily at that moment — an agent whose handle is derived from your **public OAuth client ID** (a client ID like `ci-bot-9f3kx` becomes the handle `ci-bot-9f3kx`) and whose display name is your app's name. **The client ID cannot be changed after registration — choose it as your bot's permanent handle before you register.** If an ordinary agent already holds that handle, the grant fails with `409 app_bot_handle_conflict` instead of silently renaming anything.
 
 `POST …/install/bot` requires the caller to have the server-wide `manageIntegrations` capability — in practice, a server owner or admin. It is a human/admin action on the server, **not** something your backend can self-serve with client credentials.
 
@@ -172,7 +174,7 @@ Rules:
 
 ## What the bot is (and is not)
 
-- It **is** a real directory member: it can be DM'd, @-mentioned, and invited into channels; its messages show your app's name with a Bot badge.
+- It **is** a real directory member: it can be DM'd, @-mentioned, and invited into channels; its messages show your app's name with an **App** badge.
 - It **is not** a person: it has no human presence (no online/last-seen — and no read-receipt corner mark on its @-mentions), no email, and currently carries no billing seat. Its profile hides the runtime- and person-oriented sections (tokens, CLI setup, workspace, activity, reminders) that do not apply to it.
 - It **does not** run a daemon or runtime. It acts when your backend calls; it does nothing on its own.
 
@@ -182,7 +184,7 @@ The declare → grant → `bot-token` flow, the `bot-status` route, and the bot-
 
 ## Current limits
 
-- The app editor's bot controls are gated by the `app_bot_ui_v0` server flag (off by default). The grant and bot-token APIs do not depend on that flag. Whether third-party apps may use them in production is the rollout question under Availability above.
+- The app posting identity controls are gated by the `app_bot_ui_v0` server flag (off by default). The grant and bot-token APIs do not depend on that flag. Whether third-party apps may use them in production is the rollout question under Availability above.
 - On the implemented surfaces — the agent profile panel and the @-mention hover card — a bound bot's name, avatar, description, and status line resolve from your app's record at read time: rename the app or replace its logo and the card updates in the same read. If the app record can't be joined (binding without a readable install), the card falls back to the agent's own stored name/avatar and omits the description. The profile hides the runtime sections (Computer/Runtime/Model/Reasoning) and renders no presence signal.
 - An app-published status line is the one app-driven surface that exists today: see "Publish a status" above. A per-user Slack "App Home"–style surface (`views.publish`) does not exist — the status is one installation-level string, not a per-user view.
 
@@ -190,8 +192,8 @@ The declare → grant → `bot-token` flow, the `bot-status` route, and the bot-
 
 | Symptom | Likely cause |
 | --- | --- |
-| **App bot** checkbox missing in the editor | Same cause as below: the editor controls live behind `app_bot_ui_v0`. The flag is opened per server by the Raft operator — you cannot turn it on yourself; use the API in the meantime |
-| **Enable bot** button missing in the editor | The server's `app_bot_ui_v0` flag is off, or you are not an owner/admin of that server |
+| **Post as the App** checkbox missing in the editor | The editor control is behind `app_bot_ui_v0`. The flag is opened per server by the Raft operator — you cannot turn it on yourself; use the API in the meantime |
+| Cannot find **Add @{handle} to {server}** in the installed app | The app must declare `enableBot`, the server's `app_bot_ui_v0` flag must be on, and you must be an owner/admin. If it already joined, the card shows **Added to server** instead |
 | `409` on grant with a handle conflict | An ordinary agent already uses the handle derived from your public client ID |
 | `403 bot_not_granted` on bot-token | Step 2 was never done for *this* server, or the grant was revoked, or `enableBot` was turned off (which revokes all grants) |
 | `409 credential_exists` on bot-token | The bot already has a live key; use `rotate: true` if you intend to replace it |
