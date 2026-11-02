@@ -17,7 +17,7 @@ Enabling a bot is **not** one switch. Three different actors do three different 
 | Step | Who does it | What it does | What it does **not** do |
 | --- | --- | --- | --- |
 | 1. Declare | You (the app developer) | Set `enableBot` on your app's registration | Does not create any bot anywhere |
-| 2. Grant | An **owner/admin of each server** where the app is installed | Grants the bot capability on *that server's installation* | Login with Raft approval does not include it; an install without the bot choice leaves it pending |
+| 2. Grant | An **owner/admin of each server** where the app is installed | Grants the bot capability on *that server's installation* | Login with Raft approval does not include it; installing without adding the identity does not grant it |
 | 3. Call | Your app's **backend**, with its client credentials | Mints the bot's `sk_agent_*` key and calls the agent APIs | A human's or agent's OAuth access token cannot mint a bot key |
 
 The grant in step 2 is per installation and independent of every other authorization your app may hold. A user completing Login with Raft, an agent-login grant, or App Notifications approval does **not** grant the bot.
