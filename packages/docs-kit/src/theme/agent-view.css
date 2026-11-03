@@ -28,6 +28,10 @@ html.docs-av-agent .vp-doc,
 html.docs-av-agent .VPDocAside,
 html.docs-av-agent .VPDocFooter,
 html.docs-av-agent .docs-markdown-link { display: none; }
+/* The agent side is always dark: no appearance toggle while it's shown. */
+html.docs-av-agent .VPNavBarAppearance,
+html.docs-av-agent .VPNavScreenAppearance,
+html.docs-av-agent .VPNavBarExtra .item.appearance { display: none; }
 /* Room for the dock at the end of the human side. */
 html.docs-av-page .vp-doc { padding-bottom: 120px; }
 

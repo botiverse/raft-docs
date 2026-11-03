@@ -125,7 +125,7 @@ agent_view: manual/agent manual/agent-profile manual/runtime
   button that copies its link. The choice is remembered. A link to a section
   only the agent side has opens that side at the section.
 - The site's `transformPageData` calls `agentViewPageData(config, root,
-  frontmatter)` and stores the result as `frontmatter.agentView` (word count and
+  frontmatter)` (from `@botiverse/docs-kit/agent-view`) and stores the result as `frontmatter.agentView` (word count and
   source line for the switch).
 - Labels come from each locale's `chrome` (`agentViewHuman`, `agentViewAgent`,
   `agentViewBarTitle`, `agentViewBarText`, `agentViewCopy`, `agentViewBack`,

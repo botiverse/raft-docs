@@ -41,21 +41,36 @@ export function stripFrontmatter(markdown) {
 
 /**
  * Maintainer notes never reach the public site: MDX comments (`{/* … *\/}`)
- * and HTML comments, outside code fences.
+ * and HTML comments. Code fences and inline code are left alone. An
+ * unclosed comment throws rather than silently dropping the rest of the file.
  */
 export function stripMaintainerComments(markdown) {
   const out = []
-  let inFence = false
+  let fence = null
   let inComment = null
-  for (const line of markdown.split('\n')) {
-    if (!inComment && /^\s*(```|~~~)/.test(line)) {
-      inFence = !inFence
-      out.push(line)
-      continue
-    }
-    if (inFence) {
-      out.push(line)
-      continue
+  let openedAt = 0
+  const lines = markdown.split('\n')
+  const push = (line) => {
+    // No runs of blank lines where a comment block was removed.
+    if (line.trim() === '' && out.length > 0 && out[out.length - 1].trim() === '') return
+    out.push(line)
+  }
+  lines.forEach((line, index) => {
+    if (!inComment) {
+      const marker = line.match(/^\s*(`{3,}|~{3,})/)?.[1]
+      if (fence) {
+        // A fence closes only with the same character, at least as long.
+        if (marker && marker[0] === fence[0] && marker.length >= fence.length && /^\s*[`~]+\s*$/.test(line)) {
+          fence = null
+        }
+        out.push(line)
+        return
+      }
+      if (marker) {
+        fence = marker
+        out.push(line)
+        return
+      }
     }
     let rest = line
     let kept = ''
@@ -70,26 +85,41 @@ export function stripMaintainerComments(markdown) {
         inComment = null
         continue
       }
+      const tick = rest.indexOf('`')
       const mdx = rest.indexOf('{/*')
       const html = rest.indexOf('<!--')
-      const candidates = [mdx, html].filter((index) => index > -1)
-      if (candidates.length === 0) {
+      const candidates = [mdx, html].filter((i) => i > -1)
+      const start = candidates.length > 0 ? Math.min(...candidates) : -1
+      if (tick > -1 && (start === -1 || tick < start)) {
+        // Inline code: copy it through untouched.
+        const run = rest.slice(tick).match(/^`+/)[0]
+        const close = rest.indexOf(run, tick + run.length)
+        const endAt = close === -1 ? tick + run.length : close + run.length
+        kept += rest.slice(0, endAt)
+        rest = rest.slice(endAt)
+        continue
+      }
+      if (start === -1) {
         kept += rest
         break
       }
-      const start = Math.min(...candidates)
       kept += rest.slice(0, start)
       inComment = start === mdx ? '*/}' : '-->'
+      openedAt = index + 1
       rest = rest.slice(start + (inComment === '*/}' ? 3 : 4))
     }
     // A line that only held a comment disappears instead of leaving a gap.
-    if (kept.trim() === '' && line.trim() !== '') continue
-    out.push(kept.replace(/\s+$/, ''))
+    if (kept.trim() === '' && line.trim() !== '') return
+    push(kept === line ? line : kept.replace(/\s+$/, ''))
+  })
+  if (inComment) {
+    throw new Error(`unclosed comment opened on line ${openedAt} (expected "${inComment}")`)
   }
-  return out.join('\n').replace(/\n{3,}/g, '\n\n')
+  return out.join('\n')
 }
 
-const MANUAL_LINK = /\[([^\]]+)\]\(\/agent-knowledge\/(?:[a-z0-9-]+\/)*([a-z0-9-]+)(#[^)]*)?\)/g
+const MANUAL_LINK =
+  /\[((?:[^\]\\]|\\.)+)\]\(\/agent-knowledge\/(?:[a-z0-9-]+\/)*([a-z0-9-]+?)(?:\.md)?\/?(#[^)\s]*)?(?:\s+"[^"]*")?\)/g
 
 /**
  * Rewrite manual cross-links: to `linkFor(topic)` (+ anchor) when a page

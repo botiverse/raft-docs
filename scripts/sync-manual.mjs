@@ -107,13 +107,21 @@ if (existsSync(manualDir)) {
     if (name.endsWith('.md')) before.set(name.slice(0, -3), readFileSync(path.join(manualDir, name), 'utf8'))
   }
 }
-rmSync(manualDir, { recursive: true, force: true })
-mkdirSync(manualDir, { recursive: true })
-
-const changed = []
+// Fetch everything first, so a failed fetch leaves the snapshot as it was.
+const bodies = new Map()
 for (const topic of topics) {
   const source = git('show', `${commit}:manual/agent-knowledge/${topic}.md`)
-  const body = `${stripMaintainerComments(source).trim()}\n`
+  try {
+    bodies.set(topic, `${stripMaintainerComments(source).trim()}\n`)
+  } catch (error) {
+    throw new Error(`${topic}: ${error.message}`)
+  }
+}
+
+rmSync(manualDir, { recursive: true, force: true })
+mkdirSync(manualDir, { recursive: true })
+const changed = []
+for (const [topic, body] of bodies) {
   writeFileSync(path.join(manualDir, `${topic}.md`), body)
   if (before.get(topic) !== body) changed.push(topic)
 }

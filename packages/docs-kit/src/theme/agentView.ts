@@ -68,27 +68,49 @@ function headingAnchor(line: string) {
   return explicit ? explicit[1] : slugify(text)
 }
 
+/**
+ * Each line with its heading anchor (null for non-headings). Repeated
+ * headings get VitePress' `-1`, `-2` suffixes.
+ */
+function scanLines(markdown: string) {
+  let fence: string | null = null
+  const seen = new Map<string, number>()
+  return markdown.split('\n').map((line) => {
+    const marker = line.match(/^\s*(`{3,}|~{3,})/)?.[1]
+    if (fence) {
+      if (marker && marker[0] === fence[0] && marker.length >= fence.length) fence = null
+      return { line, anchor: null as string | null }
+    }
+    if (marker) {
+      fence = marker
+      return { line, anchor: null }
+    }
+    if (!/^#{1,6} /.test(line)) return { line, anchor: null }
+    const base = headingAnchor(line)
+    const count = seen.get(base) ?? 0
+    seen.set(base, count + 1)
+    return { line, anchor: count === 0 ? base : `${base}-${count}` }
+  })
+}
+
 function headingAnchors(markdown: string) {
-  let inFence = false
-  const anchors: string[] = []
-  for (const line of markdown.split('\n')) {
-    if (/^\s*(```|~~~)/.test(line)) inFence = !inFence
-    else if (!inFence && /^#{1,6} /.test(line)) anchors.push(headingAnchor(line))
-  }
-  return anchors
+  return scanLines(markdown)
+    .map((entry) => entry.anchor)
+    .filter((anchor): anchor is string => anchor != null)
 }
 
 function rawHtml(markdown: string) {
-  let inFence = false
-  return markdown
-    .split('\n')
-    .map((line) => {
-      if (/^\s*(```|~~~)/.test(line)) inFence = !inFence
-      return !inFence && /^#{1,6} /.test(line)
-        ? `<span class="h" data-anchor="${esc(headingAnchor(line)).replace(/"/g, '&quot;')}">${esc(line)}</span>`
-        : esc(line)
-    })
+  return scanLines(markdown)
+    .map(({ line, anchor }) =>
+      anchor != null
+        ? `<span class="h" data-anchor="${esc(anchor).replace(/"/g, '&quot;')}">${esc(line)}</span>`
+        : esc(line),
+    )
     .join('\n')
+}
+
+function storedMode(): Mode {
+  return localStorage.getItem(MODE_KEY) === 'agent' ? 'agent' : 'human'
 }
 
 function fetchText(url: string) {
@@ -178,8 +200,9 @@ export function createAgentView(config: any, localeFor: (relativePath: string) =
       const peeking = ref(false)
       const preview = ref('')
       const toast = ref('')
-      const scroll: Record<Mode, number> = { human: 0, agent: 0 }
+      let scroll: Record<Mode, number> = { human: 0, agent: 0 }
       let toastTimer = 0
+      let darkGuard: MutationObserver | null = null
 
       const root = () => document.documentElement
 
@@ -190,6 +213,8 @@ export function createAgentView(config: any, localeFor: (relativePath: string) =
         root().classList.toggle('docs-av-page', has)
         root().classList.toggle('docs-av-agent', agent)
         // The agent side is always dark; leaving it restores the reader's theme.
+        // The appearance toggle is hidden there (agent-view.css), so the
+        // reader's saved preference is never touched.
         root().classList.toggle('dark', agent || isDark.value)
       }
 
@@ -229,16 +254,24 @@ export function createAgentView(config: any, localeFor: (relativePath: string) =
       }
 
       onMounted(() => {
-        const stored = localStorage.getItem(MODE_KEY)
-        mode.value = stored === 'agent' ? 'agent' : 'human'
+        mode.value = storedMode()
         tried.value = Boolean(localStorage.getItem(TRIED_KEY))
         applyClasses()
+        // VitePress re-applies its own theme class when the OS theme changes;
+        // keep the agent side dark through that.
+        darkGuard = new MutationObserver(() => {
+          if (root().classList.contains('docs-av-agent') && !root().classList.contains('dark')) {
+            root().classList.add('dark')
+          }
+        })
+        darkGuard.observe(root(), { attributes: true, attributeFilter: ['class'] })
         const idle = (window as any).requestIdleCallback ?? ((fn: () => void) => setTimeout(fn, 200))
         idle(prefetch)
         void openHashOnAgentSide()
       })
 
       onUnmounted(() => {
+        darkGuard?.disconnect()
         root().classList.remove('docs-av-page', 'docs-av-agent')
         window.clearTimeout(toastTimer)
       })
@@ -248,6 +281,10 @@ export function createAgentView(config: any, localeFor: (relativePath: string) =
         () => {
           preview.value = ''
           peeking.value = false
+          // A new page starts at its top on either side, on the reader's own
+          // choice (not one a section link picked on the previous page).
+          scroll = { human: 0, agent: 0 }
+          mode.value = storedMode()
           applyClasses()
           prefetch()
           void openHashOnAgentSide()
@@ -306,8 +343,8 @@ export function createAgentView(config: any, localeFor: (relativePath: string) =
               { duration: 600, easing, fill: 'forwards', pseudoElement: '::view-transition-old(root)' },
             )
           }
-        })
-        transition.finished.finally(() => root().classList.remove(cls))
+        }, () => {})
+        transition.finished.catch(() => {}).finally(() => root().classList.remove(cls))
       }
 
       function showToast(message: string) {

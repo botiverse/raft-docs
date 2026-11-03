@@ -35,6 +35,7 @@ export default defineDocsConfig({
         agentViewPeek: '{words} 词 · Agent 读的版本（英文）· 点击切换',
         agentViewLoading: '加载中…',
         agentViewFailed: '没能加载 Agent 版本，可以直接打开 Markdown：',
+        agentViewSource: 'Agent 版 · 来源：{source}',
       },
     },
   ],

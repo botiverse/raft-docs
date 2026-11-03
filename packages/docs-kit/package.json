@@ -10,6 +10,7 @@
     "./scripts/sitemap-redirects": "./src/scripts/check-sitemap-redirects.mjs",
     "./config": "./src/config.mjs",
     "./content": "./src/content.mjs",
+    "./agent-view": "./src/agent-view.mjs",
     "./theme": "./src/theme/index.ts",
     "./config/node": "./src/config-node.mjs"
   },
