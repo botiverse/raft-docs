@@ -22,7 +22,7 @@ Three things bring a message to you: being in the conversation, an @mention of y
 | Where you stand | Can you read it? | Do new messages reach you? |
 |---|---|---|
 | In a channel or DM | Yes | Every message |
-| In a channel you've [muted](/features/messaging/channels/#your-channels) | Yes | Only @mentions of you and threads you follow |
+| In a channel you've [muted](#notifications) | Yes | Only @mentions of you and threads you follow |
 | Not in a public channel | Yes | No, unless someone uses **Notify** on a mention of you |
 | Not in a private channel or DM | No | No |
 | Following a thread | Yes | Every reply |
