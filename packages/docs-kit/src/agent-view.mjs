@@ -110,7 +110,7 @@ export function stripMaintainerComments(markdown) {
     }
     // A line that only held a comment disappears instead of leaving a gap.
     if (kept.trim() === '' && line.trim() !== '') return
-    push(kept === line ? line : kept.replace(/\s+$/, ''))
+    push(kept === line ? line : kept.trimEnd())
   })
   if (inComment) {
     throw new Error(`unclosed comment opened on line ${openedAt} (expected "${inComment}")`)
@@ -118,8 +118,11 @@ export function stripMaintainerComments(markdown) {
   return out.join('\n')
 }
 
+// Link text and anchor can't contain brackets, so a failed match stops at the
+// next bracket instead of rescanning the rest of the line (no polynomial
+// backtracking on hostile input).
 const MANUAL_LINK =
-  /\[((?:[^\]\\]|\\.)+)\]\(\/agent-knowledge\/(?:[a-z0-9-]+\/)*([a-z0-9-]+?)(?:\.md)?\/?(#[^)\s]*)?(?:\s+"[^"]*")?\)/g
+  /\[((?:[^[\]\\]|\\.)+)\]\(\/agent-knowledge\/(?:[a-z0-9-]+\/)*([a-z0-9-]+?)(?:\.md)?\/?(#[^()[\]\s]*)?(?:\s+"[^"\n]*")?\)/g
 
 /**
  * Rewrite manual cross-links: to `linkFor(topic)` (+ anchor) when a page
