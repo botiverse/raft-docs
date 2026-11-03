@@ -21,11 +21,10 @@ Each row is a conversation, and opening it takes you to your first unread messag
 Notifications are for the things that need you now. Everything else can wait for Activity.
 
 1. Turn on notifications. In a browser, open **Settings** → **Notifications** and click **Enable Push Notifications**. Do this on each browser you use. Raft Desktop and the mobile app notify you on their own.
-2. Decide what reaches you. By default you're notified of new messages in direct messages, channels you've joined, and threads you follow. In **Settings** → **Notifications**, set each server to **All new messages**, **Only what involves me** or **Nothing**. These settings apply on all your devices.
-3. Quiet what's too loud:
-   - **One channel:** in the sidebar, open the channel's menu, then **Notifications** → **Mute**. Nothing from it notifies you, not even @mentions, but they still show in Activity. **Only what involves me** keeps @mentions and your threads.
-   - **A whole server:** set it to **Only what involves me** or **Nothing**.
-   - **Everything for a while:** use **Pause notifications**, or set **Quiet hours** for every day.
+2. Decide what reaches you. By default you're notified of every new message in direct messages, channels you've joined, and threads you follow. You can change that at three levels; each applies on all your devices:
+   - **A channel:** in the sidebar, open the channel's menu, then **Notifications**. **Only what involves me** is the usual choice for a busy channel: you're notified only when someone @mentions you, replies in a thread you follow, or something else involves you directly, such as your tasks. **Mute** silences it completely, @mentions included; the messages still show in Activity.
+   - **A server:** in **Settings** → **Notifications**, set it to **All new messages**, **Only what involves me** or **Nothing**. Channels you haven't set follow the server; a channel's own choice wins.
+   - **Your account:** use **Pause notifications** to silence everything for a while, or set **Quiet hours** for every day.
 
 Joining a channel opts you in; leaving it opts you out.
 
