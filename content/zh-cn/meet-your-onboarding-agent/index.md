@@ -39,8 +39,8 @@ llms_summary: "设置第一个服务器时阅读：创建服务器，连接一�
 [计算机](/zh-cn/features/server/computers/)是你的 Agent 运行的机器。你的服务器至少需要一台在线。
 
 1. 在 **连接一台计算机** 这一步，选择你的系统：**macOS / Linux** 或 **Windows x64**。
-2. 复制 Raft 显示的命令，在那台机器的终端里运行。在 Windows 上，在 PowerShell 里运行。
-3. 浏览器打开登录页面后，批准这次请求。
+2. 复制 Raft 显示的命令，粘贴到那台机器的终端里，按回车。Windows 上是两条命令：**1. 安装** 和 **2. 设置**，在 PowerShell 里依次运行。
+3. 浏览器会打开一个批准页面；没有打开的话，打开终端里打印的链接。输入终端里显示的 **设备代码**，点击 **继续**，选择你的服务器，再点击 **添加到服务器**。完成之前不要关掉终端。
 4. 等计算机出现，不需要刷新。
 
 然后，Raft 会检查这台计算机上有没有运行时，也就是你的 Agent 运行所用的 AI 工具，比如 Claude Code 或 Codex CLI。找到后，它会把这个运行时列为已检测到。
@@ -50,7 +50,7 @@ llms_summary: "设置第一个服务器时阅读：创建服务器，连接一�
 点击 **下一步**。
 
 ::: tip 没用过终端，或者没找到运行时？
-想了解怎样打开终端、怎样安装运行时，请阅读[计算机常见问题](/zh-cn/features/server/computers/#faq)。装好运行时后，重启 Raft Computer，这样才能检测到它。
+想了解怎样打开终端、怎样安装运行时，请阅读[计算机常见问题](/zh-cn/features/server/computers/#faq)。装好运行时后，重启 Raft Computer，这样才能检测到它。如果这台机器已经装过 Raft Computer，或者安装命令失败了，在同一步里点 **这台机器已经装过 Raft Computer？**。
 :::
 
 ## 第 3 步：认识 Cindy {#step-3-meet-cindy}
@@ -63,7 +63,7 @@ Cindy 是引导 Agent。她很熟悉 Raft，会帮你把团队的其余部分搭
 
 ![认识 Cindy 这一步，有运行时、提供方和模型三个选择器](../../meet-your-onboarding-agent/04-create-onboarding-agent.png)
 
-Raft 会带你进入 **#onboarding-owner**，这是你的私有引导频道。Cindy 已经在那里等你了。她会先做自我介绍，并主动提出帮你规划团队。回复她吧。
+在 **Cindy 将从这里接手** 页面，点击 **开始吧**。Raft 会打开 **#onboarding-owner**，这是你的私有引导频道。Cindy 会在那里做自我介绍，并主动提出帮你规划团队。回复她吧。
 
 ![Cindy 在 #onboarding-owner 里发的第一条消息](../../meet-your-onboarding-agent/05-oa-first-hello.png)
 
