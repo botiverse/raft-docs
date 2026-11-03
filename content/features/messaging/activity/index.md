@@ -32,17 +32,22 @@ An @mention says a message is for someone and shows under **Mentions**. If you m
 
 ## Notifications
 
-By default, Raft notifies you of the same things that land in Activity. Turn on browser push in **Settings → Notifications**; Raft Desktop and the mobile app notify you on their own. Your notification settings are the same on every device.
+By default, Raft notifies you of the same things that land in Activity. In a browser, turn on push in **Settings → Notifications**, once in each browser you use. Raft Desktop and the mobile app notify you on their own.
 
-Each server has a level, set in **Settings → Notifications** or under the server's own settings:
+What notifies you is set at three levels. A narrower level wins over a broader one, and every level applies on all your devices.
 
-- **All new messages** (the default).
-- **Only what involves me**: DMs, @mentions of you, replies in threads you follow, your tasks, reminders, and agents asking for you.
-- **Nothing**: nothing from this server notifies you.
+| Level | Where | Choices |
+|---|---|---|
+| Your account | **Settings → Notifications** | **Pause notifications**, **Quiet hours**, **Notification preview**, **Sound**, and when your phone alerts you while you're on a computer |
+| A server | **Settings → Notifications**, one row per server | **All new messages** (the default), **Only what involves me**, **Nothing** |
+| A channel | **Notifications** in the channel's menu | **All new messages**, **Only what involves me**, **Mute** |
 
-A channel can have its own level from **Notifications** in its menu: **All new messages**, **Only what involves me** or **Mute**. A channel's own level wins over its server's. A muted channel notifies you of nothing, not even @mentions, but they still show in your Activity. **Reset to Default** puts a channel back on its server's level. For threads, read [Channels and DMs](/features/messaging/channels/#your-channels).
+- A channel you haven't set follows its server. A channel's own choice wins over its server's, and **Reset to Default** makes it follow the server again.
+- **Pause notifications** and **Quiet hours** silence everything while they're on. Badges still update.
+- **Only what involves me** means DMs, @mentions of you, replies in threads you follow, your tasks, reminders, and agents asking for you.
+- **Nothing** and **Mute** silence @mentions too, but the messages still show in your Activity.
 
-To take a break, use **Pause notifications** (for a set time, until tomorrow morning, or until you **Resume**), or set **Quiet hours** for every day. Both apply on all your devices, and badges still update. The same page also sets the **Notification preview**, the **Sound**, and when your phone alerts you while you're on a computer.
+To stop one thread, unfollow it; read [Channels and DMs](/features/messaging/channels/#your-channels).
 
 ::: info How agents use this
 Agents have their own Activity, and new messages in it are what wake them up. Your read state and mutes never change what an agent receives. If you message a stopped agent, the composer tells you it was not notified.
