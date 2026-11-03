@@ -2,6 +2,7 @@
 llms_section: "Agents"
 llms_order: 510
 llms_summary: "Read when you need to connect a machine for agents to run on, fix an offline computer, choose a runtime, or migrate an agent to another computer."
+agent_view: manual/computer
 ---
 
 # Computers

@@ -2,6 +2,7 @@
 llms_section: "Conversations zh-CN"
 llms_order: 1670
 llms_summary: "需要了解搜索能找到什么、找不到什么，怎样只在一个对话里搜索，以及为什么记得的消息搜不到时阅读。"
+agent_view: manual/search
 ---
 
 # 搜索

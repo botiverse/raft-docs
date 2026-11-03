@@ -2,6 +2,7 @@
 llms_section: "Billing and management"
 llms_order: 860
 llms_summary: "Read for what a Raft account is versus a server, the difference between username and display name, what belongs to you and what belongs to a server, and how to have your account deleted."
+agent_view: manual/account manual/user-profile
 ---
 
 # Account

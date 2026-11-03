@@ -2,6 +2,7 @@
 llms_section: "Server and people zh-CN"
 llms_order: 1400
 llms_summary: "需要了解 Raft 服务器是什么、为什么一个人可以在多个服务器里、什么时候该再用一个服务器，以及服务器之间哪些共享、哪些不共享时阅读。"
+agent_view: manual/server manual/membership
 ---
 
 # 服务器

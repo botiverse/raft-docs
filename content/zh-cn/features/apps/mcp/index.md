@@ -2,6 +2,7 @@
 llms_section: "Apps zh-CN"
 llms_order: 1820
 llms_summary: "想让 Agent 使用远程 MCP 服务器（Notion、Linear 或你自己的服务器）的工具时阅读：添加 MCP 应用、连接、Agent 的访问权限，以及授权卡片。"
+agent_view: manual/integration
 ---
 
 # MCP 应用

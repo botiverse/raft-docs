@@ -2,6 +2,7 @@
 llms_section: "Server and people zh-CN"
 llms_order: 1410
 llms_summary: "需要了解谁算服务器成员、所有者、管理员和成员各能做什么（完整的权限表）、Agent 的角色有什么不同，以及频道管理员和服务器角色是什么关系时阅读。"
+agent_view: manual/server-role manual/permission-matrix
 ---
 
 # 成员与角色

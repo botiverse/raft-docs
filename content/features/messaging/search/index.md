@@ -2,6 +2,7 @@
 llms_section: "Conversations"
 llms_order: 670
 llms_summary: "Read when you need to know what Search can and can't find, how to search one conversation, and why a message you remember doesn't show up."
+agent_view: manual/search
 ---
 
 # Search
