@@ -1,0 +1,228 @@
+/*
+ * For human / For agents switch (agentView.ts). A site restyles it through
+ * these variables; the defaults are Raft's ink and yellow.
+ */
+:root {
+  --docs-av-ink: #141111;
+  --docs-av-paper: #fff;
+  --docs-av-accent: #ffe14d;
+  --docs-av-dot: #f8a16f;
+  --docs-av-raw-text: #cfc9bb;
+  --docs-av-raw-meta: #8a847a;
+}
+
+/* Agent side: the page body gives way to the raw Markdown. */
+.docs-av-raw {
+  display: none;
+  padding: 8px 0 220px;
+  font: 12.5px/1.6 var(--vp-font-family-mono, Menlo, monospace);
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--docs-av-raw-text);
+}
+.docs-av-raw .h { color: var(--docs-av-accent); font-weight: 700; scroll-margin-top: calc(var(--vp-nav-height, 64px) + 24px); }
+.docs-av-raw .meta { color: var(--docs-av-raw-meta); }
+.docs-av-raw a { color: var(--docs-av-accent); }
+html.docs-av-agent .docs-av-raw { display: block; }
+html.docs-av-agent .vp-doc,
+html.docs-av-agent .VPDocAside,
+html.docs-av-agent .VPDocFooter,
+html.docs-av-agent .docs-markdown-link { display: none; }
+/* The agent side is always dark: no appearance toggle while it's shown. */
+html.docs-av-agent .VPNavBarAppearance,
+html.docs-av-agent .VPNavScreenAppearance,
+html.docs-av-agent .VPNavBarExtra .item.appearance { display: none; }
+/* Room for the dock at the end of the human side. */
+html.docs-av-page .vp-doc { padding-bottom: 120px; }
+
+.docs-av-dock {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%);
+  z-index: 60;
+  view-transition-name: docs-av-dock;
+  font: 14.5px/1.4 var(--vp-font-family-base);
+  color: var(--docs-av-ink);
+}
+.docs-av-stack { position: relative; text-align: center; }
+
+.docs-av-seg {
+  position: relative;
+  /* Equal halves, so the knob covers either label whatever its length. */
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  border: 2px solid var(--docs-av-ink);
+  border-radius: 999px;
+  background: var(--docs-av-paper);
+  padding: 3px;
+  box-shadow: 0 10px 30px rgba(20, 17, 17, 0.18), 3px 3px 0 var(--docs-av-ink);
+}
+.docs-av-seg button {
+  position: relative;
+  z-index: 1;
+  border: 0;
+  background: none;
+  font: 600 15px/1 var(--vp-font-family-base);
+  padding: 11px 22px;
+  border-radius: 999px;
+  cursor: pointer;
+  color: var(--docs-av-ink);
+  white-space: nowrap;
+  transition: color 0.3s;
+}
+.docs-av-seg button:focus-visible { outline: 2px solid var(--docs-av-dot); outline-offset: 2px; }
+.docs-av-seg .knob {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  left: 3px;
+  width: calc(50% - 3px);
+  border-radius: 999px;
+  background: var(--docs-av-accent);
+  transition: transform 0.3s cubic-bezier(0.6, 0.1, 0.2, 1.2), background 0.3s;
+}
+html.docs-av-agent .docs-av-seg .knob { transform: translateX(100%); background: var(--docs-av-ink); }
+html.docs-av-agent .docs-av-seg .b-agent { color: var(--docs-av-accent); }
+
+/* Shown until the reader first switches. */
+.docs-av-dot {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--docs-av-dot);
+  border: 2px solid var(--docs-av-paper);
+  animation: docs-av-pulse 1.4s infinite;
+}
+@keyframes docs-av-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(248, 161, 111, 0.7); }
+  70% { box-shadow: 0 0 0 12px rgba(248, 161, 111, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(248, 161, 111, 0); }
+}
+
+.docs-av-btn {
+  border: 2px solid var(--docs-av-ink);
+  background: var(--docs-av-accent);
+  color: var(--docs-av-ink);
+  font: 600 14px/1 var(--vp-font-family-base);
+  padding: 10px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.docs-av-btn.ghost { background: var(--docs-av-paper); }
+
+.docs-av-card {
+  background: var(--docs-av-paper);
+  color: var(--docs-av-ink);
+  border: 2px solid var(--docs-av-ink);
+  border-radius: 16px;
+  box-shadow: 0 14px 40px rgba(20, 17, 17, 0.22), 4px 4px 0 var(--docs-av-ink);
+}
+
+/* On the agent side: what this is, and how to hand it over. */
+.docs-av-bar {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 12px);
+  transform: translate(-50%, 10px);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 10px 10px 18px;
+  width: max-content;
+  max-width: 92vw;
+  text-align: left;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.15s, transform 0.15s, visibility 0s 0.15s;
+}
+.docs-av-bar b { display: block; }
+html.docs-av-agent .docs-av-bar {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+  transition: opacity 0.3s 0.35s, transform 0.3s 0.35s, visibility 0s;
+}
+
+/* Hovering For agents: a look at the agent side before switching. */
+.docs-av-peek {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 14px);
+  transform: translate(-50%, 12px);
+  width: min(560px, 90vw);
+  height: 260px;
+  overflow: hidden;
+  border-radius: 12px;
+  border: 2px solid var(--docs-av-ink);
+  background: var(--docs-av-ink);
+  color: var(--docs-av-raw-text);
+  padding: 14px 16px;
+  font: 11px/1.5 var(--vp-font-family-mono, Menlo, monospace);
+  white-space: pre-wrap;
+  text-align: left;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s;
+  box-shadow: 0 14px 40px rgba(20, 17, 17, 0.3);
+}
+.docs-av-peek::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 90px;
+  background: linear-gradient(transparent, var(--docs-av-ink));
+}
+.docs-av-peek .cap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 10px;
+  z-index: 1;
+  text-align: center;
+  font: 600 13px/1.3 var(--vp-font-family-base);
+  color: var(--docs-av-accent);
+}
+.docs-av-peek .h { color: var(--docs-av-accent); font-weight: 700; }
+.docs-av-dock.peeking .docs-av-peek { opacity: 1; transform: translate(-50%, 0); }
+
+/* Switching (view transitions): only the clip animates; the dock stays put. */
+html.docs-av-vt-in::view-transition-old(root),
+html.docs-av-vt-in::view-transition-new(root),
+html.docs-av-vt-out::view-transition-old(root),
+html.docs-av-vt-out::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+html.docs-av-vt-out::view-transition-old(root) { z-index: 2; }
+::view-transition-group(docs-av-dock) { animation: none; z-index: 5; }
+::view-transition-old(docs-av-dock) { display: none; }
+::view-transition-new(docs-av-dock) { animation: none; }
+html.docs-av-vt-in body *:not(.knob):not(.docs-av-bar):not(.b-agent),
+html.docs-av-vt-out body *:not(.knob):not(.docs-av-bar):not(.b-agent) { transition: none !important; }
+
+.docs-av-toast {
+  position: fixed;
+  top: 84px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--docs-av-ink);
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font: 14px var(--vp-font-family-base);
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+  z-index: 70;
+}
+.docs-av-toast.on { opacity: 1; }
+html.dark .docs-av-toast { background: var(--docs-av-accent); color: var(--docs-av-ink); }
+
+@media (max-width: 640px) {
+  .docs-av-dock { bottom: 16px; }
+  .docs-av-seg button { padding: 10px 16px; font-size: 14px; }
+  .docs-av-bar { flex-wrap: wrap; justify-content: flex-end; }
+  .docs-av-peek { display: none; }
+}

@@ -102,6 +102,37 @@ Planned moves, in order (each one PR, behavior-preserving):
    the 8 URL contracts (`/docs/<slug>/`, `.md` twins, `/docs/zh/…`,
    `/docs.md`, `/docs/zh.md`).
 
+## For human / For agents (`agentView`)
+
+A page can have two sides: the page as written, for people, and a longer
+version for agents. The site turns it on with `agentView: { dir: 'agent-view' }`
+in `docs.config.mjs`; a page opts in with one frontmatter line naming files in
+that directory (without `.md`), in reading order:
+
+```yaml
+agent_view: manual/agent manual/agent-profile manual/runtime
+```
+
+- The agent side is those files joined, with MDX and HTML comments outside code
+  fences removed. It becomes the page's Markdown twin, so "View as Markdown"
+  and llms.txt give agents the full version.
+- Files under `manual/` are Raft manual topics: links to
+  `/agent-knowledge/<group>/<topic>` point to the twin of the page that shows
+  that topic, or become plain text. `manual/release.json` names the release
+  they came from (raft-docs: `scripts/sync-manual.mjs`).
+- The theme draws a switch at the bottom of such pages: hovering **For agents**
+  previews the agent side, choosing it shows the twin as plain text, with a
+  button that copies its link. The choice is remembered. A link to a section
+  only the agent side has opens that side at the section.
+- The site's `transformPageData` calls `agentViewPageData(config, root,
+  frontmatter)` (from `@botiverse/docs-kit/agent-view`) and stores the result as `frontmatter.agentView` (word count and
+  source line for the switch).
+- Labels come from each locale's `chrome` (`agentViewHuman`, `agentViewAgent`,
+  `agentViewBarTitle`, `agentViewBarText`, `agentViewCopy`, `agentViewBack`,
+  `agentViewCopied`, `agentViewCopyText`, `agentViewPeek`, `agentViewLoading`,
+  `agentViewFailed`, `agentViewSource`); `{words}`, `{url}` and `{source}` are
+  filled in. Colours are the `--docs-av-*` variables in `theme/agent-view.css`.
+
 ## `--config` adoption
 
 Every script accepts `--config <path>` (a site's `docs.config.mjs`) and takes

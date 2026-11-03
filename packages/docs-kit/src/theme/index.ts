@@ -4,7 +4,9 @@ import { useData } from 'vitepress'
 import { defineComponent, h, nextTick, onMounted, onUnmounted, watch, type VNode } from 'vue'
 import { enhanceAppWithTabs } from 'vitepress-plugin-tabs/client'
 import { pageTwinPath } from '../config.mjs'
+import { createAgentView } from './agentView'
 import './custom.css'
+import './agent-view.css'
 
 /**
  * createDocsTheme(config, options) — the kit's VitePress theme.
@@ -260,13 +262,22 @@ export function createDocsTheme(
     )
   }
 
+  const agentView = config.agentView
+    ? createAgentView(config, (relativePath: string) => localeForRelativePath(config, relativePath))
+    : null
+
   return {
     extends: DefaultTheme,
     Layout() {
       const kitSlots: Record<string, SlotRender> = {
-        'doc-before': () => h(MarkdownLink),
+        'doc-before': () =>
+          agentView ? [h(MarkdownLink), h(agentView.AgentViewPane)] : h(MarkdownLink),
         'nav-bar-content-after': () => h(HeaderCta),
-        'layout-bottom': () => [h(LocaleLinkRewriter), h(NavTabIndicator)],
+        'layout-bottom': () => [
+          h(LocaleLinkRewriter),
+          h(NavTabIndicator),
+          ...(agentView ? [h(agentView.AgentViewDock)] : []),
+        ],
       }
       const slots: Record<string, SlotRender> = { ...kitSlots }
       for (const [name, render] of Object.entries(options.slots ?? {})) {
