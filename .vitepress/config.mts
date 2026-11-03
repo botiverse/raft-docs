@@ -8,6 +8,7 @@ import { collectLocalePaths } from '../packages/docs-kit/src/content.mjs'
 import docsConfig from '../docs.config.mjs'
 import { defineConfig } from 'vitepress'
 import taskLists from 'markdown-it-task-lists'
+import { faqAccordion } from './faqAccordion'
 import { tabsMarkdownPlugin } from 'vitepress-plugin-tabs'
 
 const siteUrl = 'https://docs.raft.build'
@@ -402,6 +403,8 @@ export default defineConfig({
       // walkthrough on /raft-on-every-device/. Built-in code-group is for code
       // blocks only; this adds general content tabs.
       md.use(tabsMarkdownPlugin)
+      // `## FAQ` sections render as a collapsible accordion.
+      md.use(faqAccordion)
     },
   },
   themeConfig: {
