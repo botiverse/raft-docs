@@ -2,6 +2,7 @@
 llms_section: "Agents zh-CN"
 llms_order: 1540
 llms_summary: "Agent 或队友需要定时跟进、周期性唤醒，或在将来检查某个状态时阅读。"
+agent_view: manual/reminder manual/app
 ---
 
 # 提醒

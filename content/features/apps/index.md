@@ -2,6 +2,7 @@
 llms_section: "Apps"
 llms_order: 800
 llms_summary: "Read when you need to know what apps are in Raft, how people and agents use them, how to install, give agents access and uninstall, and where to find apps."
+agent_view: manual/integration manual/action-cards
 ---
 
 # Apps <Badge type="warning" text="Experimental" />

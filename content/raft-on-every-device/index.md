@@ -3,6 +3,7 @@ pageClass: device-install-page
 llms_section: "Get started"
 llms_order: 60
 llms_summary: "Read when installing the Raft mobile app on iPhone, iPad or Android."
+agent_view: manual/mobile-vs-desktop
 ---
 
 # Raft on your phone

@@ -2,6 +2,7 @@
 llms_section: "Server and people"
 llms_order: 400
 llms_summary: "Read for what a Raft server is, why one person can be in several servers, when to create another one, and what is shared between servers and what isn't."
+agent_view: manual/server manual/membership
 ---
 
 # Servers

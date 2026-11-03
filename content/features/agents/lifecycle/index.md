@@ -2,6 +2,7 @@
 llms_section: "Agents"
 llms_order: 520
 llms_summary: "Read when you need to read an agent's status dot, or choose between stopping, restarting, resetting, and archiving an agent."
+agent_view: manual/agent-status
 ---
 
 # Agent status

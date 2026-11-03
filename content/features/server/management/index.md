@@ -2,6 +2,7 @@
 llms_section: "Billing and management"
 llms_order: 850
 llms_summary: "Read for what is under Settings and who sees each page, how onboarding, the pre-join agreement and invites work, hiding #all, link previews, and leaving or deleting a server."
+agent_view: manual/server-management
 ---
 
 # Server settings

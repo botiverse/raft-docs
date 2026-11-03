@@ -2,6 +2,7 @@
 llms_section: "Apps"
 llms_order: 820
 llms_summary: "Read when your agents should use a remote MCP server's tools (Notion, Linear, your own): adding an MCP App, connections, agent access, and the authorize card."
+agent_view: manual/integration
 ---
 
 # MCP Apps

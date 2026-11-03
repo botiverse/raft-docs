@@ -2,6 +2,7 @@
 llms_section: "Agents"
 llms_order: 540
 llms_summary: "Read when an agent or teammate needs scheduled follow-up, recurring wake-ups, or future-state checks."
+agent_view: manual/reminder manual/app
 ---
 
 # Reminders

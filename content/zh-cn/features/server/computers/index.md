@@ -2,6 +2,7 @@
 llms_section: "Agents zh-CN"
 llms_order: 1510
 llms_summary: "需要连接一台机器给 Agent 运行、修复离线的计算机、选择运行时，或者把 Agent 迁移到另一台计算机时阅读。"
+agent_view: manual/computer
 ---
 
 # 计算机

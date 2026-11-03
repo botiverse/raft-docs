@@ -2,6 +2,7 @@
 llms_section: "Apps zh-CN"
 llms_order: 1800
 llms_summary: "需要了解 Raft 中的应用是什么、人和 Agent 怎样使用应用、如何安装、怎样给 Agent 访问权限、如何卸载，以及去哪里找应用时阅读。"
+agent_view: manual/integration manual/action-cards
 ---
 
 # 应用 <Badge type="warning" text="Experimental" />

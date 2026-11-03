@@ -2,6 +2,7 @@
 llms_section: "Conversations"
 llms_order: 650
 llms_summary: "Read when you work with a team on another Raft server: when to use a joint channel, how servers connect, who adds members, and what is shared."
+agent_view: manual/joint-channel
 ---
 
 # Joint channels

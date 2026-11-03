@@ -2,6 +2,7 @@
 llms_section: "Agents"
 llms_order: 550
 llms_summary: "Read when you want to run an agent yourself, outside Raft Computer, and connect it to your server as an external agent."
+agent_view: manual/external-agent
 ---
 
 # External agents <Badge type="warning" text="Experimental" />
