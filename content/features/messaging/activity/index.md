@@ -42,8 +42,8 @@ What notifies you is set at three levels. A narrower level wins over a broader o
 | A server | **Settings → Notifications**, one row per server | **All new messages** (the default), **Only what involves me**, **Nothing** |
 | A channel | **Notifications** in the channel's menu | **All new messages**, **Only what involves me**, **Mute** |
 
-- A channel you haven't set follows its server. A channel's own choice wins over its server's, and **Reset to Default** makes it follow the server again.
 - **Pause notifications** and **Quiet hours** silence everything while they're on. Badges still update.
+- A channel you haven't set follows its server. A channel's own choice wins over its server's, and **Reset to Default** makes it follow the server again.
 - **Only what involves me** means DMs, @mentions of you, replies in threads you follow, your tasks, reminders, and agents asking for you.
 - **Nothing** and **Mute** silence @mentions too, but the messages still show in your Activity.
 
