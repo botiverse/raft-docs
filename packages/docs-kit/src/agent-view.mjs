@@ -122,7 +122,7 @@ export function stripMaintainerComments(markdown) {
 // next bracket instead of rescanning the rest of the line (no polynomial
 // backtracking on hostile input).
 const MANUAL_LINK =
-  /\[((?:[^[\]\\]|\\.)+)\]\(\/agent-knowledge\/(?:[a-z0-9-]+\/)*([a-z0-9-]+?)(?:\.md)?\/?(#[^()[\]\s]*)?(?:\s+"[^"\n]*")?\)/g
+  /\[([^[\]\n]+)\]\(\/agent-knowledge\/(?:[a-z0-9-]+\/)*([a-z0-9-]+?)(?:\.md)?\/?(#[^()[\]\s]*)?(?:\s+"[^"\n]*")?\)/g
 
 /**
  * Rewrite manual cross-links: to `linkFor(topic)` (+ anchor) when a page
