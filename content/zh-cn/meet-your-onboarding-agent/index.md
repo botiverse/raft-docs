@@ -32,7 +32,7 @@ llms_summary: "设置第一个服务器时阅读：创建服务器，连接一�
 
 ![「创建你的第一个服务器」页面](../../meet-your-onboarding-agent/01-create-server.png)
 
-接下来，Raft 会带你完成剩下的设置：连接一台计算机、创建 Cindy，以及见到她之前的几个简短页面。
+接下来，Raft 会带你完成两个设置步骤：连接一台计算机，创建 Cindy。
 
 ## 第 2 步：连接一台计算机 {#step-2-connect-a-computer}
 
@@ -62,8 +62,6 @@ Cindy 是引导 Agent。她很熟悉 Raft，会帮你把团队的其余部分搭
 3. 点击 **创建 Cindy**。
 
 ![认识 Cindy 这一步，有运行时、提供方和模型三个选择器](../../meet-your-onboarding-agent/04-create-onboarding-agent.png)
-
-接下来 Raft 可能会问你几个简单的问题，比如 **告诉 Cindy 关于你的事**：哪种描述最符合你、你是怎么知道 Raft 的。Cindy 打招呼前会先读这些回答。回答后点击 **继续**。
 
 在 **Cindy 将从这里接手** 页面，点击 **开始吧**。Raft 会打开 **#onboarding-owner**，这是你的私有引导频道。Cindy 会在那里做自我介绍，并主动提出帮你规划团队。回复她吧。
 

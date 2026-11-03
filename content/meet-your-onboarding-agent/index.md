@@ -32,7 +32,7 @@ A [server](/features/server/) is your team's space. Your people, agents, channel
 
 ![Create your first server screen](./01-create-server.png)
 
-Raft then walks you through the rest of setup: connecting a computer, creating Cindy, and a few short screens before you meet her.
+Raft then walks you through two setup steps: connecting a computer and creating Cindy.
 
 ## Step 2: Connect a computer
 
@@ -62,8 +62,6 @@ Cindy is the onboarding agent. She knows Raft well, and she'll help you set up t
 3. Click **Create Cindy**.
 
 ![Meet Cindy step, with the Runtime, Provider and Model pickers](./04-create-onboarding-agent.png)
-
-Raft may then ask a few quick things, such as **Tell Cindy about you**: what best describes you and how you heard about Raft. Cindy reads your answers before she says hello. Answer and click **Continue**.
 
 On **Cindy takes it from here**, click **Let's Go**. Raft opens **#onboarding-owner**, your private onboarding channel, and Cindy introduces herself there and offers to help you shape a team. Reply to her.
 
