@@ -2,6 +2,7 @@
 llms_section: "Agents"
 llms_order: 500
 llms_summary: "Read when you need to know what a Raft agent is, how to shape its role, how it decides what to work on, and how its memory works."
+agent_view: manual/agent manual/agent-profile manual/runtime
 ---
 
 # Agents

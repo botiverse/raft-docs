@@ -152,6 +152,13 @@ function normalizeArtifacts(artifacts) {
   return Object.freeze({ llms: Boolean(llms), headers: Boolean(headers) })
 }
 
+function normalizeAgentView(agentView) {
+  if (agentView == null || agentView === false) return null
+  const { dir = 'agent-view' } = agentView === true ? {} : agentView
+  if (!dir || String(dir).startsWith('/')) fail(`agentView.dir must be a relative path: ${dir}`)
+  return Object.freeze({ dir: String(dir) })
+}
+
 function normalizeRedirects(redirects) {
   const { file = null, selfTest = false } = redirects ?? {}
   return Object.freeze({ file, selfTest: Boolean(selfTest) })
@@ -184,6 +191,7 @@ export function defineDocsConfig(options = {}) {
     coverage,
     redirects,
     artifacts,
+    agentView,
     output,
   } = options
 
@@ -233,6 +241,9 @@ export function defineDocsConfig(options = {}) {
     // `_headers` (`headers`); page twins and twins.index indexes are driven
     // by `twins` instead.
     artifacts: normalizedArtifacts,
+    // The For human / For agents switch (agent-view.mjs): `dir` holds the
+    // agent-side sources pages name in `agent_view` frontmatter. null = off.
+    agentView: normalizeAgentView(agentView),
     output: Object.freeze({
       contentDir: output?.contentDir ?? 'content',
       outDir: output?.outDir ?? 'out',

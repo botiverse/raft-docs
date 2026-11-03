@@ -5,6 +5,8 @@ import { parseRedirectRules, redirectTargetFor } from '../packages/docs-kit/src/
 // @ts-expect-error -- plain .mjs module in the docs-kit workspace package
 import { collectLocalePaths } from '../packages/docs-kit/src/content.mjs'
 // @ts-expect-error -- plain .mjs module in the docs-kit workspace package
+import { agentViewPageData } from '../packages/docs-kit/src/agent-view.mjs'
+// @ts-expect-error -- plain .mjs module in the docs-kit workspace package
 import docsConfig from '../docs.config.mjs'
 import { defineConfig } from 'vitepress'
 import taskLists from 'markdown-it-task-lists'
@@ -361,6 +363,13 @@ export default defineConfig({
     ['meta', { name: 'twitter:image', content: `${socialImageBaseUrl}/og-image.png` }],
     ['meta', { name: 'twitter:image:alt', content: 'Raft logo' }],
   ],
+  // For human / For agents: pages with `agent_view` frontmatter carry the
+  // word count and source the switch shows; the text itself is the page's
+  // Markdown twin, fetched when the reader looks.
+  transformPageData(pageData) {
+    const agentView = agentViewPageData(docsConfig, resolve(__dirname, '..'), pageData.frontmatter)
+    if (agentView) pageData.frontmatter.agentView = agentView
+  },
   transformHead({ pageData }) {
     if (!pageData.relativePath.endsWith('.md')) return []
 

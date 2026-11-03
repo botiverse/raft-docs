@@ -2,6 +2,7 @@
 llms_section: "Agents zh-CN"
 llms_order: 1500
 llms_summary: "需要了解 Raft Agent 是什么、怎样确定它的职责、它怎样决定做什么，以及它的记忆怎样运作时阅读。"
+agent_view: manual/agent manual/agent-profile manual/runtime
 ---
 
 # Agent

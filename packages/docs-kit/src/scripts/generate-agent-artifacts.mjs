@@ -1,6 +1,7 @@
 import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { loadDocsConfig } from '../config-node.mjs'
+import { AGENT_VIEW_KEY, assembleAgentView, parseAgentViewSources } from '../agent-view.mjs'
 
 // Parameterized for reuse by any docs-kit site; defaults reproduce raft-docs'
 // historical run (`node scripts/generate-agent-artifacts.mjs` from the repo
@@ -350,6 +351,11 @@ async function loadPages(markdownFiles) {
       rawOutputRelative: rawOutputPath(relativePath),
       htmlOutputRelative: htmlOutputPath(relativePath),
       artifactMarkdown: isProdDocsBuild ? stripPreviewMarkers(markdown) : markdown,
+      agentSources: parseAgentViewSources(frontmatter[AGENT_VIEW_KEY]),
+    }
+
+    if (page.agentSources.length > 0 && !siteConfig?.agentView) {
+      failures.push(`${relativePath}: ${AGENT_VIEW_KEY} frontmatter needs agentView in docs.config`)
     }
 
     validatePageMetadata(page, failures, {
@@ -365,7 +371,39 @@ async function loadPages(markdownFiles) {
     throw new Error(`Agent docs artifact metadata check failed:\n- ${failures.join('\n- ')}`)
   }
 
+  applyAgentViews(pages)
+
   return pages.sort(sortPages)
+}
+
+/**
+ * Pages with an `agent_view` serve their agent side as the Markdown twin.
+ * A manual topic links to the twin of the page that shows it, preferring a
+ * page in the same locale.
+ */
+function applyAgentViews(pages) {
+  if (!siteConfig?.agentView) return
+  const dir = path.resolve(root, siteConfig.agentView.dir)
+  const homes = new Map()
+  for (const page of pages) {
+    for (const id of page.agentSources) {
+      if (!id.startsWith('manual/')) continue
+      const key = `${page.locale}\u0000${id.slice('manual/'.length)}`
+      if (!homes.has(key)) homes.set(key, page.markdownUrl)
+    }
+  }
+  const defaultLocale = siteConfig.defaultLocale.key
+  for (const page of pages) {
+    if (page.agentSources.length === 0) continue
+    page.artifactMarkdown = assembleAgentView({
+      dir,
+      sources: page.agentSources,
+      title: page.title,
+      humanUrl: page.humanUrl,
+      linkFor: (topic) =>
+        homes.get(`${page.locale}\u0000${topic}`) ?? homes.get(`${defaultLocale}\u0000${topic}`) ?? null,
+    })
+  }
 }
 
 function renderSectionedList(pages, urlKey) {
