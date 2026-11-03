@@ -792,3 +792,67 @@ body {
   background-color: var(--docs-sidebar-active-fg);
   opacity: 1;
 }
+
+/* FAQ accordion (.vitepress/faqAccordion.ts): one bordered list, one row per
+   question, closed by default. The question keeps its h3 (id, outline). */
+.vp-doc .faq-list {
+  margin: 16px 0 24px;
+  border: 1px solid var(--line-hairline);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.vp-doc .faq-item + .faq-item {
+  border-top: 1px solid var(--line-hairline);
+}
+.vp-doc .faq-item > summary {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0;
+  padding: 14px 16px;
+  cursor: pointer;
+  list-style: none;
+}
+.vp-doc .faq-item > summary::-webkit-details-marker {
+  display: none;
+}
+.vp-doc .faq-item > summary::before {
+  content: '';
+  flex: none;
+  width: 0;
+  height: 0;
+  margin-top: 7px;
+  border-style: solid;
+  border-width: 4.5px 0 4.5px 7px;
+  border-color: transparent transparent transparent currentColor;
+  color: var(--foreground-muted);
+  transition: transform 0.15s ease;
+}
+.vp-doc .faq-item[open] > summary::before {
+  transform: rotate(90deg);
+}
+.vp-doc .faq-item > summary:hover {
+  background: var(--fill-subtle);
+}
+.vp-doc .faq-item > summary:focus-visible {
+  outline: 2px solid var(--line-strong);
+  outline-offset: -2px;
+}
+.vp-doc .faq-item > summary h3 {
+  margin: 0;
+  scroll-margin-top: calc(var(--vp-nav-height) + 24px);
+}
+.vp-doc .faq-answer {
+  padding: 0 16px 4px 33px;
+}
+.vp-doc .faq-answer > :first-child {
+  margin-top: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .vp-doc .faq-item > summary::before {
+    transition: none;
+  }
+}
+.vp-doc .faq-item > summary .header-anchor {
+  display: none;
+}

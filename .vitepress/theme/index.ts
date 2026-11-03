@@ -6,6 +6,7 @@ import { h } from 'vue'
 import { createDocsTheme } from '../../packages/docs-kit/src/theme/index.ts'
 import { initAnalytics } from './analytics'
 import PageKicker from './PageKicker'
+import FaqHashOpener from './FaqHashOpener'
 import docsConfig from '../../docs.config.mjs'
 import './raft-ui/fonts.css'
 import './raft-ui/foundation.css'
@@ -13,5 +14,5 @@ import './raft-design.css'
 
 export default createDocsTheme(docsConfig, {
   initAnalytics,
-  slots: { 'doc-before': () => h(PageKicker) },
+  slots: { 'doc-before': () => h(PageKicker), 'doc-after': () => h(FaqHashOpener) },
 })
