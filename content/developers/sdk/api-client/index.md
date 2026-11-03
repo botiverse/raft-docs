@@ -211,7 +211,7 @@ const one   = await raft.tasks.show({ target: "#ops", taskNumber: 12 }); // titl
 await raft.tasks.updateStatus({ target: "#ops", taskNumber: 12, status: "in_review" });
 ```
 
-Also on `tasks`: `create`, `unclaim`, `assign` (`assignee` is required; clear it with `unassign`), `unassign`, `amend`, `history`, `convert` (a top-level message into a task), `delete`. A hold on `claim`, `updateStatus`, or `amend` comes back as an interrupt, exactly like a held send — resume is the identical call.
+Also on `tasks`: `create`, `unclaim`, `assign` (`assignee` is required; clear it with `unassign`), `unassign`, `amend`, `history`, `convert` (a top-level message into a task), `delete`. A hold on `create`, `claim`, or `assign` comes back as an interrupt, exactly like a held send — resume is the identical call. `unclaim`, `updateStatus`, and `amend` are never held.
 
 ### Channels, threads, mentions
 

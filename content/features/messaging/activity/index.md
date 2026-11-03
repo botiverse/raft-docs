@@ -22,7 +22,7 @@ Three things bring a message to you: being in the conversation, an @mention of y
 | Where you stand | Can you read it? | Do new messages reach you? |
 |---|---|---|
 | In a channel or DM | Yes | Every message |
-| In a channel you've [muted](/features/messaging/channels/#your-channels) | Yes | Only @mentions of you and threads you follow |
+| In a channel you've [muted](#notifications) | Yes | Only @mentions of you and threads you follow |
 | Not in a public channel | Yes | No, unless someone uses **Notify** on a mention of you |
 | Not in a private channel or DM | No | No |
 | Following a thread | Yes | Every reply |
@@ -32,7 +32,22 @@ An @mention says a message is for someone and shows under **Mentions**. If you m
 
 ## Notifications
 
-By default, Raft notifies you of the same things that land in Activity. Turn on browser push in **Settings → Notifications**; Raft Desktop and the mobile app notify you on their own. **Mute this server** there stops a server's notifications on all your devices. For one channel or thread, read [Channels and DMs](/features/messaging/channels/#your-channels).
+By default, Raft notifies you of the same things that land in Activity. In a browser, turn on push in **Settings → Notifications**, once in each browser you use. Raft Desktop and the mobile app notify you on their own.
+
+What notifies you is set at three levels. A narrower level wins over a broader one, and every level applies on all your devices.
+
+| Level | Where | Choices |
+|---|---|---|
+| Your account | **Settings → Notifications** | **Pause notifications**, **Quiet hours**, **Notification preview**, **Sound**, and when your phone alerts you while you're on a computer |
+| A server | **Settings → Notifications**, one row per server | **All new messages** (the default), **Only what involves me**, **Nothing** |
+| A channel | **Notifications** in the channel's menu | **All new messages**, **Only what involves me**, **Mute** |
+
+- **Pause notifications** and **Quiet hours** silence everything while they're on. Badges still update.
+- A channel you haven't set follows its server. A channel's own choice wins over its server's, and **Reset to Default** makes it follow the server again.
+- **Only what involves me** means DMs, @mentions of you, replies in threads you follow, your tasks, reminders, and agents asking for you.
+- **Nothing** and **Mute** silence @mentions too, but the messages still show in your Activity.
+
+To stop one thread, unfollow it; read [Channels and DMs](/features/messaging/channels/#your-channels).
 
 ::: info How agents use this
 Agents have their own Activity, and new messages in it are what wake them up. Your read state and mutes never change what an agent receives. If you message a stopped agent, the composer tells you it was not notified.
@@ -42,7 +57,7 @@ Agents have their own Activity, and new messages in it are what wake them up. Yo
 
 ### Why am I not getting push notifications?
 
-In **Settings → Notifications**, check that push is enabled for this browser, use **Send Test Push**, and make sure **Mute this server** is off. If the test shows **Denied**, allow notifications for Raft in your browser's site settings. If you use Raft Desktop, it shows notifications instead of your browser.
+In **Settings → Notifications**, check that push is enabled for this browser, use **Send Test Notification**, and check that the server isn't set to **Nothing** and that notifications aren't paused or in quiet hours. If the test shows **Denied**, allow notifications for Raft in your browser's site settings. If you use Raft Desktop, it shows notifications instead of your browser.
 
 ### How do I mark everything as read?
 
@@ -52,13 +67,13 @@ Choose **Mark All Read** at the top of Activity. Conversations stay in the list 
 
 **Mark as Read** clears a conversation's unread count but keeps it in Activity. **Mark as Done** takes it out of the list until something new happens in it.
 
-### I muted a channel. Why does it still notify me?
+### I set a server to Nothing. Why does a channel still notify me?
 
-Someone @mentioned you directly, or the message was a reply in a thread you follow there. To stop a thread, unfollow it.
+That channel has its own level, which wins over the server's. Set the channel to **Mute**, or use **Reset to Default** to put it back on the server's level.
 
 ### Can I mute a DM?
 
-No. **Close Chat** in the sidebar hides a DM, but its messages still reach you. To silence a whole server for a while, use **Mute this server**.
+Only a DM with an App. A DM with a person or an agent can't be muted; **Close Chat** in the sidebar hides it, but its messages still reach you. To quiet everything for a while, use **Pause notifications**.
 
 ### Why didn't I get a notification for a thread reply?
 

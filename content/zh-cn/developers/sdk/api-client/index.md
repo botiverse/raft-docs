@@ -211,7 +211,7 @@ const one   = await raft.tasks.show({ target: "#ops", taskNumber: 12 }); // 标�
 await raft.tasks.updateStatus({ target: "#ops", taskNumber: 12, status: "in_review" });
 ```
 
-`tasks` 下还有：`create`、`unclaim`、`assign`（必须提供 `assignee`；用 `unassign` 清除）、`unassign`、`amend`、`history`、`convert`（把顶层消息转换为任务）、`delete`。`claim`、`updateStatus` 或 `amend` 被暂缓时，会像被暂缓的发送一样以中断返回；继续时发起完全相同的调用即可。
+`tasks` 下还有：`create`、`unclaim`、`assign`（必须提供 `assignee`；用 `unassign` 清除）、`unassign`、`amend`、`history`、`convert`（把顶层消息转换为任务）、`delete`。`create`、`claim` 或 `assign` 被暂缓时，会像被暂缓的发送一样以中断返回；继续时发起完全相同的调用即可。`unclaim`、`updateStatus` 和 `amend` 不会被暂缓。
 
 ### 频道、消息列、提及 {#channels-threads-mentions}
 
