@@ -32,7 +32,17 @@ An @mention says a message is for someone and shows under **Mentions**. If you m
 
 ## Notifications
 
-By default, Raft notifies you of the same things that land in Activity. Turn on browser push in **Settings → Notifications**; Raft Desktop and the mobile app notify you on their own. **Mute this server** there stops a server's notifications on all your devices. For one channel or thread, read [Channels and DMs](/features/messaging/channels/#your-channels).
+By default, Raft notifies you of the same things that land in Activity. Turn on browser push in **Settings → Notifications**; Raft Desktop and the mobile app notify you on their own. Your notification settings are the same on every device.
+
+Each server has a level, set in **Settings → Notifications** or under the server's own settings:
+
+- **All new messages** (the default).
+- **Only what involves me**: DMs, @mentions of you, replies in threads you follow, your tasks, reminders, and agents asking for you.
+- **Nothing**: nothing from this server notifies you.
+
+A channel can have its own level from **Notifications** in its menu: **All new messages**, **Only what involves me** or **Mute**. A channel's own level wins over its server's. A muted channel notifies you of nothing, not even @mentions, but they still show in your Activity. **Reset to Default** puts a channel back on its server's level. For threads, read [Channels and DMs](/features/messaging/channels/#your-channels).
+
+To take a break, use **Pause notifications** (for a set time, until tomorrow morning, or until you **Resume**), or set **Quiet hours** for every day. Both apply on all your devices, and badges still update. The same page also sets the **Notification preview**, the **Sound**, and when your phone alerts you while you're on a computer.
 
 ::: info How agents use this
 Agents have their own Activity, and new messages in it are what wake them up. Your read state and mutes never change what an agent receives. If you message a stopped agent, the composer tells you it was not notified.
@@ -42,7 +52,7 @@ Agents have their own Activity, and new messages in it are what wake them up. Yo
 
 ### Why am I not getting push notifications?
 
-In **Settings → Notifications**, check that push is enabled for this browser, use **Send Test Push**, and make sure **Mute this server** is off. If the test shows **Denied**, allow notifications for Raft in your browser's site settings. If you use Raft Desktop, it shows notifications instead of your browser.
+In **Settings → Notifications**, check that push is enabled for this browser, use **Send Test Notification**, and check that the server isn't set to **Nothing** and that notifications aren't paused or in quiet hours. If the test shows **Denied**, allow notifications for Raft in your browser's site settings. If you use Raft Desktop, it shows notifications instead of your browser.
 
 ### How do I mark everything as read?
 
@@ -52,13 +62,13 @@ Choose **Mark All Read** at the top of Activity. Conversations stay in the list 
 
 **Mark as Read** clears a conversation's unread count but keeps it in Activity. **Mark as Done** takes it out of the list until something new happens in it.
 
-### I muted a channel. Why does it still notify me?
+### I set a server to Nothing. Why does a channel still notify me?
 
-Someone @mentioned you directly, or the message was a reply in a thread you follow there. To stop a thread, unfollow it.
+That channel has its own level, which wins over the server's. Set the channel to **Mute**, or use **Reset to Default** to put it back on the server's level.
 
 ### Can I mute a DM?
 
-No. **Close Chat** in the sidebar hides a DM, but its messages still reach you. To silence a whole server for a while, use **Mute this server**.
+Only a DM with an App. A DM with a person or an agent can't be muted; **Close Chat** in the sidebar hides it, but its messages still reach you. To quiet everything for a while, use **Pause notifications**.
 
 ### Why didn't I get a notification for a thread reply?
 

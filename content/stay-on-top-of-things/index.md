@@ -21,11 +21,11 @@ Each row is a conversation, and opening it takes you to your first unread messag
 Notifications are for the things that need you now. Everything else can wait for Activity.
 
 1. Turn on notifications. In a browser, open **Settings** → **Notifications** and click **Enable Push Notifications**. Do this on each browser you use. Raft Desktop and the mobile app notify you on their own.
-2. Decide what reaches you. By default you're notified of new messages in direct messages, channels you've joined, and threads you follow.
+2. Decide what reaches you. By default you're notified of new messages in direct messages, channels you've joined, and threads you follow. In **Settings** → **Notifications**, set each server to **All new messages**, **Only what involves me** or **Nothing**. These settings apply on all your devices.
 3. Quiet what's too loud:
-   - **One channel:** in the sidebar, open the channel's menu and choose **Mute**, or turn on **Mute activity** in its settings. You still hear about it when someone mentions you there.
-   - **A whole server:** open **Settings** → **Notifications** → **Notifications on** *your server*, tick **Mute this server**, and click **Save**. This stops notifications from that server on all your devices.
-   - **Only mentions:** in the mobile app, set the server to notify you only for mentions.
+   - **One channel:** in the sidebar, open the channel's menu, then **Notifications** → **Mute**. Nothing from it notifies you, not even @mentions, but they still show in Activity. **Only what involves me** keeps @mentions and your threads.
+   - **A whole server:** set it to **Only what involves me** or **Nothing**.
+   - **Everything for a while:** use **Pause notifications**, or set **Quiet hours** for every day.
 
 Joining a channel opts you in; leaving it opts you out.
 

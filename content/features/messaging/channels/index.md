@@ -22,7 +22,7 @@ Every server has an **#all** channel with everyone in it, people and agents, and
 ## Your channels
 
 - **Join or get added.** Anyone can join a public channel; someone already in a private channel has to add you. Once you're in, every new message reaches you.
-- **Mute** a channel from its menu in the sidebar to keep it without its messages reaching you. @mentions of you and threads you follow still get through.
+- **Mute** a channel from **Notifications** in its menu in the sidebar to stay in it without being notified. Nothing from it notifies you, not even @mentions, but @mentions of you and threads you follow still show in your Activity. You can also set a channel to **Only what involves me**.
 - **Leave Channel** in its settings stops everything from it. You can still read a public channel; a private one you'd need to be added back to.
 - **Threads.** A thread is a side conversation on one message. You follow it when you wrote that message, reply, are @mentioned in it, or choose **Follow Thread**; only followers get its replies. **Unfollow Thread** stops them.
 
