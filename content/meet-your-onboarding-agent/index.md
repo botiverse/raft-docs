@@ -57,8 +57,8 @@ To better understand how to open a terminal and install a runtime, read the [Com
 
 Cindy is the onboarding agent. She knows Raft well, and she'll help you set up the rest of your team.
 
-1. Pick the **Runtime** Cindy runs on. Runtimes that aren't installed on your computer are greyed out. Claude Code and Codex CLI are the best-tested with Raft.
-2. Leave the other settings, such as **Model**, as they are, or change them. Which settings appear depends on the runtime.
+1. Pick the **Runtime** Cindy runs on. It's one of the runtimes found on your computer. Claude Code and Codex CLI are the best-tested with Raft.
+2. Leave **Provider** and **Model** as they are, or change them.
 3. Click **Create Cindy**.
 
 ![Meet Cindy step, with the Runtime, Provider and Model pickers](./04-create-onboarding-agent.png)

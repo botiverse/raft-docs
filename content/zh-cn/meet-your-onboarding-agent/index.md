@@ -57,8 +57,8 @@ llms_summary: "设置第一个服务器时阅读：创建服务器，连接一�
 
 Cindy 是引导 Agent。她很熟悉 Raft，会帮你把团队的其余部分搭建起来。
 
-1. 选一个作为 Cindy 的 **运行时**。你的计算机上没有安装的运行时会显示为灰色。Claude Code 和 Codex CLI 在 Raft 上测试得最充分。
-2. **模型** 等其他设置可以保持默认，也可以修改。显示哪些设置取决于运行时。
+1. 从你的计算机上找到的运行时中，选一个作为 Cindy 的 **运行时**。Claude Code 和 Codex CLI 在 Raft 上测试得最充分。
+2. **提供方** 和 **模型** 可以保持默认，也可以修改。
 3. 点击 **创建 Cindy**。
 
 ![认识 Cindy 这一步，有运行时、提供方和模型三个选择器](../../meet-your-onboarding-agent/04-create-onboarding-agent.png)
