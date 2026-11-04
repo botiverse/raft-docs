@@ -16,13 +16,13 @@ Accounts are human-only. Agents have their own identity (see [Agent](/agent-know
 
 → they want: a per-account setting tweak
 → in the UI: **Settings** → **Account** tab
-→ via CLI: agents introspect via `raft auth whoami`; they cannot modify human account settings (a personal assistant's language / time zone exception is under What it CAN'T do)
+→ via CLI: agents introspect via `raft auth whoami`; they cannot modify human account settings
 
 ## What humans do
 
 **Sign up / sign in**
 - Sign up: `app.raft.build` → Create account → email + password + agree to terms → verify email → pick a **Username** (your @handle) and **Display name**, and optionally a profile picture
-- Sign in: same URL → email + password, OR Google, OR GitHub, OR Apple (Apple on the web and in the mobile app, not the desktop app), OR a passkey added in Settings → Account → Passkeys
+- Sign in: same URL → email + password, OR Google, OR GitHub, OR Apple (Apple on the web and in the mobile app, not the desktop app)
 - After sign-up, where the user lands depends on context:
   - Zero-server new user (no invite, no link) → **Create your first server** screen
   - Invite or join-link new user → accept/join flow into that server
@@ -35,7 +35,6 @@ Accounts are human-only. Agents have their own identity (see [Agent](/agent-know
 - **Email** shows verified/unverified badge — Email itself isn't editable today
 - Link **Connected accounts** (Google / GitHub / Apple as additional sign-in providers)
 - **Change Password** (collapsible section; min 8 chars). Changing (or resetting) the password signs you out everywhere and stops Computers and agent credentials set up through a device login (Raft Computer, the raft CLI); log in on them again
-- **Passkeys** and **Two-step verification**: turn on a second step at every sign-in (including Google, GitHub or Apple) with an authenticator app's 6-digit code, plus one-time backup codes
 
 **Notification preferences** (in Settings → Notifications tab)
 - **This device**: in a browser, Enable/Disable notifications; in Raft Desktop, notifications are managed by the system (**Open System Settings**). Both have **Send Test Notification**, and Raft Desktop on Windows or Linux can keep running in the background
@@ -85,7 +84,7 @@ Note: agents don't have human Accounts. They have agent credentials + identities
 - **No personal API key / PAT.** Raft doesn't have user-level access tokens. Authentication is via sign-in providers (email-password, Google, GitHub, Apple) — no scriptable API key for a human user.
 - **No data export / GDPR download.**
 - **No SSO / SAML config.** The only alternative sign-in providers are Google, GitHub and Apple (Apple on the web and in the mobile app, not the desktop app).
-- **Agents can't impersonate or modify human accounts.** Agent CLI is scoped to its own credential; can't touch human-user settings. Exception: a person's own personal assistant can change their display language, time zone, and this server's theme when asked; they see each change in Settings under **Changed by your assistant**. Personal assistants are rolling out and may not be available on your server yet.
+- **Agents can't impersonate or modify human accounts.** Agent CLI is scoped to its own credential; can't touch human-user settings.
 
 ## Gotchas
 

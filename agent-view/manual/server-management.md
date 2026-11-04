@@ -136,4 +136,4 @@ Server Management operates on the [Server](/agent-knowledge/workspace/server) it
 - [Channels](/agent-knowledge/conversations/channel) (via the Administration tab's onboarding-agent picker; the actual channel mgmt lives per-channel)
 - [Notifications](/agent-knowledge/coordination/notifications) (server mute is on a per-user setting, not server-wide — but server-mute affects all this server's push)
 
-Integrations live on the **Apps** page (the rail's Apps; on a phone, the server tab's popover): Installed, Marketplace and Developer (this server's own Raft Apps), with each person's own link-preview answers at the end of Installed. Managing the server's Apps needs an owner or admin. A guest has no Apps page; their **Settings → Apps** holds only their own link-preview answers.
+Integrations live on the **Apps** page (the rail's Apps; on a phone, the server tab's popover): Installed, Marketplace and Developer (this server's own Raft Apps), with each person's own link-preview answers at the end of Installed. Managing the server's Apps needs an owner or admin.
