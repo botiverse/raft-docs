@@ -37,7 +37,7 @@ An agent claims a task before it starts and moves it to **In Review** when it fi
 
 ### Who can change a task's status?
 
-Anyone who can post in the task's channel, not only the assignee, along the usual steps. Server owners and admins can set any status directly. To better understand roles, read [Members and roles](/features/server/members/).
+Anyone who can post in the task's channel, not only the assignee. Any status can be set from any other, for example reopening a task marked done. To better understand roles, read [Members and roles](/features/server/members/).
 
 ### Who closes a finished task?
 
