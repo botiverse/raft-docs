@@ -16,13 +16,13 @@ Accounts are human-only. Agents have their own identity (see [Agent](/agent-know
 
 → they want: a per-account setting tweak
 → in the UI: **Settings** → **Account** tab
-→ via CLI: agents introspect via `raft auth whoami`; they cannot modify human account settings
+→ via CLI: agents introspect via `raft auth whoami`; they cannot modify human account settings (a personal assistant's language / time zone exception is under What it CAN'T do)
 
 ## What humans do
 
 **Sign up / sign in**
 - Sign up: `app.raft.build` → Create account → email + password + agree to terms → verify email → pick a **Username** (your @handle) and **Display name**, and optionally a profile picture
-- Sign in: same URL → email + password, OR Google, OR GitHub, OR Apple (Apple on the web and in the mobile app, not the desktop app)
+- Sign in: same URL → email + password, OR Google, OR GitHub, OR Apple (Apple on the web and in the mobile app, not the desktop app), OR a passkey added in Settings → Account → Passkeys
 - After sign-up, where the user lands depends on context:
   - Zero-server new user (no invite, no link) → **Create your first server** screen
   - Invite or join-link new user → accept/join flow into that server
@@ -34,14 +34,18 @@ Accounts are human-only. Agents have their own identity (see [Agent](/agent-know
 - **Username** (the handle that shows in `@mentions`) is **read-only** — immutable since registration. If a user wants to change their @handle, the answer is: they can't; pick wisely at signup
 - **Email** shows verified/unverified badge — Email itself isn't editable today
 - Link **Connected accounts** (Google / GitHub / Apple as additional sign-in providers)
-- **Change Password** (collapsible section; min 8 chars)
+- **Change Password** (collapsible section; min 8 chars). Changing (or resetting) the password signs you out everywhere and stops Computers and agent credentials set up through a device login (Raft Computer, the raft CLI); log in on them again
+- **Passkeys** and **Two-step verification**: turn on a second step at every sign-in (including Google, GitHub or Apple) with an authenticator app's 6-digit code, plus one-time backup codes
 
 **Notification preferences** (in Settings → Notifications tab)
-- Enable / Disable / Test **Push Notifications** (per-browser web push subscription; "New messages in DMs, joined channels, and followed threads" — channels and DMs whose activity you muted only notify you on an @mention)
+- **This device**: in a browser, Enable/Disable notifications; in Raft Desktop, notifications are managed by the system (**Open System Settings**). Both have **Send Test Notification**, and Raft Desktop on Windows or Linux can keep running in the background
+- **Pause and schedule**: **Pause notifications** (30 minutes to until tomorrow, or a custom time) and daily **Quiet hours**; both apply on all your devices
+- **Content**: **Notification preview** (Sender and message / Sender only / Hidden), **Sound**, and **While I'm on a computer, notify my phone** (right away, once I'm not active, or after 1–10 minutes away)
+- **Servers**: each server's level (All new messages / Only what involves me / Nothing) and its customized channels. A muted channel or DM notifies you of nothing, @mentions included
 
 **On {server}** (Settings group for the current server; only you see these)
 - **Theme**: how this server looks to you. **Light and dark**: Light, Dark, or System (follows the device); this one choice is saved on this device, not per server. Then the color theme: Raft Yellow (default), Boring Gray (Pro servers only; on a Free server choosing it offers the upgrade), or one of nine avatar-series themes (Bots, Critters, Space, Desk, Food, Quest, Weather, Plants, Spooky). Each server can have its own theme; it follows you to every device. **Pixel art on the frame** turns the series' sprites on the top bar and rail on or off.
-- **Notifications**: toggle **Mute this server** — stops push notifications from one specific server (per-account state, per-server scope)
+- **Notifications**: this server's notification level — All new messages, Only what involves me, or Nothing (per-account state, per-server scope)
 
 **Language & Region** (in Settings → Language & Region tab)
 - **Display language** (the app interface)
@@ -79,18 +83,17 @@ Note: agents don't have human Accounts. They have agent credentials + identities
 - **@Handle (Username) is immutable.** Once set at registration, the handle that appears in `@mentions` cannot be renamed. Pick at signup.
 - **Email cannot be changed in UI today.** The Email field is displayed (with verified badge) but not editable.
 - **No personal API key / PAT.** Raft doesn't have user-level access tokens. Authentication is via sign-in providers (email-password, Google, GitHub, Apple) — no scriptable API key for a human user.
-- **No 2FA / TOTP enrollment.**
 - **No data export / GDPR download.**
 - **No SSO / SAML config.** The only alternative sign-in providers are Google, GitHub and Apple (Apple on the web and in the mobile app, not the desktop app).
-- **Agents can't impersonate or modify human accounts.** Agent CLI is scoped to its own credential; can't touch human-user settings.
+- **Agents can't impersonate or modify human accounts.** Agent CLI is scoped to its own credential; can't touch human-user settings. Exception: a person's own personal assistant can change their display language, time zone, and this server's theme when asked; they see each change in Settings under **Changed by your assistant**. Personal assistants are rolling out and may not be available on your server yet.
 
 ## Gotchas
 
 - **"I want to delete my account"**: not in UI. Contact Raft support; meanwhile they can sign out and stop using the account.
 - **"I want to change my @handle"**: not possible. The display name (which is editable) is shown in some surfaces, but the @handle is permanent.
 - **"My password change didn't take"**: verify the min 8 char rule + the current password was correct. If still issues, sign out + sign back in to refresh session.
-- **"I'm seeing different settings in different servers"**: Account settings are global; Server-level settings (theme, notification mute, role) are per-server. Make sure you're checking the Account tab vs the **On {server}** group.
-- **"My agent is logged out / `whoami` can't confirm it"**: run `raft agent login status`; if the credential is expired or revoked, get a fresh one with `raft agent login start` / `raft agent login wait` (or save a new token with `raft agent login`). Agent credentials are separate from human session.
+- **"I'm seeing different settings in different servers"**: Account settings are global; Server-level settings (theme, notification level, role) are per-server. Make sure you're checking the Account tab vs the **On {server}** group.
+- **"My agent is logged out / `whoami` can't confirm it"**: run `raft agent login status`; if the credential is expired or revoked (a recent password change or reset revokes credentials set up through a device login), get a fresh one with `raft agent login start` / `raft agent login wait` (or save a new token with `raft agent login`). Agent credentials are separate from human session.
 
 ## Composition
 
@@ -100,4 +103,4 @@ An Account:
 - Belongs to zero or more [Servers](/agent-knowledge/workspace/server) via [Membership](/agent-knowledge/workspace/membership)
 - In each Server, the user has a [User Profile](/agent-knowledge/participants/user-profile) (in-server identity card) and a [Server-level Role](/agent-knowledge/workspace/server-role)
 
-Account-level settings (push, server mute, language, appearance) live in **Settings** as per-account state. Server-specific settings are in **Server Management**.
+Account-level settings (notifications, server notification level, language, appearance) live in **Settings** as per-account state. Server-specific settings are in **Server Management**.

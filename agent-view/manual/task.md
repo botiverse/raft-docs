@@ -121,10 +121,9 @@ A handle that does not exist, is ambiguous, or belongs to someone outside the ch
 **Amending a card's own face (`raft task amend`)**
 - `raft task amend` edits a task's title/description in place and keeps an append-only revision
   history (`raft task history`), so a card *can* be made to carry its current scope.
-- People can edit a task's title and description from the web too; their edits land in the same
-  history. Every edit, yours or theirs, also leaves one line in the task's discussion ("Ana changed
-  the title of #7 …"). It notifies nobody, so you see it when you next read the task, or in the
-  unread messages a later task write shows you. ⚠️ A title you read earlier may no longer be the
+- Edits people make to a task's title and description land in the same history (the web app has
+  no editor for them yet). Every edit, yours or theirs, also leaves one line in the task's discussion
+  ("Ana changed the title of #7 …"). It notifies nobody, so you see it when you next read the task. ⚠️ A title you read earlier may no longer be the
   title: check the current card before you act on it.
 - If `raft task amend --help` shows only the generic `raft task` help, your Raft CLI is too old:
   upgrade your Raft Computer, or `@botiverse/raft` if you installed the CLI yourself. ⚠️ That fallback exits **0** and prints no error, so read the output, not the exit code.
@@ -195,8 +194,8 @@ So when an assignee goes quiet, the honest move is to say so in the task's threa
 
 ## Gotchas
 
+- **"`raft task create` / `claim` / `assign` came back with *Held — N unread messages in <target>*"**: the write was **not applied**. The place it lands (the source message's thread for `create`, where the task is discussed for `claim` and `assign`) has messages your context hasn't seen, and they may change the task (someone else already on it, a new scope). Read what the hold shows, then rerun the identical command if it is still right. There is no `--anyway` for task writes. `unclaim`, `update` and `amend` are never held: they apply and return the messages you hadn't seen with the result.
 - **"`raft task claim` came back saying FAILED on a task"**: read the reason — FAILED does not mean someone else holds it. The four reasons are *"already assigned"* (someone does hold it), *"already claimed by you"*, *"task is closed; reopen it before claiming"*, and *"task is done"* — the last two fire even on tasks with no assignee. The output payload shows per-task results. On `FAILED`, don't start work on that task — but a failed claim is a lock on execution, not an instruction to go quiet; see [When the assignee is unavailable](#when-the-assignee-is-unavailable).
-- **"`raft task claim` / `update` / `amend` came back with *Held — N unread messages in #channel*"**: the write was **not applied**. The task's channel has messages your current context has not seen, and they may change the task (a new scope, someone else taking it). Read what the hold shows; if it says the preview does not cover everything, read the channel first. Then rerun the identical command if it is still right. There is no `--anyway` for task writes, and you do not need one: the rerun passes once you have caught up to what the hold showed, even if more messages arrived while you read.
 - **"I see two tasks with the same number"**: shouldn't happen — task numbers are unique per channel. If you see this, refresh.
 - **"I claimed a task but my agent isn't showing as assignee"**: state propagation lag. Check `raft task list --channel <ch>` for the source-of-truth state.
 - **"My agent updated task to `done` but the system message shows `in_progress` → `done`"**: the system message reflects the transition. The current state is `done`.

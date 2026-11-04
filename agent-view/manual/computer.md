@@ -15,13 +15,13 @@ Raft Computer is the local service that orchestrates [runtimes](/agent-knowledge
 ## When a user asks: "How do I add a computer? / Why is my computer offline? / Can I rename / remove it?"
 
 → they want: connect a new machine to Raft, troubleshoot a disconnection, or manage existing computers
-→ in the UI: **+ Add Computer** in the sidebar to add; click the computer to open its detail page to rename / connect-command / delete
+→ in the UI: open **Computers** in the left rail (on a phone: the server tab → **Computers**) → **Add Computer** to add; click the computer to open its detail page to rename / connect-command / delete
 → via CLI: agents can't manage computers (no `raft computer` command family); humans only
 
 ## What humans do
 
 **Add a computer** (admin or owner — gated by `registerMachines`)
-- Click **+ Add Computer** in the sidebar's **Computers** section
+- Open **Computers** in the left rail (on a phone: the server tab → **Computers**) and click **Add Computer**
 - In the dialog, pick **Your Computer** (Cloud Computer is marked "Coming soon" — not yet shipped)
 - The dialog shows an explicit platform selector:
   - **macOS / Linux**: copy and run the two Raft Computer commands:
@@ -37,7 +37,7 @@ Raft Computer is the local service that orchestrates [runtimes](/agent-knowledge
     raft-computer setup /<server-slug>
     ```
 - Copy the command for the platform you are setting up, paste it in a terminal on that machine, and run it
-- Setup prints a link and a code: open the link, sign in to Raft, enter the code, and choose the server to add this machine to (an admin or owner of it). The approval adds this one machine to that one server, once; the machine keeps no Raft sign-in. Adding the same machine to another server is another `raft-computer attach /<server-slug>` and another approval. `raft-computer login` and `logout` are no longer needed (`login` runs the same approval; `logout` changes nothing)
+- Setup (Computer 1.0.60 or later) prints a link and a code: open the link, sign in to Raft, enter the code, and choose the server to add this machine to (an admin or owner of it). The approval adds this one machine to that one server, once; the machine keeps no Raft sign-in. Adding the same machine to another server is another `raft-computer attach /<server-slug>` and another approval. `raft-computer login` and `logout` are no longer needed (`login` runs the same approval; `logout` changes nothing)
 - Raft auto-detects when the Computer connects; the dialog advances
 - Name the computer + click **Done**
 - Raft Computer is the only supported way to connect a machine. Machines that were connected with the retired standalone daemon still appear in the list; use **Migrate to Computer** on their detail page.
@@ -50,7 +50,8 @@ Raft Computer is the local service that orchestrates [runtimes](/agent-knowledge
 - Green-but-stuck (row online, agents not moving): a green row can still hide a local service-version skew or stuck runner. Run `raft-computer doctor`, then `raft-computer restart`. If doctor reports service-version skew, quit the old menu-bar app or upgrade before retrying.
 
 **Disconnect a computer from one server** (run on that machine)
-- `raft-computer detach /<server-slug>` asks first (`--yes` skips the question), then revokes this machine's key on that server together with the agent keys it issued, and only after the server confirms removes the saved key and stops that server's runner. The computer and its agents stay listed on the server; connecting again needs `raft-computer attach /<server-slug>` and a new approval. If the server cannot be reached or is too old, nothing changes; revoke it from the computer's page on the web instead.
+- `raft-computer detach /<server-slug>` asks first (`--yes` skips the question), then revokes this machine's key on that server together with the agent keys it issued, and only after the server confirms removes the saved key and stops that server's runner. The computer and its agents stay listed on the server; connecting again needs `raft-computer attach /<server-slug>` and a new approval. Needs Computer 1.0.60 or later; if `detach` is an unknown command, upgrade first. If the server cannot be reached or is too old, nothing changes. Instead, whoever approved the machine can use the **Revoke This Machine** link in the approval email (it works once, within 24 hours of the approval), or the computer can be deleted from its page on the web once its agents are removed, which also revokes its key.
+- After a detach, that computer's agents go offline, and their owners get a notice in their DM with the agent: messages and reminders wait. To bring the agents back, attach the machine again (with a new approval) or, on a Server with Pro features, move them to another computer.
 
 > ⚠️ **If you are an agent, check whose machine this is before you run `restart`.** A managed agent's own process is a **descendant of the `raft-computer` daemon**, so restarting the service **on the host you are running on terminates you mid-command** — and you cannot report the outcome, because the process that would report it is the one being killed. The commands above are written for a person at that machine. This warning is about **your own host**, not about `restart` in general. ⇒ If the Computer you need to recover is the one you are running on, say so and stop; ⛔ do not run the command expecting to report back.
 
@@ -66,7 +67,7 @@ Raft Computer is the local service that orchestrates [runtimes](/agent-knowledge
 - If setup can't stop the old daemon during migration, stop that process manually and re-run the same command. Note: `--migrate-from` is gone — the manual-adoption path is `--machine <machineId>`. "keeps your agents" applies only to the migrate/adopt branch; `new` / `--fresh` create a separate Computer and do **not** carry agents.
 
 **Rename a computer** (admin or owner)
-- Click the computer in the sidebar → its detail page
+- Open the computer from **Computers** → its detail page
 - Click the pencil icon next to the name → edit → Save
 
 **Set / edit computer description** (admin or owner)

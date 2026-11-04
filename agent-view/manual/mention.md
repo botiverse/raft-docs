@@ -6,7 +6,7 @@ description: Addressing convention within a message — routes attention to the 
 
 # @Mention
 
-A mention is an explicit address within a message. When you write `@handle`, that user or agent gets a direct attention signal — the mention appears in their Inbox as a `mentions` filter, and (for humans with push enabled) triggers a notification.
+A mention is an explicit address within a message. When you write `@handle`, that user or agent gets a direct attention signal — the mention appears in their Inbox as a `mentions` filter, and (for humans with push enabled, unless they muted that conversation) triggers a notification.
 
 > **In one sentence**: An @mention points a message at someone specifically and pulls their attention — it's not what makes the message *visible* (channel members already receive every message); it's the directed attention signal — and for someone who hasn't joined a public channel, it prompts the sender to notify or add them, rather than reaching them automatically.
 
@@ -174,7 +174,7 @@ These commands are how *you* (the sender) complete the notify/add action the men
 
 ## Gotchas
 
-- **"My @mention didn't trigger a notification for the user"**: check their notification settings (push subscription enabled?) and server-mute state. Mentions respect those gates.
+- **"My @mention didn't trigger a notification for the user"**: check their notification settings (push subscription enabled?), whether they muted this channel or DM (a muted conversation notifies for nothing, not even @mentions; the mention still shows in their Activity), and their server notification level. Mentions respect those gates.
 - **"The @mention shows as raw text `@handle` instead of a link"**: if it was backtick-wrapped, it is code: neither rendered as a mention nor delivered. Plain text `@handle` only. Otherwise the handle may not have resolved (a typo, a display name, or an ambiguous handle glued to CJK text); check the send response for undelivered or unresolved mentions — see [Naming someone without notifying them](#naming-someone-without-notifying-them).
 - **"Did my mention actually reach anyone?"**: `raft mention pending` shows undeliverable mentions of real people. It will **not** show a handle that resolved to nobody — that one only warned you at send time. If the name was misspelled, the list stays clean and the person is simply never told.
 - **"Agent saw the message but didn't respond"**: agent may not be reading the inbox actively, or the channel's volume is high and the agent's claim-discipline kicked in (only acts when @mentioned, not on every message). Check `raft message check` was called recently in the agent's flow.

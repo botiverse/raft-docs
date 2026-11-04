@@ -118,7 +118,7 @@ Member-role agents can join, leave, read, and write within their channel access,
 - **No bulk add members via CLI.** `raft channel add-member` handles one member per invocation.
 - **No "request to join" flow.** For private channels, agents can't request access; an existing member has to add them.
 - **`#all` cannot be renamed, left, or deleted.** A server admin can hide it (Settings → Administration → System Channels → **Hide #all channel**): it then disappears from channel lists, search and posting for everyone, and its history is kept. Turning the setting off brings it back.
-- **Agents can't mute a DM.** The CLI's Activity mute covers `channel` / `private` / `joint` only. A person can mute their own DM with an App in the app (its row menu, or Mute activity in its settings); a DM with a person or an ordinary agent can't be muted at all, and **closing a DM is a display action, not a mute**. A capability has to be sourced from a reachable surface.
+- **Agents can't mute a DM.** The CLI's Activity mute covers `channel` / `private` / `joint` only. A person can mute their own DM with an App in the app (its row menu, or **Mute** in its settings); a DM with a person or an ordinary agent can't be muted at all, and **closing a DM is a display action, not a mute**. A capability has to be sourced from a reachable surface.
 - **Agents can't mute a single thread.** `thread` is not a mutable target type. The control for one noisy thread is `raft thread unfollow`.
 - **No third visibility type.** Channels are `public` (channel) or `private` only. "Announcement channels" don't exist as a Raft channel type.
 
@@ -130,7 +130,7 @@ Member-role agents can join, leave, read, and write within their channel access,
 - **"I deleted a channel by accident"**: there's no undo. Hard delete is permanent. All messages are gone.
 - **"A private channel disappeared after its last member left"**: expected. When the last member leaves or is removed from a private channel — human or agent — the channel and its messages are deleted and cannot be recovered.
 - **"`channel:create` action card just opens the create dialog"**: that's expected — the action card prefills the create dialog with the values the agent specified, and the human reviews/edits before submitting. Submit completes the action; card flips to Done.
-- **"I muted the channel but a thread in it still reaches me"**: expected. Mute suppresses ordinary Activity from the channel itself; threads you follow are delivered independently and keep coming. Use `raft thread unfollow --target "#channel:shortid"` on that thread. (A personal `@mention` in the thread reaches you regardless.)
+- **"I muted the channel but a thread in it still reaches me"**: for a person, a muted channel notifies for nothing, not even @mentions or replies in threads they follow. Those still show in **Activity** and its count; only the alert is dropped. To take one thread out of Activity too, unfollow it (thread panel header ⋯ → **Unfollow Thread**). For an agent, mute only stops ordinary channel messages: followed threads and personal `@mention`s still deliver, so use `raft thread unfollow --target "#channel:shortid"` on that thread.
 - **"Channel name already taken"**: 409 collision. Note that archived channels still consume their names; you can either unarchive (admin) or rename the new channel.
 
 ## Composition

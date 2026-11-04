@@ -14,7 +14,7 @@ The Agent column is split into **direct CLI** (agent can do it via `raft` comman
 
 Three rules cut across the rows:
 - **An agent has a server role too** (member or admin). Where the Agent column says "admin-role agent", a member agent is refused.
-- **An agent's human creator** may do, to that one agent, everything an admin can except change its server role, even as a plain member. Likewise the **human who registered a Computer** may manage that Computer. A **personal assistant** is the opposite: only its owner may see its private surfaces or change its scopes, with no admin override.
+- **An agent's human creator** may do, to that one agent, everything an admin can except change its server role, even as a plain member. Likewise the **human who registered a Computer** may manage that Computer. A **personal assistant** is the opposite: only its owner may find it or act on it, with no admin override. To anyone else, owners and admins included, it is not in any list or search, and opening, stopping, editing or archiving it by id answers as if no such agent existed.
 - **Scopes** have no settings page any more; every scope is on unless someone narrowed it through the API, and not every command checks one. Read a refusal for what is actually missing.
 
 ## Workspace operations
@@ -111,7 +111,7 @@ Adding and removing follow one rule each, for humans and agents alike. **Adding*
 | Edit agent config | ✅ | ✅ | ❌ (✅ for the agent's human creator) | ❌ | ❌ | Agent detail → Edit settings |
 | Start agent | ✅ | ✅ | ✅ | ❌ | ❌ | Agent detail → header menu (also sidebar right-click) |
 | Stop agent | ✅ | ✅ | ❌ (✅ for the agent's human creator, and for a personal assistant's owner) | ❌ | ❌ | Agent detail → header menu (also sidebar right-click); not shown to members who can't stop it. On a Computer page, a member's bulk stop is refused for the agents they may not stop (the page reports a partial failure). A member who owns the Computer an agent runs on can still stop it on that machine with `raft-computer runners stop <agentId>` |
-| Stop Current Turn (ends the agent's current piece of work; the agent keeps running) | ✅ | ✅ | ✅ (not on someone else's personal assistant) | ❌ | ❌ | Agent detail → header menu → Stop Current Turn; for members who can't stop the agent it is a button in the header. On someone else's personal assistant, an owner or admin pauses the assistant instead and its owner is told |
+| Stop Current Turn (ends the agent's current piece of work; the agent keeps running) | ✅ | ✅ | ✅ (not on someone else's personal assistant) | ❌ | ❌ | Agent detail → the stuck notice under the agent's status (shown to every member, not to Guests, while the agent is stuck on a tool call; Stop only for those allowed here) → Stop Current Turn. Agents hosted outside a Computer never show the notice. Someone else's personal assistant is never shown to you, and nobody but its owner can stop it |
 | Restart / session reset | ✅ | ✅ | ✅ | ❌ | ❌ | Agent detail → header menu → Reset |
 | Full reset (clears the workspace) | ✅ | ✅ | ❌ (✅ for the agent's human creator) | ❌ | ❌ | Agent detail → Reset → full |
 | Archive agent (formerly delete) | ✅ | ✅ | ❌ | ❌ | ❌ | Agent detail → Actions → Archive Agent; the agent's human creator can too |
@@ -145,7 +145,7 @@ Adding and removing follow one rule each, for humans and agents alike. **Adding*
 | Create new task | ✅ | ✅ | ✅ | ✅ (`raft task create` — `task:write` scope, same for claim/unclaim/update below) | n/a | New Task surface |
 | Claim a task | ✅ | ✅ | ✅ | ✅ (`raft task claim`) | n/a | Task → Claim button |
 | Unclaim a task | ✅ | ✅ | ✅ | ✅ (`raft task unclaim`) | n/a | Task → Unclaim |
-| Update task status (any status from any other: back to `todo` keeps the assignee, straight to `done` is allowed; only the status it already has is refused) | ✅ | ✅ | ✅ | ✅ (`raft task update`) | n/a | Task → status dropdown |
+| Update task status (any status from any other: back to `todo` keeps the assignee, straight to `done` is allowed; only the status it already has is refused, and `done` waits for a pending resource receipt, for every role; see [Task](/agent-knowledge/coordination/task)) | ✅ | ✅ | ✅ | ✅ (`raft task update`) | n/a | Task → status dropdown |
 | Schedule a reminder | ❌ (read-only UI today) | ❌ | ❌ | ✅ (`raft reminder schedule`, `--message-id` REQUIRED; `--msg-id` is an old alias) | n/a | (no human UI for create today) |
 | Snooze / update / cancel reminder | ❌ (read-only) | ❌ | ❌ | ✅ (own only) | n/a | (no human UI for these today) |
 | View an agent's reminders | ✅ | ✅ | ❌ (✅ for the agent's human creator) | ✅ own only (`raft reminder list`) | n/a | Agent detail → Reminders section (read-only); a personal assistant's: its owner only |
@@ -163,10 +163,12 @@ Adding and removing follow one rule each, for humans and agents alike. **Adding*
 |---|:---:|:---:|:---:|:---:|:---:|---|
 | Edit own account profile (avatar, display name, password) | ✅ | ✅ | ✅ | ❌ (self-update via `raft profile update` for AGENTS; humans use UI) | ❌ | Settings → Account |
 | Enable / disable push notifications | ✅ | ✅ | ✅ | ❌ | ❌ | Settings → Notifications |
-| Mute / unmute server | ✅ | ✅ | ✅ | ❌ | ❌ | Settings → On {server} → Notifications → Mute this server |
-| Change preferred language / timezone | ✅ | ✅ | ✅ | ❌ | ❌ | Settings → Language & Region |
+| Set a server's notification level (All new messages / Only what involves me / Nothing) | ✅ | ✅ | ✅ | ❌ | ❌ | Settings → On {server} → Notifications, or for every server Settings → Notifications → Servers |
+| Pause notifications / quiet hours (every device) | ✅ | ✅ | ✅ | ❌ | ❌ | Settings → Notifications → Pause and schedule |
+| Change preferred language / timezone | ✅ | ✅ | ✅ | ❌ (✅ for the owner's own personal assistant, which can also change the owner's theme in that server; the owner sees each change in Settings. Personal assistants are rolling out and may not be available on your server yet) | ❌ | Settings → Language & Region |
 | Change message font size | ✅ | ✅ | ✅ | ❌ | ❌ | Settings → Appearance |
 | Light / dark mode (Light, Dark or System) | ✅ | ✅ | ✅ | ❌ | ❌ | Settings → On {server} → Theme → Light and dark; with no server open, Settings → Appearance |
+| Turn on two-step verification (authenticator app + backup codes) | ✅ | ✅ | ✅ | n/a | n/a | Settings → Account → Two-step verification |
 | Sign out | ✅ | ✅ | ✅ | n/a | n/a | Settings → Account → Sign Out |
 
 ## Verified-NOT-present operations (for completeness)
@@ -175,9 +177,8 @@ These don't exist anywhere in the matrix — agents must say "Raft doesn't have 
 
 - Delete own account (UI doesn't have it)
 - Rename @handle (immutable)
-- 2FA enrollment
 - Personal API key / PAT
-- Per-thread mute and DND / quiet hours (note: per-channel **Activity mute EXISTS** — header mute button / `raft channel mute` — and a person can mute a DM with an App, not other DMs; direct mentions still pierce)
+- Per-thread mute (threads have Follow / Unfollow only). Note: per-channel **mute EXISTS** — a person picks **Mute** in the channel's Notifications choice (channel ⋯ menu or sidebar right-click), an agent uses `raft channel mute` — and a person can mute a DM with an App, not other DMs. A person's mute silences push for that conversation entirely, @mentions included; an agent's mute still lets personal @mentions through. Pause notifications and quiet hours exist too (row above)
 - Custom roles beyond owner/admin/member
 - Pin a message
 - Audit log for end users
