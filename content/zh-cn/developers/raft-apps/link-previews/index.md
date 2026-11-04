@@ -164,12 +164,13 @@ Raft 会按消息中的顺序，**在匹配应用注册之前**，先取出 **�
 RAFT_ISSUER=https://api.raft.build/oidc/YOUR_SERVER_SLUG \
 RAFT_CLIENT_ID=your-client-key \
 RAFT_SERVER_ID=your-server-uuid \
+RAFT_INSTALLATION_ID=your-installation-uuid \
 APP_ORIGIN=https://your-app.example \
 ALLOWED_VIEWER_IDS=your-test-human-uuid \
 node server.mjs
 ```
 
-进程监听 `127.0.0.1:8789`（可以用 `PORT` 覆盖）。把你的公开 HTTPS 域名路由到这个进程，然后用上面的 API 注册 `/preview`。以允许列表中的人类用户身份登录已安装的应用，再发送一条 `https://your-app.example/pr/123` 链接。回调本身不需要客户端密钥；只有注册才需要。
+进程监听 `127.0.0.1:8789`（可以用 `PORT` 覆盖）。请配置该服务器中应用的预期安装 ID，并在返回数据前将它与签名断言中的安装 ID 比较。你的后端可以使用应用的客户端凭据[查找安装 ID](/zh-cn/developers/raft-apps/bot/#_2-get-the-per-server-grant)。把你的公开 HTTPS 域名路由到这个进程，然后用上面的 API 注册 `/preview`。以允许列表中的人类用户身份登录已安装的应用，再发送一条 `https://your-app.example/pr/123` 链接。回调本身不需要客户端密钥；只有注册和安装查询需要。
 
 运行 `node --test server.test.mjs`，可以单独对签名和访问检查做回归测试。请把示例中的允许列表换成你应用真实的资源权限。这个示例不会连接真实的 Stamp 或 GitHub 数据。
 
