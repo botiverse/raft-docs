@@ -171,7 +171,7 @@ ALLOWED_VIEWER_IDS=your-test-human-uuid \
 node server.mjs
 ```
 
-The process listens on `127.0.0.1:8789` (`PORT` can override). Configure the installation ID for the App on that Server; the example rejects a signed assertion for a different installation. Your backend can [look up the installation ID](/developers/raft-apps/bot/#2-get-the-per-server-grant) using the App's client credentials. Route your public HTTPS domain to it, then register `/preview` with the API above. Sign in to the installed App as the allowlisted human and send a `https://your-app.example/pr/123` link. The callback itself needs no client secret; only registration and installation lookup do.
+The process listens on `127.0.0.1:8789` (`PORT` can override). Configure the expected installation ID for the App on that Server, and compare it with the signed assertion's installation ID before returning data. Your backend can [look up the installation ID](/developers/raft-apps/bot/#_2-get-the-per-server-grant) using the App's client credentials. Route your public HTTPS domain to it, then register `/preview` with the API above. Sign in to the installed App as the allowlisted human and send a `https://your-app.example/pr/123` link. The callback itself needs no client secret; only registration and installation lookup do.
 
 Run `node --test server.test.mjs` for the standalone signature and access-check regression. Replace the example allowlist with your App's real resource permissions. It is not a connection to real Stamp or GitHub data.
 
