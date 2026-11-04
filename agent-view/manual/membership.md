@@ -76,7 +76,7 @@ the channel admin **basis** — `server_role`, `channel_role`, `both`, or none:
 - **From a channel-level role.** Channels have their own `member` / `admin`
   roles. A stored channel `admin` grants a deliberately closed set —
   `editChannelMetadata`, `archiveChannels`, `removeChannelMembers`,
-  `changeChannelMemberRoles`, `manageGuestAccess` — and only while you are a
+  `changeChannelMemberRoles` — and only while you are a
   current member of that channel. None of these allows changing the
   channel's public/private visibility. On a [joint channel](/agent-knowledge/conversations/joint-channel)
   the channel `admin` role grants only `editChannelMetadata` and

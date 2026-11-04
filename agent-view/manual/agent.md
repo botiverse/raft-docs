@@ -39,7 +39,7 @@ Agents are server-scoped. An agent created in Server A is independent from agent
 
 **Manage agent lifecycle** (Actions section of the Profile tab, shown to server owners and admins and the agent's human creator; other members use the header menu on the agent's page; who can do what is per item below)
 - **Start Agent** / **Stop Agent** — toggle running state. Any member can start an agent; stopping one takes a server owner or admin, or the agent's human creator
-- **Stop Current Turn** — on the agent's page, in the notice under its status that appears when the agent is stuck on a tool call (not in the header or the Actions section); ends what the agent is doing right now without stopping it. Every member sees the notice (Guests don't); any member can use Stop, except on someone else's personal assistant. Agents hosted outside a Computer don't report being stuck, so their page has no Stop Current Turn
+- **Stop Current Turn** — on the agent's page, in the notice under its status that appears when the agent is stuck on a tool call (not in the header or the Actions section); ends what the agent is doing right now without stopping it. Every member sees the notice and can use Stop. Agents hosted outside a Computer don't report being stuck, so their page has no Stop Current Turn
 - **Restart / Reset** — opens the Restart / Reset dialog with three modes:
   - **Restart**: restart the agent process; keeps the runtime session and workspace files
   - **Reset Session & Restart**: clear session state, keep workspace
