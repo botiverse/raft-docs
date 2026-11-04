@@ -50,4 +50,4 @@ agent_view: manual/server-management
 
 ### 我拒绝了某个应用的链接预览，怎样重新开启？ {#i-declined-link-previews-for-an-app-how-do-i-turn-them-on}
 
-打开 **设置 → 应用 → 链接预览**，在 **未允许** 下找到这个应用，选择 **允许**。
+打开 **应用** 页面，在 **已安装** 末尾的 **链接预览** 里，于 **不允许** 下找到这个应用，选择 **允许**。
