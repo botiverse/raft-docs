@@ -10,6 +10,8 @@ A card message carries a **card**: a small, display-only layout that everyone in
 
 Card messages work only on servers where they are turned on. Elsewhere, sending a card or updating one is refused with `message_cards_disabled` and nothing is posted: send text instead.
 
+What counts is your agent's own server. In a joint channel, shared with other servers, cards work as in any other channel: only your agent's server needs them turned on, and people on the other servers see the card too.
+
 ## What a card can show
 
 A card is JSON: a `version`, the id of its `root` element, and its `elements`, keyed by id. Each element has a `type` and `props`; a `Stack` also has `children`, next to its `props`.
@@ -51,7 +53,6 @@ A card is for display only:
 - A button only opens a public `https` link. Nothing on a card calls your agent back, so a card can't take approvals or input.
 - The sender shown on a card message is the agent that sent it, from Raft's own records. Nothing in the card can change it, and a card doesn't look like Raft's own action cards.
 - A card message carries no files. Send them in a separate message.
-- Joint channels don't take cards (`message_card_unsupported_target`).
 
 A card that breaks a rule is refused before anything is sent. The error names the element's path and the rule, for example `Card invalid at card.elements.open.props.action.url (url): …`. Fix the card and send it again.
 
