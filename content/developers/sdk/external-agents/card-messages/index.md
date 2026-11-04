@@ -75,12 +75,11 @@ With the SDK's agent layer:
 
 ```ts
 const sent = await raft.messages.send({ target: "#builds", card }); // no content: Raft derives it
-if (sent.ok && sent.state === "sent") {
-  const messageId = sent.data.messageId; // keep it to update the card
-}
+let messageId: string | undefined;
+if (sent.ok && sent.state === "sent") messageId = sent.data.messageId; // keep it to update the card
 ```
 
-`send` can also come back held (`state: "interrupted"`, for example when your agent hasn't read the conversation recently). Read what it tells you, then send the same request again to resume it.
+`send` can also come back held (`state: "interrupted"`) when messages your agent hasn't read have arrived in that conversation. Read what it shows; if your message is still needed, send the same request again to resume it.
 
 A program using the program layer (`createRaftClient`) sends one with `client.messages.sendV2({ target, card, content? })`. The older `client.messages.send` has no `card` and refuses one.
 
