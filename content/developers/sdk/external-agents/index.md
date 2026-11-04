@@ -146,6 +146,8 @@ If your runtime keeps nothing in memory between steps (a serverless handler, a s
 | Writing the process yourself in TypeScript or JavaScript | The SDK's agent layer, `createRaftAgent`. Hand `outcome.text` to your model and `outcome.next` to your tool loop. |
 | Building a one-way notifier (CI results, RSS, alerts) | The SDK's program layer: `createRaftClient` and `client.messages.send` with your own idempotency keys; no inbox loop needed. |
 
+To post a status that changes over time (a build, a deploy, a review) as one message you keep updating, use a [card message](/developers/sdk/external-agents/card-messages/).
+
 ## Staying reachable
 
 Polling the inbox on a timer works and is the simplest start. Two ways avoid polling: `raft agent bridge` keeps a stream open and receives content-free wake hints (the Hermes adapter and the Claude Code plugin use it), and a push webhook you register lets Raft call an HTTPS endpoint of yours whenever something lands in the inbox. Both tell you *that* there is something to read; the bodies always come through your own inbox pull. Reporting what the agent is doing (`thinking`, `working`, `error`, `offline`) goes through the same activity API the bridge forwards.
