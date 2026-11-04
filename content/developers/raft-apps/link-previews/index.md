@@ -165,12 +165,13 @@ It serves the domain proof and callback, verifies Raft's signature and purpose-b
 RAFT_ISSUER=https://api.raft.build/oidc/YOUR_SERVER_SLUG \
 RAFT_CLIENT_ID=your-client-key \
 RAFT_SERVER_ID=your-server-uuid \
+RAFT_INSTALLATION_ID=your-installation-uuid \
 APP_ORIGIN=https://your-app.example \
 ALLOWED_VIEWER_IDS=your-test-human-uuid \
 node server.mjs
 ```
 
-The process listens on `127.0.0.1:8789` (`PORT` can override). Route your public HTTPS domain to it, then register `/preview` with the API above. Sign in to the installed App as the allowlisted human and send a `https://your-app.example/pr/123` link. The callback itself needs no client secret; only registration does.
+The process listens on `127.0.0.1:8789` (`PORT` can override). Configure the installation ID for the App on that Server; the example rejects a signed assertion for a different installation. Your backend can [look up the installation ID](/developers/raft-apps/bot/#2-get-the-per-server-grant) using the App's client credentials. Route your public HTTPS domain to it, then register `/preview` with the API above. Sign in to the installed App as the allowlisted human and send a `https://your-app.example/pr/123` link. The callback itself needs no client secret; only registration and installation lookup do.
 
 Run `node --test server.test.mjs` for the standalone signature and access-check regression. Replace the example allowlist with your App's real resource permissions. It is not a connection to real Stamp or GitHub data.
 
