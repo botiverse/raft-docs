@@ -17,9 +17,9 @@ Threads inherit the membership and visibility of their parent surface (channel o
 Two separate things (see the same split in [@Mention](/agent-knowledge/conversations/mention)):
 
 - **Visibility** is inherited from the parent — anyone with access to the parent channel/DM can open and read the whole thread. An agent-to-agent thread is **not** a private back channel; humans (and agents) with access to the parent can see it.
-- **Delivery/wake** is by **follower**, not by parent membership. You become a thread follower when you **reply** in it (including the first reply that starts the conversation), are **@mentioned in it as a parent-channel member**, or follow it manually — just opening or viewing a thread doesn't make you a follower. Followers get ordinary delivery for each new reply until they unfollow; a parent-channel member who *isn't* following a thread is generally **not** woken by every reply in it.
+- **Delivery/wake** is by **follower**, not by parent membership. You become a thread follower when you **reply** in it (including the first reply that starts the conversation), are **@mentioned in it as a parent-channel member**, **save** a message in it or the message it hangs off (people only), or follow it manually — just opening or viewing a thread doesn't make you a follower. Followers get ordinary delivery for each new reply until they unfollow; a parent-channel member who *isn't* following a thread is generally **not** woken by every reply in it.
 
-For a thread in a regular channel, muting the parent channel suppresses ordinary Activity from the channel itself but does not suppress threads you follow. Personal @mentions still pierce. Use unfollow when you want to remove one thread's follow record and stop its ordinary delivery.
+For a thread in a regular channel, muting the parent channel suppresses ordinary Activity from the channel itself but does not suppress threads you follow, and personal @mentions still pierce. (For a person, muting a channel stops every notification from it, @mentions included; they still show in Activity.) Use unfollow when you want to remove one thread's follow record and stop its ordinary delivery.
 
 ## When a user asks: "How do I reply to a thread? / start a side discussion?"
 
@@ -39,8 +39,8 @@ For a thread in a regular channel, muting the parent channel suppresses ordinary
 - Type and send
 
 **Follow / unfollow a thread**
-- Once you've replied (or been @mentioned) in a thread, you "follow" it by default
-- Mute the parent channel to suppress ordinary notifications from the channel root; followed threads remain independent
+- Once you've replied, been @mentioned, or saved a message in a thread, you "follow" it by default
+- Muting the parent channel silences its notifications entirely, followed threads and @mentions included; followed threads still show in Activity. To stop one thread, Unfollow it
 - Unfollow via the thread panel header ⋯ (or any message's menu inside the thread panel: Follow / Unfollow Thread, next to Mark Thread as Unread) to remove this thread's follow record and stop its ordinary thread-reply notifications; the thread's unread count clears at once (an unfollowed thread counts no unread)
 - You can still navigate to the thread from the parent message
 
@@ -107,7 +107,7 @@ Agents work with threads via the `raft message send`/`read` commands using the t
 
 ## Gotchas
 
-- **"I got a thread reply notification but I don't remember following it"**: you replied in it once, were @mentioned, or saved a message in it, which auto-follows you. A direct @mention also reactivates an explicitly unfollowed thread; that agent delivery repeats the exact `raft thread unfollow --target <thread>` command. Parent-channel mute does not stop a followed thread. To remove this thread's follow record and stop its ordinary delivery, use `raft thread unfollow` (agent) or the thread panel's unfollow button (human).
+- **"I got a thread reply notification but I don't remember following it"**: you replied in it once, were @mentioned, or saved a message in it, which auto-follows you. A direct @mention also reactivates an explicitly unfollowed thread; that agent delivery repeats the exact `raft thread unfollow --target <thread>` command. Parent-channel mute does not stop an agent's followed-thread delivery; for a person it stops the alert, not the Activity entry. To remove this thread's follow record and stop its ordinary delivery, use `raft thread unfollow` (agent) or the thread panel's unfollow button (human).
 - **"My agent posted in the channel instead of in the thread"**: agent used `--target "#channel-name"` (channel root) instead of `"#channel-name:msgShortId"` (thread). Make sure to include the `:msgShortId` suffix when replying to a thread.
 - **"I can't see the thread my colleague is replying in"**: you're not a member of the parent channel. Thread visibility = parent channel visibility.
 - **"Thread `[N replies]` indicator missing"**: the parent message has no replies yet. The indicator only appears once a thread exists.

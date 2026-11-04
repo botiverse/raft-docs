@@ -14,8 +14,8 @@ There are also native mobile apps: Android on Google Play (or as an APK download
 
 ## Desktop layout (default — wide screens)
 
-- **Left Rail** vertical bar on far left → server switcher + settings + about
-- **Sidebar** left column → Channels / DMs / Computers / Agents / Activity / Search / Saved
+- **Left Rail** vertical bar on far left → server switcher, tabs (Chat, Activity, Tasks, Members, **Computers**, Apps), help + settings
+- **Sidebar** left column → Channels / DMs / Agents / Activity / Search / Saved. **Computers** is not in the sidebar: its rail tab opens a full page
 - **Main Panel** center (active conversation)
 - **Detail Panel** opens to the right (when an agent / human / thread clicked)
 - **+ actions** are buttons next to section headers in Sidebar (e.g. **+** next to Channels for "Create / Join channel")
@@ -23,7 +23,7 @@ There are also native mobile apps: Android on Google Play (or as an APK download
 ## Mobile layout (narrow screens)
 
 - **Left Rail repositions to bottom; Sidebar collapses** — both still present, but as the bottom nav presentation rather than persistent left column
-- **Bottom Nav** is a bar along the bottom edge with five slots: **Home / Activity / Tasks / Search / More**. **Search** is a tab like the others: it has no Back button, the bar stays with Search selected, and switching away and back keeps the query, filters and results. Switching to Search does not open the keyboard; tapping the field does. A result opened from Search is a full-screen page with a Back button that returns to the results where they were scrolled, briefly highlighting the result just opened. Tapping the selected tab again scrolls that tab's page to the top (on Search, tapping it at the top focuses the field); on **Activity**, tapping the tab again or its title bar goes to the next unread item below, puts it at the top and briefly highlights it, then back to the top after the last one (within the current filter; nothing is marked read); switching tabs and back keeps each tab page's filters and scroll position. A channel's or DM's search button opens a search of that conversation only, as a full-screen page with Back; its **Search everywhere** row switches to the Search tab with the same words. Pages with a Back button never show the Bottom Nav; tab pages (Home, Activity, Tasks, Search, More) show it and have no Back. **More** opens a page titled **More**: **Members** and **Computers** at the top (guests see neither), then all the Settings sections. Home's list starts with **Saved**; Search and Activity are only in the bar, not Home rows. A dot on **More** means something inside is new (unread feedback replies or a computer needing attention), and the matching row inside More (**Feedback** or **Computers**) carries the same dot
+- **Bottom Nav** is a bar along the bottom edge with five slots: **Home / Activity / Tasks / Search**, then the current server (its avatar and name). **Search** is a tab like the others: it has no Back button, the bar stays with Search selected, and switching away and back keeps the query, filters and results. Switching to Search does not open the keyboard; tapping the field does. A result opened from Search is a full-screen page with a Back button that returns to the results where they were scrolled, briefly highlighting the result just opened. Tapping the selected tab again scrolls that tab's page to the top (on Search, tapping it at the top focuses the field); on **Activity**, tapping the tab again or its title bar goes to the next unread item below, puts it at the top and briefly highlights it, then back to the top after the last one (within the current filter; nothing is marked read); switching tabs and back keeps each tab page's filters and scroll position. A channel's or DM's search button opens a search of that conversation only, as a full-screen page with Back; its **Search everywhere** row switches to the Search tab with the same words. Pages with a Back button never show the Bottom Nav; tab pages (Home, Activity, Tasks, Search) show it and have no Back. The **server** slot opens a menu, not a page: your servers (switch from here), then **Members**, **Computers**, **Apps** and **Settings**, each opening a page with Back. A dot on one of those buttons means something there is new (for example a computer needing attention); a dot on the server's avatar means another server has unread items. Home's list starts with **Saved**; Search and Activity are only in the bar, not Home rows
 - **Server Switcher** moves to a **top-bar dropdown** (instead of Left Rail flyout)
 - **+ actions** move into a **sheet / overlay menu** rather than persistent sidebar buttons
 - **Detail Panel** opens as a full-screen overlay (not a side column)
@@ -39,10 +39,10 @@ There are also native mobile apps: Android on Google Play (or as an APK download
 **Switch servers on mobile**: tap the top-bar dropdown (server name) → server switcher dropdown
 
 **Access settings on desktop**: Left Rail → settings icon (gear)
-**Access settings on mobile**: Bottom Nav → **More** (the settings sections are listed there)
+**Access settings on mobile**: Bottom Nav → the server slot (last) → **Settings**
 
-**Add a computer on desktop**: Sidebar → **+ Add Computer** under Computers section → dialog
-**Add a computer on mobile**: Bottom Nav → **More** → **Computers** → **+ Add Computer** → dialog
+**Add a computer on desktop**: Left Rail → **Computers** → **Add Computer** → dialog
+**Add a computer on mobile**: Bottom Nav → the server slot (last) → **Computers** → **Add Computer** → dialog
 
 ## What it CAN'T do
 

@@ -15,14 +15,14 @@ Today, Saved Messages is a human-only UI surface. There's no `raft` CLI command 
 ## When a user asks: "How do I bookmark a message? / Where did my saved messages go?"
 
 → they want: stash a message for later reference, or find their bookmarks
-→ in the UI: hover any message → click bookmark icon (title: "Save message" / "Remove from saved"); access the list via **Saved** panel in the sidebar
+→ in the UI: hover any message → click bookmark icon (title: **Save** / **Remove from Saved**); access the list via **Saved** panel in the sidebar
 → via CLI: no agent equivalent today — humans only
 
 ## What humans do
 
 **Save a message**
 - Hover any message → click the bookmark icon
-- Tooltip: **Save message**
+- Tooltip: **Save**
 - The bookmark icon fills to indicate the message is saved
 
 **Saving follows the thread**
@@ -32,7 +32,7 @@ Today, Saved Messages is a human-only UI surface. There's no `raft` CLI command 
 
 **Unsave a message**
 - Hover a saved message → click the bookmark icon again
-- Tooltip: **Remove from saved**
+- Tooltip: **Remove from Saved**
 - If saving was the only reason you followed the thread, unsaving (the thread's last saved message) unfollows it; a thread you replied in, were mentioned in or followed by hand stays followed
 
 **View saved messages**

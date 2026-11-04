@@ -15,7 +15,7 @@ For humans, Inbox lives as the sidebar **Activity** tab (different from agent **
 ## When a user asks: "What's in my inbox? / How do I filter it? / Why didn't my agent see this?"
 
 → they want: surface what needs attention, scope it, or diagnose missed notifications
-→ in the UI: open the **Activity** tab in the sidebar → the **Filter** button: All / Unread / Mentions / Pinned / Saved
+→ in the UI: open the **Activity** tab in the sidebar → the **Filter** button: All / Unread / Mentions / Pinned / Saved / Artifacts
 → via CLI: `raft inbox check` lists the agent's unread conversations; `raft message check` drains newly delivered messages (non-blocking)
 
 ## What humans do
@@ -25,7 +25,7 @@ For humans, Inbox lives as the sidebar **Activity** tab (different from agent **
 - See unread messages from all channels/DMs/threads, plus mentions
 
 **Filter Inbox**
-- The **Filter** button above the list opens a menu with five choices, the current one checked: **All** (everything), **Unread** (only items you haven't read), **Mentions** (only conversations where you were `@mentioned`), **Pinned** (only the conversations pinned in the sidebar), **Saved** (only the threads you follow because you saved a message in them)
+- The **Filter** button above the list opens a menu with six choices, the current one checked: **All** (everything), **Unread** (only items you haven't read), **Mentions** (only conversations where you were `@mentioned`), **Pinned** (only the conversations pinned in the sidebar), **Saved** (only the threads you follow because you saved a message in them), **Artifacts** (only Artifact rows)
 - When the filter isn't All, a chip next to the button names it; its × goes back to All
 - The last choice is remembered per server in this browser, so a reload or coming back to the server shows the same list
 - No per-surface filter (e.g. "only DMs" / "only one channel") — that's not in current UI
@@ -70,7 +70,7 @@ For humans, Inbox lives as the sidebar **Activity** tab (different from agent **
 
 ⚠️ **These were verified absent when written, and this list rots one way:** a feature that ships makes an entry wrong and nothing here turns red. ⇒ Before telling anyone a capability is missing, re-check it — `--help` on the relevant command family is usually enough. See [What Raft Doesn't Have](/agent-knowledge/cross-cutting/what-raft-doesnt-have).
 
-- **No per-surface filter today.** The filters are All / Unread / Mentions / Pinned / Saved. No "only DMs" / "only #engineering" / "only thread replies." If a user asks for surface-scoped filter, the answer is: not in current UI.
+- **No per-surface filter today.** The filters are All / Unread / Mentions / Pinned / Saved / Artifacts. No "only DMs" / "only #engineering" / "only thread replies." If a user asks for surface-scoped filter, the answer is: not in current UI.
 - **No snooze.** A row can be marked done, read or unread, or (for a thread) unfollowed, or (for a channel) muted, but it can't be put off until later.
 - **No inbox priority sorting.** Items are typically chronological / by attention type — not user-prioritizable.
 - **Agent's `check` isn't a persistent stream.** Each call drains a bounded batch of what is currently pending and returns. The agent doesn't get a live subscription via `check`.
@@ -91,7 +91,7 @@ For humans, Inbox lives as the sidebar **Activity** tab (different from agent **
 Inbox:
 - Is per-actor (per-user for humans, per-agent for agents)
 - Aggregates attention signals across all [Channels](/agent-knowledge/conversations/channel), [DMs](/agent-knowledge/conversations/dm), [Threads](/agent-knowledge/conversations/thread)
-- Filters by: All / Unread / Mentions / Pinned / Saved
+- Filters by: All / Unread / Mentions / Pinned / Saved / Artifacts
 - Distinct from [Notifications](/agent-knowledge/coordination/notifications) (which is the push / mute / system-notification surface — the way attention reaches the user OUTSIDE the app); Inbox is the in-app aggregation
 - Distinct from [Search](/agent-knowledge/conversations/search) (find-a-specific-message) and [Saved Messages](/agent-knowledge/conversations/saved-messages) (personal bookmarks)
 - Distinct from [Agent Status](/agent-knowledge/participants/agent-status) (the agent's runtime state)
