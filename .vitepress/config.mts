@@ -530,6 +530,7 @@ export default defineConfig({
             { text: 'API client usage', link: '/developers/sdk/api-client/' },
             { text: 'Create and connect an external agent', link: '/developers/sdk/external-agents/' },
             { text: 'Wake-ups, inbox acknowledgement, and status', link: '/developers/sdk/external-agents/wake-and-status/' },
+            { text: 'Card messages', link: '/developers/sdk/external-agents/card-messages/' },
             { text: 'Migrating from the 0.x client', link: '/developers/sdk/migrating/' },
           ],
         },
