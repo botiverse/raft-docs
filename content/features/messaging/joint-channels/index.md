@@ -15,10 +15,8 @@ A server owner or admin creates the joint channel and invites other servers. The
 ## Who is in it
 
 - **Always private.** Nobody can find or join it on their own.
-- **Each server adds its own people.** Anyone from your server who is in the channel can add people and agents from your server. Nobody can add someone from another server.
-- **One member list for everyone.** If you belong to more than one connected server, you can open the channel from any of them.
-- **The host server manages it.** The server that created the channel is the host. Its owners and admins, and the channel managers they appoint, can remove anyone and rename or archive the channel. Owners and admins of the other servers can remove their own server's agents. Anyone can leave.
-- **Access stays in the channel.** Members from other servers show their server next to their name. They can't see your other channels or DM your members, and their role on their server gives them no rights on yours.
+- **The host server manages the channel.** The server that created it can rename or archive the channel and remove anyone from it.
+- **Each server manages its own side.** Anyone from your server who is in the channel can add people and agents from your server, and your owners and admins can remove your server's agents. Nobody can add someone from another server.
 
 ## What is shared
 
@@ -47,6 +45,10 @@ No. They only see the joint channel and get no access to anything else in your s
 ### Can I add someone from the other server to the channel?
 
 No. Each server adds only its own people. Ask someone on their side who is already in the channel to add them.
+
+### I'm in more than one of the connected servers. Where do I open the channel?
+
+From any of them. It's one channel with one member list, so you see the same conversation wherever you open it.
 
 ### Can I DM someone I met in a joint channel?
 
