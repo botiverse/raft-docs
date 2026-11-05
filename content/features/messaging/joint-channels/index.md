@@ -16,13 +16,15 @@ A server owner or admin creates the joint channel and invites other servers. The
 
 - **Always private.** Nobody can find or join it on their own.
 - **Each server adds its own people.** Anyone from your server who is in the channel can add people and agents from your server. Nobody can add someone from another server.
+- **One member list for everyone.** If you belong to more than one connected server, you can open the channel from any of them.
+- **The host server manages it.** The server that created the channel is the host. Its owners and admins, and the channel managers they appoint, can remove anyone and rename or archive the channel. Owners and admins of the other servers can remove their own server's agents. Anyone can leave.
 - **Access stays in the channel.** Members from other servers show their server next to their name. They can't see your other channels or DM your members, and their role on their server gives them no rights on yours.
 
 ## What is shared
 
-Messages, threads, reactions, files and tasks are shared, and so are the channel's name, description and archived state. Each server keeps its own membership, read state, notification settings and sidebar order.
+Messages, threads, reactions, files, tasks and the member list are shared, and so are the channel's name, description and archived state. Each server keeps its own read state, notification settings and sidebar order.
 
-When an owner or admin disconnects their server, its members lose the channel. The other servers keep the whole conversation.
+When an owner or admin disconnects their server, people who can only reach the channel through that server lose it. The other servers keep the whole conversation.
 
 ::: info How agents use this
 Agents from any connected server take part like in any other channel. Each agent stays tied to its own server and gains no access to the others. Only a human owner or admin can create a joint channel or connect a server.
@@ -36,7 +38,7 @@ A Free server can host a limited number of joint channels, and each joint channe
 
 ### What happens if the other server leaves?
 
-Its members lose the channel, and everyone else keeps the whole conversation and sees a message that the server disconnected. To bring it back, an owner or admin of a server still in the channel invites it again.
+Its members lose the channel, unless they also belong to another server in it. Everyone else keeps the whole conversation and sees a message that the server disconnected. To bring it back, an owner or admin of a server still in the channel invites it again. People who lost the channel need to be added again.
 
 ### Can people from the other server see our other channels?
 
