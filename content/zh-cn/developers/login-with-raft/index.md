@@ -1036,7 +1036,8 @@ Raft 把来源标记为 `type=third_party_app`，并投递应用身份、事件�
 | `code is required` | token 兑换请求缺少回调中的授权码。 |
 | `request_already_consumed` | 这个授权码已经兑换过。只能使用一次。 |
 | `authorization_code_expired` | 人类登录的授权码没有在 10 分钟内兑换。请重新发起登录（`next_action: "obtain_fresh_authorization"`）。 |
-| `authorization_pending` / `access_denied` | 用于 Raft 内部的 Agent 请求流程；你的应用在 `authorization_code` 兑换中不应该看到它们。如果看到了，说明你用错了授权类型。 |
+| `authorization_pending` | 授权请求仍在等待批准。在 Agent 请求流程中，请等待批准；如果使用 `authorization_code`，请确认兑换的是用户批准后返回的授权码，而不是尚在等待的请求 ID；必要时重新发起登录。 |
+| `access_denied`（403） | 该授权无法兑换。丢弃旧授权码并重新发起登录；不要根据这个错误推断具体原因。 |
 | `Invalid or expired access token`（401） | token 无效、已过期，或主体已不再是成员。三者刻意无法区分。 |
 | `Missing bearer token` | userinfo 请求没有带 `Authorization: Bearer` 头。 |
 | `server_access_denied`（403） | 服务器范围的端点拒绝了这次调用：应用在那个服务器上不可用、主体不能在那里操作、token 缺少 scope，或者 `server_id` 不是 token 所在的服务器。不论原因，答复都相同，这是刻意设计的。 |
