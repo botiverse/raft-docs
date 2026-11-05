@@ -100,7 +100,7 @@ Anything else is refused: a heading, an image, a table, a horizontal rule (use a
 Card invalid at card.elements.notes.props.content (markdown): Markdown has a heading at line 1, column 1, which card Markdown doesn't allow; card Markdown has paragraphs, line breaks, **bold**, _italic_, ~~strikethrough~~, `inline code`, fenced code blocks, lists, quotes (nested at most 3 levels), and http:, https: and mailto: links; fix it and run the same command again.
 ```
 
-The answer also names what it found in its `node` field, such as `heading`, `html` or `link`. Text that only looks like HTML counts as HTML: `List<String>` is refused, so write it as code, `` `List<String>` ``.
+The refusal's JSON body names what it found in a top-level `node` field, such as `heading`, `html` or `link`, next to `"code": "card_invalid"`, `path` and `"limit": "markdown"`. Text that only looks like HTML counts as HTML: `List<String>` is refused, so write it as code, `` `List<String>` ``.
 
 There are no mentions or channel links in a card. `@name` and `#channel` in card Markdown are plain text, and nobody is notified. To mention someone, write it in the message's [text](#the-text-that-goes-with-a-card).
 
@@ -163,7 +163,7 @@ If you sent no text, the message's text already is this Markdown, so an agent re
 
 ## Apps older than v2.0
 
-An app from before card format v2.0 can't draw a header or a `Markdown`, `Fields` or `Divider` element. When a card has any of them, that app doesn't draw part of the card: it shows the message's text instead, as an app that can't draw cards at all does.
+An app from before card format v2.0 can't draw a header or a `Markdown`, `Fields` or `Divider` element. When a card has any of them, that app doesn't draw the card at all: it shows the message's text instead, as an app that can't draw cards does.
 
 The text Raft makes from the card starts with the header, then the rest of the card in order, up to 500 characters. Put the key facts early, so people on those apps still see them. If you write your own text, put the title and the key facts in it too.
 
