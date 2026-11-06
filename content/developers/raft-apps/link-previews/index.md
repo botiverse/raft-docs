@@ -1,7 +1,7 @@
 ---
 llms_section: "Developers"
 llms_order: 892
-llms_summary: "Register an App-owned link preview, verify the viewer callback, and return a read-only json-render card. Includes access requirements and v1 limits."
+llms_summary: "Register an App-owned link preview, verify the viewer callback, and return a read-only json-render card. Includes access requirements, v1 limits and declaring newer versions for block cards and buttons."
 ---
 
 # App link previews
@@ -103,7 +103,7 @@ Require these values before reading private App data:
 | --- | --- |
 | `alg`, `kid` | `ES256`; verify the signature against the matching published Raft key. |
 | `typ` | `raft-link-preview+jwt` |
-| `iss` | Exactly your configured issuer: `<Raft API origin>/oidc/<server-slug>`. Link-preview assertions always use this Server-scoped form. |
+| `iss` | Exactly your configured issuer: `<Raft API origin>/oidc/<server-slug>`. Link-preview assertions always use this Server-scoped form. [Version 2 requests](#newer-versions) name the Server by ID instead. |
 | `aud` | `urn:raft:link-preview:<your-client-key>` |
 | `token_use`, `type` | `link_preview`, `human` |
 | `iat`, `nbf`, `exp` | Valid time window; assertions live for 30 seconds. |
@@ -145,6 +145,87 @@ Titles are 1–160 characters. A card contains at most 16 elements and four pare
 
 This is a restricted json-render catalog. Expressions, state, watchers, visibility rules, custom styles, arbitrary HTML, scripts, images, actions and additional link destinations are not accepted. Text is rendered literally.
 
+## 5. Declare newer versions for block cards and buttons {#newer-versions}
+
+Everything above is version 1: a read-only card on the link. Newer versions let your App draw a block card in the message and add buttons. An App gets them only if it declares them, and only on Servers where interactive link cards are turned on, so they aren't available everywhere yet. Raft keeps sending version 1 wherever a Server or a reader can't take a newer one, so your callback must always answer it.
+
+Add `preview_versions` to your registration:
+
+```json
+{
+  "origin":"https://your-app.example",
+  "endpoint":"https://your-app.example/preview",
+  "paths":["/pr", "/issues"],
+  "preview_versions":[1, 2, 3]
+}
+```
+
+The list must include 1, can't repeat a version, and can only have 3 together with 2. Any other value returns `400`.
+
+**Send it on every `PUT`.** A `PUT` replaces the whole registration, so one without `preview_versions` takes your App back to `[1]`, with no error. If that happens, its page under My Apps in Raft says its previews are read-only. Check what is stored with `GET /api/oauth/link-preview`, which returns it as `previewVersions`.
+
+A change applies from the next read and doesn't need Marketplace review. It also leaves buttons on cards people already have open working.
+
+### The version 2 request
+
+An App that declared 2 gets this body, with an `Accept-Language` header:
+
+```json
+{
+  "version":2,
+  "url":"https://your-app.example/pr/123",
+  "request_id":"request-uuid",
+  "client_capabilities":["card.v2", "block.v1", "preview.v3"],
+  "locale":"en"
+}
+```
+
+Verify it as in [step 3](#_3-verify-the-preview-request), with one difference: **`iss` names the Server by ID**, as `<Raft API origin>/oidc/<server-id>`, so accept that form for version 2 and the slug form for version 1.
+
+Raft doesn't retry a failed version 2 request as version 1: an invalid answer shows the plain link. Declare 2 only once your callback answers it.
+
+### The version 3 answer
+
+There's no version 3 request. Answer the version 2 request with version 3, an ordered list of what to draw. Raft draws only what you list:
+
+```json
+{
+  "version":3,
+  "items":[
+    {"type":"inline", "title":"PR 123"},
+    {
+      "type":"card",
+      "placement":"block",
+      "title":"PR 123: Fix sign-in",
+      "card_revision":"r1",
+      "business_revision":"b1",
+      "card":{
+        "root":"summary",
+        "elements":{
+          "summary":{"type":"Stack", "props":{}, "children":["status", "detail", "open"]},
+          "status":{"type":"Badge", "props":{"text":"Open"}},
+          "detail":{"type":"Text", "props":{"text":"Ready for review", "tone":"muted"}},
+          "open":{"type":"Button", "props":{"label":"Review", "action":{"kind":"navigate", "url":"https://your-app.example/pr/123/files"}}}
+        }
+      }
+    }
+  ]
+}
+```
+
+| Item | What Raft draws |
+| --- | --- |
+| `inline` | The link becomes a small label with this `title`. Without it, the link stays as written. |
+| `card` with `placement: "block"` | The card, in the message after the link's paragraph. |
+| `card` with `placement: "hover"` | The card, when someone hovers over the label. |
+| `[]` (an empty `items`) | Only the plain link. |
+
+Send at most one `inline` and one `card`; an invalid answer shows the plain link, and Raft skips item types it doesn't know. `card_revision` and `business_revision` are strings you choose: change `card_revision` when the card changes, and `business_revision` when the thing it shows changes.
+
+You can answer version 3 to every version 2 request. For a reader whose client doesn't list `preview.v3`, Raft converts your answer: a block card becomes a label with the card on hover.
+
+**Buttons:** Raft keeps `navigate` buttons, which open a URL on your origin, for any App. Buttons that act on something need an approved official App with a reviewed action endpoint, so Raft removes them from any other App's card.
+
 ## Fallback and privacy
 
 Raft takes the **first three distinct visible HTTPS URLs that meet its URL rules**, in message order, **before matching App registrations**. Links to sites without a registered renderer still count toward this limit; a fourth distinct URL is not considered. URLs containing credentials, fragments, non-default ports, IP-literal hosts or dotless hosts are not eligible. Code, image destinations and unused Markdown link definitions do not trigger callbacks. Requests have a three-second deadline including DNS, and responses must be at most 32 KiB of JSON. Slow, malformed, unauthorized or failed responses leave the ordinary link intact.
@@ -184,6 +265,7 @@ Run `node --test server.test.mjs` for the standalone signature and access-check 
 | Registration returns `409` | Another App owns the origin. Do not work around it with another domain spelling; coordinate removal of the old registration. |
 | Registration returns `502` | Check public DNS, TLS, JSON content type and reachability of the proof endpoint. Redirects and private network destinations are rejected. |
 | Registration succeeds but only a plain link appears | Check active installation, the viewer's current Login with Raft authorization, matching path, the three-link limit, and the callback response. A private App ACL refusal correctly falls back. |
+| Previews stay read-only after you declared newer versions | Check `previewVersions` with `GET /api/oauth/link-preview`. A `PUT` without `preview_versions` goes back to `[1]`. Also check that interactive link cards are on for that Server. |
 | A resource changed but an already-open card did not | There is no push-update API or continuous polling in v1. A new view request fetches current data; reload the message view to test it. |
 
 Test with two people: one who can access the App resource and one who cannot.

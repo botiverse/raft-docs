@@ -1,7 +1,7 @@
 ---
 llms_section: "Developers zh-CN"
 llms_order: 1892
-llms_summary: "注册由应用提供的链接预览，验证查看者回调，并返回只读的 json-render 卡片。包含接入条件和 v1 的限制。"
+llms_summary: "注册由应用提供的链接预览，验证查看者回调，并返回只读的 json-render 卡片。包含接入条件、v1 的限制，以及如何声明更新的版本来使用 block 卡片和按钮。"
 ---
 
 # 应用链接预览
@@ -102,7 +102,7 @@ Raft 只发送匹配到的 URL，不发送消息正文或频道历史。`Authori
 | --- | --- |
 | `alg`、`kid` | `ES256`；用公布的、与之匹配的 Raft 密钥验证签名。 |
 | `typ` | `raft-link-preview+jwt` |
-| `iss` | 与你配置的签发者完全一致：`<Raft API origin>/oidc/<server-slug>`。链接预览断言始终使用这种限定到服务器的形式。 |
+| `iss` | 与你配置的签发者完全一致：`<Raft API origin>/oidc/<server-slug>`。链接预览断言始终使用这种限定到服务器的形式。[版本 2 请求](#newer-versions)改用 ID 表示服务器。 |
 | `aud` | `urn:raft:link-preview:<your-client-key>` |
 | `token_use`、`type` | `link_preview`、`human` |
 | `iat`、`nbf`、`exp` | 处于有效时间窗口内；断言的有效期是 30 秒。 |
@@ -144,6 +144,87 @@ Raft 只发送匹配到的 URL，不发送消息正文或频道历史。`Authori
 
 这是一个受限的 json-render 组件目录。不接受表达式、状态、监听器、可见性规则、自定义样式、任意 HTML、脚本、图片、操作和额外的链接目标。文本按字面原样渲染。
 
+## 5. 声明更新的版本，使用 block 卡片和按钮 {#newer-versions}
+
+上面讲的都是版本 1：链接上的一张只读卡片。更新的版本可以让应用在消息里显示 block 卡片，并加上按钮。应用只有声明了才会用到它们，而且只在开启了交互式链接卡片的服务器 上生效，所以目前还不是所有地方都能用。只要服务器或查看者用不了更新的版本，Raft 就继续发版本 1，所以你的回调必须始终能回答版本 1。
+
+在注册里加上 `preview_versions`：
+
+```json
+{
+  "origin":"https://your-app.example",
+  "endpoint":"https://your-app.example/preview",
+  "paths":["/pr", "/issues"],
+  "preview_versions":[1, 2, 3]
+}
+```
+
+这个列表必须包含 1，不能重复，3 必须和 2 一起声明。其他值都返回 `400`。
+
+**每次 `PUT` 都要带上它。** `PUT` 会替换整条注册，不带 `preview_versions` 的 `PUT` 会把应用退回 `[1]`，而且不报错。发生这种情况时，Raft 里 My Apps 下的应用页面会提示它的预览是只读的。用 `GET /api/oauth/link-preview` 可以查看已保存的值，字段名是 `previewVersions`。
+
+修改从下一次读取开始生效，不需要 Marketplace 审核，已打开卡片上的按钮也不受影响。
+
+### 版本 2 请求 {#the-version-2-request}
+
+声明了 2 的应用会收到下面的请求体，并带上 `Accept-Language` 请求头：
+
+```json
+{
+  "version":2,
+  "url":"https://your-app.example/pr/123",
+  "request_id":"request-uuid",
+  "client_capabilities":["card.v2", "block.v1", "preview.v3"],
+  "locale":"en"
+}
+```
+
+验证方式和[第 3 步](#_3-verify-the-preview-request)相同，只有一处不同：**`iss` 用 ID 表示服务器**，形式是 `<Raft API origin>/oidc/<server-id>`。所以版本 2 要接受这种形式，版本 1 仍用 slug 形式。
+
+版本 2 请求失败后，Raft 不会改用版本 1 重试：无效的回答只显示普通链接。请在回调能回答版本 2 之后再声明 2。
+
+### 版本 3 回答 {#the-version-3-answer}
+
+没有单独的版本 3 请求。用版本 3 回答版本 2 请求，它是一个按顺序列出要显示什么的列表，Raft 只显示你列出的内容：
+
+```json
+{
+  "version":3,
+  "items":[
+    {"type":"inline", "title":"PR 123"},
+    {
+      "type":"card",
+      "placement":"block",
+      "title":"PR 123: Fix sign-in",
+      "card_revision":"r1",
+      "business_revision":"b1",
+      "card":{
+        "root":"summary",
+        "elements":{
+          "summary":{"type":"Stack", "props":{}, "children":["status", "detail", "open"]},
+          "status":{"type":"Badge", "props":{"text":"Open"}},
+          "detail":{"type":"Text", "props":{"text":"Ready for review", "tone":"muted"}},
+          "open":{"type":"Button", "props":{"label":"Review", "action":{"kind":"navigate", "url":"https://your-app.example/pr/123/files"}}}
+        }
+      }
+    }
+  ]
+}
+```
+
+| 项目 | Raft 显示什么 |
+| --- | --- |
+| `inline` | 链接变成一个带这个 `title` 的小标签。没有它时，链接保持原样。 |
+| `placement` 为 `"block"` 的 `card` | 卡片显示在消息里，位于链接所在段落之后。 |
+| `placement` 为 `"hover"` 的 `card` | 把鼠标移到小标签上时显示卡片。 |
+| `[]`（空的 `items`） | 只显示普通链接。 |
+
+`inline` 和 `card` 各最多一个；无效的回答只显示普通链接，Raft 不认识的项目类型会被跳过。`card_revision` 和 `business_revision` 是你自己定的字符串：卡片变了就改 `card_revision`，卡片显示的对象变了就改 `business_revision`。
+
+你可以用版本 3 回答所有版本 2 请求。如果查看者的客户端没有列出 `preview.v3`，Raft 会转换你的回答：block 卡片变成小标签，卡片在悬停时显示。
+
+**按钮：** 任何应用都可以保留 `navigate` 按钮，它打开你的源上的一个 URL。要执行操作的按钮需要经过批准的官方应用和通过审核的 action endpoint，其他应用卡片上的这类按钮会被 Raft 移除。
+
 ## 回退与隐私 {#fallback-and-privacy}
 
 Raft 会按消息中的顺序，**在匹配应用注册之前**，先取出 **前三个符合 URL 规则、互不相同的可见 HTTPS URL**。链接指向的网站即使没有注册渲染器，也计入这个上限；第四个不同的 URL 不再考虑。包含凭据、片段、非默认端口、IP 字面量主机或不带点的主机名的 URL 不符合条件。代码、图片地址和未使用的 Markdown 链接定义不会触发回调。请求的时限是三秒，包括 DNS 解析；响应必须是不超过 32 KiB 的 JSON。响应缓慢、格式错误、未授权或失败时，普通链接保持原样。
@@ -183,6 +264,7 @@ node server.mjs
 | 注册返回 `409` | 这个源已经归另一个应用所有。不要换一种域名写法来绕过；请协调删除旧的注册。 |
 | 注册返回 `502` | 检查公共 DNS、TLS、JSON 内容类型，以及所有权证明端点能否访问。重定向和私有网络目标会被拒绝。 |
 | 注册成功，但只显示普通链接 | 检查安装是否有效、查看者当前的 Login with Raft 授权、路径是否匹配、三个链接的上限，以及回调响应。应用私有 ACL 拒绝访问时回退为普通链接，这是正确的行为。 |
+| 声明了更新的版本，预览仍然是只读的 | 用 `GET /api/oauth/link-preview` 检查 `previewVersions`。不带 `preview_versions` 的 `PUT` 会退回 `[1]`。再确认那个服务器开启了交互式链接卡片。 |
 | 资源变了，但已经打开的卡片没有更新 | 在 v1 中，没有推送更新的 API，也不会持续轮询。新的查看请求会获取最新数据；重新加载消息视图即可测试。 |
 
 请找两个人测试：一个能访问应用资源，一个不能。还要测试登录被撤销、应用被卸载、回调超时、JSON 无效，以及回调还在进行时编辑或删除消息的情况。在每种情况下，私有内容都不能展示给未授权的查看者，原始链接也必须仍然可用。
