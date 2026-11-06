@@ -2,6 +2,7 @@
 llms_section: "Conversations zh-CN"
 llms_order: 1630
 llms_summary: "需要了解你会收到哪些消息及其原因、@ 提及和关注的消息列怎样起作用、动态列表怎样排序和筛选、什么时候算已读或完成，以及推送通知和服务器静音怎样起作用时阅读。"
+agent_view: manual/inbox manual/notifications manual/mention
 ---
 
 # 动态与通知

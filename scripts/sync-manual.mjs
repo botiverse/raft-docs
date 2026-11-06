@@ -9,13 +9,23 @@
 //
 // Only topics that some page lists in its `agent_view` frontmatter are copied,
 // with maintainer comments stripped (they hold code paths and review notes).
-// The output names what changed and which pages show it: on review, check that
-// each page's For human side still agrees with the new manual text.
 //
-//   --check   fail if a page names a manual topic that isn't synced, or a
-//             synced topic no page uses; write nothing
+// Two copies of each topic:
+//   agent-view/upstream/  the release text as it is, never edited by hand
+//   agent-view/manual/    what the docs publish: the release text after review
+// A sync merges what the release changed (old upstream → new upstream) into the
+// reviewed copy, so earlier rewrites survive; clashes are left as conflict
+// markers. Lines matching agent-view/not-public.json are listed for review.
+// Before opening the PR, read every changed topic: resolve conflicts, remove
+// what the public docs don't mention yet, and check that each page's For human
+// side still agrees.
+//
+//   --check   fail if a page names a manual topic that isn't synced, a synced
+//             topic no page uses, a reviewed copy still has conflict markers,
+//             or it matches not-public.json; write nothing
 import { execFileSync } from 'node:child_process'
-import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import {
@@ -27,6 +37,8 @@ import {
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const contentDir = path.join(root, 'content')
 const manualDir = path.join(root, 'agent-view', 'manual')
+const upstreamDir = path.join(root, 'agent-view', 'upstream')
+const notPublicFile = path.join(root, 'agent-view', 'not-public.json')
 const args = process.argv.slice(2)
 const option = (name) => {
   const index = args.indexOf(`--${name}`)
@@ -44,6 +56,31 @@ function listPages(dir, prefix = '') {
   }
   return files.sort()
 }
+
+function readTopics(dir) {
+  const topics = new Map()
+  if (!existsSync(dir)) return topics
+  for (const name of readdirSync(dir)) {
+    if (name.endsWith('.md')) topics.set(name.slice(0, -3), readFileSync(path.join(dir, name), 'utf8'))
+  }
+  return topics
+}
+
+// [{ pattern, why }]: features the public docs don't mention yet
+function notPublicHits(topicsByName) {
+  const rules = existsSync(notPublicFile) ? JSON.parse(readFileSync(notPublicFile, 'utf8')) : []
+  const hits = []
+  for (const [topic, body] of topicsByName) {
+    body.split('\n').forEach((line, index) => {
+      for (const rule of rules) {
+        if (new RegExp(rule.pattern, 'i').test(line)) hits.push(`${topic}.md:${index + 1} ${rule.why}`)
+      }
+    })
+  }
+  return hits
+}
+
+const conflictMarker = /^(<{7}|={7}|>{7})( |$)/m
 
 function frontmatterValue(markdown, key) {
   if (!markdown.startsWith('---\n')) return null
@@ -71,14 +108,15 @@ for (const page of listPages(contentDir)) {
 const topics = [...usage.keys()].sort()
 
 if (checkOnly) {
-  const synced = existsSync(manualDir)
-    ? readdirSync(manualDir)
-        .filter((name) => name.endsWith('.md'))
-        .map((name) => name.slice(0, -3))
-    : []
+  const reviewed = readTopics(manualDir)
+  const synced = [...reviewed.keys()]
+  const upstream = readTopics(upstreamDir)
   const failures = [
     ...topics.filter((topic) => !synced.includes(topic)).map((topic) => `not synced: ${topic} (used by ${usage.get(topic).join(', ')})`),
     ...synced.filter((topic) => !usage.has(topic)).map((topic) => `synced but no page uses it: ${topic}`),
+    ...synced.filter((topic) => !upstream.has(topic)).map((topic) => `no release copy in agent-view/upstream: ${topic}`),
+    ...synced.filter((topic) => conflictMarker.test(reviewed.get(topic))).map((topic) => `unresolved conflict: ${topic}`),
+    ...notPublicHits(reviewed).map((hit) => `not public yet: ${hit}`),
   ]
   if (failures.length > 0) {
     console.error(`Manual snapshot check failed:\n- ${failures.join('\n- ')}`)
@@ -101,12 +139,8 @@ if (!/^v\d+\.\d+\.\d+$/.test(ref)) {
 const git = (...gitArgs) => execFileSync('git', ['-C', slock, ...gitArgs], { encoding: 'utf8' })
 const commit = git('rev-parse', `${ref}^{commit}`).trim()
 
-const before = new Map()
-if (existsSync(manualDir)) {
-  for (const name of readdirSync(manualDir)) {
-    if (name.endsWith('.md')) before.set(name.slice(0, -3), readFileSync(path.join(manualDir, name), 'utf8'))
-  }
-}
+const previousUpstream = readTopics(upstreamDir)
+const previousReviewed = readTopics(manualDir)
 // Fetch everything first, so a failed fetch leaves the snapshot as it was.
 const bodies = new Map()
 for (const topic of topics) {
@@ -118,23 +152,62 @@ for (const topic of topics) {
   }
 }
 
-rmSync(manualDir, { recursive: true, force: true })
-mkdirSync(manualDir, { recursive: true })
-const changed = []
-for (const [topic, body] of bodies) {
-  writeFileSync(path.join(manualDir, `${topic}.md`), body)
-  if (before.get(topic) !== body) changed.push(topic)
+const previousRef = existsSync(path.join(upstreamDir, 'release.json'))
+  ? JSON.parse(readFileSync(path.join(upstreamDir, 'release.json'), 'utf8')).ref
+  : 'previous release'
+const scratch = mkdtempSync(path.join(tmpdir(), 'sync-manual-'))
+// Three-way merge: the release's change since last sync, applied to the reviewed copy.
+function merge(reviewed, base, next) {
+  const files = ['reviewed', 'base', 'next'].map((name, index) => {
+    const file = path.join(scratch, name)
+    writeFileSync(file, [reviewed, base, next][index])
+    return file
+  })
+  try {
+    return { text: execFileSync('git', ['merge-file', '-p', '-L', 'docs review', '-L', previousRef, '-L', ref, ...files], { encoding: 'utf8' }), conflicts: 0 }
+  } catch (error) {
+    if (typeof error.status === 'number' && error.status > 0 && error.stdout) return { text: error.stdout, conflicts: error.status }
+    throw error
+  }
 }
-const removed = [...before.keys()].filter((topic) => !usage.has(topic))
-writeFileSync(
-  path.join(manualDir, 'release.json'),
-  `${JSON.stringify({ ref, commit, topics }, null, 2)}\n`,
-)
+
+const report = { new: [], changed: [], conflicts: [] }
+const reviewedNext = new Map()
+for (const [topic, body] of bodies) {
+  const reviewed = previousReviewed.get(topic)
+  const base = previousUpstream.get(topic)
+  if (reviewed === undefined || base === undefined) {
+    reviewedNext.set(topic, reviewed ?? body)
+    if (reviewed === undefined) report.new.push(topic)
+    else if (reviewed !== body) report.changed.push(topic)
+    continue
+  }
+  if (base === body) {
+    reviewedNext.set(topic, reviewed)
+    continue
+  }
+  const { text, conflicts } = merge(reviewed, base, body)
+  reviewedNext.set(topic, text)
+  report.changed.push(topic)
+  if (conflicts > 0) report.conflicts.push(`${topic} (${conflicts})`)
+}
+rmSync(scratch, { recursive: true, force: true })
+
+const release = `${JSON.stringify({ ref, commit, topics }, null, 2)}\n`
+for (const [dir, contents] of [[upstreamDir, bodies], [manualDir, reviewedNext]]) {
+  rmSync(dir, { recursive: true, force: true })
+  mkdirSync(dir, { recursive: true })
+  for (const [topic, body] of contents) writeFileSync(path.join(dir, `${topic}.md`), body)
+  writeFileSync(path.join(dir, 'release.json'), release)
+}
+const removed = [...previousReviewed.keys()].filter((topic) => !usage.has(topic))
 
 console.log(`Synced ${topics.length} manual topics from ${ref} (${commit.slice(0, 10)}).`)
-if (changed.length === 0 && removed.length === 0) {
-  console.log('No topic changed.')
-} else {
-  for (const topic of changed) console.log(`changed: ${topic} → check ${usage.get(topic).join(', ')}`)
-  for (const topic of removed) console.log(`removed: ${topic}`)
-}
+const pages = (topic) => usage.get(topic).join(', ')
+for (const topic of report.new) console.log(`new: ${topic} → review the whole topic; check ${pages(topic)}`)
+for (const topic of report.changed) console.log(`changed: ${topic} → check ${pages(topic)}`)
+for (const topic of removed) console.log(`removed: ${topic}`)
+if (report.new.length + report.changed.length + removed.length === 0) console.log('No topic changed.')
+if (report.conflicts.length > 0) console.log(`\nConflicts with earlier review (resolve in agent-view/manual/): ${report.conflicts.join(', ')}`)
+const hits = notPublicHits(reviewedNext)
+if (hits.length > 0) console.log(`\nNot public yet, rewrite or remove:\n- ${hits.join('\n- ')}`)

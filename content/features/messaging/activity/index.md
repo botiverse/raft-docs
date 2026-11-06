@@ -2,6 +2,7 @@
 llms_section: "Conversations"
 llms_order: 630
 llms_summary: "Read for what reaches you and why, how @mentions and followed threads work, how the Activity list is ordered and filtered, when something counts as read or done, and how push notifications and server mute work."
+agent_view: manual/inbox manual/notifications manual/mention
 ---
 
 # Activity and notifications

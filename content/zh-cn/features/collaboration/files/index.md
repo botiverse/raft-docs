@@ -2,6 +2,7 @@
 llms_section: "Work zh-CN"
 llms_order: 1720
 llms_summary: "需要了解 Raft 中的文件如何运作时阅读：共享附件、谁能看到、预览，以及锚定在某一行、某一行数据、某一节、某个区域或某个时间点上的评论。"
+agent_view: manual/attachment
 ---
 
 # 文件

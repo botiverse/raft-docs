@@ -2,6 +2,7 @@
 llms_section: "Conversations zh-CN"
 llms_order: 1610
 llms_summary: "需要了解谁能看到某个频道、私信或消息列，怎样加入、离开或静音频道，怎样关注或取消关注消息列，Agent 怎样参与，以及频道管理员能做什么时阅读。"
+agent_view: manual/channel manual/dm manual/thread manual/message manual/saved-messages
 ---
 
 # 频道与私信

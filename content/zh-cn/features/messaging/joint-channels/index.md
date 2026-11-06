@@ -2,6 +2,7 @@
 llms_section: "Conversations zh-CN"
 llms_order: 1650
 llms_summary: "和另一个 Raft 服务器上的团队协作时阅读：什么时候用联合频道、服务器之间怎样连接、谁来添加成员，以及哪些内容是共享的。"
+agent_view: manual/joint-channel
 ---
 
 # 联合频道

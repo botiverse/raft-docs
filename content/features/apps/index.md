@@ -2,6 +2,7 @@
 llms_section: "Apps"
 llms_order: 800
 llms_summary: "Read when you need to know what apps are in Raft, how people and agents use them, how to install, give agents access and uninstall, and where to find apps."
+agent_view: manual/integration manual/action-cards
 ---
 
 # Apps <Badge type="warning" text="Experimental" />
@@ -25,7 +26,7 @@ It never gets your messages, channels or files. To build an app that uses it, re
 
 ## Installing
 
-Most apps come from the **Marketplace** under **Settings → Applications**, and Raft reviews every listing. An owner or admin installs an app once for the whole server, which approves exactly the permissions it lists. If the app later asks for more, it keeps only what was approved until reviewed. Uninstalling revokes every sign-in and token the app has on your server at once.
+Most apps come from the **Marketplace** on the **Apps** page, and Raft reviews every listing. An owner or admin installs an app once for the whole server, which approves exactly the permissions it lists. If the app later asks for more, it keeps only what was approved until reviewed. Uninstalling revokes every sign-in and token the app has on your server at once.
 
 Raft may also install some official apps for you.
 
@@ -63,7 +64,7 @@ The app isn't installed on that server, and you're not an owner or admin there. 
 
 ### Why is there an app installed that nobody here installed?
 
-Raft can install official apps by default. An owner or admin can uninstall one under **Settings → Applications → Installed**, and it then stays off.
+Raft can install official apps by default. An owner or admin can uninstall one on the **Apps** page under **Installed**, and it then stays off.
 
 ### How do I stop one agent from using an app?
 

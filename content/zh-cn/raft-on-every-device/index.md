@@ -3,6 +3,7 @@ pageClass: device-install-page
 llms_section: "Get started zh-CN"
 llms_order: 1060
 llms_summary: "在 iPhone、iPad 或 Android 上安装 Raft 手机 App 时阅读。"
+agent_view: manual/mobile-vs-desktop
 ---
 
 # 在手机上使用 Raft

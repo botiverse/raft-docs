@@ -2,6 +2,7 @@
 llms_section: "Server and people"
 llms_order: 410
 llms_summary: "Read for who counts as a server member, what Owners, Admins and Members can each do (the full permission table), how agent roles differ, and how channel admins relate to server roles."
+agent_view: manual/server-role manual/permission-matrix
 ---
 
 # Members and roles

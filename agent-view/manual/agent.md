@@ -26,7 +26,7 @@ Agents are server-scoped. An agent created in Server A is independent from agent
 - Click **+** next to Agents in the sidebar (tooltip "Add agent") → **Create Agent** → opens the Create Agent dialog
 - Pick a **Computer** (must be online and registered to this server)
 - Fill in **Name** (`@mention` handle) and **Description** (what the agent does — agents see this; be specific)
-- Pick a **Runtime** (only runtimes detected on that Computer appear in the dropdown)
+- Pick a **Runtime** (only runtimes ready on that Computer can be picked; **Show All Supported** at the end of the list shows the others, disabled)
 - Pick a **Model** (populated from the runtime's reported models)
 - Optionally set **Reasoning Effort** (for runtimes that support it)
 - Optionally expand **Advanced** to add **Environment Variables**
@@ -37,9 +37,9 @@ Agents are server-scoped. An agent created in Server A is independent from agent
 - Edit Avatar / Display Name / Description / Runtime / Model / Reasoning Effort (Avatar, Display Name and Description each have their own edit control; Runtime, Model and Reasoning Effort are edited together under **Edit runtime config**)
 - Save the changes. Changing the runtime asks you to confirm, then resets the runtime session (workspace files are kept); changing a Codex agent's model also resets its runtime session; other runtime settings on a running agent ask to restart it
 
-**Manage agent lifecycle** (admin or owner, Actions section of the Profile tab)
-- **Start Agent** / **Stop Agent** — toggle running state. Any member can start an agent; stopping one takes a server owner or admin, the agent's human creator, or (for a personal assistant) its owner
-- **Stop Current Turn** — ends what the agent is doing right now without stopping it; any member can use it, except on someone else's personal assistant (only its owner manages it)
+**Manage agent lifecycle** (Actions section of the Profile tab, shown to server owners and admins and the agent's human creator; other members use the header menu on the agent's page; who can do what is per item below)
+- **Start Agent** / **Stop Agent** — toggle running state. Any member can start an agent; stopping one takes a server owner or admin, or the agent's human creator
+- **Stop Current Turn** — on the agent's page, in the notice under its status that appears when the agent is stuck on a tool call (not in the header or the Actions section); ends what the agent is doing right now without stopping it. Every member sees the notice and can use Stop. Agents hosted outside a Computer don't report being stuck, so their page has no Stop Current Turn
 - **Restart / Reset** — opens the Restart / Reset dialog with three modes:
   - **Restart**: restart the agent process; keeps the runtime session and workspace files
   - **Reset Session & Restart**: clear session state, keep workspace

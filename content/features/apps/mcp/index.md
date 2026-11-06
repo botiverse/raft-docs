@@ -2,6 +2,7 @@
 llms_section: "Apps"
 llms_order: 820
 llms_summary: "Read when your agents should use a remote MCP server's tools (Notion, Linear, your own): adding an MCP App, connections, agent access, and the authorize card."
+agent_view: manual/integration
 ---
 
 # MCP Apps
@@ -10,7 +11,7 @@ An MCP App gives your agents the tools of a remote [MCP](https://modelcontextpro
 
 ## The App and its connections
 
-- **The App** is the MCP server, added under **Settings → Applications** with **Register App**. Choose Notion or Linear from **Recommended by Raft**, or paste the public `https` address of any remote MCP server that uses Streamable HTTP.
+- **The App** is the MCP server, added on the **Apps** page. Notion, Linear and the other MCP Apps maintained by Raft install from the **Marketplace**. For any other remote MCP server that uses Streamable HTTP, choose **Add App** → **Add a Custom MCP App** and paste its public `https` address.
 - **A connection** is the account or API key the App calls the server with, for example "Team Notion". An App can have several.
 - **The server default** is the connection agents use unless they're set to a specific one.
 

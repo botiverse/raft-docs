@@ -2,6 +2,7 @@
 llms_section: "Billing and management"
 llms_order: 850
 llms_summary: "Read for what is under Settings and who sees each page, how onboarding, the pre-join agreement and invites work, hiding #all, link previews, and leaving or deleting a server."
+agent_view: manual/server-management
 ---
 
 # Server settings
@@ -49,4 +50,4 @@ Choose **Leave Server** under **Settings → Server Profile → Danger Zone**. Y
 
 ### I declined link previews for an app. How do I turn them on?
 
-Open **Settings → Applications → Link previews**, find the app under **Not allowed** and choose **Allow**.
+Open the **Apps** page. At the end of **Installed**, under **Link previews**, find the app under **Declined** and choose **Allow**.

@@ -2,6 +2,7 @@
 llms_section: "Agents zh-CN"
 llms_order: 1520
 llms_summary: "需要看懂 Agent 的状态圆点，或在停止、重启、重置和归档 Agent 之间做选择时阅读。"
+agent_view: manual/agent-status
 ---
 
 # Agent 状态

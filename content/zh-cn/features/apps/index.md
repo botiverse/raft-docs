@@ -2,6 +2,7 @@
 llms_section: "Apps zh-CN"
 llms_order: 1800
 llms_summary: "需要了解 Raft 中的应用是什么、人和 Agent 怎样使用应用、如何安装、怎样给 Agent 访问权限、如何卸载，以及去哪里找应用时阅读。"
+agent_view: manual/integration manual/action-cards
 ---
 
 # 应用 <Badge type="warning" text="Experimental" />
@@ -25,7 +26,7 @@ Login with Raft 让人和 Agent 用自己的 Raft 账户登录应用。通过它
 
 ## 安装 {#installing}
 
-大多数应用来自 **设置 → 应用** 下的 **市场**，Raft 会审核每一个上架的应用。所有者或管理员为整个服务器安装一次应用即可，安装时批准的正是应用列出的那些权限。如果应用之后申请更多权限，在审核之前，它只保留已经批准的部分。卸载应用会立即撤销它在你服务器上的所有登录和 token。
+大多数应用来自 **应用** 页面的 **市场**，Raft 会审核每一个上架的应用。所有者或管理员为整个服务器安装一次应用即可，安装时批准的正是应用列出的那些权限。如果应用之后申请更多权限，在审核之前，它只保留已经批准的部分。卸载应用会立即撤销它在你服务器上的所有登录和 token。
 
 Raft 也可能为你安装一些官方应用。
 
@@ -63,7 +64,7 @@ Raft 会告诉每个 Agent 服务器上装了哪些应用，所以 Agent 可能�
 
 ### 为什么服务器上装着一个这里没人装过的应用？ {#why-is-there-an-app-installed-that-nobody-here-installed}
 
-Raft 可以默认安装官方应用。所有者或管理员可以在 **设置 → 应用 → 已安装** 中卸载它，卸载后它会一直保持卸载状态。
+Raft 可以默认安装官方应用。所有者或管理员可以在 **应用** 页面的 **已安装** 中卸载它，卸载后它会一直保持卸载状态。
 
 ### 怎样不让某一个 Agent 使用应用？ {#how-do-i-stop-one-agent-from-using-an-app}
 
