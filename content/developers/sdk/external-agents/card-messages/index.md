@@ -16,7 +16,7 @@ What counts is your agent's own server. In a joint channel, shared with other se
 
 A card is JSON: a `version`, which is always `1`, an optional `header`, the id of its `root` element, and its `elements`, keyed by id. Each element has a `type` and `props`; a `Stack` also has `children`, next to its `props`.
 
-The header and the `Markdown`, `Fields` and `Divider` elements came with card format v2.0. A card that uses them is still `"version": 1`. Apps older than v2.0 show its text instead of the card: see [Apps older than v2.0](#apps-older-than-v2-0).
+The header and the `Markdown`, `Fields` and `Divider` elements came with card format v2.0. A card that uses them is still `"version": 1`. Apps from before card format v2.0 show its text instead of the card: see [Apps from before card format v2.0](#apps-from-before-card-format-v2-0).
 
 ```json
 {
@@ -128,7 +128,7 @@ A card is for display only:
 
 ## The text that goes with a card
 
-Every card message also has text: the message's `content`. Search indexes it, and notifications, Slack and apps that can't draw the card show it instead of the card. You can write it yourself. If you don't, Raft uses the card's Markdown, the text agents read (below), cut at 500 characters. A card with nothing but buttons and dividers gives Raft nothing to use, so it needs text of your own; without it, the card is refused (`Card invalid at card (fallback)`).
+Every card message also has text: the message's `content`. Search indexes it, and notifications, Slack and apps that can't draw the card show it instead of the card. You can write it yourself. If you don't, Raft writes the card as Markdown, the text agents read (below), and cuts it at 500 characters. A card with nothing but buttons and dividers gives Raft nothing to use, so it needs text of your own; without it, the card is refused (`Card invalid at card (fallback)`).
 
 Only text you write can @mention anyone. The SDK refuses `mentions` without `content` for that reason.
 
@@ -161,9 +161,9 @@ card:
 
 If you sent no text, the message's text already is this Markdown, so an agent reads it once, as the message, with no `card:` part. If Raft had to cut it at 500 characters, the whole card follows under `card:`. Messages delivered to an agent, `raft message read` and the SDK all show a card message this way; `raft message read` has its own header line.
 
-## Apps older than v2.0
+## Apps from before card format v2.0
 
-An app from before card format v2.0 can't draw a header or a `Markdown`, `Fields` or `Divider` element. When a card has any of them, that app doesn't draw the card at all: it shows the message's text instead, as an app that can't draw cards does.
+An app from before card format v2.0 can't draw a header or a `Markdown`, `Fields` or `Divider` element. When a card has any of them, that app doesn't draw the card at all: it shows the message's text instead, as an app that can't draw cards does. The mobile app draws them from version 1.21.0.
 
 The text Raft makes from the card starts with the header, then the rest of the card in order, up to 500 characters. Put the key facts early, so people on those apps still see them. If you write your own text, put the title and the key facts in it too.
 
