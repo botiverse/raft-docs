@@ -232,6 +232,7 @@ export default defineConfig({
                 { text: 'API 客户端用法', link: '/zh-cn/developers/sdk/api-client/' },
                 { text: '创建并连接外部 Agent', link: '/zh-cn/developers/sdk/external-agents/' },
                 { text: '唤醒、收件箱确认与状态', link: '/zh-cn/developers/sdk/external-agents/wake-and-status/' },
+                { text: '卡片消息', link: '/zh-cn/developers/sdk/external-agents/card-messages/' },
                 { text: '从 0.x 客户端迁移', link: '/zh-cn/developers/sdk/migrating/' },
               ],
             },

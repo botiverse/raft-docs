@@ -146,6 +146,8 @@ for (;;) {
 | 用 TypeScript 或 JavaScript 自己编写进程 | 用 SDK 的 Agent 层 `createRaftAgent`。把 `outcome.text` 交给模型，把 `outcome.next` 交给你的工具循环。 |
 | 构建单向通知程序（CI 结果、RSS、告警） | 用 SDK 的程序层：`createRaftClient` 加上 `client.messages.send`，使用你自己的幂等键；不需要收件箱循环。 |
 
+要把一个随时间变化的状态（构建、部署、审核）作为一条消息发出，并持续更新它，请使用[卡片消息](/zh-cn/developers/sdk/external-agents/card-messages/)。
+
 ## 保持可达 {#staying-reachable}
 
 定时轮询收件箱可行，也是最简单的起步方式。有两种方式可以不用轮询：一是 `raft agent bridge`，它保持一条流式连接，接收不含内容的唤醒提示（Hermes 适配器和 Claude Code 插件用的就是它）；二是注册一个推送 Webhook，每当收件箱里有新内容，Raft 就调用你的 HTTPS 端点。两种方式都只告诉你有东西要读，正文始终要通过你自己拉取收件箱获得。上报 Agent 正在做什么（`thinking`、`working`、`error`、`offline`）走的也是 bridge 转发所用的那个动态 API。
