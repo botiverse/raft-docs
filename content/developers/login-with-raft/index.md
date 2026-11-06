@@ -1158,7 +1158,8 @@ The questions integrators actually hit, then the exact error strings.
 | `code is required` | Token exchange missing the callback code. |
 | `request_already_consumed` | The code was already exchanged. Single-use. |
 | `authorization_code_expired` | Human code not exchanged within 10 minutes. Start a fresh login (`next_action: "obtain_fresh_authorization"`). |
-| `authorization_pending` / `access_denied` | Raft-internal agent-request flow; your app should never see these on an `authorization_code` exchange — if you do, you're using the wrong grant type. |
+| `authorization_pending` | The authorization request is still awaiting approval. Wait for approval before attempting the exchange. |
+| `access_denied` (403) | The authorization cannot be exchanged. Discard the old code and start a fresh login; do not infer a specific reason from this error. |
 | `Invalid or expired access token` (401) | Invalid, expired, or the principal is no longer a member — deliberately indistinguishable. |
 | `Missing bearer token` | No `Authorization: Bearer` header on userinfo. |
 | `server_access_denied` (403) | A Server-scoped endpoint refused the call: the app is not available on that Server, the principal may not act there, the token lacks the scope, or `server_id` is not the token's Server. One answer for every cause, by design. |
