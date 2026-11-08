@@ -894,16 +894,18 @@ raft integration token --service <registered-client-key> \
 
 ## 向 Agent 发送事件（实验性） {#sending-events-to-an-agent-experimental}
 
-已安装的应用可以向选定的某个 Agent 发送结构化的事件或通知。这是一条入站的信息通道，不是冒名发聊天消息，也不是远程执行命令。
+已安装的应用可以向选定的某个 Agent 发送事件或通知：Agent 读到的是一行文字。这是一条入站的信息通道，不是冒名发聊天消息，也不是远程执行命令。
 
 应用必须在注册、发布或安装之前，声明相应的非默认 scope：
 
 | 事件类型 | 所需 scope | 用途 |
 | --- | --- | --- |
-| `event` | `agent:event:write` | 结构化的领域事实，比如一次构建完成、一场会议开始。 |
+| `event` | `agent:event:write` | 领域事实，比如一次构建完成、一场会议开始。 |
 | `notification` | `agent:notification:write` | 发给选定 Agent 的告知性通知。 |
 
-两种类型都只用于传递信息。`action_request` 是保留类型，Raft 不接受。不要把操作请求藏在 `summary` 或 `payload` 里。
+两种类型都只用于传递信息。`action_request` 是保留类型，Raft 不接受。`summary` 可以说明 Agent 能用你应用的哪个操作，但不能命令 Agent 去执行。
+
+**`summary` 是写给 Agent 看的。** 它就是整条消息：Agent 读的是文字，不是 JSON。把 Agent 判断和行动所需的内容（事实、id、链接、该用你应用的哪个操作）用平实的话写进去。`payload` 已废弃（见下文）。
 
 完整流程：
 
@@ -911,8 +913,8 @@ raft integration token --service <registered-client-key> \
 App server
   → request access to one agent with an installed app's declared scope
   → exchange the one-time request for a resource-bound access token
-  → POST a structured event with that bearer token
-  → Raft delivers source provenance, summary, and the complete payload to the agent
+  → POST the event with that bearer token
+  → Raft delivers your app's name and the summary to the agent
 ```
 
 ### 1. 声明 Agent 入站 scope {#_1-declare-agent-inbound-scopes}
@@ -979,33 +981,38 @@ Content-Type: application/json
 
 {
   "kind": "event",
-  "summary": "Weekly sync has started",
+  "summary": "Weekly sync has started (organizer Ray). Join: https://meet.example.com/weekly-sync",
   "externalEventId": "meeting-weekly-sync-2026-07-17T10:00:00Z",
-  "ttlSeconds": 3600,
-  "payload": {
-    "meetingTitle": "Weekly sync",
-    "joinUrl": "https://meet.example.com/weekly-sync",
-    "organizer": "@Ray"
-  }
+  "ttlSeconds": 3600
 }
 ```
 
 | 字段 | 必填 | 约定 |
 | --- | --- | --- |
 | `kind` | 是 | `event` 或 `notification`，决定所需的 scope。 |
-| `summary` | 是 | 非空文本，规范化空白后不超过 500 个字符。 |
-| `payload` | 否 | 投递给 Agent 的结构化 JSON；默认为 `{}`，序列化后不超过 32 KiB。 |
+| `summary` | 是 | 消息本身。非空，一行（换行会折成空格），不超过 2000 个字符。 |
+| `payload` | 否，**已废弃** | JSON 对象，序列化后不超过 32 KiB。除非 Agent 主动读这条事件，否则不会展示给它；之后会移除。`{}` 或不传都算没有 payload。 |
 | `externalEventId` | 否 | 由应用定义的幂等键，不超过 200 个字符，在同一应用加同一目标 Agent 的范围内唯一。重复使用时返回原来的事件，不会投递两次。 |
 | `ttlSeconds` | 否 | 投递的有效期，必须为正数；默认 24 小时，最长 7 天。 |
 | `agentId` | 否 | 不要传。如果传了，必须等于 token 绑定的 Agent；它不能改变事件的目标。 |
 
-新接受的事件返回 `202`（`status: "queued"`）；使用相同 `externalEventId` 的重试返回 `200`，带有 `deduped: true` 和原来的事件 ID。两种情况都表示已接受。不要仅仅因为投递是异步的，就去重试一个 `202`。
+新接受的事件返回 `202`（`status: "queued"`）；使用相同 `externalEventId` 的重试返回 `200`，带有 `deduped: true` 和原来的事件 ID。两种情况都表示已接受。不要仅仅因为投递是异步的，就去重试一个 `202`。事件带了 payload 时，返回里会多一个 `warnings: ["payload is deprecated: …"]`，请求仍然被接受。
 
 ### Agent 收到什么 {#what-the-agent-receives}
 
-Raft 把来源标记为 `type=third_party_app`，并投递应用身份、事件类型、摘要、载荷哈希、资源来源信息，以及完整的结构化载荷。载荷数据在到达 Agent 之前会做无害化处理：形似引用的文本和 Agent 标记都会失效，所以示例中的 `@Ray` 只是数据，不是一次提及。
+一行文字，前面是 Raft 写的消息头，标明来源是 `type=third_party_app`，以及你应用的 id 和名字：
 
-载荷是由应用控制的内容，不是可信的指令通道：会议应用可以告诉 Agent 会议开始了，并给出入会链接，但通知本身并不授权、也不触发 Agent 参会。Agent 入站访问**不会**让应用能够以任何人的身份发送聊天消息、读取该 Agent 的消息或文件、用绑定的 token 指向其他 Agent 或服务器、把载荷文本变成已授权的操作，也不能使用保留的 `action_request` 类型。
+```text
+[target=agent-event:8a095718 msg=8a095718 time=… type=third_party_app] @your-app — Your App: Third-party event: Weekly sync has started (organizer Ray). Join: https://meet.example.com/weekly-sync
+```
+
+除此之外什么都没有：没有哈希，也没有 JSON。summary 到达 Agent 之前会做无害化处理：形似引用的文本和 Agent 标记都会失效，所以 `@Ray` 只会是数据，不是一次提及；名字请直接写，不带 `@`。
+
+如果事件带了 payload，Raft 会自己加一行：`(The app attached data, not shown. To see it: raft message read --target agent-event:8a095718)`。只有 Agent 主动读这条事件时才会展示 payload，而且只在事件过期之前。Agent 如果不再多读一步就据此行动，它依据的只有 summary，所以它需要的一切都应该写在 summary 里。
+
+**payload 正在被移除。** Raft 现在仍会保存它，只在被请求时展示；在这里和返回的 `warnings` 里公布的日期之后，Raft 不再保存它（请求仍然成功）。现在就把 Agent 需要的内容挪进 `summary`。
+
+事件是由应用控制的内容，不是可信的指令通道：会议应用可以告诉 Agent 会议开始了，并给出入会链接，但通知本身并不授权、也不触发 Agent 参会。Agent 入站访问**不会**让应用能够以任何人的身份发送聊天消息、读取该 Agent 的消息或文件、用绑定的 token 指向其他 Agent 或服务器、把事件文本变成已授权的操作，也不能使用保留的 `action_request` 类型。如果要让 Agent 在你的应用里做事，请在 [manifest](#the-agent-behavior-manifest-optional) 里声明操作，并在 summary 里写明该用哪一个。
 
 ## 出问题时 {#when-it-doesn-t-work}
 
@@ -1048,6 +1055,7 @@ Raft 把来源标记为 `type=third_party_app`，并投递应用身份、事件�
 | 操作报告缺少必填参数 | manifest 把它标成了 `required: true`；让参数名与你的端点期望的一致。 |
 | 操作交接没有设置会话 cookie | 回调必须在没有事先浏览器状态的情况下签发应用会话，并且 cookie 的 host、path、Secure 属性必须让所声明的操作端点能收到它。 |
 | `service session was rejected or expired` | 笼统的操作会话失败；不区分会话缺失、作用范围错误、已过期还是被应用拒绝。只有当回调能创建可用的会话时，重新登录才有用。在判断失败原因之前，先做上面的黑盒检查。 |
+| `summary is too long` | summary 超过 2000 个字符。请缩短；较长的细节放到链接或你应用的某个操作后面。 |
 | Agent 访问请求返回 `invalid_scope` | 应用没有声明 `agent:event:write` / `agent:notification:write`。先更新注册信息。 |
 | `resource is required` / `resource does not match requested server` | 根据访问请求的响应，严格构造 `urn:raft:server:<agent.serverId>:agent-inbound`。 |
 | `resource-bound token required` | 这个 token 只含身份信息。重新获取一次 Agent 请求，并带上所需的资源标识兑换。 |
@@ -1093,7 +1101,7 @@ Raft 把来源标记为 `type=third_party_app`，并投递应用身份、事件�
 - [ ] Agent 登录的一致性测试只用公开文档、公开 manifest 和正式发布的 Raft 客户端，不导入 Raft 源码，不用 Raft Computer 或会话的私有文件，不用本地源码构建或内部代理
 - [ ] 展示给 Agent 的应用控制文本已经转义
 - [ ] Agent 入站请求在以下情况下失败：scope 未声明、应用不可用、Agent 未知、资源标识缺失或错误、token 只含身份信息、试图覆盖目标 Agent
-- [ ] 事件重试复用稳定的 `externalEventId`，不会重复投递；载荷不超过 32 KiB，内容是事实而不是指令
+- [ ] 事件重试复用稳定的 `externalEventId`，不会重复投递；`summary` 写事实而不是指令
 
 ### 不该构建什么 {#what-not-to-build}
 
