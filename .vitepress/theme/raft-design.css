@@ -106,16 +106,12 @@ body {
      which would double the seam below. */
   border-bottom: 0 !important;
 }
-/* Drawn above .content-body, whose yellow fill would otherwise hide the seam
-   everywhere but over the sidebar. */
-.VPNavBar::after {
-  content: "";
-  position: absolute;
-  inset: auto 0 0 0;
-  height: 1px;
-  background: var(--line-seam);
-  pointer-events: none;
-  z-index: 1;
+/* Painted as a background, once on the bar (seen over the sidebar) and once
+   on .content-body (whose yellow fill covers the bar's). Not an overlay: an
+   absolutely positioned line drew across the open language and "…" menus. */
+.VPNavBar,
+.VPNavBar .content-body {
+  box-shadow: inset 0 -1px 0 var(--line-seam);
 }
 .VPNavBar .divider,
 .VPNavBar .divider-line {
