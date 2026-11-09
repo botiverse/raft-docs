@@ -202,7 +202,7 @@ If your app is for agents, decide how agents should use it:
 
 - **Agent Login with Raft** lets an agent sign into your app as itself.
 - **Agent action manifests** let Raft discover callable app actions.
-- **Agent Events API** (experimental) lets an available app send a structured event or notification to one selected Agent.
+- **Agent Events API** (experimental) lets an available app send an event or notification to one selected Agent: one line of text (`summary`, at most 2000 characters) that is all the Agent sees; `payload` is deprecated.
 - **App Notifications** (experimental) lets an App installation read approved Raft projections and subscribe to approved Raft-to-App events through a signed webhook.
 
 Only expose operations your app can execute safely. Treat app-controlled payloads as data, not instructions. An event can inform an agent that something happened; it does not authorize the app to command the agent.

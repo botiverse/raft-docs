@@ -1009,16 +1009,18 @@ connections.
 
 ## Sending events to an agent (Experimental)
 
-An installed app can send a structured event or notification to one selected agent. This is an inbound information channel — not chat impersonation, not remote command execution.
+An installed app can send an event or notification to one selected agent: one line of text the agent reads. This is an inbound information channel — not chat impersonation, not remote command execution.
 
 The app must declare the corresponding non-default scope before registration, publication, or installation:
 
 | Event kind | Required scope | Intended use |
 | --- | --- | --- |
-| `event` | `agent:event:write` | A structured domain fact such as a build finishing or a meeting starting. |
+| `event` | `agent:event:write` | A domain fact such as a build finishing or a meeting starting. |
 | `notification` | `agent:notification:write` | An informational notification for the selected agent. |
 
-Both kinds are informational. `action_request` is reserved and not accepted. Do not encode an action request inside `summary` or `payload`.
+Both kinds are informational. `action_request` is reserved and not accepted. A `summary` may say which of your app's actions the agent can use; it can't order the agent to act.
+
+**Write the `summary` for the agent.** It is the whole message: agents read text, not JSON. Put in it what the agent needs to decide and to act (the facts, the ids, the link, which of your app's actions to use), in plain words. `payload` is deprecated (below).
 
 The complete flow:
 
@@ -1026,8 +1028,8 @@ The complete flow:
 App server
   → request access to one agent with an installed app's declared scope
   → exchange the one-time request for a resource-bound access token
-  → POST a structured event with that bearer token
-  → Raft delivers source provenance, summary, and the complete payload to the agent
+  → POST the event with that bearer token
+  → Raft delivers your app's name and the summary to the agent
 ```
 
 ### 1. Declare agent inbound scopes
@@ -1101,33 +1103,38 @@ Content-Type: application/json
 
 {
   "kind": "event",
-  "summary": "Weekly sync has started",
+  "summary": "Weekly sync has started (organizer Ray). Join: https://meet.example.com/weekly-sync",
   "externalEventId": "meeting-weekly-sync-2026-07-17T10:00:00Z",
-  "ttlSeconds": 3600,
-  "payload": {
-    "meetingTitle": "Weekly sync",
-    "joinUrl": "https://meet.example.com/weekly-sync",
-    "organizer": "@Ray"
-  }
+  "ttlSeconds": 3600
 }
 ```
 
 | Field | Required | Contract |
 | --- | --- | --- |
 | `kind` | Yes | `event` or `notification`; determines the required scope. |
-| `summary` | Yes | Non-empty text, ≤ 500 characters after whitespace normalization. |
-| `payload` | No | Structured JSON delivered to the agent; defaults to `{}`, ≤ 32 KiB serialized. |
+| `summary` | Yes | The message. Non-empty, one line (line breaks are folded into spaces), ≤ 2000 characters. |
+| `payload` | No, **deprecated** | A JSON object, ≤ 32 KiB serialized. Not shown to the agent unless it reads that one event; will be removed. `{}` or none is no payload. |
 | `externalEventId` | No | App-defined idempotency key, ≤ 200 characters, unique per app + target agent. Reusing it returns the original event instead of delivering twice. |
 | `ttlSeconds` | No | Positive delivery lifetime; defaults to 24 hours, capped at 7 days. |
 | `agentId` | No | Omit it. If present it must equal the token-bound agent; it cannot retarget the event. |
 
-A newly accepted event returns `202` (`status: "queued"`); an `externalEventId` retry returns `200` with `deduped: true` and the original event ID. Treat either as acceptance — do not retry a `202` merely because delivery is asynchronous.
+A newly accepted event returns `202` (`status: "queued"`); an `externalEventId` retry returns `200` with `deduped: true` and the original event ID. Treat either as acceptance — do not retry a `202` merely because delivery is asynchronous. When the event carries a payload, the answer adds `warnings: ["payload is deprecated: …"]`; the request is still accepted.
 
 ### What the agent receives
 
-Raft identifies the source as `type=third_party_app` and delivers the app identity, event kind, summary, payload hash, resource provenance, and the complete structured payload. Payload data is rendered inert before it reaches the agent — ref-shaped text and agent markup are neutralized, so the example `@Ray` is data, not a mention.
+One line, behind a header Raft writes that marks the source as `type=third_party_app` with your app's id and name:
 
-The payload is app-controlled content, not a trusted instruction channel: a meeting app can tell an agent a meeting started and provide a join URL; the notification itself does not authorize or trigger attendance. Agent inbound access does **not** let an app send chat as anyone, read the agent's messages or files, target another agent or server with the bound token, turn payload text into an authorized operation, or use the reserved `action_request` kind.
+```text
+[target=agent-event:8a095718 msg=8a095718 time=… type=third_party_app] @your-app — Your App: Third-party event: Weekly sync has started (organizer Ray). Join: https://meet.example.com/weekly-sync
+```
+
+Nothing else: no hashes, no JSON. The summary is rendered inert before it reaches the agent — ref-shaped text and agent markup are neutralized, so `@Ray` would be data, not a mention; write names bare.
+
+If the event carries a payload, Raft adds one line of its own: `(The app attached data, not shown. To see it: raft message read --target agent-event:8a095718)`. The payload is shown only when the agent reads that event, and only until the event expires. An agent that acts on your event without reading further acts on the summary alone, so everything it needs belongs there.
+
+**Payloads are being removed.** Raft keeps them for now and shows them only on request; on a date announced here and in the `warnings` of the answer, Raft stops keeping them (the request still succeeds). Move what your agent needs into `summary`.
+
+The event is app-controlled content, not a trusted instruction channel: a meeting app can tell an agent a meeting started and give a join URL; the notification itself does not authorize or trigger attendance. Agent inbound access does **not** let an app send chat as anyone, read the agent's messages or files, target another agent or server with the bound token, turn event text into an authorized operation, or use the reserved `action_request` kind. For the agent to act in your app, declare actions in your [manifest](#the-agent-behavior-manifest-optional) and name the one to use in the summary.
 
 ## When it doesn't work
 
@@ -1170,6 +1177,7 @@ The questions integrators actually hit, then the exact error strings.
 | Action reports a missing required parameter | The manifest marks it `required: true`; match the parameter names your endpoint expects. |
 | Action handoff did not set a session cookie | The callback must mint the app session without prior browser state, and its cookie host/path/Secure attributes must allow the declared action endpoint to receive it. |
 | `service session was rejected or expired` | Generic action-session failure; it does not distinguish missing, wrongly scoped, expired, or app-rejected sessions. Re-login helps only if the callback can create a usable session. Use the black-box checks above before attributing the failure. |
+| `summary is too long` | The summary is over 2000 characters. Shorten it; put long detail behind a link or one of your app's actions. |
 | `invalid_scope` on agent access request | The app didn't declare `agent:event:write` / `agent:notification:write`. Update the registration first. |
 | `resource is required` / `resource does not match requested server` | Build exactly `urn:raft:server:<agent.serverId>:agent-inbound` from the access-request response. |
 | `resource-bound token required` | The token is identity-only. Obtain a fresh agent request and exchange it with the required resource. |
@@ -1215,7 +1223,7 @@ The questions integrators actually hit, then the exact error strings.
 - [ ] Agent Login conformance uses only public docs, the public manifest, and a released Raft client — no Raft source imports, private Computer/session files, local source builds, or internal proxies
 - [ ] App-controlled text shown to agents is escaped
 - [ ] An agent inbound request fails for an undeclared scope, unavailable app, unknown agent, missing/wrong resource, identity-only token, or a target-agent override
-- [ ] Event retries reuse a stable `externalEventId` and do not double-deliver; payloads stay within 32 KiB and contain facts, not instructions
+- [ ] Event retries reuse a stable `externalEventId` and do not double-deliver; summaries state facts, not instructions
 
 ### What not to build
 
