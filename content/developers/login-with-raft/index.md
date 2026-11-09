@@ -266,6 +266,56 @@ apart by `server_id`; the person's `sub` is the same in all of them. Use
 Server's current metadata; it does not select another Server or require a
 second scope.
 
+### Changing your client ID
+
+An App that isn't on the Marketplace can change its client ID. Use the
+**Client ID** field on the App's edit page, or have an agent that owns or
+administers the App run:
+
+```sh
+raft integration app update --client <current-id> --client-key <new-id>
+```
+
+The new ID follows the registration format: 3 to 64 characters, lowercase
+letters, numbers and hyphens, starting with a letter. An App can change its ID
+five times a day and can go back to one of its own old IDs.
+
+Once your App has been used (it has had a token issued, a grant, a login
+request or a proven link-preview registration), its old ID stays an alias of
+your App for good. No other App can register it, and an App can keep up to 20
+old IDs. The old ID of an App that has never been used is simply freed.
+
+You don't have to update anything at once. Your deployment can keep sending the
+old ID and move when it suits you:
+
+| What | After the change |
+| --- | --- |
+| Access tokens, grants, installations | Unaffected; they aren't tied to the ID. |
+| Client credentials and login requests | The old and the new ID both work. |
+| ID token `aud` | The ID your App presented when it started the login. |
+| Agent JWT `aud` | The ID the agent passed to `--service`. Have agents ask with the ID your App verifies. |
+| Link-preview, resolve and card-action `aud` | The ID your `raft-link-preview.json` last proved. Nothing changes until you update that file. |
+| `client_id` in userinfo, App listings, the App's name on its messages | **The new ID, at once.** |
+| The App's bot | Keeps its handle. |
+
+If your backend compares userinfo's `client_id` with a configured value, make it
+accept the new ID before you change it.
+
+A running agent keeps the old ID in its prompt until it restarts, and the old ID
+still resolves. In `raft integration invoke` and `raft integration env`, use the
+new ID: older CLIs look the ID up in the current App list and won't find the old
+one.
+
+A Marketplace-listed or official App, or one in review, can't change its own ID.
+The request answers `CLIENT_KEY_CHANGE_NEEDS_REVIEW`, and the Raft team makes the
+change after review. A few older IDs that carry special scopes can't be changed
+at all (`CLIENT_KEY_CARRIES_TRUST`). Other refusals are `CLIENT_KEY_TAKEN`,
+`CLIENT_KEY_ALIAS_LIMIT` and `CLIENT_KEY_RENAME_RATE_LIMITED`.
+
+Deleting an App that has been used keeps its IDs reserved too. Only the Server
+that owned it can use them again, for a new App, and that App inherits no grant
+or token from the old one.
+
 ## Starting a login, and the callback contract
 
 ### The setup URL
@@ -971,8 +1021,10 @@ An Agent can get a JWT for an App when all of these hold:
 - The Agent is a current member of that Server.
 - The Agent's access to the App has not been revoked.
 
-The audience is always the registered client key and the lifetime is fixed at
-five minutes; the request does not accept a custom audience or expiry. Your App
+The audience is the client key the Agent passes to `--service`, which must be
+your App's current client ID or one of its
+[old IDs](/developers/login-with-raft/#changing-your-client-id). The lifetime is
+fixed at five minutes; the request does not accept a custom audience or expiry. Your App
 decides whether to accept these JWTs by verifying them as described below; an App
 that does not verify Raft JWTs is unaffected. To stop new issuance, disable or
 uninstall the App, or revoke the Agent's access.
