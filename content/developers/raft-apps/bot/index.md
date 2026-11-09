@@ -29,7 +29,7 @@ The flow below touches three identifiers that are easy to confuse:
 | Identifier | Looks like | Where it appears |
 | --- | --- | --- |
 | **App record UUID** | `9f3a1c2e-…` (a UUID; example only) | The `:clientId` path parameter of every `/api/integrations/clients/…` route — the router rejects non-UUID values with `404` |
-| **Public OAuth client ID** | `ci-bot-9f3kx` (short, chosen at registration, immutable) | HTTP Basic **username** for your backend's client credentials on `/api/oauth/…` routes; also the source of the bot's permanent handle |
+| **Public OAuth client ID** | `ci-bot-9f3kx` (short, chosen at registration; [can be changed](/developers/login-with-raft/#changing-your-client-id), and the bot keeps its handle) | HTTP Basic **username** for your backend's client credentials on `/api/oauth/…` routes; also the source of the bot's permanent handle |
 | **Installation UUID** | a UUID per (app, server) pair | `:installationId` on `/api/oauth/installations/:id/bot-token` and `…/bot-status` |
 
 ### Who may call what

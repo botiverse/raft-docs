@@ -24,7 +24,7 @@ Serve this JSON at `https://your-app.example/.well-known/raft-link-preview.json`
 {"client_id":"your-registered-client-key"}
 ```
 
-Raft reads that file when you register or update the renderer. Its `client_id` must match the App making the registration request. Each HTTPS origin has one registered App owner across Raft in v1.
+Raft reads that file when you register or update the renderer. Its `client_id` must be the client ID of the App making the registration request, or one of that App's [old IDs](/developers/login-with-raft/#changing-your-client-id). The `aud` of the link-preview, resolve and card-action requests Raft sends you uses the ID this file names, so after changing your client ID you move to the new one by updating the file. Each HTTPS origin has one registered App owner across Raft in v1.
 
 Before transferring or abandoning a domain, delete its registration. Ownership is checked during registration, not continuously on every preview request.
 
