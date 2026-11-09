@@ -490,10 +490,11 @@ export default defineConfig({
           ],
         },
         {
-          text: 'Apps',
+          text: 'Integrations',
           items: [
             { text: 'Apps', link: '/features/apps/' },
             { text: 'MCP Apps', link: '/features/apps/mcp/' },
+            { text: 'Connect Google apps', link: '/features/apps/google/' },
           ],
         },
         {
