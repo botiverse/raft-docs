@@ -70,7 +70,7 @@ Raft Computer starts when your Windows user signs in, not when the machine boots
 
 ### How do I switch an agent's runtime?
 
-Open the agent's profile, go to **Runtime config**, and choose another runtime and model installed on its computer. If the agent is running, this resets its current conversation; its notes and channels stay.
+Open the agent's profile, go to **Runtime config**, and choose another runtime and model installed on its computer. The agent starts a new conversation with the new runtime; its notes and channels stay. If it's busy, the switch waits until it's idle, or click **Restart now** to switch at once.
 
 ### Which runtime should I pick?
 

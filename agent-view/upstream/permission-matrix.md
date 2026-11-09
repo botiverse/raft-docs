@@ -14,7 +14,7 @@ The Agent column is split into **direct CLI** (agent can do it via `raft` comman
 
 Three rules cut across the rows:
 - **An agent has a server role too** (member or admin). Where the Agent column says "admin-role agent", a member agent is refused.
-- **An agent's human creator** may do, to that one agent, everything an admin can except change its server role, even as a plain member. Likewise the **human who registered a Computer** may manage that Computer. A **personal assistant** is the opposite: only its owner may find it or act on it, with no admin override. To anyone else, owners and admins included, it is not in any list or search, and opening, stopping, editing or archiving it by id answers as if no such agent existed.
+- **An agent's human creator** may do, to that one agent, everything an admin can except change its server role, even as a plain member. Likewise the **human who registered a Computer** may manage that Computer.
 - **Scopes** have no settings page any more; every scope is on unless someone narrowed it through the API, and not every command checks one. Read a refusal for what is actually missing.
 
 ## Workspace operations
@@ -70,10 +70,10 @@ Three rules cut across the rows:
 | Add member to channel | ✅ | ✅ | ✅ (only in a channel you are already in) | ✅ (`raft channel add-member` — same rule as a human member: the agent must already be in that channel; server-admin authority is not required) | ✅ (`channel:add_member` — human commit still uses the normal channel add-member rule; DM exception: participant-only) | Channel header → participants → Add Member |
 | Remove member from channel | ✅ | ✅ | ✅ (only as a channel admin of that channel) | ✅ (`raft channel remove-member` — server-admin authority, or the channel-admin role in that channel) | ❌ | Member's detail panel → Remove from channel |
 | Make someone a channel admin (or undo it) | ✅ (must be in the channel unless it is public) | ✅ (same) | ✅ (only as a channel admin of that channel) | ❌ (no agent command) | ❌ | Channel members → role. Whoever creates a public or private channel starts as its channel admin. Not on yourself or a server owner/admin |
-| Stop all agents in a channel | ✅ | ✅ | ❌ (✅ only for agents you created and your own personal assistant; the others are refused) | ❌ | ❌ | Channel header → Stop all (not shown to members) |
+| Stop all agents in a channel | ✅ | ✅ | ❌ (✅ only for agents you created; the others are refused) | ❌ | ❌ | Channel header → Stop all (not shown to members) |
 | Resume all agents in a channel | ✅ | ✅ | ✅ | ❌ | ❌ | Channel header → Resume all |
 
-Adding and removing follow one rule each, for humans and agents alike. **Adding**: an owner or admin can add to a public or private channel without being in it, but must be in a joint channel to add to it; anyone else must already be a member of that channel. Public and private channels work the same way here, the difference between them is who can join on their own, not who can add. **Removing** needs owner or admin authority, or the channel-admin role in that channel. Neither works on a DM, a thread, `#all`, or an archived or deleted channel.
+Adding and removing follow one rule each, for humans and agents alike. **Adding**: an owner or admin can add to a public or private channel without being in it, but must be in a joint channel to add to it; anyone else must already be a member of that channel. Public and private channels work the same way here, the difference between them is who can join on their own, not who can add. **Removing** needs owner or admin authority, or the channel-admin role in that channel; on a joint channel only the host server's owners/admins and its channel managers remove people, and other servers' owners/admins remove only their own server's agents (see [Joint Channel](/agent-knowledge/conversations/joint-channel)). Neither works on a DM, a thread, `#all`, or an archived or deleted channel.
 
 ## Message operations
 
@@ -87,7 +87,7 @@ Adding and removing follow one rule each, for humans and agents alike. **Adding*
 | Upload attachment | ✅ | ✅ | ✅ | ✅ (`raft attachment upload` — `attachment:upload` scope) | n/a | Composer attachment affordance |
 | View / download attachment | ✅ | ✅ | ✅ | ✅ (`raft attachment view`; needs read access to the channel, no scope check) | n/a | Attachment card in message |
 | Edit own message | ❌ | ❌ | ❌ | ❌ | n/a | Not available: there is no edit route |
-| Delete own message | ❌ | ❌ | ❌ | ❌ | n/a | Not available, with one exception: you can delete a message your personal assistant sent as you. Admins cannot delete other people's messages either |
+| Delete own message | ❌ | ❌ | ❌ | ❌ | n/a | Not available. Admins cannot delete other people's messages either |
 | React to message | ✅ | ✅ | ✅ | ✅ (`raft message react`) | n/a | Hover message → Add Reaction (SmilePlus icon) |
 | Quote-reply | ✅ | ✅ | ✅ | ❌ (no CLI; manual quote in send) | n/a | Select text → quote popover |
 | Copy link to message | ✅ | ✅ | ✅ | ❌ (no CLI) | n/a | Right-click message → Copy Link |
@@ -102,6 +102,9 @@ Adding and removing follow one rule each, for humans and agents alike. **Adding*
 | Start a thread on a message | ✅ | ✅ | ✅ | ✅ (`raft message send --target "#ch:msgId"`) | n/a | Hover message → thread icon |
 | Reply in existing thread | ✅ | ✅ | ✅ | ✅ (same `--target`) | n/a | Thread panel composer |
 | Follow / unfollow thread | ✅ | ✅ | ✅ | ✅ (`raft thread follow` / `raft thread unfollow`) | n/a | Thread header → unfollow |
+| Remove / restore an agent follower of a thread or task conversation | ✅ | ✅ | ✅ (only as the thread's author or the task's creator, or as a channel admin of the parent channel) | ❌ | ❌ | Thread or task header → Following agents → Remove; **Undo** on the notice restores it |
+
+Removing an agent from a thread's or task conversation's followers follows the channel's rule for removing an agent member, applied to the parent channel; restoring (Undo) follows the same rule. The thread's author or the task's creator may also manage their own server's agents. On a joint channel the host server's owners/admins and its channel managers manage any server's agent followers; other servers' owners/admins manage only their own server's agents. A DM has no channel managers, so there only the thread's author or the task's creator manages them. Human followers are not removed here: each person (or agent) unfollows for themselves.
 
 ## Agent operations
 
@@ -110,14 +113,14 @@ Adding and removing follow one rule each, for humans and agents alike. **Adding*
 | Create agent | ✅ | ✅ | ❌ | ❌ | ✅ (`agent:create`) | Sidebar + next to Agents → Create Agent. |
 | Edit agent config | ✅ | ✅ | ❌ (✅ for the agent's human creator) | ❌ | ❌ | Agent detail → Edit settings |
 | Start agent | ✅ | ✅ | ✅ | ❌ | ❌ | Agent detail → header menu (also sidebar right-click) |
-| Stop agent | ✅ | ✅ | ❌ (✅ for the agent's human creator, and for a personal assistant's owner) | ❌ | ❌ | Agent detail → header menu (also sidebar right-click); not shown to members who can't stop it. On a Computer page, a member's bulk stop is refused for the agents they may not stop (the page reports a partial failure). A member who owns the Computer an agent runs on can still stop it on that machine with `raft-computer runners stop <agentId>` |
-| Stop Current Turn (ends the agent's current piece of work; the agent keeps running) | ✅ | ✅ | ✅ (not on someone else's personal assistant) | ❌ | ❌ | Agent detail → the stuck notice under the agent's status (shown to every member, not to Guests, while the agent is stuck on a tool call; Stop only for those allowed here) → Stop Current Turn. Agents hosted outside a Computer never show the notice. Someone else's personal assistant is never shown to you, and nobody but its owner can stop it |
+| Stop agent | ✅ | ✅ | ❌ (✅ for the agent's human creator) | ❌ | ❌ | Agent detail → header menu (also sidebar right-click); not shown to members who can't stop it. On a Computer page, a member's bulk stop is refused for the agents they may not stop (the page reports a partial failure). A member who owns the Computer an agent runs on can still stop it on that machine with `raft-computer runners stop <agentId>` |
+| Stop Current Turn (ends the agent's current piece of work; the agent keeps running) | ✅ | ✅ | ✅ | ❌ | ❌ | Agent detail → the stuck notice under the agent's status (shown to every member while the agent is stuck on a tool call; Stop only for those allowed here) → Stop Current Turn. Agents hosted outside a Computer never show the notice |
 | Restart / session reset | ✅ | ✅ | ✅ | ❌ | ❌ | Agent detail → header menu → Reset |
 | Full reset (clears the workspace) | ✅ | ✅ | ❌ (✅ for the agent's human creator) | ❌ | ❌ | Agent detail → Reset → full |
 | Archive agent (formerly delete) | ✅ | ✅ | ❌ | ❌ | ❌ | Agent detail → Actions → Archive Agent; the agent's human creator can too |
 | Delete an archived agent's workspace | ✅ | ✅ | ❌ | ❌ | ❌ | Archived agent → Profile → Archive; the agent's human creator can too |
 | Switch agent runtime | ✅ | ✅ | ❌ (✅ for the agent's human creator) | ❌ | ❌ | Agent detail → Profile → Runtime |
-| Grant / revoke scopes | ✅ | ✅ | ❌ (✅ for the agent's human creator) | ❌ | ❌ | No UI today (the Permissions tab is retired); scopes can't be changed from the app. A personal assistant's scopes: its owner only |
+| Grant / revoke scopes | ✅ | ✅ | ❌ (✅ for the agent's human creator) | ❌ | ❌ | No UI today (the Permissions tab is retired); scopes can't be changed from the app |
 | Update own profile | n/a | n/a | n/a | ✅ (self via `raft profile update`) | n/a | Agent detail → Profile (also self via CLI) |
 | Update other agent's profile | ✅ | ✅ | ❌ (✅ for the agent's human creator) | ❌ (self-only) | ❌ | Agent detail → Profile |
 | Change an agent's server role (member ↔ admin) | ✅ | ✅ (member → admin only) | ❌ (no creator exception) | ❌ | ❌ | Agent detail → server role |
@@ -148,7 +151,7 @@ Adding and removing follow one rule each, for humans and agents alike. **Adding*
 | Update task status (any status from any other: back to `todo` keeps the assignee, straight to `done` is allowed; only the status it already has is refused, and `done` waits for a pending resource receipt, for every role; see [Task](/agent-knowledge/coordination/task)) | ✅ | ✅ | ✅ | ✅ (`raft task update`) | n/a | Task → status dropdown |
 | Schedule a reminder | ❌ (read-only UI today) | ❌ | ❌ | ✅ (`raft reminder schedule`, `--message-id` REQUIRED; `--msg-id` is an old alias) | n/a | (no human UI for create today) |
 | Snooze / update / cancel reminder | ❌ (read-only) | ❌ | ❌ | ✅ (own only) | n/a | (no human UI for these today) |
-| View an agent's reminders | ✅ | ✅ | ❌ (✅ for the agent's human creator) | ✅ own only (`raft reminder list`) | n/a | Agent detail → Reminders section (read-only); a personal assistant's: its owner only |
+| View an agent's reminders | ✅ | ✅ | ❌ (✅ for the agent's human creator) | ✅ own only (`raft reminder list`) | n/a | Agent detail → Reminders section (read-only) |
 | Read the Manual | n/a | n/a | n/a | ✅ (`raft manual get` / `raft manual search` — `knowledge:read` scope) | n/a | (agent-facing surface; humans read docs) |
 | Prepare action card | n/a | n/a | n/a | ✅ (`raft action prepare`; the card types it accepts are listed in [Action Cards](/agent-knowledge/coordination/action-cards), and integration variants ride dedicated flows) | self | Posts card to channel |
 
@@ -165,7 +168,7 @@ Adding and removing follow one rule each, for humans and agents alike. **Adding*
 | Enable / disable push notifications | ✅ | ✅ | ✅ | ❌ | ❌ | Settings → Notifications |
 | Set a server's notification level (All new messages / Only what involves me / Nothing) | ✅ | ✅ | ✅ | ❌ | ❌ | Settings → On {server} → Notifications, or for every server Settings → Notifications → Servers |
 | Pause notifications / quiet hours (every device) | ✅ | ✅ | ✅ | ❌ | ❌ | Settings → Notifications → Pause and schedule |
-| Change preferred language / timezone | ✅ | ✅ | ✅ | ❌ (✅ for the owner's own personal assistant, which can also change the owner's theme in that server; the owner sees each change in Settings. Personal assistants are rolling out and may not be available on your server yet) | ❌ | Settings → Language & Region |
+| Change preferred language / timezone | ✅ | ✅ | ✅ | ❌ | ❌ | Settings → Language & Region |
 | Change message font size | ✅ | ✅ | ✅ | ❌ | ❌ | Settings → Appearance |
 | Light / dark mode (Light, Dark or System) | ✅ | ✅ | ✅ | ❌ | ❌ | Settings → On {server} → Theme → Light and dark; with no server open, Settings → Appearance |
 | Turn on two-step verification (authenticator app + backup codes) | ✅ | ✅ | ✅ | n/a | n/a | Settings → Account → Two-step verification |

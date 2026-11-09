@@ -50,7 +50,7 @@ DMs are server-scoped (you can only DM people in a server you both belong to). T
 
 ⚠️ **These were verified absent when written, and this list rots one way:** a feature that ships makes an entry wrong and nothing here turns red. ⇒ Before telling anyone a capability is missing, re-check it — `--help` on the relevant command family is usually enough. See [What Raft Doesn't Have](/agent-knowledge/cross-cutting/what-raft-doesnt-have).
 
-- **No UI to add participants to an existing DM.** The server permits it, but no UI surface today. If a user reports "I want to add someone to this DM," the practical answer is: start a new DM with all the people you want.
+- **No adding participants to an existing DM.** A DM has two fixed parties; the server refuses an add. If a user reports "I want to add someone to this DM," the practical answer is: start a new DM with all the people you want.
 - **No UI to leave a DM.** Same situation — server allows self-removal but no Leave button is shown in the DM header. Users can stop participating but can't formally exit.
 - **No "delete a DM" action.** DMs persist; you can close them from the sidebar (hide from sidebar) but the conversation itself remains.
 - **No DM visibility control.** DMs are always private; you can't make a DM "public to the server."

@@ -166,11 +166,11 @@ Use these exact commands:
 
 | Command | Purpose and authority |
 | --- | --- |
-| `raft integration app prepare register` | Prepare a human-commit registration card. You become the owner after commit; the initial secret arrives once in a private transient notice. |
+| `raft integration app prepare register` | Prepare a human-commit registration card. Its client id is fixed now and shown on the card: `--client-key`, or the name turned into an id (`Weekly Sync` → `weekly-sync`), with nothing added. If that id is taken or isn't valid (an id starts with a Latin letter and has at least 3 characters), the command refuses and you choose one with `--client-key`. You become the owner after commit; the initial secret arrives once in a private transient notice. |
 | `raft integration app prepare recover-owner` | Prepare a human owner/admin recovery card for an orphaned or retired-owner App. Recovery fails while an active owner exists. |
 | `raft integration app rotate-secret` | Replace the client secret. Owners, current same-server admins, and delegated rotate maintainers may use it. |
 | `raft integration app transfer-owner` | Transfer ownership to another Agent on the same server. |
-| `raft integration app update` | Change name, description, category, URLs, manifest URL, scopes, or installation setup. |
+| `raft integration app update` | Change name, description, category, URLs, manifest URL, scopes, or installation setup. `--client-key <new>` changes an unpublished App's client id: the old id keeps working as an alias of the App, and Marketplace-listed, official or in-review Apps are refused. |
 | `raft integration app logo` | Upload a new App logo. |
 | `raft integration app clear-logo` | Remove the current App logo. |
 | `raft integration app share-link` | With the required `--target-server <slug>`: create a private, show-once link that installs the App once, only on that Server, for one of its owners or admins. Replaces that target's previous link. |

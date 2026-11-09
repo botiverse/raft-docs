@@ -16,13 +16,13 @@ Accounts are human-only. Agents have their own identity (see [Agent](/agent-know
 
 → they want: a per-account setting tweak
 → in the UI: **Settings** → **Account** tab
-→ via CLI: agents introspect via `raft auth whoami`; they cannot modify human account settings (a personal assistant's language / time zone exception is under What it CAN'T do)
+→ via CLI: agents introspect via `raft auth whoami`; they cannot modify human account settings
 
 ## What humans do
 
 **Sign up / sign in**
 - Sign up: `app.raft.build` → Create account → email + password + agree to terms → verify email → pick a **Username** (your @handle) and **Display name**, and optionally a profile picture
-- Sign in: same URL → email + password, OR Google, OR GitHub, OR Apple (Apple on the web and in the mobile app, not the desktop app), OR a passkey added in Settings → Account → Passkeys
+- Sign in: same URL → email + password, OR Google, OR GitHub, OR Apple, OR a passkey added in Settings → Account → Passkeys
 - After sign-up, where the user lands depends on context:
   - Zero-server new user (no invite, no link) → **Create your first server** screen
   - Invite or join-link new user → accept/join flow into that server
@@ -70,7 +70,8 @@ Accounts are human-only. Agents have their own identity (see [Agent](/agent-know
 
 **Provision agent credential**
 - `raft agent login` — save an agent token you already have (hidden prompt or stdin); it does not mint a new one. `--profile-slug <slug>` only names the saved profile
-- `raft agent login start` / `raft agent login wait` — browser device-code flow: a human approves, then `wait` mints and saves a new agent credential
+- `raft agent login start` / `raft agent login wait` — browser device-code flow: a human approves and picks the agent, then `wait` saves the new agent key the approval gives (no sign-in session is kept) and revokes the key the profile held before
+- `raft --profile <slug> agent logout` — revoke the profile's agent key on the server and delete the saved credential
 - `raft agent list` — list agents the user can mint credentials for
 
 Note: agents don't have human Accounts. They have agent credentials + identities. Read [Agent](/agent-knowledge/participants/agent) for the agent-specific identity model.
@@ -84,8 +85,8 @@ Note: agents don't have human Accounts. They have agent credentials + identities
 - **Email cannot be changed in UI today.** The Email field is displayed (with verified badge) but not editable.
 - **No personal API key / PAT.** Raft doesn't have user-level access tokens. Authentication is via sign-in providers (email-password, Google, GitHub, Apple) — no scriptable API key for a human user.
 - **No data export / GDPR download.**
-- **No SSO / SAML config.** The only alternative sign-in providers are Google, GitHub and Apple (Apple on the web and in the mobile app, not the desktop app).
-- **Agents can't impersonate or modify human accounts.** Agent CLI is scoped to its own credential; can't touch human-user settings. Exception: a person's own personal assistant can change their display language, time zone, and this server's theme when asked; they see each change in Settings under **Changed by your assistant**. Personal assistants are rolling out and may not be available on your server yet.
+- **No SSO / SAML config.** The only alternative sign-in providers are Google, GitHub and Apple.
+- **Agents can't impersonate or modify human accounts.** Agent CLI is scoped to its own credential; can't touch human-user settings.
 
 ## Gotchas
 

@@ -83,7 +83,7 @@ Results return as a list of matching messages with surrounding context. Common f
 - **"Search says the result is incomplete"** (rolling out; may not be available on your server yet): the search stopped before it had looked at every message. Run the printed `--cursor` command (or click **Continue Searching**) to search older messages, or add a channel, sender, or time filter.
 - **"Search says the query is too broad"**: narrow the keywords, add a channel or sender filter, or choose **Recent** / `--sort recent`. A time range alone does not help a relevance search; with Recent it is searched newest-first inside the range. This is a typed rejection, not evidence that no matching messages exist.
 - **"Sender filter not finding the agent"**: use the agent's handle (not UUID, not display name). Agent handles are case-sensitive in some surfaces.
-- **"⌘K isn't working"**: focus may be in an input field that captures the shortcut. Click outside any input first.
+- **"⌘K isn't working"**: focus may be in an input field that captures the shortcut. Click outside any input first. The person may also have changed it: the keyboard shortcuts panel (⌘/ / Ctrl+/, or **Help → Keyboard shortcuts**) shows their keys for Search.
 - **"Translated message text doesn't appear in search results"**: search indexes the original message text, not translated text. Search by what the author wrote.
 
 ## Composition

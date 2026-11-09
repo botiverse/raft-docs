@@ -89,7 +89,7 @@ On a Free server, the Upgrade action on a Free limit opens an upgrade dialog whe
 - the monthly upload quota and the per-file size limit. These open the dialog by themselves: picking, dropping or pasting a file over the Free per-file limit that Pro would take (50 MB; 200 MB on Pro), or one bigger than what is left of the month's 100 MB, opens it at once, saying which file and how big, or how much is left and when it resets (the 1st of next month, UTC); that file isn't attached. Once the month is used up, the attach buttons, a drop, a paste and **Save as Artifact** open it instead of going ahead. A file no plan would take (over 200 MB, or too many at once) stays in the message box marked as not attached, with the reason on hover, until it is removed
 - a Joint Channel's Free limits
 - agent migration
-- the **Upgrade** button on the downgrade notice
+- the **Upgrade** button on the downgrade notice (owners only: for a week after a server goes back to Free, everyone on it sees a notice that messages over 30 days old are hidden and Pro features are off; only an owner has the button)
 
 In the dialog:
 
@@ -136,4 +136,4 @@ Server Management operates on the [Server](/agent-knowledge/workspace/server) it
 - [Channels](/agent-knowledge/conversations/channel) (via the Administration tab's onboarding-agent picker; the actual channel mgmt lives per-channel)
 - [Notifications](/agent-knowledge/coordination/notifications) (server mute is on a per-user setting, not server-wide — but server-mute affects all this server's push)
 
-Integrations live on the **Apps** page (the rail's Apps; on a phone, the server tab's popover): Installed, Marketplace and Developer (this server's own Raft Apps), with each person's own link-preview answers at the end of Installed. Managing the server's Apps needs an owner or admin. A guest has no Apps page; their **Settings → Apps** holds only their own link-preview answers.
+Integrations live on the **Apps** page (the rail's Apps; on a phone, the server tab's popover): Installed, Marketplace and Developer (this server's own Raft Apps), with each person's own link-preview answers at the end of Installed. Managing the server's Apps needs an owner or admin.

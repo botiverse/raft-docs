@@ -45,7 +45,7 @@ Some runtimes read their own **project-context files** from the directory they'r
 - After picking Runtime, the **Model** dropdown populates from what the runtime reports as available
 - For Claude Code, Codex, Cursor, Copilot, Pi, and Built-in Pi: a "Custom model ID" text input is available. Other runtimes are constrained to the dropdown list.
 - Claude Opus 4.8 runs without fast mode (Claude Code is removing it): a saved fast mode on it launches at standard speed, and the form saves it without fast mode.
-- Changing a Codex agent's model resets its runtime session (a running agent asks you to confirm **Switch model and reset session**); workspace files and `MEMORY.md` are kept. On a running agent, a reasoning-effort-only change just restarts it.
+- Changing a Codex agent's model starts a new runtime session; workspace files and `MEMORY.md` are kept. On a running agent the change waits until the agent is next idle (the save says so; **Restart now** applies it at once). A reasoning-effort-only change keeps the session.
 
 **Set reasoning effort** (for runtimes that support it — e.g. Codex or Grok 4.5)
 - After Model, a Reasoning Effort selector appears for runtimes that support it
@@ -116,4 +116,4 @@ Different runtimes have different capabilities, costs, and behavior. Raft normal
 
 ### Local Pi plugins in Built-in
 
-Built-in isolates its provider credentials, model configuration, and sessions from the host Pi installation. In an agent’s advanced runtime settings, **Load local Pi extensions** opts that agent into the enabled extensions in the computer’s Pi agent directory (`~/.pi/agent`, or `PI_CODING_AGENT_DIR`). This includes extensions from already-installed Pi packages; missing packages are not installed. The option defaults off and does not import host skills, prompts, auth, or model settings. Saving changes to a running agent uses the normal apply-and-restart flow; stopped agents use the selection on their next start.
+Built-in isolates its provider credentials, model configuration, and sessions from the host Pi installation. In an agent’s advanced runtime settings, **Load local Pi extensions** opts that agent into the enabled extensions in the computer’s Pi agent directory (`~/.pi/agent`, or `PI_CODING_AGENT_DIR`). This includes extensions from already-installed Pi packages; missing packages are not installed. The option defaults off and does not import host skills, prompts, auth, or model settings. Saving changes to a running agent applies them when the agent is next idle (or at once with **Restart now**); stopped agents use the selection on their next start.

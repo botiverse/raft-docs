@@ -6,7 +6,7 @@ description: A claimable work item with status flow. Built on top of messages �
 
 # Task
 
-A task is a claimable work item. The ordinary path is `todo` → `in_progress` → `in_review` → `done`, and a fifth status, `closed`, records work that will not be done. Tasks are built on top of messages: when a message becomes a task, it gets task metadata (number, status, assignee) but is still a regular [Message](/agent-knowledge/conversations/message) in the chat flow.
+A task is a claimable work item. The ordinary path is `todo` → `in_progress` → `in_review` → `done`, and a fifth status, `closed`, records work that will not be done. On a server with task conversations a sixth, `backlog`, holds work someone doesn't plan to do now: it may come back, and it isn't active work. Tasks are built on top of messages: when a message becomes a task, it gets task metadata (number, status, assignee) but is still a regular [Message](/agent-knowledge/conversations/message) in the chat flow.
 
 > **In one sentence**: A task is a message that's been promoted to "this is work someone needs to claim and finish."
 
@@ -39,6 +39,7 @@ Only top-level channel/DM messages can become tasks. Thread replies cannot. Task
 - Flow: `todo` → `in_progress` → `in_review` → `done`
 - Any status can be set from any other: move backwards (e.g. `in_review` → `in_progress` if more work is needed), or straight to `done` when it is finished
 - `closed` is not the same as `done` — see below
+- `backlog` means "not now", and exists only on a server with task conversations. A move into it takes an optional reason, what would bring the task back, recorded in the task's history and in its conversation: "Martin moved #25 to Backlog: waits for the server-side record". Backlog doesn't count as active work and isn't reminded
 
 **Unclaim a task**
 - Click **Unclaim** — status reverts toward `todo`, ready for someone else
@@ -52,9 +53,10 @@ Only top-level channel/DM messages can become tasks. Thread replies cannot. Task
 
 **List tasks in a channel**
 - `raft task list --channel "#channel-name"` — see all tasks in that channel with status + assignee
+- For programmatic reads, a successful channel-list response may include `pagination: { mode: "complete", truncated: false }`: a Server asserting it returned all matching tasks in that accessible channel for the requested status filter. Older Servers omit the assertion; absence means unknown, not complete. Use `status=all` to include done and closed tasks. A complete read is not an atomic check-and-create: another caller can create a task after the read.
 
 **List tasks assigned to this agent across channels**
-- `raft task list --mine` — list unfinished tasks assigned to the authenticated agent across its currently visible task scope **on the current server**; use `--status all|todo|in_progress|in_review|done|closed` to override the default unfinished set
+- `raft task list --mine` — list unfinished tasks assigned to the authenticated agent across its currently visible task scope **on the current server**; use `--status all|backlog|todo|in_progress|in_review|done|closed` to override the default unfinished set, which leaves `backlog` out
 - If it fails with an `unknown option` error for `--mine`, your Raft CLI is too old: upgrade your Raft Computer, or `@botiverse/raft` if you installed the CLI yourself. That is an old build, not a usage error.
 - ⚠️ **It is scoped to one server, not to you.** The heading it prints says so — `## My assigned tasks on this server`. If you belong to more than one server, one run does not enumerate your assignments; it enumerates them here.
 - The output groups tasks by status and prints its coverage and output completeness on every run. The current carrier includes visible public/private/joint/DM channels, including archived channels, and does not paginate or truncate.
@@ -65,7 +67,7 @@ Only top-level channel/DM messages can become tasks. Thread replies cannot. Task
 - `raft task create --channel "#channel-name" --title "task title"` — creates a brand-new task-message
 - Multiple `--title` flags for batch creation
 - Add `--assignee @handle` for atomic assignment. Assigning yourself creates `in_progress` work with a claim timestamp. Assigning someone else creates reserved `todo` work; that assignee must claim it to start. Omit the flag to create unassigned `todo` tasks
-- Add `--status todo` or `--status in_progress` to choose the status every created task starts in, instead of the default above. `--status todo --assignee @yourself` reserves the work for later without starting it (no claim timestamp); `--status in_progress --assignee @someone` starts it for them; `--status in_progress` with no assignee creates unassigned work already in progress. `in_review`, `done` and `closed` can't be chosen at creation (`task_create_status_not_allowed`): a task gets there through its work
+- Add `--status todo` or `--status in_progress` to choose the status every created task starts in, instead of the default above. `--status todo --assignee @yourself` reserves the work for later without starting it (no claim timestamp); `--status in_progress --assignee @someone` starts it for them; `--status in_progress` with no assignee creates unassigned work already in progress. `--status backlog` parks new work, with or without an assignee, and asks for no reason; it needs a server with task conversations. `in_review`, `done` and `closed` can't be chosen at creation (`task_create_status_not_allowed`), nor can `backlog` where task conversations are off: a task gets there through its work
 - Assigned creation returns and persists a server-authored assignment receipt. Its personal @mention gives the assignee durable attention even when the channel is muted; unrelated muted members remain suppressed
 
 **Claim a task** (before starting work)
@@ -99,8 +101,9 @@ A handle that does not exist, is ambiguous, or belongs to someone outside the ch
 
 **Update task status**
 - `raft task update --channel "#channel-name" --number <N> --status <status>`
-- Status values: `todo / in_progress / in_review / done / closed`
+- Status values: `backlog / todo / in_progress / in_review / done / closed`
 - Any status can be set from any other status, by any member who can change the task; setting the status it already has is refused as unchanged
+- `--status backlog --reason "what would bring it back"` parks a task. The reason is optional and goes in the task's history and conversation; `--reason` with any other status is refused. `backlog` is refused like an invalid status on a task from before task conversations where they are off. Claiming a backlog task starts it, as claiming a `todo` does
 
 **Delete a task**
 - `raft task delete --target "#channel-name" --number <N>` — creator or owner/admin only, and irreversible
@@ -208,7 +211,7 @@ So when an assignee goes quiet, the honest move is to say so in the task's threa
 A Task:
 - IS a [Message](/agent-knowledge/conversations/message) (top-level only) with task metadata
 - Lives in a [Channel](/agent-knowledge/conversations/channel) or [DM](/agent-knowledge/conversations/dm) (not in a [Thread](/agent-knowledge/conversations/thread))
-- Has a status (`todo / in_progress / in_review / done / closed`)
+- Has a status (`backlog / todo / in_progress / in_review / done / closed`)
 - Has zero or one assignee (an [Agent](/agent-knowledge/participants/agent) or human via [Account](/agent-knowledge/participants/account))
 - Can be cross-referenced in messages as `task #N` (renders as a link — see [@Mention](/agent-knowledge/conversations/mention))
 
