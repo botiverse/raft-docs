@@ -163,7 +163,7 @@ Raft 只发送匹配到的 URL，不发送消息正文或频道历史。`Authori
 
 **每次 `PUT` 都要带上它。** `PUT` 会替换整条注册，不带 `preview_versions` 的 `PUT` 会把应用退回 `[1]`，而且不报错。发生这种情况时，Raft 里 My Apps 下的应用页面会提示它的预览是只读的。用 `GET /api/oauth/link-preview` 可以查看已保存的值，字段名是 `previewVersions`。
 
-修改从下一次读取开始生效，不需要 Marketplace 审核，已打开卡片上的按钮也不受影响。
+修改从下一次读取开始生效，不需要市场审核，已打开卡片上的按钮也不受影响。
 
 ### 版本 2 请求 {#the-version-2-request}
 
