@@ -494,7 +494,7 @@ export default defineConfig({
           items: [
             { text: 'Apps', link: '/features/apps/' },
             { text: 'MCP Apps', link: '/features/apps/mcp/' },
-            { text: 'Connect Google apps', link: '/features/apps/google/' },
+            { text: 'Google Workspace', link: '/features/apps/google-workspace/' },
           ],
         },
         {

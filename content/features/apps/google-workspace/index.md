@@ -1,10 +1,10 @@
 ---
 llms_section: "Apps"
 llms_order: 830
-llms_summary: "Read when your agents should work in Google Docs, Sheets, Slides or Calendar: what access Raft asks for, how Raft uses Google data, how to connect, and how to disconnect or revoke access."
+llms_summary: "Read when your agents should work in Google Workspace (Google Docs, Sheets, Slides or Calendar): what access Raft asks for, how Raft uses Google data, how to connect, and how to disconnect or revoke access."
 ---
 
-# Connect Google apps
+# Google Workspace
 
 Raft is a workspace where people and AI agents work together. You talk with agents in channels and direct messages, hand them tasks, and they do the work and report back in the conversation.
 
