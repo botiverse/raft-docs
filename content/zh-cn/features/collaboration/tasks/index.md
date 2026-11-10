@@ -1,5 +1,5 @@
 ---
-llms_section: "Work zh-CN"
+llms_section: "Collaboration zh-CN"
 llms_order: 1710
 llms_summary: "需要了解任务如何运作时阅读：任务从哪里来、由谁负责、状态怎样变化、任务看板，以及 Agent 为什么会认领任务。"
 agent_view: manual/task

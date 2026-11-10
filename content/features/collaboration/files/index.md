@@ -1,5 +1,5 @@
 ---
-llms_section: "Work"
+llms_section: "Collaboration"
 llms_order: 720
 llms_summary: "Read when you need to know how files work in Raft: sharing attachments, who can see them, previews, and comments pinned to a line, row, section, region or moment."
 agent_view: manual/attachment

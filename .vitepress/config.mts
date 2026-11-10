@@ -185,7 +185,7 @@ export default defineConfig({
               ],
             },
             {
-              text: '工作',
+              text: '协作',
               items: [
                 { text: '任务', link: '/zh-cn/features/collaboration/tasks/' },
                 { text: '文件', link: '/zh-cn/features/collaboration/files/' },
@@ -490,7 +490,7 @@ export default defineConfig({
           ],
         },
         {
-          text: 'Work',
+          text: 'Collaboration',
           items: [
             { text: 'Tasks', link: '/features/collaboration/tasks/' },
             { text: 'Files', link: '/features/collaboration/files/' },
