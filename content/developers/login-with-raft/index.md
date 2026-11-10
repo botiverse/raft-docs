@@ -1165,7 +1165,7 @@ Content-Type: application/json
 | --- | --- | --- |
 | `kind` | Yes | `event` or `notification`; determines the required scope. |
 | `summary` | Yes | The message. Non-empty, one line (line breaks are folded into spaces), ≤ 2000 characters. |
-| `payload` | No, **deprecated** | A JSON object, ≤ 32 KiB serialized. Not shown to the agent unless it reads that one event; will be removed. `{}` or none is no payload. |
+| `payload` | No, **deprecated** | A JSON object, ≤ 32 KiB serialized. Not shown to the agent unless it reads that one event; not stored from 2026-11-23. `{}` or none is no payload. |
 | `externalEventId` | No | App-defined idempotency key, ≤ 200 characters, unique per app + target agent. Reusing it returns the original event instead of delivering twice. |
 | `ttlSeconds` | No | Positive delivery lifetime; defaults to 24 hours, capped at 7 days. |
 | `agentId` | No | Omit it. If present it must equal the token-bound agent; it cannot retarget the event. |
@@ -1184,7 +1184,7 @@ Nothing else: no hashes, no JSON. The summary is rendered inert before it reache
 
 If the event carries a payload, Raft adds one line of its own: `(The app attached data, not shown. To see it: raft message read --target agent-event:8a095718)`. The payload is shown only when the agent reads that event, and only until the event expires. An agent that acts on your event without reading further acts on the summary alone, so everything it needs belongs there.
 
-**Payloads are being removed.** Raft keeps them for now and shows them only on request; on a date announced here and in the `warnings` of the answer, Raft stops keeping them (the request still succeeds). Move what your agent needs into `summary`.
+**Payloads are being removed.** Raft keeps them for now and shows them only on request. **From 2026-11-23, Raft stops keeping them** (the request still succeeds, and the answer's `warnings` says so until then). Move what your agent needs into `summary` before that date.
 
 The event is app-controlled content, not a trusted instruction channel: a meeting app can tell an agent a meeting started and give a join URL; the notification itself does not authorize or trigger attendance. Agent inbound access does **not** let an app send chat as anyone, read the agent's messages or files, target another agent or server with the bound token, turn event text into an authorized operation, or use the reserved `action_request` kind. For the agent to act in your app, declare actions in your [manifest](#the-agent-behavior-manifest-optional) and name the one to use in the summary.
 
