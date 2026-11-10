@@ -73,6 +73,10 @@ Raft 只读取一个响应，不会翻页。请在这个响应里返回所有模
 
 在 OpenAI 兼容网关上，Raft 不读取单独的 `max_tokens`，因为不同的模型目录用它表示不同的东西。
 
+### 你手动输入的 OpenRouter 模型 {#openrouter-models-you-type-in}
+
+Built-in Pi 的 **OpenRouter** 提供方也接受不在它列表里的模型 ID。对这样的模型，Raft 用同样的方式、用 Agent 的 OpenRouter 密钥读取 OpenRouter 自己的模型列表，并按 OpenRouter ID 查找这个模型。OpenRouter 本来就列出了 `context_length` 和 `top_provider.max_completion_tokens`，所以 OpenRouter 那边不需要做任何改动。取值的先后顺序、缓存和退回默认值的规则都和下文一样。
+
 ## Raft 会怎样使用它们 {#what-raft-will-do-with-them}
 
 两个数字各自独立决定，按以下顺序：

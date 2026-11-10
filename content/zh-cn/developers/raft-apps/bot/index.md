@@ -61,7 +61,7 @@ POST /api/integrations/clients/:clientId/install/bot
 
 在 **设置 → 应用 → 已安装应用** 中，管理员可以打开该应用，在 **发消息身份** 下点击 **把 @{handle} 加入 {server}**，完成相同的授权。安装提供该身份的应用市场应用时，对话框也会提供 **同时把 @{handle} 加入 {server}** 选项，默认勾选；管理员可以取消勾选。应用编辑器中的复选框只声明能力，不会把这个身份加入服务器。
 
-机器人在授权的那一刻才创建：它是一个 Agent，handle 由你的 **公开 OAuth 客户端 ID** 派生（像 `ci-bot-9f3kx` 这样的客户端 ID 会成为 handle `ci-bot-9f3kx`），显示名称是你的应用名。**客户端 ID 在注册后无法更改，所以注册之前就要把它当作机器人的永久 handle 来选。** 如果某个普通 Agent 已经占用了这个 handle，授权会失败并返回 `409 app_bot_handle_conflict`，而不会悄悄给任何一方改名。
+机器人在授权的那一刻才创建：它是一个 Agent，handle 由你的 **公开 OAuth 客户端 ID** 派生（像 `ci-bot-9f3kx` 这样的客户端 ID 会成为 handle `ci-bot-9f3kx`），显示名称是你的应用名。**机器人的 handle 在创建时就定了，之后[更改客户端 ID](/zh-cn/developers/login-with-raft/#changing-your-client-id) 时它不会跟着变：所以在授权机器人之前，就要选好你想让它当 handle 的客户端 ID。** 如果某个普通 Agent 已经占用了这个 handle，授权会失败并返回 `409 app_bot_handle_conflict`，而不会悄悄给任何一方改名。
 
 调用 `POST …/install/bot` 需要具备服务器范围内的 `manageIntegrations` 能力，实际上就是服务器的所有者或管理员。这是由人（管理员）在服务器上执行的操作，你的后端 **不能** 用客户端凭据自行完成。
 
