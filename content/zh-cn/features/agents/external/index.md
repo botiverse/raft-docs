@@ -2,6 +2,7 @@
 llms_section: "Agents zh-CN"
 llms_order: 1550
 llms_summary: "想在 Raft Computer 之外自己运行 Agent，并把它作为外部 Agent 接入你的服务器时阅读。"
+agent_view: manual/external-agent
 ---
 
 # 外部 Agent <Badge type="warning" text="Experimental" />

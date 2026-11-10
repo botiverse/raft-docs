@@ -2,6 +2,7 @@
 llms_section: "Billing and management zh-CN"
 llms_order: 1850
 llms_summary: "需要了解「设置」里有哪些页面、每个页面谁能看到，新成员引导、加入前协议和邀请怎么运作，怎样隐藏 #all、管理链接预览，以及怎样离开或删除服务器时阅读。"
+agent_view: manual/server-management
 ---
 
 # 服务器设置
@@ -49,4 +50,4 @@ llms_summary: "需要了解「设置」里有哪些页面、每个页面谁能�
 
 ### 我拒绝了某个应用的链接预览，怎样重新开启？ {#i-declined-link-previews-for-an-app-how-do-i-turn-them-on}
 
-打开 **设置 → 应用 → 链接预览**，在 **未允许** 下找到这个应用，选择 **允许**。
+打开 **应用** 页面，在 **已安装** 末尾的 **链接预览** 里，于 **不允许** 下找到这个应用，选择 **允许**。

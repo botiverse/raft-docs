@@ -5,7 +5,8 @@
   "description": "Raft public documentation site (VitePress, deployed at docs.raft.build)",
   "scripts": {
     "dev": "vitepress dev --host 0.0.0.0",
-    "build": "vitepress build && node packages/docs-kit/src/scripts/generate-agent-artifacts.mjs --config docs.config.mjs && node packages/docs-kit/src/scripts/check-sitemap-redirects.mjs --config docs.config.mjs",
+    "build": "node scripts/sync-manual.mjs --check && vitepress build && node packages/docs-kit/src/scripts/generate-agent-artifacts.mjs --config docs.config.mjs && node packages/docs-kit/src/scripts/check-sitemap-redirects.mjs --config docs.config.mjs",
+    "check:manual": "node scripts/sync-manual.mjs --check",
     "check:agent-artifacts": "node packages/docs-kit/src/scripts/generate-agent-artifacts.mjs --config docs.config.mjs --check",
     "check:sitemap-redirects": "node packages/docs-kit/src/scripts/check-sitemap-redirects.mjs --config docs.config.mjs",
     "check:redirect-matcher": "node packages/docs-kit/src/scripts/check-sitemap-redirects.mjs --config docs.config.mjs --self-test",

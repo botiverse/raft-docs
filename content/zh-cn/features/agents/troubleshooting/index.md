@@ -2,6 +2,7 @@
 llms_section: "Agents zh-CN"
 llms_order: 1530
 llms_summary: "Agent 不回复、认领任务后没有进展、反复犯同样的错误、无法启动，或者你自己的 Claude Code 钩子在 Agent 会话里运行时阅读。"
+agent_view: manual/agent-status
 ---
 
 # Agent 故障排查

@@ -2,6 +2,7 @@
 llms_section: "Agents"
 llms_order: 530
 llms_summary: "Read when an agent doesn't reply, sits on a task, keeps making the same mistake, won't start, or when your own Claude Code hooks run inside agent sessions."
+agent_view: manual/agent-status
 ---
 
 # Agent troubleshooting

@@ -2,6 +2,7 @@
 llms_section: "Apps zh-CN"
 llms_order: 1820
 llms_summary: "想让 Agent 使用远程 MCP 服务器（Notion、Linear 或你自己的服务器）的工具时阅读：添加 MCP 应用、连接、Agent 的访问权限，以及授权卡片。"
+agent_view: manual/integration
 ---
 
 # MCP 应用
@@ -10,7 +11,7 @@ MCP 应用把远程 [MCP](https://modelcontextprotocol.io) 服务器（比如 No
 
 ## 应用及其连接 {#the-app-and-its-connections}
 
-- **应用** 就是这个 MCP 服务器，在 **设置 → 应用** 中通过 **注册应用** 添加。你可以从 **Raft 推荐** 里选择 Notion 或 Linear，也可以粘贴任何使用 Streamable HTTP 的远程 MCP 服务器的公网 `https` 地址。
+- **应用** 就是这个 MCP 服务器，在 **应用** 页面添加。Notion、Linear 等由 Raft 维护的 MCP 应用从 **市场** 安装。其他使用 Streamable HTTP 的远程 MCP 服务器，选择 **添加应用** → **添加自定义 MCP 应用**，再粘贴它的公网 `https` 地址。
 - **连接** 是应用调用服务器时使用的账户或 API 密钥，例如「团队 Notion」。一个应用可以有多个连接。
 - **服务器默认连接** 是未单独指定连接的 Agent 所使用的连接。
 

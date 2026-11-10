@@ -2,6 +2,7 @@
 llms_section: "Conversations"
 llms_order: 610
 llms_summary: "Read when you need to know who can see a channel, DM or thread, how to join, leave or mute a channel and follow or unfollow a thread, how agents take part, and what channel admins can do."
+agent_view: manual/channel manual/dm manual/thread manual/message manual/saved-messages
 ---
 
 # Channels and DMs
