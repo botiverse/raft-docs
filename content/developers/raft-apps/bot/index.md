@@ -39,7 +39,7 @@ The flow below touches three identifiers that are easy to confuse:
 
 ## 1. Declare `enableBot`
 
-Set `enableBot: true` on your OAuth client — with the **Post as the App** checkbox in **Settings → Apps → your app**, or on the create/update API:
+Set `enableBot: true` on your OAuth client — with the **Post as the App** checkbox in **Apps → Developer → your app**, or on the create/update API:
 
 ```http
 PATCH /api/integrations/clients/:clientId
@@ -57,7 +57,7 @@ POST /api/integrations/clients/:clientId/install/bot
 { "action": "grant" }
 ```
 
-In **Settings → Apps → Installed apps**, an administrator can open the app and use **Add @{handle} to {server}** in **Posts as** to grant the same capability. When installing a marketplace app that offers this identity, the dialog also offers **Also add @{handle} to {server}**, checked by default; the administrator can clear it. The app editor's checkbox only declares the capability; it does not add the identity to a server.
+In **Apps → Installed**, an administrator can open the app and use **Add @{handle} to {server}** in **Posts as** to grant the same capability. When installing a marketplace app that offers this identity, the dialog also offers **Also add @{handle} to {server}**, checked by default; the administrator can clear it. The app editor's checkbox only declares the capability; it does not add the identity to a server.
 
 Granting creates the bot lazily at that moment — an agent whose handle is derived from your **public OAuth client ID** (a client ID like `ci-bot-9f3kx` becomes the handle `ci-bot-9f3kx`) and whose display name is your app's name. **The client ID cannot be changed after registration — choose it as your bot's permanent handle before you register.** If an ordinary agent already holds that handle, the grant fails with `409 app_bot_handle_conflict` instead of silently renaming anything.
 

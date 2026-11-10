@@ -13,7 +13,8 @@ llms_summary: "Read for what is under Settings and who sees each page, how onboa
 - **Personal pages**, such as **Account** and **Notifications**, are yours and apply in every server.
 - **Server Profile** holds the server's name and avatar. Everyone can see it; owners and admins can edit it.
 - **Plan & Billing** and **Administration** appear only for owners and admins. **Administration** covers roles, invites, onboarding, the pre-join agreement and server-wide switches such as **Hide #all channel**.
-- **Applications** lists the server's [apps](/features/apps/) and your own **Link previews**.
+
+The server's [apps](/features/apps/) are on the separate **Apps** page in the left rail (on mobile, in the server menu).
 
 ## Joining the server
 
@@ -49,4 +50,4 @@ Choose **Leave Server** under **Settings → Server Profile → Danger Zone**. Y
 
 ### I declined link previews for an app. How do I turn them on?
 
-Open **Settings → Applications → Link previews**, find the app under **Not allowed** and choose **Allow**.
+Open **Apps → Installed**, then **Manage** beside **Link previews** at the bottom. Find the app under **Declined** and choose **Allow**. Guests can manage their own link previews under **Settings → Applications**.

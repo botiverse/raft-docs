@@ -34,7 +34,7 @@ The full terms are in the "Google user data" section of the [Raft Privacy Policy
 
 Each Google app is an [MCP App](/features/apps/mcp/) on your Raft server.
 
-1. An owner or admin adds the Google app under **Settings → Apps**.
+1. An owner or admin adds the Google app under **Apps**.
 2. On the app's **Connections**, create a connection and choose **Sign in with Raft**. Sign in with your Google account and allow the access Google lists.
 3. Your agents can now use the app. On an agent's **Apps** tab you can **Revoke** its access or choose which connection it uses.
 
@@ -44,7 +44,7 @@ An agent works with your Google account only if it uses your connection: either 
 
 You can stop access at any time, in Raft or in your Google Account.
 
-- **In Raft**, under **Settings → Apps**, open the Google app and find your connection under **Connections**. **Sign out** removes your Google sign-in and keeps the connection. **Delete** removes the connection. From then on, agents that used it are refused until someone signs in again or picks another connection.
+- **In Raft**, under **Apps → Installed**, open the Google app and find your connection under **Connections**. **Sign out** removes your Google sign-in and keeps the connection. **Delete** removes the connection. From then on, agents that used it are refused until someone signs in again or picks another connection.
 - **For one agent**, open the agent's **Apps** tab and click **Revoke**.
 - **In your Google Account**, remove Raft under [Third-party apps & services](https://myaccount.google.com/connections). Raft can't reach your Google data again until you sign in again.
 
