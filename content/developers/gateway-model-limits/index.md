@@ -6,27 +6,29 @@ llms_summary: "Read when you run a model gateway (OpenAI- or Anthropic-compatibl
 
 # Model limits from your gateway
 
-**List each model's context window and output limit in your `/models` response, and Built-in Pi agents use them without anyone typing numbers in.**
+**List each model's context window and output limit in your `/models` response, so Built-in Pi agents can use them without anyone typing numbers in.**
 
-Built-in Pi can reach any model through an **OpenAI-compatible** or **Anthropic-compatible** gateway: you enter the gateway's Base URL, an API key and a model name. Raft then needs two numbers for that model:
+Built-in Pi can reach any model through an **OpenAI-compatible** or **Anthropic-compatible** gateway: the agent's owner enters the gateway's Base URL, an API key and a model name. Raft then needs two numbers for that model:
 
 - **Context window**: the most tokens one request can hold, input and output together. Pi uses it to decide when to compact the conversation.
 - **Max output tokens**: the most tokens the model writes in one reply. Raft sends it as the request's output limit.
 
-For models Pi already knows, the numbers come from Pi's own model table. For any other model, Raft falls back to 200,000 and 8,192, which can be too high for some models and too low for others. This page describes how a gateway reports the real values, so Raft reads them itself.
+For models Pi already knows, the numbers come from Pi's own model table. For any other model, Raft falls back to 200,000 and 8,192, which can be too high for some models and too low for others. This page describes how a gateway reports the real values so that Raft can read them itself.
 
 ::: info Status
-Raft Computer reads these fields starting with an upcoming release; this page will name the version once it ships. Until then, set the two numbers in the agent's **Advanced** settings.
+Raft doesn't read these fields yet: support is coming in an upcoming Raft Computer release, and this page will name the version once it ships. You can add the fields to your gateway now. Until then, the agent's owner sets the two numbers by hand: on the agent's settings, under **Advanced**, **Context window (tokens)** and **Max output tokens**. These appear for OpenAI-compatible and Anthropic-compatible providers with a custom model.
 :::
 
 ## What your gateway returns
 
-Raft reads the endpoint your gateway already serves for listing models, with the same Base URL and API key the agent uses:
+Raft will read the endpoint your gateway already serves for listing models, with the same Base URL and API key the agent uses. The Base URL follows each protocol's convention: an OpenAI-compatible Base URL includes the version path (Raft sends chat requests to `<Base URL>/chat/completions`), and an Anthropic-compatible one doesn't (requests go to `<Base URL>/v1/messages`).
 
 | Gateway type | Request |
 | --- | --- |
 | OpenAI-compatible | `GET <Base URL>/models` with `Authorization: Bearer <API key>` |
-| Anthropic-compatible | `GET <Base URL>/v1/models` with `x-api-key: <API key>` and `anthropic-version: 2023-06-01` |
+| Anthropic-compatible | `GET <Base URL>/v1/models?limit=1000` with `x-api-key: <API key>` and `anthropic-version: 2023-06-01` |
+
+Raft reads one response and doesn't follow pages. Return every model in that response, or at least every model agents use.
 
 The response keeps its usual shape: a `data` array with one object per model, whose `id` is the name the agent sends as `model`. Add two fields to each model object:
 
@@ -50,11 +52,14 @@ The response keeps its usual shape: a `data` array with one object per model, wh
 }
 ```
 
-These are the field names OpenRouter uses. Clients that don't know them ignore them, so adding them doesn't change anything for other tools.
+`context_length` is the name OpenRouter's model list uses; `max_completion_tokens` matches the OpenAI request parameter for the output limit. Clients that don't know these fields ignore them, so adding them doesn't change anything for other tools.
+
+An Anthropic-compatible gateway that already returns the Anthropic Models API's `max_input_tokens` and `max_tokens` doesn't need to add anything: Raft reads those too (see below).
 
 ### Rules for the values
 
-- **Positive whole numbers, in tokens.** Raft ignores a field that is missing, zero, negative, fractional, a string, or above 10,000,000.
+- **Positive whole numbers, in tokens.** Raft ignores a field that is missing, `null`, zero, negative, fractional or a string, a context window above 10,000,000, and a max output above 1,000,000.
+- **Max output must fit in the context window.** If max output tokens is larger than the context window, Raft ignores the max output value.
 - **Leave a field out when you don't know it.** Don't send a guess or a placeholder such as `0` or a provider-wide default: Raft would treat a guess as the real limit.
 - **Report the limit of the model as you route it.** If one `id` can be served by upstreams with different limits, report the smallest, so a request that fits never fails on one of them.
 - **Match `id` to what agents send.** Raft looks the model up by exact, case-sensitive `id`. If you accept aliases, list each alias as its own entry with the same limits.
@@ -66,18 +71,18 @@ If your gateway already uses another common name, you don't need to add a second
 - **Context window:** `context_length`, `context_window`, `max_model_len` (vLLM), `top_provider.context_length` (OpenRouter), then `max_input_tokens` (Anthropic Models API) or `input_token_limit`, used as the context window when no total is given.
 - **Max output tokens:** `max_completion_tokens`, `max_output_tokens`, `top_provider.max_completion_tokens` (OpenRouter), `output_token_limit`, then `max_tokens` on Anthropic-compatible gateways only.
 
-On OpenAI-compatible gateways Raft does not read a bare `max_tokens`, because catalogs use it for different things.
+On OpenAI-compatible gateways Raft doesn't read a bare `max_tokens`, because catalogs use it for different things.
 
-## What Raft does with them
+## What Raft will do with them
 
 Each number is decided on its own, in this order:
 
 1. **The agent's own setting.** Whatever the owner entered under **Advanced** always wins.
-2. **Your gateway's value**, from the fields above.
+2. **Your gateway's value**, from the fields above. It ranks above Pi's table because your gateway knows how it routes each model; so make sure it's right.
 3. **Pi's model table**, when Pi knows this exact model on this endpoint.
 4. **Raft's fallback**: 200,000 for the context window, 8,192 for max output tokens.
 
-When either number is Raft's fallback, the agent's page shows a warning that its limits are Raft's defaults. Once your gateway reports both, the warning goes away.
+When either number comes from Raft's fallback, the agent's page shows the warning "This model may be using Raft default limits". When your gateway reports both, the warning won't appear.
 
 When Raft reads your endpoint:
 
@@ -89,11 +94,18 @@ If the request fails, times out, is too large or isn't valid JSON, or the model 
 
 ## Check your response
 
-Ask for the list with the key an agent uses and look for the two fields on the model:
+List the models with the key an agent uses, and look for the two fields on the model. OpenAI-compatible:
 
 ```sh
 curl -s -H "Authorization: Bearer $API_KEY" "$BASE_URL/models" \
   | jq '.data[] | select(.id == "swe-2-flash") | {id, context_length, max_completion_tokens}'
 ```
 
-Both numbers should be present and match what your upstream accepts. Then restart the agent: the warning about Raft's default limits should no longer appear on its page.
+Anthropic-compatible:
+
+```sh
+curl -s -H "x-api-key: $API_KEY" -H "anthropic-version: 2023-06-01" "$BASE_URL/v1/models?limit=1000" \
+  | jq '.data[] | select(.id == "swe-2-flash") | {id, max_input_tokens, max_tokens, context_length, max_completion_tokens}'
+```
+
+Both numbers should be present and match what your upstream accepts. Once your agents' Computer has the release that reads them, restart an agent on that model: the defaults warning shouldn't appear on its page.
