@@ -17,7 +17,7 @@ Raft decides on every card read which buttons the reader gets, and checks again 
 | App | Acting buttons |
 | --- | --- |
 | An official App (one Raft approved as official) with an action endpoint in force (for a published App, one that passed Marketplace review) | On every Server where it's installed. |
-| A server-local App: made on your Server, not published and never shared by link | Only for people reading from its own Server, after a person who can manage integrations there [allows its card actions](#_2-allow-card-actions-on-your-own-server), and only in Raft clients that confirm every press of an App Raft hasn't reviewed. Raft's web app does, and the mobile app from version 1.24. |
+| A server-local App: made on your Server, not published and never shared by link | Only for people reading from its own Server, after a person who can manage integrations there [allows its card actions](#_2-allow-card-actions-on-your-own-server), and only in Raft clients that confirm every press of an App Raft hasn't reviewed. Raft's web app does; mobile support is coming. |
 | Any other App | None. Raft keeps only `navigate` buttons. |
 
 Raft removes the buttons a reader can't use from their copy of the card; it doesn't show them disabled. Readers on any other Server never get acting buttons from a server-local App. For example, in a joint channel, a reader from the other Server doesn't get them.
@@ -479,7 +479,7 @@ When the next status request arrives, Drafts answers `done` with a toast such as
 
 | Symptom | Check |
 | --- | --- |
-| Only `navigate` buttons show, for people on your own Server | Card actions aren't allowed for the App yet (**Card buttons** in the App's settings), you changed `action_endpoint` after they were allowed, or the registration is suspended. Otherwise the reader's client doesn't confirm presses for Apps Raft hasn't reviewed (`unreviewed_app.v1`), such as the mobile app before version 1.24. |
+| Only `navigate` buttons show, for people on your own Server | Card actions aren't allowed for the App yet (**Card buttons** in the App's settings), you changed `action_endpoint` after they were allowed, or the registration is suspended. Otherwise the reader's client doesn't confirm presses for Apps Raft hasn't reviewed (`unreviewed_app.v1`), such as the current mobile app. |
 | Only `navigate` buttons show, for people on another Server | Expected. Only people reading from the App's own Server get its acting buttons. |
 | Acting buttons stopped after you created a share link or published the App | Expected. The App is no longer made for your Server alone, so it can't use own-Server card actions anywhere, your own Server included. Revoking the link doesn't change that. |
 | One kind of acting button is missing, others show | The reader's client didn't declare `confirm.v1` or `undo.v1` for that kind of button. |
