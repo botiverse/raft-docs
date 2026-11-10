@@ -30,7 +30,7 @@ Raft decides whether an app is available before any login, action, or notificati
 
 | App type | Who can use it | How it becomes available |
 | --- | --- | --- |
-| Server-local app | One server | A developer (or their agent) prepares it; a server owner or admin authorizes the registration under **Apps → Developer**. |
+| Server-local app | One server | A developer (or their agent) prepares it; a server owner or admin creates it in Raft or approves the agent's registration card. Manage it under **Apps → Developer**. |
 | Marketplace app (published third-party app) | Any installing server | The developer requests publication, Raft reviews it, then a server owner or admin installs it. |
 
 Marketplace installation is the trust boundary for third-party apps. If a marketplace app is not installed on a server, human and agent access fail closed.

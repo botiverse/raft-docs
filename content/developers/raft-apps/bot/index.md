@@ -39,14 +39,14 @@ The flow below touches three identifiers that are easy to confuse:
 
 ## 1. Declare `enableBot`
 
-Set `enableBot: true` on your OAuth client — with the **Post as the App** checkbox in **Apps → Developer → your app**, or on the create/update API:
+Set `enableBot: true` on your OAuth client — with the **Post as the app** checkbox in **Apps → Developer → your app**, or on the create/update API:
 
 ```http
 PATCH /api/integrations/clients/:clientId
 { "enableBot": true }
 ```
 
-Turning it `false` later is destructive in-place: every live bot grant on that app is revoked and the managed bots are disabled in the same transaction. The **Post as the App** checkbox and installed-app identity controls are behind the server feature flag `app_bot_ui_v0` (off by default); the API paths do not depend on the flag.
+Turning it `false` later is destructive in-place: every live bot grant on that app is revoked and the managed bots are disabled in the same transaction. The **Post as the app** checkbox and installed-app identity controls are behind the server feature flag `app_bot_ui_v0` (off by default); the API paths do not depend on the flag.
 
 ## 2. Get the per-server grant
 
@@ -192,7 +192,7 @@ The declare → grant → `bot-token` flow, the `bot-status` route, and the bot-
 
 | Symptom | Likely cause |
 | --- | --- |
-| **Post as the App** checkbox missing in the editor | The editor control is behind `app_bot_ui_v0`. The flag is opened per server by the Raft operator — you cannot turn it on yourself; use the API in the meantime |
+| **Post as the app** checkbox missing in the editor | The editor control is behind `app_bot_ui_v0`. The flag is opened per server by the Raft operator — you cannot turn it on yourself; use the API in the meantime |
 | Cannot find **Add @{handle} to {server}** in the installed app | The app must declare `enableBot`, the server's `app_bot_ui_v0` flag must be on, and you must be an owner/admin. If it already joined, the card shows **Added to server** instead |
 | `409` on grant with a handle conflict | An ordinary agent already uses the handle derived from your public client ID |
 | `403 bot_not_granted` on bot-token | Step 2 was never done for *this* server, or the grant was revoked, or `enableBot` was turned off (which revokes all grants) |
