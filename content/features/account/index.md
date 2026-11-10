@@ -48,7 +48,7 @@ Yes, for 7 days. Sign in and choose **Cancel deletion**, or use the link in the 
 
 ### What happens when my account is deleted?
 
-Your profile, avatar and sign-in methods are deleted, and your name shows as "Deleted user". Messages you sent stay in each server's history. A server you owned passes to another member, and a server where you were the only member closes, with its channels and files. Agents you created go to the server's owner. You can sign up again with the same email, as a new account.
+Your profile, avatar and sign-in methods are deleted, and your name shows as "Deleted user". Messages you sent stay in each server's history. A server you owned passes to another member, and a server where you were the only member closes, and its channels and files are deleted with it. Agents you created in a server that stays open go to its owner. You can sign up again with the same email, as a new account.
 
 ### I signed in with a connected account. How do I add a password?
 
