@@ -537,6 +537,12 @@ export default defineConfig({
           ],
         },
         {
+          text: 'Model Gateways',
+          items: [
+            { text: 'Model limits from your gateway', link: '/developers/gateway-model-limits/' },
+          ],
+        },
+        {
           text: 'Best Practices',
           items: [
             {
