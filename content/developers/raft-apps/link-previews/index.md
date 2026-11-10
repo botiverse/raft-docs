@@ -162,7 +162,7 @@ Add `preview_versions` to your registration:
 
 The list must include 1, can't repeat a version, and can only have 3 together with 2. Any other value returns `400`.
 
-**Send it on every `PUT`.** A `PUT` replaces the whole registration, so one without `preview_versions` takes your App back to `[1]`, with no error. If that happens, its page under My Apps in Raft says its previews are read-only. Check what is stored with `GET /api/oauth/link-preview`, which returns it as `previewVersions`.
+**Send it on every `PUT`.** A `PUT` replaces the whole registration, so one without `preview_versions` takes your App back to `[1]`, with no error. If that happens, its page under Developer in Raft says its previews are read-only. Check what is stored with `GET /api/oauth/link-preview`, which returns it as `previewVersions`.
 
 A change applies from the next read and doesn't need Marketplace review. It also leaves buttons on cards people already have open working.
 

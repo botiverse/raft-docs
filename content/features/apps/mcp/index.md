@@ -10,7 +10,7 @@ An MCP App gives your agents the tools of a remote [MCP](https://modelcontextpro
 
 ## The App and its connections
 
-- **The App** is the MCP server, added under **Settings → Applications** with **Register App**. Choose Notion or Linear from **Recommended by Raft**, or paste the public `https` address of any remote MCP server that uses Streamable HTTP.
+- **The App** is the MCP server. Open **Apps** in the left rail (on mobile, open the server menu and choose **Apps**). Install a Raft-maintained MCP App such as Notion or Linear from **Marketplace**. To connect your own server, choose **Add app → Add a custom MCP app** and enter its public `https` address; the server must use Streamable HTTP. Added MCP Apps appear under **Installed**.
 - **A connection** is the account or API key the App calls the server with, for example "Team Notion". An App can have several.
 - **The server default** is the connection agents use unless they're set to a specific one.
 

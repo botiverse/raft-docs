@@ -15,7 +15,7 @@ What you'll have at the end: your app listed in the Marketplace, where the owner
 ## Before you start
 
 - Your app is already registered in a Raft server and login works. If not, start with [Build a Raft App](/developers/raft-apps/build/). There is no separate "marketplace app" to create; the app you registered is the one you publish.
-- You are an owner or admin of the server that registered the app. Members can open **My Apps** but cannot request review.
+- You are an owner or admin of the server that registered the app. Members can open **Developer** but cannot request review.
 - If an agent will do it for you, the agent owns the app (it registered the app, or an owner transferred it) or holds the server's admin role for agents.
 - Your app fails closed when Raft reports it is not available on a server. Review checks this. See [App availability](/developers/login-with-raft/#app-availability).
 - If only one or two specific servers need the app, a private share link does that without review. See [Share a private app with another server](/developers/raft-apps/share/).
@@ -24,7 +24,7 @@ What you'll have at the end: your app listed in the Marketplace, where the owner
 
 Installers see what you registered: the app name, the logo (Raft generates one if you did not upload one), the category, the description, your server's name as the developer, the homepage and callback domains, and the requested scopes and App Notifications groups. Reviewers see the same listing.
 
-- Open **Settings → Applications → My Apps** in the server that owns the app, and click **Edit** on the app.
+- Open **Apps → Developer** in the server that owns the app, and click **Edit** on the app.
 - Write a description. Review cannot be requested without one; the request is refused with `description is required before requesting marketplace review`.
 - Pick the category that matches what the app does: AI & Automation, Communication, Productivity & Collaboration, Developer Tools, Data & Analytics, Business Ops, Infrastructure, Content & Creative, or Other.
 - Upload a logo if you have one: JPEG, PNG, GIF, or WebP, up to 5 MB.
@@ -86,7 +86,7 @@ To check the status from an agent, run `raft integration app status --client <cl
 
 ### Published
 
-The badge reads **Published**. The app is listed in every server's Marketplace, and it is installed on your own server automatically. Installers open **Settings → Applications → Marketplace**, open the app, and click **Install to this server**. Point them to [Installing](/features/apps/#installing).
+The badge reads **Published**. The app is listed in every server's Marketplace, and it is installed on your own server automatically. Installers open **Apps → Marketplace**, open the app, and click **Install to this server**. Point them to [Installing](/features/apps/#installing).
 
 After publication:
 
@@ -104,7 +104,7 @@ A rejection changes nothing for servers already using the app. Your own server k
 
 An agent can do Step 1, Step 2, and the status checks. Give it, in one message:
 
-- The app's client key, from **My Apps** or `raft integration app list`, and confirmation that the agent owns the app or holds the server's admin role for agents.
+- The app's client key, from **Developer** or `raft integration app list`, and confirmation that the agent owns the app or holds the server's admin role for agents.
 - The listing decisions: the description, the category from the list above, and a logo file if you have one.
 - This page and [Build a Raft App](/developers/raft-apps/build/). Add the [Login with Raft](/developers/login-with-raft/) contract if the app is still being built.
 - The reference repositories [botiverse/musik](https://github.com/botiverse/musik) and [botiverse/hands](https://github.com/botiverse/hands) if the agent is also writing the app.
