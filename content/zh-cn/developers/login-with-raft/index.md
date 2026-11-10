@@ -214,6 +214,38 @@ Raft 里的 scope 有两种不同的含义。OAuth 的 `scope` 参数控制 clai
 
 一个应用要在多个服务器上使用，仍然只是一个 OAuth 客户端。在它的来源服务器上注册一次，再安装到其他每个服务器上：通过[市场](/zh-cn/developers/raft-apps/publish/)，或通过[私有共享链接](/zh-cn/developers/raft-apps/share/)。这样，同一个人可以在每个服务器上各有一个登录，各有自己的 token。你的应用用 `server_id` 区分这些登录；这个人的 `sub` 在所有登录里都相同。用同一个 bearer token 调用 `/api/oauth/serverinfo`，可以读取当前绑定服务器的最新元数据；它不会选择别的服务器，也不需要额外的 scope。
 
+### 更改客户端 ID {#changing-your-client-id}
+
+没有上架市场的应用可以更改自己的客户端 ID。在应用的编辑页面修改 **客户端 ID** 字段，或者让拥有或管理这个应用的 Agent 运行：
+
+```sh
+raft integration app update --client <current-id> --client-key <new-id>
+```
+
+新 ID 遵循注册时的格式：3 到 64 个字符，只能用小写字母、数字和连字符，以字母开头。一个应用每天最多更改五次 ID，也可以改回自己用过的旧 ID。
+
+只要你的应用被使用过（签发过 token，有过授权、登录请求，或者有过经过验证的链接预览注册），它的旧 ID 就会永久保留为你的应用的别名。其他应用不能注册这个 ID，一个应用最多保留 20 个旧 ID。从未被使用过的应用，旧 ID 会直接释放。
+
+你不需要马上更新任何东西。你的部署可以继续发送旧 ID，等方便的时候再切换：
+
+| 项目 | 更改之后 |
+| --- | --- |
+| access token、授权、安装 | 不受影响；它们不和 ID 绑定。 |
+| 客户端凭据和登录请求 | 旧 ID 和新 ID 都能用。 |
+| ID token 的 `aud` | 你的应用发起登录时出示的那个 ID。 |
+| Agent JWT 的 `aud` | Agent 传给 `--service` 的 ID。让 Agent 用你的应用校验的那个 ID 来申请。 |
+| 链接预览、resolve 和卡片操作请求的 `aud` | 你的 `raft-link-preview.json` 最近一次证明的 ID。在你更新这个文件之前，什么都不会变。 |
+| userinfo 中的 `client_id`、应用列表、应用消息上显示的应用名称 | **立即变为新 ID。** |
+| 应用的机器人 | 保留原来的 handle。 |
+
+如果你的后端会把 userinfo 里的 `client_id` 和配置的值做比较，先让它接受新 ID，再去更改。
+
+正在运行的 Agent 在重启之前，提示词里仍然是旧 ID，而旧 ID 也仍然能解析。在 `raft integration invoke` 和 `raft integration env` 中要使用新 ID：较旧的 CLI 会在当前的应用列表里查找 ID，找不到旧 ID。
+
+已在市场上架的应用、官方应用和审核中的应用，不能自己更改 ID。这样的请求会返回 `CLIENT_KEY_CHANGE_NEEDS_REVIEW`，由 Raft 团队审核后代为更改。少数带有特殊 scope 的旧 ID 完全不能更改（`CLIENT_KEY_CARRIES_TRUST`）。其他拒绝原因有 `CLIENT_KEY_TAKEN`、`CLIENT_KEY_ALIAS_LIMIT` 和 `CLIENT_KEY_RENAME_RATE_LIMITED`。
+
+删除一个被使用过的应用后，它的 ID 同样会保留。只有原来拥有这个应用的服务器可以再次使用这些 ID，而且只能用于一个新应用；新应用不会继承旧应用的任何授权或 token。
+
 ## 发起登录与回调约定 {#starting-a-login-and-the-callback-contract}
 
 ### 登录入口 URL {#the-setup-url}
@@ -877,7 +909,7 @@ Agent 通过 Raft 调用某个操作时，Raft 会带上操作参数，以及经
 - Agent 目前是该服务器的成员。
 - Agent 对该应用的访问没有被撤销。
 
-audience 始终是注册的 client key，有效期固定为五分钟；请求不接受自定义的 audience 或过期时间。是否接受这些 JWT，由你的应用按下文的方法校验后决定；不校验 Raft JWT 的应用不受影响。要停止签发新的 JWT，可以禁用或卸载应用，或撤销该 Agent 的访问。
+audience 是 Agent 传给 `--service` 的 client key，它必须是你的应用当前的客户端 ID，或者是它的某个[旧 ID](/zh-cn/developers/login-with-raft/#changing-your-client-id)。有效期固定为五分钟；请求不接受自定义的 audience 或过期时间。是否接受这些 JWT，由你的应用按下文的方法校验后决定；不校验 Raft JWT 的应用不受影响。要停止签发新的 JWT，可以禁用或卸载应用，或撤销该 Agent 的访问。
 
 服务器、CLI 和托管运行器的守护进程，三者都必须支持这项功能；请查看 `raft integration token --help`，并升级不支持的运行时。
 
