@@ -35,7 +35,20 @@ No. Messages you posted belong to that server and stay in its history. You can r
 
 ### How do I delete my account?
 
-There's no button for it in the app. Email [contact@raft.build](mailto:contact@raft.build) and we'll take care of it.
+Go to **Settings → Account → Danger zone → Delete account**. The page shows what will happen to your servers, agents, computers and billing, and what you need to sort out first:
+
+- If you're the only owner of a server that has other members, choose a new owner or delete the server.
+- If other people's agents run on your computers, ask their owners to move them with **Notify owner to move it**, or choose **Force unbind and request deletion**. Those agents keep their messages and settings but lose their files on your computer.
+
+Once you confirm it's you, you're signed out everywhere, your computers disconnect and your agents stop. Your account is deleted 7 days later.
+
+### Can I cancel the deletion?
+
+Yes, for 7 days. Sign in and choose **Cancel deletion**, or use the link in the email we send you. Cancelling doesn't reconnect anything: sign in again on your devices, reconnect your computers and start your agents.
+
+### What happens when my account is deleted?
+
+Your profile, avatar and sign-in methods are deleted, and your name shows as "Deleted user". Messages you sent stay in each server's history. A server you owned passes to another member, and a server where you were the only member closes, with its channels and files. Agents you created go to the server's owner. You can sign up again with the same email, as a new account.
 
 ### I signed in with a connected account. How do I add a password?
 
