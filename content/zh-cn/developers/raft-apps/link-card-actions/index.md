@@ -22,9 +22,9 @@ llms_summary: "给应用的链接卡片加上执行操作的按钮。包括谁�
 
 查看者用不了的按钮，Raft 会从这个人看到的卡片里删掉，而不是显示为禁用。在其他任何服务器上阅读的人，都拿不到服务器本地应用的执行操作的按钮。例如在联合频道里，来自另一个服务器的查看者就拿不到。
 
-Raft 没有审核过服务器本地应用，所以这类应用的执行操作的按钮每次被按下之前（包括带撤销倒计时的按钮），Raft 的客户端都会请这个人确认。确认内容会写明你的应用名，说明 Raft 没有审核过它，并说明你的应用会知道是谁按的。只有显示这个确认的客户端才能拿到应用的执行操作的按钮；在其他客户端里，这个人只看到 `navigate` 按钮。
+Raft 没有审核过服务器本地应用，所以这类应用的执行操作的按钮每按一次，Raft 都会请这个人确认。确认内容写明你的应用名，说明 Raft 没有审核过它，并说明你的应用会知道是谁按的。即使是带撤销倒计时的按钮，也会先请对方确认。只有显示这个确认的客户端才能拿到应用的执行操作的按钮；在其他客户端里，这个人只看到 `navigate` 按钮。
 
-为应用创建 [私有分享链接](/zh-cn/developers/raft-apps/share/)，或者把它发布到市场，都会让其他服务器可以安装它。这两种改变都是永久的，都会结束它在自己服务器上的卡片操作，你自己的服务器也一样。
+应用一旦有了 [私有分享链接](/zh-cn/developers/raft-apps/share/)，或者发布到了市场，就不再是只为你的服务器创建的应用，之后撤销链接也不会改变这一点。它在任何地方都不能再使用本服务器卡片操作，包括它自己的服务器。
 
 只有人能点击。Agent 拿不到链接卡片。和任何预览一样，点击的人必须已经通过 Login with Raft 登录过你的应用，并且仍然能阅读这条消息。
 
@@ -34,7 +34,7 @@ Raft 没有审核过服务器本地应用，所以这类应用的执行操作的
 
 1. 你的回调用一张带 `execute` 按钮的卡片回答版本 2 请求。
 2. Raft 检查你的应用能否为这位查看者提供执行操作的按钮，为每个启用的 `execute` 按钮签一个只能用一次的 handle，交给查看者的客户端。这时还不保存任何东西。
-3. 这个人点击按钮。如果是服务器本地应用，Raft 的客户端先请这个人确认，见上文。如果按钮带 `confirm: "prepare"`，Raft 向你的操作端点发一个 **prepare** 请求，再在自己的对话框里显示你的确认文字。如果按钮带 `undoWindowMs`，客户端会倒计时，同时显示 **撤销** 按钮。
+3. 这个人点击按钮。如果是服务器本地应用，Raft 会请这个人确认这次点击，见上文。如果按钮带 `confirm: "prepare"`，Raft 向你的操作端点发一个 **prepare** 请求，再在自己的对话框里显示你的确认文字。如果按钮带 `undoWindowMs`，客户端会倒计时，同时显示 **撤销** 按钮。
 4. Raft 用当前状态核对 handle，为这次点击记录一条 **操作记录（operation）**，并向你的操作端点发一个 **execute** 请求。
 5. 你的应用检查、执行，并用一个状态回答。如果需要更长时间，就先回答 `accepted`，之后用 [终态更新](#_7-finish-later-with-a-terminal-update) 或在 [status 回答](#_8-answer-status-requests) 里报告结果。
 6. Raft 把结果告诉这个人，并重新读取卡片。
@@ -63,23 +63,15 @@ prepare、execute 和 status 请求都发到这一个 URL，用请求体里的 `
 
 ## 2. 在你自己的服务器上允许卡片操作 {#_2-allow-card-actions-on-your-own-server}
 
-官方应用跳过这一步。服务器本地应用只注册操作端点还不够：要由你的服务器上能管理集成的人（所有者或管理员）在应用的设置里允许它的卡片操作。对方确认的是 Raft 显示的那个准确的操作端点 URL，所以允许的就是 Raft 将要调用的。
+官方应用跳过这一步。服务器本地应用只注册操作端点还不够：要由你的服务器上有管理集成权限的人在应用的设置里允许它的卡片操作。对方确认的是准确的操作端点 URL，所以允许的就是 Raft 将要调用的。
 
-- 允许只针对这一个 URL。如果你修改了操作端点，执行操作的按钮立即停止工作，直到有人允许新的 URL。
+这个设置界面即将推出。在它上线之前，没有人能允许卡片操作，所以服务器本地应用的按钮只能跳转。
+
+- 这项允许只针对这个准确的 URL。只要应用的操作端点指向别的地址，它的按钮就只能打开链接。如果端点改回已允许的 URL，按钮会重新执行操作。要使用别的 URL，需要有人允许那一个。
 - 撤回允许后，执行操作的按钮立即关闭，别人已经打开的卡片也一样：下一次点击会被拒绝。
 - 注册因为域名证明失败而被暂停期间，执行操作的按钮也会关闭。证明重新成功后会恢复。
 - 即使已经允许，这些按钮也只在会为 Raft 没审核过的应用逐次确认点击的客户端里执行操作（[见上文](#who-can-use-acting-buttons)）。
 - 在撤回之前刚被 Raft 接受的点击，仍可能到达你的端点。已经开始的操作记录，status 请求和终态更新照常工作。
-
-设置用的是下面这些路由。它们是管理界面路由：需要一个已登录的人的会话，以及你的服务器的 `X-Server-Id` 请求头，不接受应用的客户端凭据，Agent 也不能调用。`:clientId` 是应用记录的 UUID（见 [三个标识符，三个不同的值](/zh-cn/developers/raft-apps/bot/#three-identifiers-three-different-values)）。
-
-| 请求 | 结果 |
-| --- | --- |
-| `GET /api/integrations/clients/:clientId/action-endpoint` | 当前生效的操作端点 `action_endpoint`，以及 `own_server_actions`：`{ "state", "confirmed_action_endpoint", "confirmed_at", "confirmed_by", "in_force" }`。`state` 是 `no_endpoint`、`not_allowed`、`endpoint_changed`（要允许新的 URL）、`suspended` 或 `allowed`。`confirmed_by` 是允许它的那个人的 `{ "id", "name" }`，或者 `null`。`state` 为 `allowed` 时，`in_force` 为 `true`。不是服务器本地应用时，`own_server_actions` 为 `null`。 |
-| `PUT /api/integrations/clients/:clientId/action-endpoint/own-server-actions`，请求体 `{ "action_endpoint": "<the URL exactly as shown>" }` | 为这个 URL 允许卡片操作。 |
-| `DELETE /api/integrations/clients/:clientId/action-endpoint/own-server-actions` | 撤回允许。 |
-
-`PUT` 在这些情况下返回 `409`：应用在显示之后改了操作端点，代码是 `OWN_SERVER_ACTIONS_ENDPOINT_CHANGED`（重新读取，再允许新的端点）；应用没有操作端点，代码是 `OWN_SERVER_ACTIONS_NO_ENDPOINT`；应用不是服务器本地应用，代码是 `OWN_SERVER_ACTIONS_NOT_SERVER_LOCAL`。没有这项权限的人，或者在其他服务器上的人，会收到 `404`。
 
 ## 3. 在卡片上加入执行操作的按钮 {#_3-add-acting-buttons-to-the-card}
 
@@ -391,7 +383,7 @@ status 请求可能针对一个你从未认领过的 `operation_id`：它的 exe
 
 | 回答 | 含义 |
 | --- | --- |
-| `404` | 这个服务器上没有开放卡片操作。客户端在本次会话中不再提供执行操作的按钮。 |
+| `404` | 卡片操作暂不可用。客户端在本次会话中不再提供执行操作的按钮。 |
 | `409` `VIEW_PENDING` | 这张卡片上之前的操作还没完成。 |
 | `409` `HANDLE_USED` | 这个按钮已经用过。 |
 | `410` `HANDLE_INVALID` | 卡片已过期（[见上文](#revisions-and-stale-clicks)）。客户端会重新读取它。 |
@@ -449,7 +441,9 @@ Drafts 是一个服务器本地的客服应用。收到问题后，它写好一�
 
 对 Dana 以外的人，发送同一张卡片，但在 Approve 按钮的属性里加上 `"disabledReason":"Only Dana can approve this draft."`，或者干脆不放这个按钮。完全看不到这份草稿的查看者，得到 `{"version":3,"items":[]}`，也就是普通链接。
 
-**prepare。** Dana 点击 **Approve**，并在 Raft 提示它没有审核过 Drafts 时确认之后，Drafts 验证断言，检查 `sub` 是草稿 42 指定的审核人、草稿仍是 `v3`，然后回答：
+因为 Raft 没有审核过 Drafts，Dana 每次按它的执行操作的按钮，Raft 都会请 Dana 确认。
+
+**prepare。** Dana 点击 **Approve** 时，Drafts 验证断言，检查 `sub` 是草稿 42 指定的审核人、草稿仍是 `v3`，然后回答：
 
 ```json
 {
@@ -485,10 +479,9 @@ Drafts 是一个服务器本地的客服应用。收到问题后，它写好一�
 
 | 现象 | 检查 |
 | --- | --- |
-| 你自己服务器上的人只看到 `navigate` 按钮 | 读取 `GET …/action-endpoint`：`own_server_actions.state` 必须是 `allowed`。否则就是还没有允许卡片操作（`not_allowed`），允许之后你改了 `action_endpoint`（`endpoint_changed`），或者注册被暂停了（`suspended`）。如果已经是 `allowed`，那就是查看者的客户端没有声明 `unreviewed_app.v1`；目前已发布的客户端都还没有声明。 |
+| 你自己服务器上的人只看到 `navigate` 按钮 | 还没有人允许这个应用的卡片操作（设置界面即将推出），允许之后你改了 `action_endpoint`，或者注册被暂停了。如果都不是，那就是查看者的客户端不会为 Raft 没审核过的应用确认点击（`unreviewed_app.v1`）；目前已发布的客户端都还不会。 |
 | 其他服务器上的人只看到 `navigate` 按钮 | 这是预期行为。只有从应用自己的服务器阅读的人才能拿到它的执行操作的按钮。 |
-| 创建分享链接或发布应用之后，执行操作的按钮不能用了 | 这是预期行为。应用已经不再是服务器本地应用，这个改变是永久的。 |
-| 允许卡片操作时返回 `409` `OWN_SERVER_ACTIONS_ENDPOINT_CHANGED` | 应用的操作端点在显示之后改变了。重新读取，允许当前生效的那一个。 |
+| 创建分享链接或发布应用之后，执行操作的按钮不能用了 | 这是预期行为。应用已经不再是只为你的服务器创建的应用，所以在任何地方都不能使用本服务器卡片操作，包括你自己的服务器。撤销链接也不会改变这一点。 |
 | 某一类执行操作的按钮不见了，其他的还在 | 查看者的客户端没有为这类按钮声明 `confirm.v1` 或 `undo.v1`。 |
 | 整张卡片变成了普通链接 | 回答无效。检查每个 `execute` 操作是否恰好带 `confirm` 和 `undoWindowMs` 其中之一，`action_id` 是否有重复，卡片是否超过 4 个按钮。 |
 | 点击一直返回 `410` | handle 绑定的某样东西一直在变。例如部署脚本每次启动都发送不同的注册（不同的操作端点或路径集合），每次都会让屏幕上的按钮全部失效。 |
