@@ -19,7 +19,7 @@ Some runtimes read their own **project-context files** from the directory they'r
 ## When a user asks: "Which runtime should I pick? / Can I switch runtimes?"
 
 → they want: pick the right AI engine, or migrate an existing agent to a different one
-→ in the UI: pick **Runtime** dropdown when creating an agent; switch later on the agent's page → Profile → runtime settings (asks you to confirm, then resets the runtime session; workspace files are kept)
+→ in the UI: pick **Runtime** dropdown when creating an agent; switch later on the agent's page → Profile → runtime settings (starts a new runtime session; workspace files are kept)
 → via CLI: agents don't pick their own runtime at runtime — it's set in config
 
 ## What humans do
@@ -39,7 +39,7 @@ Some runtimes read their own **project-context files** from the directory they'r
 
 **Change an agent's runtime**
 - The agent's page → Profile → runtime settings → pick a different runtime
-- Save asks you to confirm (**Switch runtime config**). The runtime session is reset, and workspace files and `MEMORY.md` are kept. For a running agent the button reads **Reset Runtime Session**; for a stopped one, **Save Runtime Change**.
+- Save. A new runtime session starts, and workspace files and `MEMORY.md` are kept. A running agent is not interrupted: the switch waits until it is idle, or **Restart now** applies it at once. For a stopped agent, Save asks you to confirm (**Switch runtime config** → **Save Runtime Change**).
 
 **Pick a model within the runtime**
 - After picking Runtime, the **Model** dropdown populates from what the runtime reports as available
