@@ -264,7 +264,7 @@ JCS 是 RFC 8785 定义的 JSON 规范化方案。Raft 对收到的描述计算�
 6. 带 `confirm` 的按钮：`prepared_action_id` 对应的 prepared 记录存在、没有过期，摘要等于 `prepared_digest`。如果已经过期，用代码 `STALE_PREPARED` 拒绝。
 7. 执行，以 `operation_id` 为键记录结果，然后回答。
 
-用一个状态回答，只能用这几个字段：`status`（必填）、`code`（1–64 个字符）、`attribution`（1–200 个字符）和 `toast`（`{ "tone": "info" | "success" | "warning", "text": … }`，1–200 个字符）。
+用一个状态回答，只能用这几个字段：`status`（必填）、`code`（1–64 个字符）、`attribution`（1–200 个字符）和 `toast`（`{ "tone": "info" | "success" | "warning", "text": … }`，1–200 个字符）。[status 回答](#_8-answer-status-requests)也适用同样的限制。
 
 ```json
 {"status":"done"}
@@ -281,7 +281,7 @@ JCS 是 RFC 8785 定义的 JSON 规范化方案。Raft 对收到的描述计算�
 
 - `done`、`refused` 和 `failed_not_sent` 是终态。终态不会再改变。
 - **没有回答永远不算成功。** Raft 把这条操作记录记为 `unknown`，之后通过 [status](#_8-answer-status-requests) 了解结果。只有当 Raft 的请求根本没有发出去时（你的端点 DNS 解析失败，或者地址不是公开地址），Raft 才会记为操作没有执行。
-- 这个人看到的是 Raft 按状态给出的固定提示，不是你在 execute 回答里写的 `toast`、`code` 或 `attribution`。你自己的文字只能通过 status 回答传给对方。
+- 操作结束时，如果你带了 `toast`，这个人看到的是你的 `toast`，否则是 Raft 按状态给出的提示。不管是 execute 直接回答了终态（`done`、`refused`、`failed_not_sent`），还是之后的 status 回答结束了操作，都是这样。execute 回答终态后，客户端不再跟踪，之后也不会再有 status 请求。
 - 如果这项工作可能超过大约两秒，立刻回答 `accepted`，稍后再完成。
 
 ## 7. 稍后用终态更新报告结果 {#_7-finish-later-with-a-terminal-update}
@@ -315,7 +315,7 @@ JCS 是 RFC 8785 定义的 JSON 规范化方案。Raft 对收到的描述计算�
 | `429` `RATE_LIMITED` 或 `LOCK_TIMEOUT` | 更新太频繁，或者 Raft 暂时繁忙。等 `Retry-After` 指定的时间后，用同一个 `update_id` 重试。 |
 | `500` | 用同一个 `update_id` 重试。 |
 
-用同一个 `update_id` 和相同的内容重试，会再次得到第一次的回答，即使 token 已经过期。应用被卸载之后、卡片操作被撤销之后、注册改变之后，Raft 仍然接受更新；但应用的凭据被停用之后就不再接受。
+用同一个 `update_id` 和相同的内容重试，会再次得到第一次的回答，即使 token 已经过期；但只到操作进入终态后大约 24 小时为止。之后 Raft 已经删除了用过的 token，会回答 `410` `UPDATE_TOKEN_INVALID`。应用被卸载之后、卡片操作被撤销之后、注册改变之后，Raft 仍然接受更新；但应用的凭据被停用之后就不再接受。
 
 ## 8. 回答 status 请求 {#_8-answer-status-requests}
 
@@ -334,7 +334,7 @@ Raft 发出 execute 之后，会在点击者的客户端询问进展时，向你
 - 终态会结束一条未完成的操作记录。`accepted` 或 `executing` 会把 `unknown` 的操作记录改为已接受。`unknown` 不改变任何东西。
 - 如果 `sub` 已经不能再看到这个对象，回答 `not_visible`。Raft 就不显示任何私有内容。它从不表示「没有执行」。
 - 只有当你的回答不是 `not_visible`，并且这个人仍然能阅读这条消息时，Raft 才显示你的 `toast`。Raft 不保存它。
-- Raft 只询问 execute 当初发往的那个操作端点。如果你的注册里已经没有这个端点（你修改或删除了它，或者注册被暂停），Raft 就不再询问这条操作记录。有操作记录还没完成时，不要修改操作端点。
+- Raft 只询问 execute 当初发往的那个操作端点。如果你的注册里已经没有这个端点（你修改或删除了它，或者注册被暂停），仍是 `accepted` 或 `unknown` 的操作记录会在下一次 status 检查时被标记为待对账，不用等 24 小时，Raft 也不再询问它。有操作记录还没完成时，不要修改操作端点。
 - 点击 24 小时后仍是 `accepted` 或 `unknown` 的操作记录会被标记为待核对。之后的终态 status 回答仍然可以结束它。Raft 永远不会重发 execute。
 
 ### 你没有记录的操作记录 {#an-operation-you-have-no-record-of}
@@ -375,7 +375,7 @@ status 请求可能针对一个你从未认领过的 `operation_id`：它的 exe
 | 服务器本地应用的 execute | 另外，每人在每个服务器上对每个应用每分钟 10 次 | `429` `RATE_LIMITED` |
 | 一个人未完成的操作记录 | 每个服务器 20 条，计入仍在进行或尚未确认的操作记录 | `429` `OPEN_OPERATIONS_CAP` |
 | 一个安装未完成的操作记录 | 1,000 条，也计入等待核对的操作记录 | `429` `OPEN_OPERATIONS_CAP` |
-| 一张卡片上未完成的操作记录 | 1 条：有一条未完成时，这张卡片上的其他点击会被拒绝 | `409` `VIEW_PENDING` |
+| 一个人看到的一张卡片上未完成的操作记录 | 1 条：有一条未完成时，这个人在这张卡片上的下一次点击会被拒绝；其他人仍然可以点击 | `409` `VIEW_PENDING` |
 | 发给你应用的 status 请求 | 每条操作记录每 2 秒最多 1 次 | Raft 根据自己的记录回答 |
 | 终态更新 | 每个安装每分钟 600 次 | `429` `RATE_LIMITED`，带 `Retry-After` |
 
@@ -384,7 +384,7 @@ status 请求可能针对一个你从未认领过的 `operation_id`：它的 exe
 | 回答 | 含义 |
 | --- | --- |
 | `404` | 卡片操作暂不可用。客户端在本次会话中不再提供执行操作的按钮。 |
-| `409` `VIEW_PENDING` | 这张卡片上之前的操作还没完成。 |
+| `409` `VIEW_PENDING` | 你在这张卡片上之前的操作还没完成。 |
 | `409` `HANDLE_USED` | 这个按钮已经用过。 |
 | `410` `HANDLE_INVALID` | 卡片已过期（[见上文](#revisions-and-stale-clicks)）。客户端会重新读取它。 |
 | `410` `PREPARED_INVALID` | 确认在 5 分钟后过期了，或者对不上。请重新点击。 |
@@ -473,7 +473,7 @@ Drafts 是一个服务器本地的客服应用。收到问题后，它写好一�
 4. 检查 prepared 记录：存在、不超过 5 分钟，摘要等于 `prepared_digest`。
 5. 以应用身份把回复发到消息列，以 `operation_id` 为键记录结果，回答 `{"status":"done"}`。如果发送在任何内容发出之前就失败了，回答 `failed_not_sent`。
 
-下一个 status 请求到达时，Drafts 回答 `done`，并带上一条提示，例如「Reply sent to the thread.」，Dana 就能看到它。
+Drafts 可以在这个回答里带上一条提示，例如 `{"status":"done", "toast":{"tone":"success", "text":"Reply sent to the thread."}}`，Dana 就能看到它。回答终态之后，不会再有 status 请求。
 
 ## 故障排查 {#troubleshooting}
 

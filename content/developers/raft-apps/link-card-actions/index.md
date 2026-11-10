@@ -264,7 +264,7 @@ Check in this order:
 6. For a `confirm` button: your prepared record for `prepared_action_id` exists, hasn't expired, and has the digest in `prepared_digest`. If it expired, refuse with the code `STALE_PREPARED`.
 7. Act, record the outcome under `operation_id`, and answer.
 
-Answer with a status, and nothing else from this list: `status` (required), `code` (1–64 characters), `attribution` (1–200 characters), and `toast` (`{ "tone": "info" | "success" | "warning", "text": … }`, 1–200 characters).
+Answer with a status, and nothing else from this list: `status` (required), `code` (1–64 characters), `attribution` (1–200 characters), and `toast` (`{ "tone": "info" | "success" | "warning", "text": … }`, 1–200 characters). The same limits apply to [status answers](#_8-answer-status-requests).
 
 ```json
 {"status":"done"}
@@ -281,7 +281,7 @@ Answer with a status, and nothing else from this list: `status` (required), `cod
 
 - `done`, `refused` and `failed_not_sent` are final. Nothing changes a final state.
 - **No answer is never a success.** Raft records the operation as `unknown` and finds out later through [status](#_8-answer-status-requests). Only when Raft's request never left (your endpoint's DNS failed, or its address isn't public) does Raft record that the action was not carried out.
-- The person sees Raft's fixed message for the state, not the `toast`, `code` or `attribution` of your execute answer. Your own words reach them only through a status answer.
+- When the operation ends, the person sees your `toast` if you sent one, otherwise Raft's message for the state. This holds whether your execute answer is final (`done`, `refused`, `failed_not_sent`) or a later status answer finishes it. A final execute answer ends the client's tracking, so no status request follows it.
 - If the work can take longer than about two seconds, answer `accepted` at once and finish later.
 
 ## 7. Finish later with a terminal update {#_7-finish-later-with-a-terminal-update}
@@ -315,7 +315,7 @@ The body is at most 8 KiB of strict JSON with only these fields.
 | `429` `RATE_LIMITED` or `LOCK_TIMEOUT` | Too many updates, or Raft was busy. Wait for `Retry-After` and retry with the same `update_id`. |
 | `500` | Retry with the same `update_id`. |
 
-Retrying with the same `update_id` and the same content returns the first answer again, even after the token expired. Raft accepts an update after the App was uninstalled, after card actions were withdrawn or after a registration change, but not once your App's credentials are disabled.
+Retrying with the same `update_id` and the same content returns the first answer again, even after the token expired, until about 24 hours after the operation became final. After that Raft has deleted the used token and answers `410` `UPDATE_TOKEN_INVALID`. Raft accepts an update after the App was uninstalled, after card actions were withdrawn or after a registration change, but not once your App's credentials are disabled.
 
 ## 8. Answer status requests {#_8-answer-status-requests}
 
@@ -334,7 +334,7 @@ Verify the assertion as in [step 4](#_4-verify-the-request); `sub` is the person
 - A final status settles an open operation. `accepted` or `executing` moves an `unknown` operation to accepted. `unknown` changes nothing.
 - Answer `not_visible` when `sub` may no longer see this object. Raft then shows nothing private. It never means "not carried out".
 - Raft shows your `toast` only when your answer isn't `not_visible` and the person can still read the message. It doesn't store it.
-- Raft asks only the action endpoint the execute went to. If your registration no longer has it (you changed or removed it, or the registration is suspended), Raft stops asking about that operation. Avoid changing your action endpoint while operations are open.
+- Raft asks only the action endpoint the execute went to. If your registration no longer has it (you changed or removed it, or the registration is suspended), an operation still `accepted` or `unknown` is marked for reconciliation at its next status check, without waiting 24 hours, and Raft stops asking about it. Avoid changing your action endpoint while operations are open.
 - An operation still `accepted` or `unknown` 24 hours after the click is marked for reconciliation. A final status answer can still settle it. Raft never re-sends the execute.
 
 ### An operation you have no record of {#an-operation-you-have-no-record-of}
@@ -375,7 +375,7 @@ Both are strings you choose, 1–512 characters. After every refused or finished
 | Execute for a server-local App | Also 10 per person per Server per App per minute | `429` `RATE_LIMITED` |
 | Open operations of one person | 20 per Server, counting operations still in progress or unconfirmed | `429` `OPEN_OPERATIONS_CAP` |
 | Open operations of one installation | 1,000, also counting those waiting for reconciliation | `429` `OPEN_OPERATIONS_CAP` |
-| Open operations on one card | 1: while one is open, another click on that card is refused | `409` `VIEW_PENDING` |
+| Open operations in one person's view of a card | 1: while one is open, that person's next click on the card is refused; other readers can still click | `409` `VIEW_PENDING` |
 | Status requests to your App | At most 1 per operation every 2 seconds | Raft answers from its records |
 | Terminal updates | 600 per installation per minute | `429` `RATE_LIMITED`, with `Retry-After` |
 
@@ -384,7 +384,7 @@ When you test in a browser, a click can get these answers from Raft:
 | Answer | Meaning |
 | --- | --- |
 | `404` | Card actions aren't available right now. The client stops offering acting buttons for the session. |
-| `409` `VIEW_PENDING` | An earlier action on this card is still open. |
+| `409` `VIEW_PENDING` | Your earlier action on this card is still open. |
 | `409` `HANDLE_USED` | This button was already used. |
 | `410` `HANDLE_INVALID` | The card is out of date ([above](#revisions-and-stale-clicks)). The client reads it again. |
 | `410` `PREPARED_INVALID` | The confirmation expired after 5 minutes, or doesn't match. Click again. |
@@ -473,7 +473,7 @@ It stores the description and its digest under `prepared_action_id` for 5 minute
 4. Checks its prepared record: it exists, is under 5 minutes old, and its digest equals `prepared_digest`.
 5. Posts the reply in the thread as the App, records the result under `operation_id`, and answers `{"status":"done"}`. If posting fails before anything was sent, it answers `failed_not_sent`.
 
-When the next status request arrives, Drafts answers `done` with a toast such as "Reply sent to the thread.", which Dana sees.
+Drafts can include a toast in that answer, such as `{"status":"done", "toast":{"tone":"success", "text":"Reply sent to the thread."}}`, which Dana sees. No status request follows a final answer.
 
 ## Troubleshooting {#troubleshooting}
 
