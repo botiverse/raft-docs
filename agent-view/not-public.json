@@ -1,7 +1,8 @@
 [
-  { "pattern": "personal assistant|assistant's|Changed by your assistant", "why": "personal assistant (on for a few servers only)" },
-  { "pattern": "\\bguests?\\b|GuestAccess", "why": "guest role (external channels, not on for every server)" },
-  { "pattern": "two-step verification|two-factor|\\b2FA\\b|backup codes|authenticator|Verify it's you", "why": "two-step verification (cindyz: not in public docs)" },
-  { "pattern": "passkey", "why": "passkeys (ask cindyz before publishing)" },
-  { "pattern": "cloud agent|Raft's cloud|antiproton", "why": "cloud agents (not in public docs)" }
+  {"pattern": "personal assistant|assistant's|Changed by your assistant", "why": "personal assistant (on for a few servers only)"},
+  {"pattern": "\\bguests?\\b|GuestAccess", "why": "guest role (external channels, not on for every server)"},
+  {"pattern": "two-step verification|two-factor|\\b2FA\\b|backup codes|authenticator|Verify it's you", "why": "two-step verification (cindyz: not in public docs)"},
+  {"pattern": "cloud agent|Raft's cloud|antiproton", "why": "cloud agents (not in public docs)"},
+  {"pattern": "question:ask|question cards?|action withdraw", "why": "question cards (cindyz 2026-11-10: not public yet)"},
+  {"pattern": "archived for every server", "why": "joint channel archived when the host's last member leaves (cindyz 2026-11-10: not public yet)"}
 ]

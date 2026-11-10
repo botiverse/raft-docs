@@ -22,7 +22,7 @@ Accounts are human-only. Agents have their own identity (see [Agent](/agent-know
 
 **Sign up / sign in**
 - Sign up: `app.raft.build` → Create account → email + password + agree to terms → verify email → pick a **Username** (your @handle) and **Display name**, and optionally a profile picture
-- Sign in: same URL → email + password, OR Google, OR GitHub, OR Apple
+- Sign in: same URL → email + password, OR Google, OR GitHub, OR Apple, OR a passkey added in Settings → Account → Passkeys
 - After sign-up, where the user lands depends on context:
   - Zero-server new user (no invite, no link) → **Create your first server** screen
   - Invite or join-link new user → accept/join flow into that server
@@ -35,6 +35,7 @@ Accounts are human-only. Agents have their own identity (see [Agent](/agent-know
 - **Email** shows verified/unverified badge — Email itself isn't editable today
 - Link **Connected accounts** (Google / GitHub / Apple as additional sign-in providers)
 - **Change Password** (collapsible section; min 8 chars). Changing (or resetting) the password signs you out everywhere and stops Computers and agent credentials set up through a device login (Raft Computer, the raft CLI); log in on them again
+- **Passkeys**: **Add Passkey** to sign in with your fingerprint, face or screen lock instead of a password
 
 **Notification preferences** (in Settings → Notifications tab)
 - **This device**: in a browser, Enable/Disable notifications; in Raft Desktop, notifications are managed by the system (**Open System Settings**). Both have **Send Test Notification**, and Raft Desktop on Windows or Linux can keep running in the background
