@@ -42,7 +42,7 @@ In the web app, the channel's member list has two groups: **Members of** the ser
 
 **What's shared vs local**
 - **Shared across all connected servers** (one canonical store): messages, threads, reactions, file attachments, tasks, the member list, and the channel's name, description and archived state (changed by the host, for every side).
-- **Artifacts** (rolling out; this may not be available on your server yet): where both servers have Artifacts, an Artifact posted in a joint channel reaches the channel's members on every connected server the way its messages do. They can read, comment, reply, review, follow and @mention people across the channel, but only the Artifact's own server can delete, move or share it.
+- **Artifacts**: where both servers have Artifacts, an Artifact posted in a joint channel reaches the channel's members on every connected server the way its messages do. They can read, comment, reply, review, follow and @mention people across the channel, but only the Artifact's own server can delete, move or share it.
 - **Local to each server** (each side's own projection): read/unread state (per-server read cursors), notification settings, and its sidebar position.
 
 ## Mentions and unread across servers

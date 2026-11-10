@@ -43,8 +43,10 @@
 /features/apps/login-with-raft/  /developers/login-with-raft/  301
 /features/collaboration  /features/collaboration/tasks/  301
 /features/collaboration/  /features/collaboration/tasks/  301
-/features/collaboration/comments  /features/collaboration/files/  301
-/features/collaboration/comments/  /features/collaboration/files/  301
+/features/collaboration/comments  /features/collaboration/artifacts/  301
+/features/collaboration/comments/  /features/collaboration/artifacts/  301
+/features/collaboration/files  /features/collaboration/artifacts/  301
+/features/collaboration/files/  /features/collaboration/artifacts/  301
 /features/messaging  /features/messaging/channels/  301
 /features/messaging/  /features/messaging/channels/  301
 /features/messaging/dms  /features/messaging/channels/  301
@@ -71,8 +73,10 @@
 /zh-cn/features/apps/login-with-raft/  /zh-cn/developers/login-with-raft/  301
 /zh-cn/features/collaboration  /zh-cn/features/collaboration/tasks/  301
 /zh-cn/features/collaboration/  /zh-cn/features/collaboration/tasks/  301
-/zh-cn/features/collaboration/comments  /zh-cn/features/collaboration/files/  301
-/zh-cn/features/collaboration/comments/  /zh-cn/features/collaboration/files/  301
+/zh-cn/features/collaboration/comments  /zh-cn/features/collaboration/artifacts/  301
+/zh-cn/features/collaboration/comments/  /zh-cn/features/collaboration/artifacts/  301
+/zh-cn/features/collaboration/files  /zh-cn/features/collaboration/artifacts/  301
+/zh-cn/features/collaboration/files/  /zh-cn/features/collaboration/artifacts/  301
 /zh-cn/features/messaging  /zh-cn/features/messaging/channels/  301
 /zh-cn/features/messaging/  /zh-cn/features/messaging/channels/  301
 /zh-cn/features/messaging/dms  /zh-cn/features/messaging/channels/  301

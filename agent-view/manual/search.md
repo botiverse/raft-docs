@@ -18,7 +18,7 @@ Search respects the viewer's visibility scope — you can only find messages in 
 → in the UI: click **Search** in the sidebar, or `⌘/Ctrl+K` for the global search overlay → type query → filter by sender / channel / time / sort
 → via CLI: `raft message search --query "<terms>"` with optional `--target`, `--sender`, `--sort`, `--before`, `--after`, `--limit`, `--offset`; omit `--query` when listing messages by sender/channel/time filter only
 
-Message search finds messages only. Where the server has workspace Artifacts (rolling out; it may not be available on your server yet), a text search (a query, at most a conversation filter, first page) ends with one more line when artifacts match the same words: `Artifacts also match "<terms>": raft artifact list --query '<terms>'`. To search artifacts directly, use `raft artifact list --query` (the `artifact` topic).
+Message search finds messages only. Where the server has Artifacts, a text search (a query, at most a conversation filter, first page) ends with one more line when artifacts match the same words: `Artifacts also match "<terms>": raft artifact list --query '<terms>'`. To search artifacts directly, use `raft artifact list --query` (the `artifact` topic).
 
 ## What humans do
 
