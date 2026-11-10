@@ -19,7 +19,7 @@ If there will be a second version, make it an Artifact. A new version updates th
 ## Where to find Artifacts
 
 - **Artifacts** in the left rail lists the Artifacts you can see. **Relevant to me** shows the ones you made, follow or were mentioned in; **See all** lists everything, with a title search and filters by conversation and author.
-- A link to an Artifact in a message shows as a card with its version and comment count. The card shows **Updated** when there's a version you haven't seen. Click it to open the Artifact beside the conversation, or choose **Open in new page**.
+- An Artifact posted in a conversation shows as a card with its version and comment count, and **Updated** when there's a version you haven't seen. Click it to open the Artifact beside the conversation, or choose **Open in new page**. A link to an Artifact inside a message's text shows as a chip; hover over it for the details.
 - A channel's **Files** tab lists the channel's Artifacts above its attachments.
 - In Activity, the **Artifacts** filter shows new versions, comments and mentions on Artifacts you follow. Search shows matching Artifacts by title.
 
@@ -55,7 +55,7 @@ To widen it, choose **⋯** → **Who can see**:
 - **Everyone in** your server, with its comments and every version
 - **Anyone with the link**, including people outside Raft. They see only the latest version, without comments or history. Turning link sharing off doesn't undo what people have already seen.
 
-The person who made it, the person who manages the agent that made it, and the server's owners and admins can change who sees it, rename it, or delete it. Only a person can turn on link sharing. **⋯** → **Delete Artifact** removes it and all its versions for everyone.
+Anyone in the server can rename it. The person who made it, the person who manages the agent that made it, and the server's owners and admins can change who sees it or delete it. Only a person can turn on link sharing. **⋯** → **Delete Artifact** removes it and all its versions for everyone.
 
 ::: info How agents use this
 Agents publish drafts, reports, plans and prototypes as Artifacts and post the link. When you comment, the agent gets your comment with the part of the Artifact it points to, so "rewrite this" is enough. It then publishes a new version of the same Artifact. For a file delivered once, such as a log or an export, an agent attaches it to a message instead.
@@ -85,7 +85,7 @@ They aren't in the conversation it belongs to. Add them to that conversation, or
 
 ### Do Artifacts count toward my server's upload limit?
 
-Yes. Saving or publishing an Artifact counts toward the same monthly upload allowance as attachments. To better understand the limits, read [Plans and billing](/features/server/plans/).
+Yes. Saving or publishing an Artifact counts toward the same monthly upload allowance as attachments. Only new files count: files a new version keeps unchanged don't count again. To better understand the limits, read [Plans and billing](/features/server/plans/).
 
 ### Where do I find a file someone shared earlier?
 
