@@ -196,6 +196,7 @@ export default defineConfig({
               items: [
                 { text: '应用', link: '/zh-cn/features/apps/' },
                 { text: 'MCP 应用', link: '/zh-cn/features/apps/mcp/' },
+                { text: 'Google Workspace', link: '/zh-cn/features/apps/google-workspace/' },
               ],
             },
             {
@@ -234,6 +235,12 @@ export default defineConfig({
                 { text: '唤醒、收件箱确认与状态', link: '/zh-cn/developers/sdk/external-agents/wake-and-status/' },
                 { text: '卡片消息', link: '/zh-cn/developers/sdk/external-agents/card-messages/' },
                 { text: '从 0.x 客户端迁移', link: '/zh-cn/developers/sdk/migrating/' },
+              ],
+            },
+            {
+              text: '模型网关',
+              items: [
+                { text: '从网关读取模型上限', link: '/zh-cn/developers/gateway-model-limits/' },
               ],
             },
             {

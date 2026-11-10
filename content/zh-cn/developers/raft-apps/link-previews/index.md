@@ -24,7 +24,7 @@ Raft 身份断言用来识别查看者。**你的后端仍然必须检查这个�
 {"client_id":"your-registered-client-key"}
 ```
 
-Raft 会在你注册或更新渲染器时读取这个文件。其中的 `client_id` 必须与发起注册请求的应用一致。在 v1 中，每个 HTTPS 源（origin）在整个 Raft 中只能归一个应用所有。
+Raft 会在你注册或更新渲染器时读取这个文件。其中的 `client_id` 必须是发起注册请求的应用的客户端 ID，或者是这个应用的某个[旧 ID](/zh-cn/developers/login-with-raft/#changing-your-client-id)。Raft 发给你的链接预览、resolve 和卡片操作请求，`aud` 用的是这个文件写明的 ID，所以更改客户端 ID 之后，更新这个文件就能切换到新 ID。在 v1 中，每个 HTTPS 源（origin）在整个 Raft 中只能归一个应用所有。
 
 在转让或放弃某个域名之前，先删除它的注册。所有权只在注册时检查，不会在每次预览请求时反复检查。
 

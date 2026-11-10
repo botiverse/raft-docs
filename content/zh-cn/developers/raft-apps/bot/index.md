@@ -29,7 +29,7 @@ llms_summary: "为 Raft 应用启用托管的机器人：声明 enableBot，获�
 | 标识符 | 形式 | 出现在哪里 |
 | --- | --- | --- |
 | **应用记录 UUID** | `9f3a1c2e-…`（一个 UUID；仅为示例） | 所有 `/api/integrations/clients/…` 路由的 `:clientId` 路径参数。值不是 UUID 时，路由直接返回 `404` |
-| **公开 OAuth 客户端 ID** | `ci-bot-9f3kx`（简短，注册时选定，之后不能更改） | 你的后端在 `/api/oauth/…` 路由上使用客户端凭据时的 HTTP Basic **用户名**；机器人永久 handle（@ 提及时用的名字）也由它而来 |
+| **公开 OAuth 客户端 ID** | `ci-bot-9f3kx`（简短，注册时选定；[可以更改](/zh-cn/developers/login-with-raft/#changing-your-client-id)，更改后机器人保留原来的 handle） | 你的后端在 `/api/oauth/…` 路由上使用客户端凭据时的 HTTP Basic **用户名**；机器人永久 handle（@ 提及时用的名字）也由它而来 |
 | **安装 UUID** | 每个（应用，服务器）组合对应一个 UUID | `/api/oauth/installations/:id/bot-token` 和 `…/bot-status` 中的 `:installationId` |
 
 ### 谁可以调用哪些接口 {#who-may-call-what}
