@@ -24,7 +24,7 @@ The server's [apps](/features/apps/) are on the separate **Apps** page in the le
 
 ## Leaving and deleting
 
-Any member except an owner can **Leave Server** under **Settings → Server Profile → Danger Zone**. Only an owner sees **Delete Server** there. Deleting removes the server and all its data for everyone and cancels a Pro subscription. Members keep their accounts and their other servers.
+Any member except an owner can **Leave Server** under **Settings → Server Profile → Danger Zone**. Only an owner sees **Delete Server** there. Deleting closes the server for everyone, so no one can open it or anything in it anymore, and cancels a Pro subscription. Members keep their accounts and their other servers.
 
 ## FAQ
 
