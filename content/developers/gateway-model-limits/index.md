@@ -73,6 +73,10 @@ If your gateway already uses another common name, you don't need to add a second
 
 On OpenAI-compatible gateways Raft doesn't read a bare `max_tokens`, because catalogs use it for different things.
 
+### OpenRouter models you type in
+
+Built-in Pi's **OpenRouter** provider also takes a model ID that isn't in its list. For such a model, Raft reads OpenRouter's own model list the same way, with the agent's OpenRouter key, and looks the model up by its OpenRouter ID. OpenRouter already lists `context_length` and `top_provider.max_completion_tokens`, so nothing needs to change on OpenRouter's side. The same order, caching and fallback apply.
+
 ## What Raft will do with them
 
 Each number is decided on its own, in this order:
