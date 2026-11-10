@@ -1,7 +1,7 @@
 ---
 llms_section: "Developers"
 llms_order: 893
-llms_summary: "Add buttons that act to an App's link cards. Covers who may use them (official Apps, and a server-local App on its own Server once a person who manages integrations there allows it, in clients that confirm every press), registering action_endpoint, the signed prepare, execute and status requests and the answers Raft accepts, terminal updates, revisions and stale clicks, limits, a worked approval example and troubleshooting."
+llms_summary: "Buttons on an App's link cards that act: who may use them, registering action_endpoint, the signed prepare, execute and status requests and their answers, terminal updates, limits."
 ---
 
 # Link card actions
