@@ -1,39 +1,32 @@
 ---
 llms_section: "Collaboration"
 llms_order: 720
-llms_summary: "Read when you need to know how Artifacts work in Raft: versioned pages and files people comment on, how they differ from attachments, versions, comments, who can see one, and how agents use them."
+llms_summary: "Read when you need to know how Artifacts work in Raft: interactive, versioned pages and files people comment on, where to find them, who can see one, how agents use them, and attachments."
 agent_view: manual/artifact manual/attachment
 ---
 
 # Artifacts
 
-An Artifact is a page or a set of files that your team keeps improving together: a report, a plan, a design, a prototype, a chart. It has one link that always opens the latest version, keeps every earlier version, and takes comments on the exact part they mean.
+An Artifact is a page or a set of files that your team keeps improving together: a report, a plan, a design, a prototype, a chart. Agents publish their work as Artifacts, and you review it in Raft.
 
-## Artifact or attachment?
-
-- **An attachment** is a file sent once with a message: a log, an export, a screenshot, something people will just open or download.
-- **An Artifact** is work that goes round by round with feedback, or that people need one stable link to.
-
-If there will be a second version, make it an Artifact. A new version updates the same Artifact instead of piling up files in the chat.
-
-## Where to find Artifacts
-
-- **Artifacts** in the left rail lists the Artifacts you can see. **Relevant to me** shows the ones you made, follow or were mentioned in; **See all** lists everything, with a title search and filters by conversation and author.
-- An Artifact posted in a conversation shows as a card with its version and comment count, and **Updated** when there's a version you haven't seen. Click it to open the Artifact beside the conversation, or choose **Open in new page**. A link to an Artifact inside a message's text shows as a chip; hover over it for the details.
-- A channel's **Files** tab lists the channel's Artifacts above its attachments.
-- In Activity, the **Artifacts** filter shows new versions, comments and mentions on Artifacts you follow. Search shows matching Artifacts by title.
+- **Interactive pages.** An HTML Artifact is a live web page. Click through a prototype or filter a chart right in Raft, beside the conversation about it.
+- **One link, every version.** The link always opens the latest version, and every earlier version stays in its history.
+- **Comments on the exact spot.** Select a sentence, a line, a row or an element on the page and comment on it. The agent gets your comment with the part it points to.
+- **Seen by the right people.** An Artifact belongs to the conversation it was made in, and you choose when to share it more widely.
 
 ## Making an Artifact
 
-Agents make most Artifacts: an agent publishes its work as an Artifact and posts the link in the conversation. To turn a file you attached into one, open the attachment's **⋯** menu and choose **Save as Artifact**. The new Artifact belongs to the same conversation, and the attachment links to it.
+Most Artifacts come from agents: an agent publishes its work and posts it in the conversation, where it shows as a card with its version and comment count. Click the card to open the Artifact beside the conversation, or choose **Open in new page**. A link to an Artifact inside a message's text shows as a chip; hover over it for the details.
+
+To make a file you uploaded or sent into an Artifact, open the file's **⋯** menu and choose **Save as Artifact**. The new Artifact belongs to the same conversation, and the file links to it.
 
 An Artifact can hold several files. HTML and Markdown open as pages, PDFs as documents, CSV as a table, and images and plain text as they are. Other files, including video, can be downloaded. **⋯** → **Files** lists every file in it.
 
 ## Versions
 
-Each time an agent publishes a change, the Artifact gets a new version. Its link and every card that shows it move to the latest version. To look at an earlier one, choose **⋯** → **Version history**. Versions are kept as they were and can't be edited.
+Each time an agent publishes a change, the Artifact gets a new version. Its link and every card that shows it move to the latest version, and a card shows **Updated** when there's a version you haven't seen. To look at an earlier one, choose **⋯** → **Version history**. Versions are kept as they were and can't be edited.
 
-To hear about new versions and comments, choose **⋯** → **Follow**. Agents follow the Artifacts they publish or comment on.
+To hear about new versions and comments, choose **⋯** → **Follow**. They show in Activity, under the **Artifacts** filter. Agents follow the Artifacts they publish or comment on.
 
 ## Comments
 
@@ -47,6 +40,8 @@ Comment on the exact part you mean, or on the whole Artifact:
 You can @mention people and agents in a comment, and reply to one. To leave several comments at once, choose **Save draft** on each, then send them together. Only you see your drafts until you send them.
 
 ## Who can see an Artifact
+
+**Artifacts** in the left rail gathers every Artifact you can see, from all your conversations, in one place. **Relevant to me** shows the ones you made, follow or were mentioned in. **See all** lists everything, with a title search and filters by conversation and author. Search also finds Artifacts by title.
 
 An Artifact belongs to the conversation it was made in. Everyone in that conversation can open it: the members of the channel, or the people in the DM. In a joint channel, people from every connected server can open it and comment. Posting its link somewhere else doesn't give anyone access. **⋯** → **Send to conversation** tells you when some people there can't see it, and offers to widen it.
 
@@ -73,7 +68,7 @@ You can comment on a spot in an attachment, too. The comment is a reply in the m
 
 ### Can I edit an Artifact myself?
 
-Not in Raft. Comment on what should change, and the agent publishes a new version. A file you attach and save as an Artifact also changes only when an agent publishes a new version.
+Not in Raft. Comment on what should change, and the agent publishes a new version. A file you save as an Artifact also changes only when an agent publishes a new version.
 
 ### Can I go back to an earlier version?
 
