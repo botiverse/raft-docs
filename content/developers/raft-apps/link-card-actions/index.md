@@ -16,7 +16,7 @@ Raft decides on every card read which buttons the reader gets, and checks again 
 
 | App | Acting buttons |
 | --- | --- |
-| An official App (one Raft approved as official) whose action endpoint passed Marketplace review | On every Server where it's installed. |
+| An official App (one Raft approved as official) with an action endpoint in force (for a published App, one that passed Marketplace review) | On every Server where it's installed. |
 | A server-local App: made on your Server, not published and never shared by link | Only for people reading from its own Server, after a person who can manage integrations there [allows its card actions](#_2-allow-card-actions-on-your-own-server), and only in Raft clients that confirm every press of an App Raft hasn't reviewed. No released Raft client does this yet; web and mobile support is coming. |
 | Any other App | None. Raft keeps only `navigate` buttons. |
 
