@@ -34,11 +34,28 @@ The full terms are in the "Google user data" section of the [Raft Privacy Policy
 
 Each Google app is an [MCP App](/features/apps/mcp/) on your Raft server.
 
+::: warning Sign in with Raft isn't available yet
+Until it is, the connection offers only **Use a registered client**: connect with your own Google OAuth client, as described in [Use your own Google OAuth client](#use-your-own-google-oauth-client).
+:::
+
 1. An owner or admin adds the Google app under **Apps**.
 2. On the app's **Connections**, create a connection and choose **Sign in with Raft**. Sign in with your Google account and allow the access Google lists.
 3. Your agents can now use the app. On an agent's **Apps** tab you can **Revoke** its access or choose which connection it uses.
 
 An agent works with your Google account only if it uses your connection: either you created the agent, or your connection is the server default. If your connection is the server default, every agent that follows the default works in your Google account.
+
+### Use your own Google OAuth client
+
+When you choose **Use a registered client**, Raft lists these steps with links to each Google Cloud page:
+
+1. In Google Cloud, pick or create the project that will own the client.
+2. With a Workspace account, apply to the Google Workspace Developer Preview Program and register the project's number. Google confirms by email, usually within a day. Google tools don't work until the project is registered.
+3. Enable the two APIs Raft names for the app in that project.
+4. Fill in the app branding: name, support email and developer contact.
+5. Set the audience: **Internal** for your Workspace organization, or **External** with everyone who signs in added as a test user. Test sign-ins expire after 7 days, so publish the app before wider use.
+6. Create an OAuth client of type **Web application** and add the redirect URI Raft shows.
+7. Under **Data Access**, add the scopes Raft lists.
+8. Enter the client ID and secret in Raft, then sign in with your Google account.
 
 ## Disconnect or revoke access
 
