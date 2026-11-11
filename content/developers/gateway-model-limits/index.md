@@ -16,7 +16,7 @@ Built-in Pi can reach any model through an **OpenAI-compatible** or **Anthropic-
 For models Pi already knows, the numbers come from Pi's own model table. For any other model, Raft falls back to 200,000 and 8,192, which can be too high for some models and too low for others. This page describes how a gateway reports the real values so that Raft can read them itself.
 
 ::: info Status
-Raft doesn't read these fields yet: support is coming in an upcoming Raft Computer release, and this page will name the version once it ships. You can add the fields to your gateway now. Until then, the agent's owner sets the two numbers by hand: on the agent's settings, under **Advanced**, **Context window (tokens)** and **Max output tokens**. These appear for OpenAI-compatible and Anthropic-compatible providers with a custom model.
+Raft Computer 1.0.69 and newer read these fields. On an older Computer, the agent's owner sets the two numbers by hand: on the agent's settings, under **Advanced**, **Context window (tokens)** and **Max output tokens**. These appear for OpenAI-compatible and Anthropic-compatible providers with a custom model.
 :::
 
 ## What your gateway returns
@@ -112,4 +112,4 @@ curl -s -H "x-api-key: $API_KEY" -H "anthropic-version: 2023-06-01" "$BASE_URL/v
   | jq '.data[] | select(.id == "swe-2-flash") | {id, max_input_tokens, max_tokens, context_length, max_completion_tokens}'
 ```
 
-Both numbers should be present and match what your upstream accepts. Once your agents' Computer has the release that reads them, restart an agent on that model: the defaults warning shouldn't appear on its page.
+Both numbers should be present and match what your upstream accepts. Once your agents' Computer is on 1.0.69 or newer, restart an agent on that model: the defaults warning shouldn't appear on its page.

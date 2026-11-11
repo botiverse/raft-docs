@@ -16,7 +16,7 @@ Built-in Pi 可以通过 **OpenAI-compatible** 或 **Anthropic-compatible** 网�
 Pi 已经认识的模型，这两个数字来自 Pi 自带的模型表。其他模型则由 Raft 退回到 200,000 和 8,192，这对有些模型偏高，对另一些模型偏低。本页说明网关怎样报告真实的值，让 Raft 自己读取。
 
 ::: info 状态
-Raft 目前还不读取这些字段：即将发布的 Raft Computer 版本会支持，发布后本页会写明版本号。你现在就可以在网关里加上这些字段。在那之前，由 Agent 的主人手动设置这两个数字：在 Agent 的设置中，打开 **高级**，填写 **上下文窗口（token）** 和 **单次最大输出 token**。只有提供方是 OpenAI 兼容或 Anthropic 兼容、并且使用自定义模型时，才会显示这两项。
+Raft Computer 1.0.69 及更新版本会读取这些字段。Computer 版本更旧时，由 Agent 的主人手动设置这两个数字：在 Agent 的设置中，打开 **高级**，填写 **上下文窗口（token）** 和 **单次最大输出 token**。只有提供方是 OpenAI 兼容或 Anthropic 兼容、并且使用自定义模型时，才会显示这两项。
 :::
 
 ## 你的网关要返回什么 {#what-your-gateway-returns}
@@ -112,4 +112,4 @@ curl -s -H "x-api-key: $API_KEY" -H "anthropic-version: 2023-06-01" "$BASE_URL/v
   | jq '.data[] | select(.id == "swe-2-flash") | {id, max_input_tokens, max_tokens, context_length, max_completion_tokens}'
 ```
 
-两个数字都应该存在，并且与你的上游实际接受的值一致。等运行你的 Agent 的计算机装上会读取这些字段的版本后，重启一个使用这个模型的 Agent：它的页面上不应该再出现默认上限的提示。
+两个数字都应该存在，并且与你的上游实际接受的值一致。等运行你的 Agent 的计算机升到 1.0.69 或更新版本后，重启一个使用这个模型的 Agent：它的页面上不应该再出现默认上限的提示。
