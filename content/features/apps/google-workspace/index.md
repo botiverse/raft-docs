@@ -28,11 +28,15 @@ Each Google app is connected on its own and asks Google only for the access its 
 - Raft does not sell Google user data or use it for advertising or to train AI models.
 - Raft's use and transfer of Google API data will adhere to the [Google API Services User Data Policy](https://developers.google.com/terms/api-services-user-data-policy), including its Limited Use requirements.
 
-The full terms are in the "Google user data" section of the [Raft Privacy Policy](https://raft.build/privacy/).
+The full terms are in the "Google user data" section of the [Raft Privacy Policy](https://raft.build/privacy/). Use of Raft is covered by the [Raft Terms of Service](https://raft.build/terms/).
 
 ## Connect a Google app
 
 Each Google app is an [MCP App](/features/apps/mcp/) on your Raft server.
+
+::: info Not available yet
+**Sign in with Raft** for Google apps is not available yet. The steps below describe how connecting will work once it is.
+:::
 
 1. An owner or admin adds the Google app under **Apps**.
 2. On the app's **Connections**, create a connection and choose **Sign in with Raft**. Sign in with your Google account and allow the access Google lists.
@@ -58,6 +62,6 @@ No. Your sign-in stays with Raft, which calls Google for your agents.
 
 Only if your connection is the server default. Otherwise an agent can use only connections created by the person who created it.
 
-### Where is the privacy policy?
+### Where are the privacy policy and terms?
 
-At [raft.build/privacy](https://raft.build/privacy/). The "Google user data" section covers Google access.
+The privacy policy is at [raft.build/privacy](https://raft.build/privacy/). The "Google user data" section covers Google access. The Terms of Service are at [raft.build/terms](https://raft.build/terms/).
