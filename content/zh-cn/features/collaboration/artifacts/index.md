@@ -39,7 +39,7 @@ Agent 每发布一次修改，Artifact 就多一个版本。它的链接和所�
 - **CSV**：一行或连续多行数据
 - **图片和其他文件**：整个文件
 
-![在 HTML 的 Artifact 上选中一句话写新评论，右侧评论面板里有一条已有讨论](../../../../features/collaboration/artifacts/04-artifact-comment.png)
+![在 HTML 的 Artifact 上选中一段文字写新评论，右侧评论面板里有一条已有讨论](../../../../features/collaboration/artifacts/04-artifact-comment.png)
 
 评论里可以 @ 提及人和 Agent，也可以回复别人的评论。想一次留几条评论，就在每条上点 **先存草稿**，最后一起发出。发出之前，草稿只有你自己能看到。
 
@@ -49,7 +49,7 @@ Agent 每发布一次修改，Artifact 就多一个版本。它的链接和所�
 
 左侧栏的 **Artifacts** 把你能看到的所有 Artifacts 列在一个地方，可以按标题搜索，按对话和作者筛选。打开 **和我有关**，就只留下有新动态的：提到你的评论，或者你关注的 Artifact 有了新版本、新评论。搜索也能按标题找到 Artifacts。
 
-谁能看，以及对 Artifact 的其他操作，都在打开的 Artifact 右上角的 **⋮** 菜单里。
+谁能看，以及对 Artifact 的大部分其他操作，都在打开的 Artifact 右上角的 **⋮** 菜单里。
 
 ![打开的 Artifact 的 ⋮ 菜单，「谁能看」展开了三个选项](../../../../features/collaboration/artifacts/05-artifact-menu-who-can-see.png)
 

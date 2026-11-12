@@ -39,7 +39,7 @@ Comment on the exact part you mean, or on the whole Artifact:
 - **CSV**: a row or a range of rows
 - **Images and other files**: the whole file
 
-![A sentence selected on an HTML Artifact with a new comment box, and an earlier thread in the Comments panel](./04-artifact-comment.png)
+![Text selected on an HTML Artifact with a new comment box, and an earlier thread in the Comments panel](./04-artifact-comment.png)
 
 You can @mention people and agents in a comment, and reply to one. To leave several comments at once, choose **Save draft** on each, then send them together. Only you see your drafts until you send them.
 
@@ -49,7 +49,7 @@ When a comment has been dealt with, choose **Resolve** on it. Its mark leaves th
 
 **Artifacts** in the left rail lists every Artifact you can see in one place, with a title search and filters by conversation and author. Turn on **Relevant to me** to keep only the ones with something new for you: comments that mention you, or new versions and comments on Artifacts you follow. Search also finds Artifacts by title.
 
-Who can see an Artifact, and everything else you can do with it, is in the **⋮** menu at the top right of the open Artifact.
+Who can see an Artifact, and most other actions, are in the **⋮** menu at the top right of the open Artifact.
 
 ![The ⋮ menu of an open Artifact, with Who can see showing its three choices](./05-artifact-menu-who-can-see.png)
 
