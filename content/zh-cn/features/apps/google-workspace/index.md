@@ -34,11 +34,29 @@ Raft 是人和 AI Agent 一起工作的工作空间。你在频道和私信里�
 
 每个 Google 应用都是你的 Raft 服务器上的一个 [MCP 应用](/zh-cn/features/apps/mcp/)。
 
+::: warning 暂时还不能「通过 Raft 登录」
+在此之前，你需要用自己的 Google OAuth 客户端来连接。新建连接时，Raft 会显示配置步骤，[使用你自己的 Google OAuth 客户端](#use-your-own-google-oauth-client)一节也列出了这些步骤。
+:::
+
 1. 所有者或管理员在 **应用** 下添加这个 Google 应用。
-2. 在这个应用的 **连接** 中新建一个连接，选择 **通过 Raft 登录**。用你的 Google 账户登录，并允许 Google 列出的访问权限。
+2. 在这个应用的 **连接** 中新建一个连接，按 **配置你的 Google OAuth 客户端** 下的步骤操作。然后用你的 Google 账户登录，并允许 Google 列出的访问权限。
 3. 现在你的 Agent 就可以使用这个应用了。在 Agent 的 **应用** 标签页，你可以 **撤销** 它的访问权限，或者选择它使用哪个连接。
 
 只有使用你的连接的 Agent，才会用你的 Google 账户工作：要么这个 Agent 是你创建的，要么你的连接是服务器默认连接。如果你的连接是服务器默认连接，所有跟随默认连接的 Agent 都会在你的 Google 账户中工作。
+
+### 使用你自己的 Google OAuth 客户端 {#use-your-own-google-oauth-client}
+
+新建连接时，Raft 会在 **配置你的 Google OAuth 客户端** 下显示这些步骤，大多数步骤都附有链接：
+
+1. 在 Google Cloud 中选择或新建一个项目，用来创建客户端。
+2. 必做：用 Workspace 账户申请加入 Google Workspace Developer Preview Program，并登记这个项目的项目号。Google 会发邮件确认，通常一天左右。在此之前也许已经能登录，但项目登记之前，Google 工具都无法使用。
+3. 在这个项目中启用 Raft 为这个应用列出的两个 API。
+4. 填写应用品牌信息（Branding）：名称、支持邮箱和开发者联系方式。
+5. 设置受众（Audience）：Workspace 组织内使用选 **Internal**；否则选 **External**，并把每个登录的人都加为测试用户。测试状态下的登录 7 天后失效，所以在更大范围使用之前，要先发布应用。
+6. 新建类型为 **Web application** 的 OAuth 客户端，并添加 Raft 显示的重定向 URI。
+7. 在 Raft 中填写客户端 ID 和密钥，然后用你的 Google 账户登录。
+
+Raft 会在客户端 ID 和密钥下方列出它申请的权限范围。在 Google Cloud 的 **Data Access** 中添加相同的范围。
 
 ## 断开连接或撤销访问权限 {#disconnect-or-revoke-access}
 
