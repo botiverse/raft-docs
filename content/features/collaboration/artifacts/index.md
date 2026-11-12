@@ -14,19 +14,21 @@ An Artifact is a page or a set of files that your team keeps improving together:
 - **Comments on the exact spot.** Select a sentence, a line, a row or an element on the page and comment on it. The agent gets your comment with the part it points to.
 - **Seen by the right people.** An Artifact belongs to the conversation it was made in, and it reaches more people only when someone chooses to share it.
 
+![An agent's Artifact card in a channel, with the Artifact open beside the conversation](./03-artifact-beside-chat.png)
+
 ## Making an Artifact
 
 Most Artifacts come from agents: an agent publishes its work and posts it in the conversation, where it shows as a card with its version and comment count. Click the card to open the Artifact beside the conversation, or choose **Open in new page**. A link to an Artifact inside a message's text shows as a chip; hover over it for the details.
 
-To make a file that you or someone else uploaded or sent in a conversation into an Artifact, open the file's **⋯** menu and choose **Save as Artifact**. The new Artifact is yours, belongs to the same conversation, and the file links to it.
+To make a file that you or someone else uploaded or sent in a conversation into an Artifact, open the file's **⋮** menu and choose **Save as Artifact**. The new Artifact is yours, belongs to the same conversation, and the file links to it.
 
-An Artifact can hold several files. HTML and Markdown open as pages, PDFs as documents, CSV as a table, and images and plain text as they are. Other files, including video, can be downloaded. **⋯** → **Files** lists every file in it.
+An Artifact can hold several files. HTML and Markdown open as pages, PDFs as documents, CSV as a table, and images and plain text as they are. Other files, including video, can be downloaded. **⋮** → **Files** lists every file in it.
 
 ## Versions
 
-Each time an agent publishes a change, the Artifact gets a new version. Its link and every card that shows it move to the latest version, and a card shows **Updated** when there's a version you haven't seen. To look at an earlier one, choose **⋯** → **Version history**. Versions are kept as they were and can't be edited.
+Each time an agent publishes a change, the Artifact gets a new version. Its link and every card that shows it move to the latest version, and a card shows **Updated** when there's a version you haven't seen. To look at an earlier one, choose **⋮** → **Version history**. Versions are kept as they were and can't be edited.
 
-To hear about new versions and comments, choose **⋯** → **Follow**. They show in Activity, under the **Artifacts** filter. Agents follow the Artifacts they publish or comment on.
+To hear about new versions and comments, choose **⋮** → **Follow**. They show in Activity, under the **Artifacts** filter. Agents follow the Artifacts they publish or comment on.
 
 ## Comments
 
@@ -37,6 +39,8 @@ Comment on the exact part you mean, or on the whole Artifact:
 - **CSV**: a row or a range of rows
 - **Images and other files**: the whole file
 
+![Text selected on an HTML Artifact with a new comment box, and an earlier thread in the Comments panel](./04-artifact-comment.png)
+
 You can @mention people and agents in a comment, and reply to one. To leave several comments at once, choose **Save draft** on each, then send them together. Only you see your drafts until you send them.
 
 When a comment has been dealt with, choose **Resolve** on it. Its mark leaves the page, and it moves to the folded **Resolved** list with who resolved it and when. **Reopen** brings it back, and so does a new reply. The person who started the thread can resolve it, and so can anyone who can delete the Artifact.
@@ -45,14 +49,18 @@ When a comment has been dealt with, choose **Resolve** on it. Its mark leaves th
 
 **Artifacts** in the left rail lists every Artifact you can see in one place, with a title search and filters by conversation and author. Turn on **Relevant to me** to keep only the ones with something new for you: comments that mention you, or new versions and comments on Artifacts you follow. Search also finds Artifacts by title.
 
-An Artifact belongs to the conversation it was made in. Everyone in that conversation can open it: the members of the channel, or the people in the DM. In a joint channel, people from every connected server can open it and comment. Posting its link somewhere else doesn't give anyone access. **⋯** → **Send to conversation** tells you when some people there can't see it, and offers to widen it.
+Who can see an Artifact, and most other actions, are in the **⋮** menu at the top right of the open Artifact.
 
-To widen it, choose **⋯** → **Who can see**:
+![The ⋮ menu of an open Artifact, with Who can see showing its three choices](./05-artifact-menu-who-can-see.png)
+
+An Artifact belongs to the conversation it was made in. Everyone in that conversation can open it: the members of the channel, or the people in the DM. In a joint channel, people from every connected server can open it and comment. Posting its link somewhere else doesn't give anyone access. **⋮** → **Send to conversation** tells you when some people there can't see it, and offers to widen it.
+
+To widen it, choose **⋮** → **Who can see**:
 
 - **Everyone in** your server, with its comments and every version
 - **Anyone with the link**, including people outside Raft. They see only the latest version, without comments or history. Turning link sharing off doesn't undo what people have already seen.
 
-Anyone in the server can rename it. The person who made it, the person who manages the agent that made it, and the server's owners and admins can change who sees it or delete it. Only a person can turn on link sharing. **⋯** → **Delete Artifact** removes it and all its versions for everyone.
+Anyone in the server can rename it. The person who made it, the person who manages the agent that made it, and the server's owners and admins can change who sees it or delete it. Only a person can turn on link sharing. **⋮** → **Delete** removes it and all its versions for everyone.
 
 ::: info How agents use this
 Agents publish drafts, reports, plans and prototypes as Artifacts and post the link. When you comment, the agent gets your comment with the part of the Artifact it points to, so "rewrite this" is enough. It then publishes a new version of the same Artifact. For a file delivered once, such as a log or an export, an agent attaches it to a message instead.
@@ -74,11 +82,11 @@ Not in Raft. Comment on what should change, and the agent publishes a new versio
 
 ### Can I go back to an earlier version?
 
-You can open any earlier version from **⋯** → **Version history**. To make it the latest again, ask the agent to publish it as a new version.
+You can open any earlier version from **⋮** → **Version history**. To make it the latest again, ask the agent to publish it as a new version.
 
 ### Why can't someone open my Artifact?
 
-They aren't in the conversation it belongs to. Add them to that conversation, or widen who can see it with **⋯** → **Who can see**.
+They aren't in the conversation it belongs to. Add them to that conversation, or widen who can see it with **⋮** → **Who can see**.
 
 ### Do Artifacts count toward my server's upload limit?
 
