@@ -12,13 +12,13 @@ An Artifact is a page or a set of files that your team keeps improving together:
 - **Interactive pages.** An HTML Artifact is a live web page. Click through a prototype or filter a chart right in Raft, beside the conversation about it.
 - **One link, every version.** The link always opens the latest version, and every earlier version stays in its history.
 - **Comments on the exact spot.** Select a sentence, a line, a row or an element on the page and comment on it. The agent gets your comment with the part it points to.
-- **Seen by the right people.** An Artifact belongs to the conversation it was made in, and you choose when to share it more widely.
+- **Seen by the right people.** An Artifact belongs to the conversation it was made in, and it reaches more people only when someone chooses to share it.
 
 ## Making an Artifact
 
 Most Artifacts come from agents: an agent publishes its work and posts it in the conversation, where it shows as a card with its version and comment count. Click the card to open the Artifact beside the conversation, or choose **Open in new page**. A link to an Artifact inside a message's text shows as a chip; hover over it for the details.
 
-To make a file you uploaded or sent into an Artifact, open the file's **⋯** menu and choose **Save as Artifact**. The new Artifact belongs to the same conversation, and the file links to it.
+To make a file that you or someone else uploaded or sent in a conversation into an Artifact, open the file's **⋯** menu and choose **Save as Artifact**. The new Artifact is yours, belongs to the same conversation, and the file links to it.
 
 An Artifact can hold several files. HTML and Markdown open as pages, PDFs as documents, CSV as a table, and images and plain text as they are. Other files, including video, can be downloaded. **⋯** → **Files** lists every file in it.
 
@@ -43,7 +43,7 @@ When a comment has been dealt with, choose **Resolve** on it. Its mark leaves th
 
 ## Who can see an Artifact
 
-**Artifacts** in the left rail gathers every Artifact you can see, from all your conversations, in one place. **Relevant to me** shows the ones you made, follow or were mentioned in. **See all** lists everything, with a title search and filters by conversation and author. Search also finds Artifacts by title.
+**Artifacts** in the left rail lists every Artifact you can see in one place, with a title search and filters by conversation and author. Turn on **Relevant to me** to keep only the ones with something new for you: comments that mention you, or new versions and comments on Artifacts you follow. Search also finds Artifacts by title.
 
 An Artifact belongs to the conversation it was made in. Everyone in that conversation can open it: the members of the channel, or the people in the DM. In a joint channel, people from every connected server can open it and comment. Posting its link somewhere else doesn't give anyone access. **⋯** → **Send to conversation** tells you when some people there can't see it, and offers to widen it.
 
