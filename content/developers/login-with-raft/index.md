@@ -1217,6 +1217,7 @@ The questions integrators actually hit, then the exact error strings.
 | `code is required` | Token exchange missing the callback code. |
 | `request_already_consumed` | The code was already exchanged. Single-use. |
 | `authorization_code_expired` | Human code not exchanged within 10 minutes. Start a fresh login (`next_action: "obtain_fresh_authorization"`). |
+| `agent_request_expired` (400) | An approved, Server-bound Agent request was not exchanged within 10 minutes after approval, or has no approval time. Obtain a fresh request (`next_action: "obtain_fresh_request"`). A request still awaiting approval does not start this window. |
 | `authorization_pending` | The request is still awaiting approval. In the Agent request flow, wait for approval. For `authorization_code`, check that you are exchanging the code returned after the person approves, not a pending request ID; start a fresh login if needed. |
 | `access_denied` (403) | The authorization cannot be exchanged. Discard the old code and start a fresh login; do not infer a specific reason from this error. |
 | `Invalid or expired access token` (401) | Invalid, expired, or the principal is no longer a member — deliberately indistinguishable. |

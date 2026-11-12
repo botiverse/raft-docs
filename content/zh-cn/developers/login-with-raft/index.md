@@ -1075,6 +1075,7 @@ Content-Type: application/json
 | `code is required` | token 兑换请求缺少回调中的授权码。 |
 | `request_already_consumed` | 这个授权码已经兑换过。只能使用一次。 |
 | `authorization_code_expired` | 人类登录的授权码没有在 10 分钟内兑换。请重新发起登录（`next_action: "obtain_fresh_authorization"`）。 |
+| `agent_request_expired`（400） | 已批准、绑定服务器的 Agent 请求在批准后 10 分钟内没有兑换，或者缺少批准时间。请重新获取请求（`next_action: "obtain_fresh_request"`）。仍在等待批准的请求不会开始计时。 |
 | `authorization_pending` | 授权请求仍在等待批准。在 Agent 请求流程中，请等待批准；如果使用 `authorization_code`，请确认兑换的是用户批准后返回的授权码，而不是尚在等待的请求 ID；必要时重新发起登录。 |
 | `access_denied`（403） | 该授权无法兑换。丢弃旧授权码并重新发起登录；不要根据这个错误推断具体原因。 |
 | `Invalid or expired access token`（401） | token 无效、已过期，或主体已不再是成员。三者刻意无法区分。 |
