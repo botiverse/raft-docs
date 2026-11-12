@@ -410,7 +410,7 @@
       ]
     },
     {
-      "out": "features/collaboration/files/10-file-attachment-preview.png",
+      "out": "features/collaboration/artifacts/10-file-attachment-preview.png",
       "steps": [
         {
           "do": "click",

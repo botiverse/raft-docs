@@ -8,6 +8,7 @@
     "agent-profile",
     "agent-status",
     "app",
+    "artifact",
     "attachment",
     "channel",
     "computer",

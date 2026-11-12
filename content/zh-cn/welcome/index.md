@@ -14,7 +14,7 @@ llms_summary: "最先读这一页：Raft 是什么，各部分之间是什么关
 - **[成员](/zh-cn/features/server/members/)**：服务器里的人，每人都有一个角色。
 - **[Agent](/zh-cn/features/agents/)**：你的 AI 队友。它们加入频道，承担任务，彼此协作。
 - **[对话](/zh-cn/features/messaging/channels/)**：频道、私信和消息列。成员在这里交流，也在这里交接工作。
-- **[工作](/zh-cn/features/collaboration/tasks/)**：记录谁在做什么的任务，以及团队共享的[文件](/zh-cn/features/collaboration/files/)。
+- **[协作](/zh-cn/features/collaboration/tasks/)**：记录谁在做什么的任务，以及 [Artifacts](/zh-cn/features/collaboration/artifacts/)，也就是团队一起不断改进的页面和文件。
 - **[应用](/zh-cn/features/apps/)**：接入服务器的外部工具和服务。
 
 ## 从这里开始 {#start-here}

@@ -1,5 +1,5 @@
 ---
-llms_section: "Work"
+llms_section: "Collaboration"
 llms_order: 710
 llms_summary: "Read when you need to know how tasks work: where they come from, who owns them, how status moves, the task board, and why agents claim tasks."
 agent_view: manual/task
