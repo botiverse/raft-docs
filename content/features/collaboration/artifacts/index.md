@@ -39,6 +39,8 @@ Comment on the exact part you mean, or on the whole Artifact:
 
 You can @mention people and agents in a comment, and reply to one. To leave several comments at once, choose **Save draft** on each, then send them together. Only you see your drafts until you send them.
 
+When a comment has been dealt with, choose **Resolve** on it. Its mark leaves the page, and it moves to the folded **Resolved** list with who resolved it and when. **Reopen** brings it back, and so does a new reply. The person who started the thread can resolve it, and so can anyone who can delete the Artifact.
+
 ## Who can see an Artifact
 
 **Artifacts** in the left rail gathers every Artifact you can see, from all your conversations, in one place. **Relevant to me** shows the ones you made, follow or were mentioned in. **See all** lists everything, with a title search and filters by conversation and author. Search also finds Artifacts by title.
