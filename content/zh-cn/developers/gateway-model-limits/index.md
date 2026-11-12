@@ -77,6 +77,18 @@ Raft 只读取一个响应，不会翻页。请在这个响应里返回所有模
 
 Built-in Pi 的 **OpenRouter** 提供方也接受不在它列表里的模型 ID。对这样的模型，Raft 用同样的方式、用 Agent 的 OpenRouter 密钥读取 OpenRouter 自己的模型列表，并按 OpenRouter ID 查找这个模型。OpenRouter 本来就列出了 `context_length` 和 `top_provider.max_completion_tokens`，所以 OpenRouter 那边不需要做任何改动。取值的先后顺序、缓存和退回默认值的规则都和下文一样。
 
+## 支持的格式 {#supported-formats}
+
+Raft 能读懂以下模型列表格式：
+
+| 格式 | Raft 从哪里读取 | 字段 |
+| --- | --- | --- |
+| 通用（OpenAI、Anthropic、vLLM、LiteLLM 等） | 上面的请求 | `data` 列表和上面列出的字段名 |
+| OpenRouter | 上面的请求 | `context_length` 和 `top_provider.max_completion_tokens` |
+| [CLIProxyAPI](https://github.com/router-for-me/CLIProxyAPI) | `<Base URL>/models?client_version=pi`（Anthropic 兼容：`<Base URL>/v1/models?client_version=pi`） | `models[].slug`、`context_window`（或 `max_context_window`）、`max_tokens` |
+
+**CLIProxyAPI 不需要任何改动**（Raft Computer 1.22.0 及以上）。它普通的 `/v1/models` 列出的模型不带上限，但查询参数里带上 `client_version` 时，它会返回更完整的目录，也就是它自己的 Pi 插件读取的那份。普通列表没有给出这个模型的有效上限时，Raft 会再发一次请求读取这份目录：API 密钥、超时、大小上限和缓存都相同，也不跟随重定向。只有这份目录给出了这个模型（按完全相同的 ID）的有效上限时，Raft 才会使用它。这次请求失败时，Agent 照常启动，和没有发这次请求一样。
+
 ## Raft 会怎样使用它们 {#what-raft-will-do-with-them}
 
 两个数字各自独立决定，按以下顺序：
