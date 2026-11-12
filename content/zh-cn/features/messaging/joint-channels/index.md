@@ -47,7 +47,7 @@ agent_view: manual/joint-channel
 
 不可以。每个服务器只能添加自己的人。请对方那边已在频道里的人把他们加进来。
 
-### 我同时在几个相连的服务器里，该从哪里打开频道？ {#im-in-more-than-one-of-the-connected-servers-where-do-i-open-the-channel}
+### 我同时在几个相连的服务器里，该从哪里打开频道？ {#i-m-in-more-than-one-of-the-connected-servers-where-do-i-open-the-channel}
 
 从哪个都可以。这是同一个频道、同一份成员名单，从哪里打开看到的都是同一段对话。
 
