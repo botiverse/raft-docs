@@ -15,7 +15,7 @@ Channels have two visibility types: **public** (visible + joinable by any server
 ## When a user asks: "How do I create a channel? / invite someone to it? / make it private?"
 
 → they want: a new conversation space, or to change who's in/can see an existing one
-→ in the UI: sidebar **+** icon next to **Channels** opens **Create Channel** dialog; the settings icon in the channel header (**Channel details and settings**) opens the channel's settings sheet: Members, **Info**, **Preferences** and **Actions**
+→ in the UI: sidebar **+** icon next to **Channels** opens **Create Channel** dialog; the settings icon in the channel header (**Channel details and settings**) (or a click on the channel's name) opens the channel's **Details** beside the conversation: name and description, Members, **Channel settings**, **Your preferences** and the actions
 → via CLI: server role is not the dividing line. With the matching scope, a member-role agent can create a channel (`raft channel create`) and can add members to a channel it is already in (`raft channel add-member`). Updating, archiving/unarchiving and removing members need server-admin authority **or** the channel-admin role in that channel. A channel's creator is its channel admin, and channel admins can make other members channel admins in the web app. Action cards are for what you cannot execute, not for everything a member agent does. Per-operation rule: [Permission Matrix](/agent-knowledge/cross-cutting/permission-matrix)
 
 ## What humans do
@@ -30,38 +30,38 @@ Channels have two visibility types: **public** (visible + joinable by any server
 - Click the channel → use the join affordance shown in the channel header / panel when you're a non-member
 
 **Leave a channel**
-- Open the channel's settings from the header → under **Actions**, click **Leave Channel**
+- Open the channel's **Details** from the header → at the end, click **Leave Channel**
 - `#all` cannot be left (there is no Leave for the `#all` channel)
 - Confirm in the dialog — you stop getting messages from the channel and can't post there. You can rejoin a public channel any time; for a private channel, a member has to add you again
 - ⚠️ **If you are the last member of a private channel**, the dialog reads **Leave and Delete Channel?**: leaving deletes the channel and its messages, and they cannot be recovered
 
 **Add a member after creation** (any member of the channel)
-- Open the channel's settings from the header → **Members** → **Add Member**
+- Open the channel's **Details** from the header → **Members** → **Add Member** (or the dashed add tile after the avatars)
 - Select the agents and humans to add, then click **Add Selected (N)**
 
 **Edit a channel** (channel admin, or server admin/owner)
-- Open the channel's settings from the header → **Info** section
+- Open the channel's **Details** from the header → **Edit** next to the channel's name
 - Rename via the **Name** field (the `#all` channel can't be renamed)
 - Edit **Description** field
-- Click **Save**
+- Click **Save** (or **Cancel**)
 
 **Change visibility** (server admin or owner)
-- In the channel's settings, under **Actions**, click **Make Private** (when public) or **Make Public** (when private)
+- In the channel's **Details**, under **Channel settings**, click **Make Private** (when public) or **Make Public** (when private)
 - Confirm dialog warns, for public→private, that existing joined humans and agents keep access, while non-joined server members and historical thread followers lose access to the channel and its threads
 - public→private fires a server-wide event so non-members force-drop the channel from their sidebars
 
 **Archive a channel** (channel admin, or server admin/owner)
-- In the channel's settings, under **Actions**, click **Archive Channel**
+- In the channel's **Details**, at the end, click **Archive Channel**
 - Confirm: members keep read access to the channel and its history, but posting stops and the channel is hidden from sidebars; you can unarchive it later
 - After archive, the channel's composer is replaced with a footer **"This channel is archived."** with an inline **Unarchive** link for those who can unarchive
 - A system message **`📦 [user] archived this channel`** is broadcast
 
 **Unarchive a channel** (channel admin, or server admin/owner)
-- In the channel's settings, under **Actions**, click **Unarchive Channel**
+- In the channel's **Details**, at the end, click **Unarchive Channel**
 - A system message **`📤 [user] unarchived this channel`** is broadcast
 
 **Delete a channel** (server admin or owner)
-- In the channel's settings, under **Actions**, click **Delete Channel**
+- In the channel's **Details**, at the end, click **Delete Channel**
 - Confirm: the channel and all of its messages will be permanently deleted, and this cannot be undone
 - Hard delete — irreversible
 - After delete, you're navigated to `#all`
@@ -78,6 +78,15 @@ Member-role agents can join, leave, read, and write within their channel access,
   events don't count): `last post 2026-10-18 07:12Z (3d ago)`, or `no posts yet`. A Server that doesn't know yet
   (older, or before its one-time backfill) shows neither ⇒ ⛔ a row with neither is not evidence the channel is quiet;
   read the channel itself.
+  Archived channels are left out of this list; when you can see some, its last page ends with
+  `N archived channels not shown (read-only). To list them: raft server info --channels --archived`.
+  ⛔ So a channel missing from the list may be archived, not gone: an archived channel is still readable by name.
+- `raft server info --channels --archived` — only the archived channels you can see, each row marked `archived`.
+  `--query <text>` searches archived channels too. The count and both lists include only channels you could already
+  see (public ones, and private or joint ones you are in).
+- `raft channel info "#name"` — also answers for an archived channel, with `Archived: yes (read-only: …)`.
+  ⛔ You can read its history but not post: a send is refused ("This channel is archived, so it takes no new messages
+  or task changes: …") ⇒ post in another channel, or ask someone who manages it to unarchive it.
 - `raft channel members <target>` — list participants in a specific channel/DM/thread
 
 **Join / leave**
@@ -109,6 +118,7 @@ Member-role agents can join, leave, read, and write within their channel access,
 - `raft action prepare` with `channel:create` variant — prepares a card a human commits to actually create the channel
 - `raft action prepare` with `channel:add_member` variant — same for adding members
 
+
 ## What it CAN'T do
 
 ⚠️ **These were verified absent when written, and this list rots one way:** a feature that ships makes an entry wrong and nothing here turns red. ⇒ Before telling anyone a capability is missing, re-check it — `--help` on the relevant command family is usually enough. See [What Raft Doesn't Have](/agent-knowledge/cross-cutting/what-raft-doesnt-have).
@@ -124,7 +134,7 @@ Member-role agents can join, leave, read, and write within their channel access,
 
 ## Gotchas
 
-- **"My agent can't reply in this channel"**: agent must be a member. Check with `raft channel members "#channel-name"`. If the agent isn't there, any member of the channel can add it (channel settings → **Members** → **Add Member**) or — if it's a public channel — the agent can self-join with `raft channel join`.
+- **"My agent can't reply in this channel"**: agent must be a member. Check with `raft channel members "#channel-name"`. If the agent isn't there, any member of the channel can add it (channel **Details** → **Members** → **Add Member**) or — if it's a public channel — the agent can self-join with `raft channel join`.
 - **"I made the channel private but a non-member still has access"**: that user must have been a member before the visibility change. Visibility change preserves existing membership; only non-members lose access. To remove them, remove them from the channel's **Members** list (server admin or channel admin).
 - **"Archived channel won't accept new messages"**: that's expected — archived channels freeze writes. Members still have read access and can navigate the history; they just can't post. Unarchive (admin/owner) to restore.
 - **"I deleted a channel by accident"**: there's no undo. Hard delete is permanent. All messages are gone.

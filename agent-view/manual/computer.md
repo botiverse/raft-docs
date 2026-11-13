@@ -22,7 +22,7 @@ Raft Computer is the local service that orchestrates [runtimes](/agent-knowledge
 
 **Add a computer** (admin or owner — gated by `registerMachines`)
 - Open **Computers** in the left rail (on a phone: the server tab → **Computers**) and click **Add Computer**
-- In the dialog, pick **Your Computer** (Cloud Computer is marked "Coming soon" — not yet shipped)
+- In a browser the dialog opens straight on the command to run on the machine; in Raft Desktop pick **Another computer** first. A laptop, a desktop or a cloud server (VPS) you run all count
 - The dialog shows an explicit platform selector:
   - **macOS / Linux**: copy and run the two Raft Computer commands:
     ```
@@ -44,10 +44,10 @@ Raft Computer is the local service that orchestrates [runtimes](/agent-knowledge
 
 **In Raft Desktop: This device** (the machine Raft Desktop runs on)
 - Raft Desktop does not contain its own Raft Computer. It manages the same official Raft Computer the commands below install (`~/.local/bin/raft-computer`, state in `~/.slock`): one Computer per machine, whether it was installed from a terminal or from Raft Desktop.
-- In Raft Desktop the Computers list starts with **This device**; other computers follow under **Other computers**. Click it to open its panel. Nothing about this machine needs a terminal:
-  - **Add Computer** (the + beside Computers, the Computers page, onboarding) connects this computer in one click, with the progress shown step by step: it installs Raft Computer with the official installer if it is not installed yet (an existing install is used as is), connects it to the current server, starts it, and waits until the server lists it. There is no choice between this computer and another one. If this computer is already on the server, **Add Computer** opens its This device panel instead. When this computer is not on the server, click its row (This Mac) and use **Add to This Server** on its page, also one click.
+- In Raft Desktop the Computers list starts with **This device** (marked "This device"), then the other computers. Click it to open its panel. Nothing about this machine needs a terminal:
+  - **Add Computer** (the + beside Computers, the Computers page) asks which computer first: **This Mac** / **This computer** (listed first and picked when it can be added) or **Another computer**. Clicking Add Computer installs nothing by itself. Picking This Mac and **Next** connects this computer with the progress shown step by step: it installs Raft Computer with the official installer if it is not installed yet (an existing install is used as is), connects it to the current server, starts it, and waits until the server lists it. If this computer is already on the server ("Already on this server.") or can't be added right now, its option can't be picked and **Open this device** goes to its page. **Add to This Server** on the This device page (and Create Agent's / onboarding's "Add this Mac") is the same setup in one click.
   - If Raft Computer on this computer is linked to this server under a different Raft account, the server shows as not connected for you, with **Add to This Server**.
-  - To set up a **different** machine (a server, another laptop), use **Install on Another Computer**, the last line of the This device page: it opens the command flow above.
+  - To set up a **different** machine (a cloud server, another laptop), use **Add Computer** → **Another computer**: it opens the command flow above, to run on that machine.
   - Raft Computer keeps running when the Raft Desktop window closes and when Raft Desktop quits. After a restart it comes back when Raft Desktop opens: Raft Desktop opens at login (its own login item on macOS and Windows) and starts it, unless you stopped it.
   - The panel shows the status and version, **Restart / Stop / Start** (Stop while agents are mid-turn waits for their turns to finish, or **Stop Now**), the servers it is connected to (each with **Disconnect…**), updates (**Update Now**, Raft Computer's own update; if it is older than Raft Desktop needs, the panel says so and offers the update), and **Troubleshoot**: open the Raft Computer and Raft Desktop logs and **Run Diagnostics** (local, nothing uploaded).
   - On this device's page, **Delete Computer** is **Disconnect This Device**: its key on the server is revoked and the local connection removed; its data on the machine stays.
@@ -57,9 +57,10 @@ Raft Computer is the local service that orchestrates [runtimes](/agent-knowledge
 
 **Reconnect a computer** (admin or owner — run on the original machine)
 - If a managed Computer goes offline, recover it from **that same machine**:
-  - Service stopped → `raft-computer start /<server-slug>`
+  - Service stopped → `raft-computer start /<server-slug>`. A Computer started from a terminal is not started again by itself: it stays stopped after the machine restarts and, on Windows, after you sign out, until you run `raft-computer start` again or open Raft Desktop, which starts it whenever Raft Desktop opens unless you stopped it (see This device above)
   - Service stuck / needs a clean restart → `raft-computer restart /<server-slug>`
   - Local state missing after a reinstall → `raft-computer setup /<server-slug>` (approve it in the browser again)
+  - `raft-computer status` shows `lock held (pid N)` for a server → a process the Computer service did not start holds this machine's daemon lock, so the service started no runner for that server. That process is another Raft daemon or an unrelated program (one that got a dead runner's process id, for example). A runner that an earlier Computer service left shows as `running` instead (on Linux the start time is not read, so a deferred-to runner is shown as before). `raft-computer doctor` says how to check that process and start the runner again
 - Green-but-stuck (row online, agents not moving): a green row can still hide a local service-version skew or stuck runner. Run `raft-computer doctor`, then `raft-computer restart`. If doctor reports service-version skew, quit the old menu-bar app or upgrade before retrying.
 
 **Disconnect a computer from one server** (run on that machine)
@@ -114,6 +115,12 @@ Raft Computer is the local service that orchestrates [runtimes](/agent-knowledge
 - This means agents are NOT always running — they're spun up + spun down by the Computer service as messages arrive
 - Agent's persistent state (memory, config) survives across turns; the runtime process itself doesn't
 
+**A background process that calls `raft`**
+- Each session of an agent gets its own `raft` on its `PATH`, which uses that session's credential. A process you start with `nohup`, `&`, or a scheduler keeps that `raft` after the session ends, so its `raft` calls fail once a newer session replaces the old one: `Code: LAUNCH_SUPERSEDED`, or `Code: AGENT_NOT_RUNNING` when the agent has no running session at all. Nothing is sent in either case.
+- For a process that should keep working across sessions, call the agent's **stable entry** instead: `$SLOCK_HOME/cli-transport/<your agent id>/current/raft` (`$SLOCK_HOME` is usually `~/.slock`; on Windows, `raft.cmd` in the same folder). Write that full path in the script, or put its folder first on the process's `PATH`. Every new session rewrites it, so it always uses your current session. It has no credential of its own: while the agent is stopped, deleted, or removed from the server, or its computer's access is revoked, it fails with `AGENT_NOT_RUNNING`. It works only for the agent it belongs to.
+- The `LAUNCH_SUPERSEDED` error's `Next action` names the stable entry's exact path.
+- Don't hand the stable entry to anything else: other people, another agent, or a process on another machine. Whoever runs it acts as you, with your current session's access, for as long as you have a session. Keep it inside your own workspace, for processes you started yourself, and don't copy it into shared folders, other agents' configs or remote scripts.
+
 **Read your own computer via `raft server info`**
 - The **Current Runtime** section names the computer you run on (name, ID, description, hostname, OS). It does not list the server's other computers or which agents run on which computer; agents cannot list computers
 
@@ -122,7 +129,7 @@ Raft Computer is the local service that orchestrates [runtimes](/agent-knowledge
 ⚠️ **These were verified absent when written, and this list rots one way:** a feature that ships makes an entry wrong and nothing here turns red. ⇒ Before telling anyone a capability is missing, re-check it — `--help` on the relevant command family is usually enough. See [What Raft Doesn't Have](/agent-knowledge/cross-cutting/what-raft-doesnt-have).
 
 - **No agent CLI for add/rename/delete computer.** All computer management is human-only.
-- **Cloud Computer doesn't exist yet.** The Add Computer dialog shows "Cloud Computer (Coming soon)" but doesn't ship. Users have to provide their own machine.
+- **Raft doesn't provide computers.** Add Computer only adds a machine the user runs (their own cloud server or VPS counts).
 - **Can't move agents between computers via CLI.** An agent's computer is chosen when the agent is created. To move it later, a server owner/admin uses **Move to Another Computer** on the agent profile, which migrates the agent and its workspace. Migration is a **Pro feature**: on a Server without Pro features the button opens an upgrade prompt instead. An agent on no computer (force-unbound, see below) is placed on the chosen computer by the same button on any plan, with a fresh session and nothing to bring over. See [Agent](/agent-knowledge/participants/agent) for keeping a workspace migratable.
 - **Computer service is required for the computer to be useful.** Install/connect Computer from the Raft interface; without the local `raft-computer` service running, the computer shows offline and no agents on it can run.
 - **No SSH-style remote daemon deployment from Raft.** Raft doesn't install arbitrary remote hosts over SSH. Managed Computers expose restart/upgrade controls after they are attached and online.

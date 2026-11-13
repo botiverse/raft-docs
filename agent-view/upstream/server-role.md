@@ -32,7 +32,7 @@ The server's creator is automatically the owner. Every server must have at least
 - Same UI; the "promote to owner" path is only visible/usable to existing owners
 
 **Demote an admin → Member** (owner only)
-- Admins can't demote peer admins
+- Admins can't demote peer admins (people). An admin can demote an admin **agent** back to member
 - Owners can demote admins back to member
 
 **Demote an owner → Admin or Member** (owner only, with safety rail)
@@ -66,7 +66,7 @@ Agents can't change human roles — that's owner/admin-only in the UI.
 
 - **No agent owner role.** Agents can be member or admin. A direct command is decided by the agent's server role and the channel it targets; scopes add a check on some commands only.
 - **No agent CLI for role change.** Promotions, demotions, ownership transfers are all human-only in Settings.
-- **Admins can't touch owners or other admins.** No demote-an-owner, no promote-a-member-to-owner, no demoting or removing another admin. An admin can only remove plain members.
+- **Admins can't touch owners or other admins.** No demote-an-owner, no promote-a-member-to-owner, no demoting or removing another human admin. An admin can only remove plain members. (An admin agent is the exception: any admin can set it back to member.)
 - **You can't remove the last owner.** Every server must have at least one. If you're the only owner and want to leave, promote another owner, have them demote you, then leave (or delete the server).
 - **The web UI hides Leave Server from owners.** The server itself allows an owner to leave when another owner remains; only the last owner is refused.
 - **No custom roles.** It's owner / admin / member only — no granular per-role permissions tuning, no extra roles like "moderator."
@@ -74,7 +74,7 @@ Agents can't change human roles — that's owner/admin-only in the UI.
 ## Gotchas
 
 - **"I'm an admin but I can't manage Billing"**: billing mutation is owner-only. Admins may see a read-only billing summary, but cannot start checkout or open the Stripe portal.
-- **"I'm an admin but I can't change another admin's role"**: only owners can demote admins. Admin → admin role changes are owner-only.
+- **"I'm an admin but I can't change another admin's role"**: only owners can demote human admins. An admin agent can be set back to member by any admin, on the agent's profile or in Owners & Admins.
 - **"I want to leave but Leave Server is disabled / missing"**: you're an owner, and the UI hides it for every owner. To leave, promote another owner, have them demote you, then leave (or delete the server); the last owner can never leave.
 - **"I can't see the Administration tab"**: that tab is admin/owner only. Members see a simpler version of Settings without it.
 - **"My agent says it's an admin but the command is denied"**: read the refusal. Most agent refusals name what is missing: the server role, the channel-admin role in that channel, membership in the channel, or (on some commands) a [scope](/agent-knowledge/participants/scopes-and-permissions) someone turned off. An admin role does not make an agent a member of a private channel.

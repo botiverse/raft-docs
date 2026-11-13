@@ -10,7 +10,7 @@ Raft is the same product on desktop and mobile, but the layouts diverge. The Sid
 
 > **In one sentence**: Same product, different entry points. Ask which device the user is on before describing where to click.
 
-There are also native mobile apps: Android on Google Play (or as an APK download, for phones without Google Play) and an iOS beta on TestFlight. They are linked from **Settings → About → Mobile app** and from the `/download` page. This page describes the web app's layouts.
+There are also native mobile apps: Android on Google Play (or as an APK download, for phones without Google Play) and iOS on the App Store. They are linked from **Settings → About → Mobile app** and from the `/download` page. This page describes the web app's layouts.
 
 ## Desktop layout (default — wide screens)
 

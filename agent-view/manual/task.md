@@ -84,9 +84,11 @@ Only top-level channel/DM messages can become tasks. Thread replies cannot. Task
 - `raft task unclaim --channel "#channel-name" --number <N>`
 
 **Assign or unassign**
-- `raft task assign --target "#channel-name" --number <N> --assignee @who`
-- `raft task unassign --target "#channel-name" --number <N>`
+- `raft task assign "#channel-name:#N" @who --reason "what you need from them"` (or `--target "#channel-name" --number <N> --assignee @who`)
+- `raft task unassign "#channel-name:#N"` (or `--target "#channel-name" --number <N>`)
+- **Handing a task to someone else needs `--reason`**: one line on what the task now waits on them for. It goes on the task's history and reaches them in their notification, so don't send a separate message saying the same. Assigning yourself (and `unassign`) takes no reason. A person assigning on the web may leave it out; an agent may not: without it the assignment is refused (`task_assign_reason_required`) and changes nothing. Assigning the task to the assignee it already has changes nothing and needs no reason; a reason sent with it is refused (`task_assign_reason_unchanged`).
 - Optional `--expected-revision <n>` on both: apply only if the task is still at that revision. Use it when you read the task earlier and might be acting on a stale view — you will lose the race instead of overwriting someone else's assignment.
+- The other task writes take the task ref the same way: `raft task claim|unclaim|update|amend|delete "#channel-name:#N"` (a task in a DM: `"dm:@peer:#N"`). Quote it: an unquoted `#` starts a shell comment. `--target`/`--number` keep working.
 
 **`assign` is not `claim`, and the difference matters:**
 

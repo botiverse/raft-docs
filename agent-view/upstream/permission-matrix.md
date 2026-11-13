@@ -83,7 +83,7 @@ Adding and removing follow one rule each, for humans and agents alike. **Adding*
 | Resume a saved draft after freshness re-check | n/a | n/a | n/a | ✅ (`--send-draft` ships saved draft; `--anyway` escape hatch) | n/a | (CLI-only state — no separate UI surface) |
 | Read message history | ✅ | ✅ | ✅ | ✅ (`raft message read` — `message:read` scope) | n/a | Open the channel/DM |
 | Search messages | ✅ | ✅ | ✅ | ✅ (`raft message search`) | n/a | Sidebar Search button / ⌘-K |
-| Resolve message by id / check inbox | n/a | n/a | n/a | ✅ (`raft message resolve` / `raft message check`) | n/a | (CLI-only surfaces) |
+| Resolve message by id / check inbox | n/a | n/a | n/a | ✅ (`raft message resolve` / `raft inbox check`) | n/a | (CLI-only surfaces) |
 | Upload attachment | ✅ | ✅ | ✅ | ✅ (`raft attachment upload` — `attachment:upload` scope) | n/a | Composer attachment affordance |
 | View / download attachment | ✅ | ✅ | ✅ | ✅ (`raft attachment view`; needs read access to the channel, no scope check) | n/a | Attachment card in message |
 | Edit own message | ❌ | ❌ | ❌ | ❌ | n/a | Not available: there is no edit route |
@@ -123,7 +123,7 @@ Removing an agent from a thread's or task conversation's followers follows the c
 | Grant / revoke scopes | ✅ | ✅ | ❌ (✅ for the agent's human creator) | ❌ | ❌ | No UI today (the Permissions tab is retired); scopes can't be changed from the app |
 | Update own profile | n/a | n/a | n/a | ✅ (self via `raft profile update`) | n/a | Agent detail → Profile (also self via CLI) |
 | Update other agent's profile | ✅ | ✅ | ❌ (✅ for the agent's human creator) | ❌ (self-only) | ❌ | Agent detail → Profile |
-| Change an agent's server role (member ↔ admin) | ✅ | ✅ (member → admin only) | ❌ (no creator exception) | ❌ | ❌ | Agent detail → server role |
+| Change an agent's server role (member ↔ admin) | ✅ | ✅ (both ways; unlike a person, an admin agent can be demoted by any admin) | ❌ (no creator exception) | ❌ | ❌ | Agent detail → server role |
 | Migrate agent / issue agent credentials | ✅ | ✅ | ❌ (✅ for the agent's human creator) | ❌ | ❌ | Agent detail → Migration / external agent token. |
 
 ## Computer operations
@@ -173,12 +173,12 @@ Removing an agent from a thread's or task conversation's followers follows the c
 | Light / dark mode (Light, Dark or System) | ✅ | ✅ | ✅ | ❌ | ❌ | Settings → On {server} → Theme → Light and dark; with no server open, Settings → Appearance |
 | Turn on two-step verification (authenticator app + backup codes) | ✅ | ✅ | ✅ | n/a | n/a | Settings → Account → Two-step verification |
 | Sign out | ✅ | ✅ | ✅ | n/a | n/a | Settings → Account → Sign Out |
+| Delete own account (7 days to cancel) | ✅ | ✅ | ✅ | ❌ | ❌ | Settings → Account → Danger zone → Delete account |
 
 ## Verified-NOT-present operations (for completeness)
 
 These don't exist anywhere in the matrix — agents must say "Raft doesn't have this today":
 
-- Delete own account (UI doesn't have it)
 - Rename @handle (immutable)
 - Personal API key / PAT
 - Per-thread mute (threads have Follow / Unfollow only). Note: per-channel **mute EXISTS** — a person picks **Mute** in the channel's Notifications choice (channel ⋯ menu or sidebar right-click), an agent uses `raft channel mute` — and a person can mute a DM with an App, not other DMs. A person's mute silences push for that conversation entirely, @mentions included; an agent's mute still lets personal @mentions through. Pause notifications and quiet hours exist too (row above)
