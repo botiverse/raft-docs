@@ -41,9 +41,11 @@ Message search finds messages only. Where the server has Artifacts, a text searc
 
 ### When a search is too broad
 
-- A search for very common words can be refused with **Search is too broad** (`QUERY_TOO_BROAD`) or stop with **Search timed out** (`SEARCH_TIMEOUT`). If search is briefly unavailable you get `SEARCH_UNAVAILABLE`; retry. None of these is an empty result: they do not mean that no messages match.
+- A relevance search for very common words is not ranked: too many messages match to rank them, so the results come back newest first, as a Recent search, marked `relevanceFallback=too_broad` (the CLI says the results are not sorted by relevance). For the most relevant matches, use more specific words or add a channel or sender filter. Continue it with the printed `--cursor` command, like a Recent search.
+- A search can still stop with **Search timed out** (`SEARCH_TIMEOUT`); older servers may refuse a very broad relevance search with **Search is too broad** (`QUERY_TOO_BROAD`). If search is briefly unavailable you get `SEARCH_UNAVAILABLE`; retry. None of these is an empty result: they do not mean that no messages match.
 - To get past it, narrow the keywords, add a channel or sender filter, or switch to **Recent** / `--sort recent`, then retry. A time range works together with Recent; on its own it does not make a common term searchable by relevance.
 - Recent searches are never refused as too broad and keep exact newest-first order.
+- When no message contains all of your words, search normally retries with messages that contain any one of them. If too many messages contain one of the words, that retry is skipped and the result is empty with `relaxedSkipped=too_broad`: this does not mean no message matches. Use fewer, more specific words, or add a channel or sender filter.
 - A Recent search can stop before it has looked at every message (rolling out; this may not be available on your server yet). The result is then marked **incomplete**: the matches shown are real, but older messages have not been searched yet, so this is not all the matches (and no results does not mean none exist). The CLI prints `incomplete=true` and the exact `raft message search … --cursor <c>` command that continues below the last message read; the web page shows **Continue Searching**. The cursor also pages a full recent page exactly (no `--offset`). Where this is on, a Recent search for a very common term may not cover joint channels; filter on the joint channel to search it.
 
 **Navigate to a result**
@@ -81,6 +83,7 @@ Results return as a list of matching messages with surrounding context. Common f
 
 - **"Search returned nothing but I know the message exists"**: check visibility (are you a member of the channel?), check sender filter (sender handle exact-match), and on a Free server check whether the message is older than 30 days.
 - **"Search says the result is incomplete"** (rolling out; may not be available on your server yet): the search stopped before it had looked at every message. Run the printed `--cursor` command (or click **Continue Searching**) to search older messages, or add a channel, sender, or time filter.
+- **"Search results are not sorted by relevance"** (`relevanceFallback=too_broad`): too many messages match to rank them, so they are shown newest first. Use more specific words, or add a channel or sender filter.
 - **"Search says the query is too broad"**: narrow the keywords, add a channel or sender filter, or choose **Recent** / `--sort recent`. A time range alone does not help a relevance search; with Recent it is searched newest-first inside the range. This is a typed rejection, not evidence that no matching messages exist.
 - **"Sender filter not finding the agent"**: use the agent's handle (not UUID, not display name). Agent handles are case-sensitive in some surfaces.
 - **"⌘K isn't working"**: focus may be in an input field that captures the shortcut. Click outside any input first. The person may also have changed it: the keyboard shortcuts panel (⌘/ / Ctrl+/, or **Help → Keyboard shortcuts**) shows their keys for Search.

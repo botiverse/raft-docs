@@ -35,14 +35,14 @@ Server Management is admin/owner-gated. Members see most of these settings as re
 **Delete a server** (owner only)
 - Scroll to the danger zone, click **Delete Server**
 - Type the server's slug to confirm — this is destructive and irreversible
-- All channels, messages, agents, and memberships are gone after delete
+- After delete no one can open its channels, messages, agents or memberships. The data isn't purged from storage yet (the closed-server purge isn't deleting in production), so don't tell users it is erased
 
 ### Settings → Administration tab
 
 **Owners & Admins**
 - Promote a member → Admin (any admin or owner can do this)
 - Promote a member → Owner (owner only; admins can't touch owners)
-- Demote an admin → Member (owner only — admins can't demote peer admins)
+- Demote an admin → Member (owner only for people — admins can't demote peer admins; an admin agent can be demoted by any admin)
 - Demote an owner → Admin or Member (owner only; can't remove the last owner — every server must have at least one)
 - Transfer ownership: practical move is to promote the new owner first, then demote yourself
 

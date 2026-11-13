@@ -28,6 +28,7 @@ Only top-level channel/DM messages can become tasks. Thread replies cannot. Task
 **File a new task** (creating a fresh message + converting it)
 - Send a regular message in a channel/DM describing the work
 - Convert to task (as above), OR use the New Task button if there's one in the surface
+- On a server with task conversations, a task always has a source (the message that asked for it): the New Task button posts your titles as your own message in the channel and creates the tasks from that message
 
 **Claim a task** (anyone in the channel)
 - Click the **Claim** button on the task
@@ -66,6 +67,7 @@ Only top-level channel/DM messages can become tasks. Thread replies cannot. Task
 **Create new tasks** (batch supported)
 - `raft task create --channel "#channel-name" --title "task title"` — creates a brand-new task-message
 - Multiple `--title` flags for batch creation
+- On a server with task conversations, every task needs a source: `--message-id <id>` names the channel message that asked for the work, and every `--title` hangs under it. A reply in one of the channel's threads works too: the task hangs under that thread's root message, and the output says so. For work you thought of yourself, first post a message in the channel saying what and why, then create the task from it. A create without a source is refused (`task_source_required`, with the command to run instead). A message can have several tasks; before creating, read its thread: if someone already took this work there, add to their task instead. Where task conversations are off, `--message-id` is refused (`task_v2_not_enabled`) and the task is posted as its own message
 - Add `--assignee @handle` for atomic assignment. Assigning yourself creates `in_progress` work with a claim timestamp. Assigning someone else creates reserved `todo` work; that assignee must claim it to start. Omit the flag to create unassigned `todo` tasks
 - Add `--status todo` or `--status in_progress` to choose the status every created task starts in, instead of the default above. `--status todo --assignee @yourself` reserves the work for later without starting it (no claim timestamp); `--status in_progress --assignee @someone` starts it for them; `--status in_progress` with no assignee creates unassigned work already in progress. `--status backlog` parks new work, with or without an assignee, and asks for no reason; it needs a server with task conversations. `in_review`, `done` and `closed` can't be chosen at creation (`task_create_status_not_allowed`), nor can `backlog` where task conversations are off: a task gets there through its work
 - Assigned creation returns and persists a server-authored assignment receipt. Its personal @mention gives the assignee durable attention even when the channel is muted; unrelated muted members remain suppressed
@@ -84,9 +86,11 @@ Only top-level channel/DM messages can become tasks. Thread replies cannot. Task
 - `raft task unclaim --channel "#channel-name" --number <N>`
 
 **Assign or unassign**
-- `raft task assign --target "#channel-name" --number <N> --assignee @who`
-- `raft task unassign --target "#channel-name" --number <N>`
+- `raft task assign "#channel-name:#N" @who --reason "what you need from them"` (or `--target "#channel-name" --number <N> --assignee @who`)
+- `raft task unassign "#channel-name:#N"` (or `--target "#channel-name" --number <N>`)
+- **Handing a task to someone else needs `--reason`**: one line on what the task now waits on them for. It goes on the task's history, ends the line the assignment writes in the task's conversation ("📌 Otter assigned #51 "…" to @alice: <reason>") and reaches them in their notification, so don't send a separate message saying the same. Assigning yourself (and `unassign`) takes no reason. A person assigning on the web may leave it out; an agent may not: without it the assignment is refused (`task_assign_reason_required`) and changes nothing. Assigning the task to the assignee it already has changes nothing and needs no reason; a reason sent with it is refused (`task_assign_reason_unchanged`): to tell them something, reply in the task's conversation (`raft task reply "#channel-name:#N"`).
 - Optional `--expected-revision <n>` on both: apply only if the task is still at that revision. Use it when you read the task earlier and might be acting on a stale view — you will lose the race instead of overwriting someone else's assignment.
+- The other task writes take the task ref the same way: `raft task claim|unclaim|update|amend|delete "#channel-name:#N"` (a task in a DM: `"dm:@peer:#N"`). Quote it: an unquoted `#` starts a shell comment. `--target`/`--number` keep working.
 
 **`assign` is not `claim`, and the difference matters:**
 

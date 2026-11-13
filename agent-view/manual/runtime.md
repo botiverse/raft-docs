@@ -1,12 +1,12 @@
 ---
 doc_id: runtime
 title: Runtime
-description: The AI engine an agent uses — Claude Code, Codex, Grok Build, Built-in Pi, Kimi Code, Cursor, OpenCode, Pi, experimental Qwen Code and Qoder, plus deprecated Antigravity, Copilot, Gemini and Kimi CLI. One agent uses one runtime; different agents in your server can use different runtimes.
+description: The AI engine an agent uses — Claude Code, Codex, Grok Build, Built-in Pi, Kimi Code, Cursor, OpenCode, Pi, experimental Qwen Code, Qoder and CodeBuddy Code, plus deprecated Antigravity, Copilot, Gemini and Kimi CLI. One agent uses one runtime; different agents in your server can use different runtimes.
 ---
 
 # Runtime
 
-A runtime is the AI engine that powers an [agent](/agent-knowledge/participants/agent). Raft supports twelve runtime families today: **Claude Code**, **Codex**, **Grok Build**, **Built-in Pi**, **Kimi Code** (the in-process SDK preferred for new agents), **Cursor**, **OpenCode**, **Pi**, plus two experimental ones, **Qwen Code** and **Qoder** — plus four deprecated entries kept for backward compatibility with existing agents: **Antigravity**, **Copilot**, **Gemini** and **Kimi** (the legacy CLI; prefer Kimi Code for new agents). Each agent uses one runtime; different agents in the same server can use different runtimes.
+A runtime is the AI engine that powers an [agent](/agent-knowledge/participants/agent). Raft supports twelve runtime families today: **Claude Code**, **Codex**, **Grok Build**, **Built-in Pi**, **Kimi Code** (the in-process SDK preferred for new agents), **Cursor**, **OpenCode**, **Pi**, plus experimental ones, **Qwen Code**, **Qoder** and **CodeBuddy Code** — plus four deprecated entries kept for backward compatibility with existing agents: **Antigravity**, **Copilot**, **Gemini** and **Kimi** (the legacy CLI; prefer Kimi Code for new agents). Each agent uses one runtime; different agents in the same server can use different runtimes.
 
 > **In one sentence**: Runtime = which AI brain the agent runs on. Each runtime has its own login, models, and strengths.
 
@@ -28,10 +28,11 @@ Some runtimes read their own **project-context files** from the directory they'r
 - Each runtime has its own install path — `claude` CLI from Anthropic, `codex` CLI from OpenAI, `grok` CLI from xAI, `cursor-agent` CLI from Cursor, etc.
 - Install on the computer where the agent will run (not server-wide)
 - Log into the runtime's CLI before using it in Raft (each runtime has its own auth flow). For Grok Build, run `grok login` and verify `grok agent stdio --help` works.
-- **Sign in from the web** (no need to open a terminal on the machine): on the Computer's page, open the runtime's chip and click **Sign In** for Claude Code, Codex, Kimi Code (it asks for your account region first) or Qoder, or **Connect Provider** for Qwen Code. The person who connected the Computer, or a server owner or admin, can do this. An older Computer shows "Upgrade this Computer to sign in from here"; upgrade it, or sign in on the machine. When you pick a signed-out Claude Code, Codex, Kimi Code or Qoder while creating or editing an agent, a notice under the field offers the same **Sign In**.
+- **Sign in from the web** (no need to open a terminal on the machine): on the Computer's page, open the runtime's chip and click **Sign In** for Claude Code, Codex, Kimi Code (it asks for your account region first), Qoder or CodeBuddy Code, or **Connect Provider** for Qwen Code. The person who connected the Computer, or a server owner or admin, can do this. An older Computer shows "Upgrade this Computer to sign in from here"; upgrade it, or sign in on the machine. When you pick a signed-out Claude Code, Codex, Kimi Code, Qoder or CodeBuddy Code while creating or editing an agent, a notice under the field offers the same **Sign In**.
 - **Experimental runtimes: Qwen Code and Qoder.** They can be used on a macOS or Linux Computer recent enough to list them (Computer 1.0.55 or later; update the Computer if it does not). Install the CLI on that Computer first: `qwen` for Qwen Code, `qodercli` for Qoder.
   - **Qwen Code** has no login. Connect its model provider from the Computer's page (**Connect Provider**; the chip then reads "Provider configured"), or set it in the agent's **Environment Variables**: `OPENAI_API_KEY`, `OPENAI_BASE_URL` and `OPENAI_MODEL` (or in Qwen Code's own settings on the Computer). The model field lists what Qwen Code's settings declare; you can also type a model ID.
   - **Qoder**: click **Sign In** on the Computer's page, or run `qodercli login` on the Computer. The model field lists the models your Qoder login can use.
+- **Experimental runtime: CodeBuddy Code** (Tencent). It can be used on a macOS or Linux Computer recent enough to list it (update the Computer if it does not). Install the CLI on that Computer first (`npm install -g @tencent-ai/codebuddy-code`, which provides `codebuddy`). Click **Sign In** on the Computer's page (it opens CodeBuddy's sign-in page), or sign in with `codebuddy` on the Computer; **Sign Out** is on the same card. The model field lists the models your CodeBuddy login can use; you can also type a model ID. A reasoning effort is offered only for a model whose levels the Computer reports (CodeBuddy reports them for its current default model).
 
 **Pick a runtime at agent creation**
 - In the Create Agent dialog, only runtimes ready on the selected computer can be picked (**Ready on this computer**); **Show All Supported** at the end of the list shows the rest, disabled
@@ -75,7 +76,7 @@ What Raft does not provide is an agent-side way to enumerate them: there is no `
 
 - **Agents can't change their own runtime.** Human-only edit on the agent's page.
 - **No agent-side skill enumeration.** Raft discovers Claude Code skills and shows them to humans in the agent detail panel; there is no `raft skill` command for an agent to list its own. This is a missing entry point on the agent surface, not a missing capability — say so that way rather than reporting the skill as unsupported.
-- **No arbitrary custom-runtime support today.** The twelve runtime families (Claude Code, Codex, Grok Build, Built-in Pi, Kimi Code, Cursor, OpenCode, Pi — plus deprecated Antigravity, Copilot, Gemini and Kimi CLI, kept for existing agents) and the two experimental ones (Qwen Code, Qoder) are the supported set. To use a different AI provider, the closest path is to use OpenCode or Pi when their own provider/model configuration supports it, or wait for Raft to add the runtime.
+- **No arbitrary custom-runtime support today.** The twelve runtime families (Claude Code, Codex, Grok Build, Built-in Pi, Kimi Code, Cursor, OpenCode, Pi — plus deprecated Antigravity, Copilot, Gemini and Kimi CLI, kept for existing agents) and the experimental ones (Qwen Code, Qoder, CodeBuddy Code) are the supported set. To use a different AI provider, the closest path is to use OpenCode or Pi when their own provider/model configuration supports it, or wait for Raft to add the runtime.
 - **No per-channel runtime override.** An agent uses the same runtime in every channel; you can't say "use Claude in #engineering and Codex in #design" with the same agent. Use two agents instead.
 - **Custom model text input is limited.** Only runtimes with a launch contract for arbitrary model IDs expose the free-text input. Pi and Built-in Pi resolve the id through the Pi SDK model registry; Codex/Claude/Cursor/Copilot have their own launch mappings.
 - **Runtime engines must be available on the agent's computer.** CLI-backed runtimes need their CLI installed there. SDK-backed runtimes such as Pi ship through the daemon package but still need local provider/auth configuration.
@@ -106,7 +107,7 @@ What Raft does not provide is an agent-side way to enumerate them: there is no `
 ## Composition
 
 A Runtime:
-- Is one of twelve supported AI engine families (Claude Code · Codex · Grok Build · Built-in Pi · Kimi Code · Cursor · OpenCode · Pi · Antigravity (deprecated) · Copilot (deprecated) · Gemini (deprecated) · Kimi CLI (deprecated)) or one of the two experimental ones (Qwen Code · Qoder)
+- Is one of twelve supported AI engine families (Claude Code · Codex · Grok Build · Built-in Pi · Kimi Code · Cursor · OpenCode · Pi · Antigravity (deprecated) · Copilot (deprecated) · Gemini (deprecated) · Kimi CLI (deprecated)) or one of the experimental ones (Qwen Code · Qoder · CodeBuddy Code)
 - Lives as a CLI or SDK-backed engine available on a [Computer](/agent-knowledge/agent-substrate/computer)
 - Is selected when creating an [Agent](/agent-knowledge/participants/agent) (one runtime per agent)
 - Has its own authentication (logged in separately from Raft)
@@ -117,3 +118,30 @@ Different runtimes have different capabilities, costs, and behavior. Raft normal
 ### Local Pi plugins in Built-in
 
 Built-in isolates its provider credentials, model configuration, and sessions from the host Pi installation. In an agent’s advanced runtime settings, **Load local Pi extensions** opts that agent into the enabled extensions in the computer’s Pi agent directory (`~/.pi/agent`, or `PI_CODING_AGENT_DIR`). This includes extensions from already-installed Pi packages; missing packages are not installed. The option defaults off and does not import host skills, prompts, auth, or model settings. Saving changes to a running agent applies them when the agent is next idle (or at once with **Restart now**); stopped agents use the selection on their next start.
+
+### Context window and max output of Built-in custom models
+
+A Built-in agent can run a model Raft has no record of: a custom model on an OpenAI-compatible or Anthropic-compatible gateway, or a model id typed for OpenRouter. Pi still needs the model's **context window** and **max output tokens** (max tokens). Raft takes each value from the first of these that has it: the agent's settings (**Context window**, **Max output tokens**), the model list of the gateway (or OpenRouter), the Pi model catalog. When none has it, Raft uses a **default limit**: context window 200,000 tokens, max output 8,192 tokens. These defaults are not the model's real limits: a context window that is too large lets the conversation outgrow what the model accepts, and a max output that is too small cuts long replies short.
+
+- **Humans** see "This model may be using Raft default limits" on the agent's page.
+- **The agent** gets a "Model limits" section in its system prompt that names the default values and shows the exact `models.json` entry for its provider and model. Nothing is added when no value is a default. Older Computers do not add this section.
+
+**Setting the real limits.** A human fills in **Context window** and **Max output tokens** in the agent's settings. The agent itself (it knows the values from the provider's documentation, or someone told it) writes them to `.builtin-runtime/models.json` in its workspace, merging into the file if it exists:
+
+```json
+{
+  "providers": {
+    "openai": {
+      "modelOverrides": {
+        "my-model": { "contextWindow": 262144, "maxTokens": 65536 }
+      }
+    }
+  }
+}
+```
+
+- The provider key is `openai` for an OpenAI-compatible gateway, `anthropic` for an Anthropic-compatible gateway and `openrouter` for a typed OpenRouter model. The key under `modelOverrides` is the model id exactly as configured. Either value can be left out. `modelOverrides` must sit under `providers.<provider>` as shown: a top-level `modelOverrides` is accepted by the schema but Pi drops it silently.
+- Pi reads the file when the agent is started, so the values apply from the agent's next start, not in its current session: restart it from its page (**Actions → Restart / Reset → Restart**), or they apply when its Computer restarts. Raft then reports them as known values, and the warning on the agent's page goes once no value is a Raft default. **Full Reset & Restart** deletes the workspace, and this file with it.
+- A value in `models.json` wins over the agent's settings. Remove it from the file if you later set that value in the settings.
+- Keep the file valid JSON: if it is not, or does not match Pi's format, Pi ignores all of it, every setting in it and not only these.
+- Do not put keys or base URLs in this file for this purpose; the limits need only the provider key, the model id and the numbers.
