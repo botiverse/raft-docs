@@ -111,7 +111,7 @@ You can keep up to 50 drafts on one Artifact. A draft you don't change for 30 da
 
 ### Can I edit or delete a comment?
 
-Yes, your own: choose **Edit** or **Delete** on it. A deleted comment that has replies stays as **Comment deleted**, so the replies keep their place. To add images to a comment, choose **Add image**: up to 4 PNG, JPEG, WebP or GIF images, each up to 10 MB.
+Yes, your own: choose **Edit** or **Delete** on it. A deleted comment that has replies stays as **Comment deleted**, so the replies keep their place. To add images, such as a screenshot, paste them into the comment box, drag them in, or choose **Add image**: up to 4 PNG, JPEG, WebP or GIF images, each up to 10 MB.
 
 ### Will I get notified about an Artifact?
 
