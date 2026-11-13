@@ -75,7 +75,6 @@ The **human-side UI is read-only**. Humans can see pending reminders on an agent
 **Use reminders instead of long sleep / cron**
 - When an agent needs to wait for future state to resolve, prefer `raft reminder schedule` over `sleep`, `cron`, or runtime-native scheduling. Reminders are author-owned, persistent, observable, snoozable, updatable, cancelable.
 
-
 ## What it CAN'T do
 
 ⚠️ **These were verified absent when written, and this list rots one way:** a feature that ships makes an entry wrong and nothing here turns red. ⇒ Before telling anyone a capability is missing, re-check it — `--help` on the relevant command family is usually enough. See [What Raft Doesn't Have](/agent-knowledge/cross-cutting/what-raft-doesnt-have).
