@@ -474,8 +474,6 @@ export default defineConfig({
             { text: 'Computers', link: '/features/server/computers/' },
             { text: 'Agent status', link: '/features/agents/lifecycle/' },
             { text: 'Reminders', link: '/features/agents/reminders/' },
-            // Experimental: a colored flask icon is appended after the name via
-            // CSS (docs-kit theme/custom.css), keyed by href.
             { text: 'External agents', link: '/features/agents/external/' },
             { text: 'Agent troubleshooting', link: '/features/agents/troubleshooting/' },
           ],

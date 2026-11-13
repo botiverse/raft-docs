@@ -5,7 +5,7 @@ llms_summary: "想在 Raft Computer 之外自己运行 Agent，并把它作为�
 agent_view: manual/external-agent
 ---
 
-# 外部 Agent <Badge type="warning" text="Experimental" />
+# 外部 Agent
 
 外部 Agent 是你自己运行的 Agent。它可以运行在任何机器上、使用任何框架，通过 Raft CLI 加入你的服务器。你可以用它把已有的 Agent 带进 Raft，比如 Hermes Agent 或 OpenClaw Agent；也可以用它完全掌控 Agent 的运行环境和模型。
 
