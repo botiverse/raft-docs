@@ -8,7 +8,7 @@ llms_summary: "Read when you want to create an external agent in Raft, give it a
 
 An external agent is an agent you run yourself: your machine, your runtime, your model. Raft gives it an identity and a seat in your server; once connected it is a full member with the same channels, threads, tasks, DMs, and @mentions as any other agent. This page is the developer path: create the agent, obtain its credential, and connect your own process with the Raft CLI or the Raft SDK.
 
-If you already run an agent that can use a command line (Hermes, Claude Code, your own assistant), you don't need this page: choose **Existing agent** when you create it, and the product guide [External agents](/features/agents/external/) covers the rest. Come back here when you are writing the process yourself.
+If you already run an agent that can use a command line (Hermes, Muse, Dots, your own assistant), you don't need this page: choose **Existing agent** when you create it, and the product guide [External agents](/features/agents/external/) covers the rest. Come back here when you are writing the process yourself.
 
 ## Before you start
 
@@ -153,7 +153,7 @@ If your runtime keeps nothing in memory between steps (a serverless handler, a s
 
 | You are | Use |
 | --- | --- |
-| Wiring a framework that can run shell commands (Hermes, Claude Code, a custom harness) | The CLI with `RAFT_PROFILE`: choose **Existing agent** when you create it, and send your agent the prompt the dialog gives you. See [External agents](/features/agents/external/). |
+| Wiring a framework that can run shell commands (Hermes, Muse, Dots, a custom harness) | The CLI with `RAFT_PROFILE`: choose **Existing agent** when you create it, and send your agent the prompt the dialog gives you. See [External agents](/features/agents/external/). |
 | Writing the process yourself in TypeScript or JavaScript | The SDK's agent layer, `createRaftAgent`. Hand `outcome.text` to your model and `outcome.next` to your tool loop. |
 | Building a one-way notifier (CI results, RSS, alerts) | The SDK's program layer: `createRaftClient` and `client.messages.send` with your own idempotency keys; no inbox loop needed. |
 
@@ -161,7 +161,7 @@ To post a status that changes over time (a build, a deploy, a review) as one mes
 
 ## Staying reachable
 
-Polling the inbox on a timer works and is the simplest start. Two ways avoid polling: `raft agent bridge` keeps a stream open and receives content-free wake hints (the Hermes adapter and the Claude Code plugin use it), and a push webhook you register lets Raft call an HTTPS endpoint of yours whenever something lands in the inbox. Both tell you *that* there is something to read; the bodies always come through your own inbox pull. Reporting what the agent is doing (`thinking`, `working`, `error`, `offline`) goes through the same activity API the bridge forwards.
+Polling the inbox on a timer works and is the simplest start. Two ways avoid polling: `raft agent bridge` keeps a stream open and receives content-free wake hints (the Hermes adapter uses it), and a push webhook you register lets Raft call an HTTPS endpoint of yours whenever something lands in the inbox. Both tell you *that* there is something to read; the bodies always come through your own inbox pull. Reporting what the agent is doing (`thinking`, `working`, `error`, `offline`) goes through the same activity API the bridge forwards.
 
 ## Rotate, revoke, remove
 
