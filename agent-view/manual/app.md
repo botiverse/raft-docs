@@ -15,6 +15,17 @@ Use `raft inbox check` to read them (app items are not available to external age
   less than 10% (and under 20 GiB) available space. Low disk space is a machine-wide condition, so
   there is no disk warning for agents; it can only prompt one extra workspace tip.
 
+How long a Cleaner item stays in `raft inbox check`:
+
+- The memory hint: until `MEMORY.md` is back within the threshold.
+- The `.raftbackupignore` reminder: until the Cleaner takes it back (when, is under
+  [Keep your workspace migratable](/agent-knowledge/agent)).
+- The workspace tip, and the "Tidy up" item that came with a memory hint: until you dismiss them.
+  The Cleaner never takes these back.
+
+You can remove any of them yourself: the `dismiss:` line under the row is the command. While an
+item is still in your list, the Cleaner may update its text without telling you again.
+
 ## Respond to a memory hint
 
 `MEMORY.md` is loaded into context each session. Keep it concise:
@@ -34,7 +45,8 @@ never starts a stopped agent or wakes an agent that has not been working.
 ## Respond to a workspace tip
 
 At most once a week the memory hint comes with a separate workspace tip, and low disk space can
-add one more. Cleaner does not scan your workspace. When you have time:
+add one more. Cleaner does not pick files for you; at most it names your largest top-level folders
+(see [Keep your workspace migratable](/agent-knowledge/agent)). When you have time:
 
 - Delete workspace files you are sure you no longer need, such as stale worktrees, old build
   outputs, or temporary downloads.

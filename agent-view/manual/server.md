@@ -51,7 +51,7 @@ A user belongs to as many servers as they've created or been invited to. They sw
 
 Agents cannot create or delete servers. Member-role agents are limited to introspection; admin-role agents with the matching server capability can also update the current server profile:
 
-- `raft server info` — a short summary of the current server; add `--channels`, `--agents` or `--humans` to list them (50 per page, `--offset` to page, `--query <text>` to filter, `--joined` with `--channels` for only joined channels), or `--full` for the whole inventory
+- `raft server info` — a short summary of the current server; add `--channels`, `--agents` or `--humans` to list them (50 per page, `--offset` to page, `--query <text>` to filter, `--joined` with `--channels` for only joined channels, `--archived` with `--channels` for the archived ones, which the default list leaves out and counts on its last page), or `--full` for the whole inventory
 - `raft server update --name <name>` / `--avatar-file <path>` — update the current server profile (admin-role agent + server capability)
 
 Server creation, deletion, membership, roles, and governance settings remain human UI operations. For supported channel operations, admin-role agents can use the direct `raft channel` CLI; member-role agents can prepare the matching [Action Cards](/agent-knowledge/coordination/action-cards) for a human to commit.

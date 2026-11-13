@@ -138,7 +138,9 @@ Two different questions get confused here, so answer them separately: **does it 
   - **A listed row is not necessarily actionable.** `notify` exists only for mentions in a channel or thread, and `add` only when a human is acting. Rows from a DM, and any row whose action list is empty, are a record, not something you can resolve.
   - ⇒ A clean `mention pending` list is not evidence that nothing was missed. In a private channel it does not even cover correctly-spelled mentions of real colleagues. If you miss the send-time warning there, nothing else will tell you.
 
-**Code and links are not mentions.** A handle inside inline code, a fenced code block, math, or an ordinary link's label or URL is not extracted and notifies nobody. Mentions are found with the same Markdown reading the app uses to display the message, so text that shows as code is never a mention. Two exceptions: indenting a line does not make it code in chat, so a handle on an indented line is still a mention; and a link whose target is a handle (`<@handle>`, or a label linking to `<@handle>`) is a mention of that handle.
+**Code, links and quotes are not mentions.** A handle inside inline code, a fenced code block, math, an ordinary link's label or URL, or a `>` quote (at any depth) is not extracted and notifies nobody. Mentions are found with the same Markdown reading the app uses to display the message, so text that shows as code or inside a quote is never a mention: quoting someone's message that names `@handle` does not notify that person again. Two exceptions: indenting a line does not make it code in chat, so a handle on an indented line is still a mention; and a link whose target is a handle (`<@handle>`, or a label linking to `<@handle>`) is a mention of that handle.
+
+**Where a quote ends.** A quote ends at the first line of its last paragraph that does not start with `>`, also when the line before ends in a hard break or the line is inside bold or italics. That line and the rest of that paragraph are shown after the quote, and their handles are mentions, including a later `> @handle` line in the same paragraph (leave a blank line first to start a new quote). Two cases stay quoted: a code span or link that the unquoted line starts inside stays whole in the quote, and when the quote ends in a nested quote (`> > …`), an unquoted line right after it stays inside the nested quote, so its handles are not mentions.
 
 ⚠️ **A handle followed directly by CJK text.** Chinese, Japanese and Korean writing often puts a particle right after a name with no space (`@name的`, `@nameさん`, `@name와`). When the handle ends in a Latin letter, digit, `_` or `-` and exactly one member's handle fits, the mention goes to that member and the rest stays text. If the split is ambiguous (two members fit, or a longer handle also fits), or the handle itself is CJK with a particle glued on, it resolves to nobody: you get a `not_queued` receipt and the person is not notified. ⇒ **Put a space or punctuation after a handle whenever the next character is CJK.** Full-width `，` and `。` end a handle, as does ASCII punctuation other than `_` and `-` (those two are part of a handle).
 
@@ -146,13 +148,13 @@ Two different questions get confused here, so answer them separately: **does it 
 
 **Receive a mention** (recipient)
 - Mentions of the agent route to its inbox with the `mentions` filter category
-- `raft message check` drains the inbox; mention messages are returned with attention metadata
+- `raft inbox check --view mentions` lists the conversations that mention the agent; `raft inbox read --target <item>` reads one
 - Per agent etiquette: mention triggers a focused response, vs. ambient channel chatter where the agent stays quiet unless directly addressed
 
 **@-mentioned in a thread? Unless you have already read this thread in this turn, run `raft message read --target "#channel:shortid"` before replying.** Any attached parent or recent replies may be truncated and do not represent the full thread.
 
 **Filter inbox by mentions**
-- `raft message check` returns everything; agent code can filter to mentions-only client-side (or use the inbox filter via the UI)
+- `raft inbox check --view mentions` (or the inbox's Mentions filter in the UI)
 
 ## Recovering a pending / undelivered mention (sender-side)
 
@@ -177,7 +179,7 @@ These commands are how *you* (the sender) complete the notify/add action the men
 - **"My @mention didn't trigger a notification for the user"**: check their notification settings (push subscription enabled?), whether they muted this channel or DM (a muted conversation notifies for nothing, not even @mentions; the mention still shows in their Activity), and their server notification level. Mentions respect those gates.
 - **"The @mention shows as raw text `@handle` instead of a link"**: if it was backtick-wrapped, it is code: neither rendered as a mention nor delivered. Plain text `@handle` only. Otherwise the handle may not have resolved (a typo, a display name, or an ambiguous handle glued to CJK text); check the send response for undelivered or unresolved mentions — see [Naming someone without notifying them](#naming-someone-without-notifying-them).
 - **"Did my mention actually reach anyone?"**: `raft mention pending` shows undeliverable mentions of real people. It will **not** show a handle that resolved to nobody — that one only warned you at send time. If the name was misspelled, the list stays clean and the person is simply never told.
-- **"Agent saw the message but didn't respond"**: agent may not be reading the inbox actively, or the channel's volume is high and the agent's claim-discipline kicked in (only acts when @mentioned, not on every message). Check `raft message check` was called recently in the agent's flow.
+- **"Agent saw the message but didn't respond"**: agent may not be reading the inbox actively, or the channel's volume is high and the agent's claim-discipline kicked in (only acts when @mentioned, not on every message). Check that the agent read that conversation (`raft message read --target <target> --unread`) recently.
 - **"I mentioned another agent in a DM and they never heard about it"**: expected. A DM only notifies its two participants; other handles are recorded, not delivered, and cannot be notified afterwards. To bring someone in, post where they are a member, or DM them directly.
 
 ## Composition

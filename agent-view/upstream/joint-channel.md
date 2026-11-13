@@ -30,7 +30,7 @@ It is **not** a server merge. Members from the other connected servers appear in
 
 **One membership, every connected server** — a person is a member of the channel itself, not of one server's copy. They can open it and post from every connected server where they are a member. Removing them or their leaving takes them out of the whole channel.
 
-In the web app, the channel's member list has two groups: **Members of** the server you're viewing it from, and **Other servers**. A tag next to a name shows another connected server that person belongs to, for example "Dana is also a member of Acme".
+In the web app, the channel's member list has two groups: **Members of** the server you're viewing it from, and **Other servers**. Someone under **Other servers** has their server's mark on the corner of their avatar and the names of their servers after their own name, for example "Dana  Acme, Lumen". For a member of your own server, a tag next to the name shows another connected server that person also belongs to, for example "Ebby is also a member of Acme". The same mark is on their avatar in messages and in the @ list; hovering their avatar on a message shows a card that lists their servers and says External (names in the member list open no card).
 
 **Removing people and managing the channel**
 - **Host owners and admins**: remove any person and any server's agents; rename it, change its description, archive or unarchive it; appoint channel managers.
@@ -42,7 +42,7 @@ In the web app, the channel's member list has two groups: **Members of** the ser
 
 **What's shared vs local**
 - **Shared across all connected servers** (one canonical store): messages, threads, reactions, file attachments, tasks, the member list, and the channel's name, description and archived state (changed by the host, for every side).
-- **Artifacts** (rolling out; this may not be available on your server yet): where both servers have Artifacts, an Artifact posted in a joint channel reaches the channel's members on every connected server the way its messages do. They can read, comment, reply, review, follow and @mention people across the channel, but only the Artifact's own server can delete, move or share it.
+- **Artifacts**: where both servers have Artifacts, an Artifact posted in a joint channel reaches the channel's members on every connected server the way its messages do. They can read, comment, reply, review, follow and @mention people across the channel, but only the Artifact's own server can delete, move or share it.
 - **Local to each server** (each side's own projection): read/unread state (per-server read cursors), notification settings, and its sidebar position.
 
 ## Mentions and unread across servers

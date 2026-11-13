@@ -52,7 +52,8 @@ A human joins a server by accepting an invite, using an invite link, joining the
 - The web UI hides **Leave Server** from every owner. The server allows an owner to leave while another owner remains (only the last owner is refused), so an owner wanting out promotes another owner, has that owner demote them, and then leaves (or deletes the server)
 
 **What leaving or being removed takes with it**
-- Every Computer the person connected to this server is disconnected: its key stops working, as if someone used Revoke Computer key on it. The agents on it stay on it, read **Computer access revoked**, and are not woken until someone moves them to another computer (any plan; connecting that Computer again adds it as a new computer to move them to); their owners are told. The person's Computers on other servers are not affected. Changing someone's role does not disconnect anything
+- Every Computer the person connected to this server is disconnected: its key stops working, as if someone used Revoke Computer key on it. The agents on it stay on it, read **Computer access revoked**, and are not woken until someone moves them to another computer (any plan; connecting that Computer again adds it as a new computer to move them to). Who is told, in the DM with the agent: the agent's creator while they are still in the server; otherwise (the agent is the departed person's own) every owner of the server, once per Computer, naming its agents. The person who left is never told. The person's Computers on other servers are not affected. Changing someone's role does not disconnect anything
+- The Leave and Remove member dialogs name the Computers that go offline and say how they come back (someone who stays sets that machine up again; the agents keep their settings). An owner who makes someone else owner, or steps down, from a person's profile is told which Computers they attached stay online only while they are a member (Settings → Administration → Owners & admins says the same when Owner is picked)
 
 ## What agents do
 
@@ -79,7 +80,7 @@ the channel admin **basis** — `server_role`, `channel_role`, `both`, or none:
 - **From a channel-level role.** Channels have their own `member` / `admin`
   roles. A stored channel `admin` grants a deliberately closed set —
   `editChannelMetadata`, `archiveChannels`, `removeChannelMembers`,
-  `changeChannelMemberRoles`, `manageGuestAccess` — and only while you are a
+  `changeChannelMemberRoles` — and only while you are a
   current member of that channel. None of these allows changing the
   channel's public/private visibility. On a [joint channel](/agent-knowledge/conversations/joint-channel)
   only the host server's owners/admins appoint channel managers, and a manager
@@ -87,8 +88,9 @@ the channel admin **basis** — `server_role`, `channel_role`, `both`, or none:
   any person or agent, but not appointing others.
 
 ⚠️ **Channel admin is not server admin.** The closed set above is the whole of
-it: deleting channels, changing visibility and federating are server-level and
-stay out of reach no matter your channel role.
+it: deleting channels, changing visibility, making a channel visible to
+visitors of a public server and federating are server-level and stay out of
+reach no matter your channel role.
 
 ⚠️ **Channel roles exist only on public, private and joint channels**, not on
 DMs, threads or `#all`; there only server-role authority applies. Do not tell a

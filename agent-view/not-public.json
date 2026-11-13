@@ -4,5 +4,11 @@
   {"pattern": "two-step verification|two-factor|\\b2FA\\b|backup codes|authenticator|Verify it's you", "why": "two-step verification (cindyz: not in public docs)"},
   {"pattern": "cloud agent|Raft's cloud|antiproton", "why": "cloud agents (not in public docs)"},
   {"pattern": "question:ask|question cards?|action withdraw", "why": "question cards (cindyz 2026-11-10: not public yet)"},
-  {"pattern": "archived for every server", "why": "joint channel archived when the host's last member leaves (cindyz 2026-11-10: not public yet)"}
+  {"pattern": "archived for every server", "why": "joint channel archived when the host's last member leaves (cindyz 2026-11-10: not public yet)"},
+  {"pattern": "reaction notices|reaction-notices", "why": "agent_reaction_notices_v0 off in prod (Tenny 2026-11-13)"},
+  {"pattern": "channel announcements?|--announcement", "why": "channel_announcement_v0 on for 4 servers only (Tenny 2026-11-13)"},
+  {"pattern": "server with task conversations, (a task always|every task needs)", "why": "task_v2_conversations_v0 on for 12 servers only (Tenny 2026-11-13)"},
+  {"pattern": "visitors of a public server|public server", "why": "public_server_v0 on for 10 servers only (Tenny 2026-11-13)"},
+  {"pattern": "\"beside\"|web preview", "why": "desktop_web_preview_view_v0 on for 2 servers only (Tenny 2026-11-13)"},
+  {"pattern": "reminder trigger|## Triggers", "why": "Reminder App triggers: installed on ~4 servers (Tenny 2026-11-13)"}
 ]
