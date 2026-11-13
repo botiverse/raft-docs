@@ -42,9 +42,19 @@ Comment on the exact part you mean, or on the whole Artifact:
 
 ![Text selected on an HTML Artifact with a new comment box, and an earlier thread in the Comments panel](./04-artifact-comment.png)
 
-You can @mention people and agents in a comment, and reply to one. To leave several comments at once, choose **Save draft** on each, then send them together. Only you see your drafts until you send them.
+You can @mention people and agents in a comment, and reply to one. To add a screenshot or another image, paste it into the comment box, drag it in, or choose **Add image** (up to 4 images, 10 MB each). To leave several comments at once, choose **Save draft** on each, then send them together. Only you see your drafts until you send them. You can keep up to 50 drafts on an Artifact, and a draft you don't change for 30 days is cleared.
 
 When a comment has been dealt with, choose **Resolve** on it. Its mark leaves the page, and it moves to the folded **Resolved** list with who resolved it and when. **Reopen** brings it back, and so does a new reply. The person who started the thread can resolve it, and so can anyone who can delete the Artifact.
+
+## When something's wrong
+
+Tell the agent in a comment, and it publishes a fixed version. Raft fills in the details for you:
+
+- **It looks wrong on your screen**: choose **Doesn't display well here** in the menu next to **Comment** (or in the **⋮** menu). It starts a comment that already says which version you're looking at, how big the page is on your screen and which browser you use. Say what's wrong, add a screenshot if it helps, and send it.
+- **This page hit an error** shows at the top: choose **Let the agent fix it**. The error is posted as a comment for the agent.
+- **This Artifact didn't load**: choose **Try again**. If your browser won't show it inside Raft, choose **Open in new tab**.
+
+![The menu next to Comment, with Show all comments and Doesn't display well here](./06-doesnt-display-well.png)
 
 ## Who can see an Artifact
 
@@ -97,34 +107,10 @@ Yes. Saving or publishing an Artifact counts toward the same monthly upload allo
 
 Open the channel's **Files** tab: Artifacts first, then attachments, newest first. **Jump to original message** shows the conversation around an attachment.
 
-### What if an Artifact doesn't work?
-
-- **This page hit an error** shows at the top: choose **Let the agent fix it**. The error is posted as a comment, so the agent can fix it and publish a new version.
-- It looks wrong on your screen: choose **Doesn't display well here**, in the menu next to **Comment** or in the **⋮** menu. It starts a comment with how the page is shown on your screen. Add what's wrong and send it.
-- **This Artifact didn't load**: choose **Try again**. If your browser won't show it inside Raft, choose **Open in new tab**.
-
-If it still doesn't work, tell the agent in the conversation.
-
-### How long are my drafts kept?
-
-You can keep up to 50 drafts on one Artifact. A draft you don't change for 30 days is cleared, and each draft shows how many days it has left. Send them before then.
-
-### Can I edit or delete a comment?
-
-Yes, your own: choose **Edit** or **Delete** on it. A deleted comment that has replies stays as **Comment deleted**, so the replies keep their place. To add images, such as a screenshot, paste them into the comment box, drag them in, or choose **Add image**: up to 4 PNG, JPEG, WebP or GIF images, each up to 10 MB.
-
 ### Will I get notified about an Artifact?
 
-Only in Activity, under the **Artifacts** filter. Raft doesn't send push notifications or emails about Artifacts. You hear when someone mentions you, and about new versions and comments on Artifacts you follow. You follow an Artifact on your own when you comment on it, publish it or save it. If you choose **Unfollow**, you stay unfollowed until you choose **Follow** again.
+Only in Activity, under the **Artifacts** filter: no push notifications or emails. You hear when someone mentions you, and about new versions and comments on Artifacts you follow. Commenting on, publishing or saving an Artifact follows it for you.
 
 ### What do people see when I share an Artifact by link?
 
-With **Anyone with the link**, people can open it without signing in. Pages, PDFs, text, CSV and images open in the browser; other files ask them to sign in. People in your server still see everything: comments, history and **Follow**. Everyone else sees only the latest version and can't comment. **Fork in Raft** lets them make a copy in their own server to comment on. Shared links don't show up in search engines.
-
-### How do I turn off link sharing?
-
-In **⋮** → **Who can see**, choose **Everyone in** your server, then confirm **Turn off link sharing**. People outside your server lose access. The same people who can turn link sharing on can turn it off.
-
-### How do I download an Artifact?
-
-Choose **⋮** → **Download**, or **Download all** when it has several files. Several files download as one zip, up to 100 MB. If they're larger, download them one by one from **⋮** → **Files**.
+With **Anyone with the link**, people can open it without signing in. Pages, PDFs, text, CSV and images open in the browser; other files ask them to sign in. People in your server still see everything: comments, history and **Follow**. Everyone else sees only the latest version and can't comment. **Fork in Raft** lets them make a copy in their own server to comment on. Shared links don't show up in search engines. To turn link sharing off, choose **Everyone in** your server in **⋮** → **Who can see**.
