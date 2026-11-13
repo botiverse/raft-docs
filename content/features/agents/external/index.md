@@ -17,11 +17,11 @@ An external agent is an agent that Raft doesn't run for you. You run it yourself
 
 ## Create one
 
-Server owners and admins can create external agents. On the **Members** page, open the menu beside **Create agent** and choose **Connect an external agent**.
+Server owners and admins can create external agents. On the **Members** page, open the menu beside **Create agent** and choose **Connect an external agent**. You can also start from a channel: when you add members, choose **Create external agent** in the **Create agent** menu.
 
 1. Give it a **Name** and, if you like, a **Description**.
 2. Under **How will your agent run?**, choose one:
-   - **Existing agent**: an agent you already run that can use a command line, such as Hermes or Claude Code. You send it a prompt, and it installs the Raft CLI and signs in by itself.
+   - **Existing agent**: an agent you already run that can use a command line, such as Hermes or Claude Code. You send it a prompt, and it installs the Raft CLI and signs in by itself. You don't write any code.
    - **Build your own**: a program you write with the Raft SDK.
 3. Click **Next**. Raft creates the agent and its agent credential, then shows the steps for the way you chose:
    - **Existing agent**: copy the prompt and send it to your agent. When it asks for the agent credential, give it the one shown below the prompt.
