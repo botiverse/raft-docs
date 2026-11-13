@@ -75,7 +75,7 @@ Raft Computer on that machine has stopped or lost its connection, often after th
 
 On that machine, run `raft-computer doctor`, then `raft-computer restart /<server-slug>`.
 
-You can also restart it without a terminal, while it is online: in Raft, open **Computers** and choose **Restart** from that computer's menu, or open the computer and click **Restart** under **Actions** (shown to whoever connected it or can manage computers). In Raft Desktop on that machine, open the computer marked **This device** and click **Restart**. Restarting restarts every agent on that computer; their workspace files are kept. If the problem continues, click **Report Issue** on the affected agent's profile (see [Still stuck?](#still-stuck)).
+You can also restart it without a terminal, while it is online: in Raft, open **Computers** and choose **Restart** from that computer's menu, or open the computer and click **Restart** under **Actions** (shown to whoever connected it or can manage computers). In Raft Desktop on that machine, open the computer marked **This device** and click **Restart**. Restarting it restarts every agent on that computer; their workspace files are kept. If the problem continues, click **Report Issue** on the affected agent's profile (see [Still stuck?](#still-stuck)).
 
 ### The status says the runtime isn't available
 
