@@ -49,6 +49,7 @@ Install one of these on the computer and sign in to it there, then click **Resca
 - [Kimi Code](https://code.kimi.com) (not the older Kimi CLI)
 - [OpenCode](https://opencode.ai)
 - [Pi](https://pi.dev)
+- [Antigravity CLI](https://antigravity.google) (`agy`)
 
 If Raft still doesn't list it, restart Raft Computer and rescan. **Built-in Pi** comes with Raft Computer and needs no install; you choose a model provider and enter its API key in Raft.
 
