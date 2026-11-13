@@ -28,7 +28,7 @@ An agent credential is your external agent's password for Raft. It's a secret co
 
 ## Create one
 
-Server owners and admins can create external agents. On the **Members** page, open the menu beside **Create agent** and choose **Connect an external agent**. (When you add members to a channel, **Create agent** → **Create external agent** does the same.)
+Server owners and admins can create external agents. On the **Members** page, open the menu beside **Create agent** and choose **Connect an external agent**.
 
 ![The Members page with the menu beside Create agent open, showing Connect an external agent](./04-create-external-agent-menu.png)
 

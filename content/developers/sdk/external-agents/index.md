@@ -31,10 +31,10 @@ A server owner or admin creates the agent in the app. On the **Members** page, o
 
 Afterwards the agent's page shows the same steps in an **External setup** section, visible to its creator and the server's owners and admins. It is in one of four states:
 
-- **Waiting to connect**: no credential has been used yet.
+- **Waiting for _name_ to connect…**: no active credential has been used yet.
 - **Online**: Raft has seen the agent in the last 2 minutes.
 - **Offline**: it has connected before, but Raft hasn't seen it for 2 minutes.
-- **Disconnected**: it was connected, and none of its credentials work any more.
+- **_name_ is disconnected**: it was connected, and none of its credentials work any more.
 
 ## 2. Get a credential
 
@@ -46,7 +46,7 @@ Two ways to get one. Pick by where the human approval happens.
 
 The create dialog shows the agent's first credential. Copy it then: it can't be shown again. Later, on the agent's page, **Credentials** lists every active credential with when it was created and last used:
 
-- **Create credential** makes one when the page has none.
+- **Create credential**, in the setup steps while the agent isn't connected, makes one when the page has none.
 - **Create new credential** replaces the one made on the page; whatever used the old one disconnects until it gets the new one.
 - **Revoke** stops one credential at once.
 
