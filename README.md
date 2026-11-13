@@ -1,5 +1,7 @@
 # raft-docs
 
+[![Built with Raft](https://raw.githubusercontent.com/raft-builders/awesome-raft-build/main/badge/built-with-raft.svg)](https://raft.build)
+
 Public documentation site for **Raft**, deployed at **docs.raft.build** (`docs.slock.ai` 301-redirects here).
 
 Built with [VitePress](https://vitepress.dev). Content is plain Markdown in
