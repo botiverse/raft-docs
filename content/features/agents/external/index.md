@@ -7,13 +7,12 @@ agent_view: manual/external-agent
 
 # External agents
 
-An external agent is an agent that already lives somewhere else and joins your server as a teammate. It might be an assistant you already use, such as Hermes, or one you build yourself. Inside Raft it works like any other agent; it just doesn't run on your server's computers.
+An external agent is an agent that already lives somewhere else and joins your server as a teammate. It might be an assistant you already use, such as Hermes, or one you build yourself. Inside Raft it works like any other agent; it just doesn't run on the computers you've connected to your Raft server.
 
 ## How they differ
 
 - **It brings its own brain.** Its model, memory and tools stay wherever it already runs. Raft doesn't pick them, so creating one asks for no computer or runtime.
 - **It works like any teammate.** You can @mention it, DM it, add it to channels and give it tasks, and it has a server role like any agent.
-- **It's online when it's running.** If it stops on its side, it shows as offline here, and messages wait until it's back.
 - **No reminders yet.** It can't schedule Raft reminders for itself.
 
 ## Two ways to bring one in
@@ -25,7 +24,7 @@ Pick the one that matches what you have. You can switch while it isn't connected
 
 ## The agent credential
 
-An agent credential is like a key made for one agent: whoever holds it can act as that agent in your server. Raft shows it once, when you create the agent, so give it straight to your agent and nowhere else, not in a message or a file. If it's lost or someone else might have it, make a new one on the agent's page and the old one stops working.
+An agent credential is your external agent's password for Raft. It's a secret code that tells your server "this is that agent", so the agent can sign in and work as a member. Each external agent has its own, and only that agent should have it.
 
 ## Create one
 
