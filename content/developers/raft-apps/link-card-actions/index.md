@@ -17,12 +17,12 @@ Raft decides on every card read which buttons the reader gets, and checks again 
 | App | Acting buttons |
 | --- | --- |
 | An official App (one Raft approved as official) with an action endpoint in force (for a published App, one that passed Marketplace review) | On every Server where it's installed. |
-| A server-local App: made on your Server, not published and never shared by link | Only for people reading from its own Server, after a person who can manage integrations there [allows its card actions](#_2-allow-card-actions-on-your-own-server), and only in Raft clients that confirm every press of an App Raft hasn't reviewed. Raft's web app does; mobile support is coming. |
+| A server-local App: made on your Server, not published and never shared by link | Only for people reading from its own Server, after a person who can manage integrations there [allows its card actions](#_2-allow-card-actions-on-your-own-server), and only in Raft clients that confirm every press of an App Raft hasn't reviewed. Raft's web app does, and so does the mobile app from version 1.24 (on iOS, 1.24 is about to be released). |
 | Any other App | None. Raft keeps only `navigate` buttons. |
 
 Raft removes the buttons a reader can't use from their copy of the card; it doesn't show them disabled. Readers on any other Server never get acting buttons from a server-local App. For example, in a joint channel, a reader from the other Server doesn't get them.
 
-Raft hasn't reviewed a server-local App, so Raft asks the person to confirm every press of its acting buttons. The confirmation names your App, says Raft didn't review it, and says your App will know who pressed. For a `confirm: "prepare"` button it is part of Raft's prepare dialog, so your App gets the prepare request, with who pressed, as soon as the person clicks, before they confirm anything. Buttons with an undo window ask first, before anything is sent. Only clients that show this confirmation get the App's acting buttons; in any other client the person sees `navigate` buttons only, and the current mobile app shows a read-only preview without buttons.
+Raft hasn't reviewed a server-local App, so Raft asks the person to confirm every press of its acting buttons. The confirmation names your App, says Raft didn't review it, and says your App will know who pressed. For a `confirm: "prepare"` button it is part of Raft's prepare dialog, so your App gets the prepare request, with who pressed, as soon as the person clicks, before they confirm anything. Buttons with an undo window ask first, before anything is sent. Only clients that show this confirmation get the App's acting buttons; in any other client, such as a mobile app older than 1.24, the person sees `navigate` buttons only.
 
 Once an App has a [private share link](/developers/raft-apps/share/), or is published to the Marketplace, it is no longer made for your Server alone, even if you revoke the link later. It can't use own-Server card actions anywhere, its own Server included.
 
@@ -478,7 +478,7 @@ Drafts can include a toast in that answer, such as `{"status":"done", "toast":{"
 
 | Symptom | Check |
 | --- | --- |
-| Only `navigate` buttons show, for people on your own Server | Card actions aren't allowed for the App yet (**Card buttons** in the App's settings), you changed `action_endpoint` after they were allowed, or the registration is suspended. Otherwise the reader's client doesn't confirm presses for Apps Raft hasn't reviewed (`unreviewed_app.v1`). The current mobile app shows no buttons at all: it reads a read-only version 1 preview. |
+| Only `navigate` buttons show, for people on your own Server | Card actions aren't allowed for the App yet (**Card buttons** in the App's settings), you changed `action_endpoint` after they were allowed, or the registration is suspended. Otherwise the reader's client doesn't confirm presses for Apps Raft hasn't reviewed (`unreviewed_app.v1`), such as a mobile app older than 1.24. |
 | Only `navigate` buttons show, for people on another Server | Expected. Only people reading from the App's own Server get its acting buttons. |
 | Acting buttons stopped after you created a share link or published the App | Expected. The App is no longer made for your Server alone, so it can't use own-Server card actions anywhere, your own Server included. Revoking the link doesn't change that. |
 | One kind of acting button is missing, others show | The reader's client didn't declare `confirm.v1` or `undo.v1` for that kind of button. |
