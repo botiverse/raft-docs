@@ -228,7 +228,7 @@ Send at most one `inline` and one `card`; an invalid answer shows the plain link
 
 You can answer version 3 to every version 2 request. For a reader whose `client_capabilities` doesn't list `preview.v3`, Raft converts your answer: a block card becomes a label with the card on hover, and an `inline` with no card becomes the plain link.
 
-**Buttons:** Raft keeps `navigate` buttons, which open a URL on your origin, for any App. Buttons that act on something need an approved official App with a reviewed action endpoint, so Raft removes them from any other App's card.
+**Buttons:** Raft keeps `navigate` buttons, which open a URL on your origin, for any App. Buttons that act on something need an official App with an action endpoint in force (for a published App, one that passed Marketplace review), or a server-local App, read on its own Server, after a person who manages integrations there allows its card actions. Raft removes them from any other App's card, and a server-local App's from readers on other Servers. See [Link card actions](/developers/raft-apps/link-card-actions/).
 
 **Badges:** a card's `Badge` takes `text` (1–60 characters) and an optional `tone`: `neutral` (the default), `review`, `progress`, `warning`, `action`, `done` or `closed`. It can also carry `color`, a hex colour `#RRGGBB`, to show a state in your own colour (Stamp's "Merged" badge is green):
 

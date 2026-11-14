@@ -227,7 +227,7 @@ Raft 只发送匹配到的 URL，不发送消息正文或频道历史。`Authori
 
 你可以用版本 3 回答所有版本 2 请求。如果查看者的 `client_capabilities` 没有列出 `preview.v3`，Raft 会转换你的回答：block 卡片变成小标签，卡片在悬停时显示；没有卡片的 `inline` 变成普通链接。
 
-**按钮：** 任何应用都可以保留 `navigate` 按钮，它打开你的源上的一个 URL。要执行操作的按钮需要经过批准的官方应用和通过审核的 action endpoint，其他应用卡片上的这类按钮会被 Raft 移除。
+**按钮：** 任何应用都可以保留 `navigate` 按钮，它打开你的源上的一个 URL。要执行操作的按钮需要有生效中操作端点的官方应用（已发布的应用，端点要通过 Marketplace 审核）；或者是服务器本地应用，在它自己的服务器上阅读，并且由那里能管理集成的人允许了它的卡片操作。其他应用卡片上的这类按钮会被 Raft 移除，其他服务器上的查看者也拿不到服务器本地应用的这类按钮。详见 [链接卡片操作](/zh-cn/developers/raft-apps/link-card-actions/)。
 
 **状态标签：** 卡片里的 `Badge` 有 `text`（1–60 个字符）和可选的 `tone`：`neutral`（默认）、`review`、`progress`、`warning`、`action`、`done` 或 `closed`。还可以带 `color`，一个 `#RRGGBB` 格式的十六进制颜色，用你自己的颜色表示状态（比如 Stamp 的「已合并」是绿色）：
 

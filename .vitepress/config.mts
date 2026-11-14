@@ -215,6 +215,7 @@ export default defineConfig({
                 { text: '概览', link: '/zh-cn/developers/raft-apps/' },
                 { text: '构建 Raft 应用', link: '/zh-cn/developers/raft-apps/build/' },
                 { text: '应用链接预览', link: '/zh-cn/developers/raft-apps/link-previews/' },
+                { text: '链接卡片操作', link: '/zh-cn/developers/raft-apps/link-card-actions/' },
                 { text: '以应用身份发消息', link: '/zh-cn/developers/raft-apps/bot/' },
                 {
                   text: '市场',
@@ -519,6 +520,7 @@ export default defineConfig({
             { text: 'Overview', link: '/developers/raft-apps/' },
             { text: 'Build a Raft App', link: '/developers/raft-apps/build/' },
             { text: 'App link previews', link: '/developers/raft-apps/link-previews/' },
+            { text: 'Link card actions', link: '/developers/raft-apps/link-card-actions/' },
             { text: 'Posting as an App', link: '/developers/raft-apps/bot/' },
             {
               text: 'Marketplace',
