@@ -8,7 +8,7 @@ llms_summary: "Read when your App's bot should send a card whose buttons act, op
 
 Your App's bot can send a card message whose buttons act. When a person presses one, Raft calls your App's action endpoint, exactly as for a [link card action](/developers/raft-apps/cards/link-card-actions/). You can name the one person who may press the buttons, such as the owner who has to approve a request. Everyone else in the conversation sees the card, with the buttons disabled.
 
-App-sent cards are available from Raft 1.27.0. For which clients show the buttons, see [Client support](#client-support).
+App-sent cards are available from Raft 1.27.0. Sending `actions` and `for` with types needs `@botiverse/raft-sdk` 0.36.0 or later; older SDKs pass the fields through only in plain JavaScript. For which clients show the buttons, see [Client support](#client-support).
 
 ## Before you start {#before-you-start}
 
@@ -49,7 +49,7 @@ This card asks Dana to approve an agent's use of a deploy key. **Approve** and *
 }
 ```
 
-Send it with the SDK's program layer, using the bot's key:
+Send it with the SDK's program layer (`@botiverse/raft-sdk` 0.36.0 or later), using the bot's key:
 
 ```ts
 import { createRaftClient } from "@botiverse/raft-sdk";
@@ -77,7 +77,7 @@ if (sent.data.state === "sent") {
 }
 ```
 
-The SDK sends `POST /internal/agent-api/v2/send` on your Raft API origin, with `Authorization: Bearer <the bot's sk_agent_* key>` and the fields below as a JSON body. You can make the same request yourself.
+`sendV2` takes these fields:
 
 | Field | Contract |
 | --- | --- |
@@ -152,14 +152,16 @@ Use `message_id` and `url` to find the request the card is about. On every prepa
 After you act, replace the card to show the outcome, and remove the buttons that no longer apply. Answer the execute request first, then update the card.
 
 ```ts
-const updated = await client.routes.messages.updateCard({
-  params: { messageId },
-  body: {
-    card: decidedCard,
-    content: "Dana approved builder-bot's use of the deploy key.",
-    expectedRevision: 1,
-    idempotencyKey: "access-request-42-decided",
-  },
+import { createRaftAgent } from "@botiverse/raft-sdk";
+
+const raft = createRaftAgent({ serverUrl: "https://api.raft.build", credential: process.env.RAFT_BOT_KEY! });
+
+const updated = await raft.messages.updateCard({
+  messageId, // the stored messageId, a plain string
+  card: decidedCard,
+  content: "Dana approved builder-bot's use of the deploy key.",
+  expectedRevision: 1,
+  idempotencyKey: "access-request-42-decided",
 });
 if (updated.ok) await saveRevision(42, updated.data.revision); // 2
 ```
@@ -179,9 +181,9 @@ Here `decidedCard` says what happened and keeps only a `navigate` button:
 }
 ```
 
-The update is `PUT /internal/agent-api/messages/:messageId/card`. It follows the rules in [Update a card](/developers/sdk/external-agents/card-messages/#update-a-card), with these additions:
+An update follows the rules in [Update a card](/developers/sdk/external-agents/card-messages/#update-a-card), with these additions:
 
-- **`actions` replaces the acting buttons.** An update with `actions` gets the same checks as a send, against the state now: your App may still send acting buttons here, every key names a `Button` of the new card, and the conversation isn't a joint channel.
+- **`actions` replaces the acting buttons.** `raft.messages.updateCard` doesn't take `actions` yet, so an update that keeps acting buttons isn't available from the SDK for now. An update with `actions` gets the same checks as a send, against the state now: your App may still send acting buttons here, every key names a `Button` of the new card, and the conversation isn't a joint channel.
 - **An update without `actions` ends the acting buttons.** Every `Button` in the new card is then an ordinary `navigate` button that opens its URL. To keep a button visible but unusable, give it your own `disabledReason`.
 - **`for` stays as you sent it.** Leave it out of updates. An update whose `for` names anyone else is refused.
 - **Every update makes a new revision.** Buttons on the old revision stop working, and clients draw the new card.
@@ -247,7 +249,6 @@ Your App can send acting buttons on a Server only while **all** of these hold:
 5. Each acting button's `action.url` is `https` on your registration's origin.
 
 Raft hasn't reviewed an App made on a Server. So for such an App, Raft asks the person to confirm every press, and shows its acting buttons only in clients that do this. The web app and the mobile app 1.25 and later do.
-
 
 Any other App can't send acting buttons. It can still send cards with `navigate` buttons.
 
