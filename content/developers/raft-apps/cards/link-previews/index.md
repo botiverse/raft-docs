@@ -8,6 +8,8 @@ llms_summary: "Register an App-owned link preview, verify the viewer callback, a
 
 An App can turn links on its own domain into a title and a small, read-only card in Raft chat. For example, a PR link can show its title, review status and a short description. The App returns JSON; Raft renders it with [json-render](https://json-render.dev/docs) and Raft components. Your App does not upload JavaScript or HTML into the chat client. Your backend can construct this JSON directly from business data; it does not need to install json-render or call a language model.
 
+This page covers link cards. To have your App's bot post a card itself, see [App-sent cards](/developers/raft-apps/cards/app-sent-cards/); [Cards](/developers/raft-apps/cards/) compares the two.
+
 ## Before you start
 
 You need a [registered Raft App](/developers/raft-apps/build/), a public HTTPS domain you control, and a backend callback on that domain. The App must be enabled and have an active installation on the viewer's Server.
@@ -228,7 +230,7 @@ Send at most one `inline` and one `card`; an invalid answer shows the plain link
 
 You can answer version 3 to every version 2 request. For a reader whose `client_capabilities` doesn't list `preview.v3`, Raft converts your answer: a block card becomes a label with the card on hover, and an `inline` with no card becomes the plain link.
 
-**Buttons:** Raft keeps `navigate` buttons, which open a URL on your origin, for any App. Buttons that act on something need an official App with an action endpoint in force (for a published App, one that passed Marketplace review), or a server-local App, read on its own Server, after a person who manages integrations there allows its card actions. Raft removes them from any other App's card, and a server-local App's from readers on other Servers. See [Link card actions](/developers/raft-apps/link-card-actions/).
+**Buttons:** Raft keeps `navigate` buttons, which open a URL on your origin, for any App. Buttons that act on something need an official App with an action endpoint in force (for a published App, one that passed Marketplace review), or a server-local App, read on its own Server, after a person who manages integrations there allows its card actions. Raft removes them from any other App's card, and a server-local App's from readers on other Servers. See [Link card actions](/developers/raft-apps/cards/link-card-actions/).
 
 **Badges:** a card's `Badge` takes `text` (1–60 characters) and an optional `tone`: `neutral` (the default), `review`, `progress`, `warning`, `action`, `done` or `closed`. It can also carry `color`, a hex colour `#RRGGBB`, to show a state in your own colour (Stamp's "Merged" badge is green):
 

@@ -8,7 +8,9 @@ llms_summary: "Buttons on an App's link cards that act: who may use them, regist
 
 A link card can carry buttons. A `navigate` button opens a page on your origin, and every App can use it. This page is about buttons that act: when a person clicks one, Raft calls your App's **action endpoint** with a signed statement of who clicked, on which card and which button. Your App checks that this person may do it and that the card is still current, and then acts.
 
-Start with [App link previews](/developers/raft-apps/link-previews/). You need a working registration, a callback that answers the [version 2 request](/developers/raft-apps/link-previews/#the-version-2-request), and `preview_versions` that include 2.
+Cards your App's bot sends itself use the same action endpoint and the same requests: see [App-sent cards](/developers/raft-apps/cards/app-sent-cards/).
+
+Start with [App link previews](/developers/raft-apps/cards/link-previews/). You need a working registration, a callback that answers the [version 2 request](/developers/raft-apps/cards/link-previews/#the-version-2-request), and `preview_versions` that include 2.
 
 ## Who can use acting buttons {#who-can-use-acting-buttons}
 
@@ -110,7 +112,7 @@ Raft sends every prepare, execute and status request as an HTTP **POST** to your
 | `alg`, `kid` | `ES256`; verify the signature against the matching published Raft key. |
 | `typ` | `raft-card-action+jwt`. A preview assertion is never valid here, and this one is never valid at your preview callback. |
 | `iss` | `<Raft API origin>/oidc/<server-id>`, where `<server-id>` equals the `server_id` claim. |
-| `aud` | `urn:raft:card-action:<your-client-key>`: the client ID your [domain file](/developers/raft-apps/link-previews/#_1-prove-ownership-of-the-domain) names. |
+| `aud` | `urn:raft:card-action:<your-client-key>`: the client ID your [domain file](/developers/raft-apps/cards/link-previews/#_1-prove-ownership-of-the-domain) names. |
 | `token_use`, `type` | `card_action`, `human` |
 | `phase` | `prepare`, `execute` or `status`; equal to the body's `phase`. |
 | `iat`, `nbf`, `exp` | A valid time window. Assertions live at most 30 seconds, and an execute assertion can be shorter. Check `exp` again when you claim an execute ([step 6](#_6-answer-execute)). |
