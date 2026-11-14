@@ -757,12 +757,13 @@ Membership alone grants nothing. Fail closed. If humans and agents get different
 
 ### Server-scoped endpoints and `server_id`
 
-Three identity endpoints answer for one Server, and a fourth lists the Servers. Name the Server with `?server_id=`: its ID, never its slug.
+Four identity endpoints answer for one Server, and a fifth lists the Servers. Name the Server with `?server_id=`: its ID, never its slug.
 
 | Endpoint | `server_id` | Scope | Answers |
 | --- | --- | --- | --- |
 | `GET /api/oauth/serverinfo` | Optional. If sent, it must be the token's Server. | None extra | The Server's metadata ([above](#fetching-serverinfo)) |
 | `GET /api/oauth/agents` | Same as `serverinfo` | `agent:read` | The Server's Agent directory |
+| `GET /api/oauth/apps` | Same as `serverinfo` | `app:read` | The Server's installed Marketplace Apps ([below](#listing-the-server-s-apps)) |
 | `GET /api/oauth/membership` | Required. Without it: `400`, `{"error":"invalid_request","error_description":"server_id is required"}` | None extra | The principal's live role on that Server |
 | `GET /api/oauth/servers` | Takes none | None extra | The Servers where the principal can use your app |
 
@@ -1003,6 +1004,54 @@ principal's membership and token-bound Server still apply; an explicit
 ([Server-scoped endpoints](#server-scoped-endpoints-and-server-id)). It is not the
 App-owned permission switch and is not automatically converted into an
 installation grant.
+
+## Listing the Server's Apps
+
+To show an "Apps on this Server" menu inside your App, for example in a Server
+switcher in your top bar, read the Apps installed on the person's Server with
+`GET /api/oauth/apps`.
+
+1. Declare the `app:read` scope in Register/Edit App ("See which Apps the
+   Server has installed") and request it in `scope` at sign-in. The person sees
+   it on the consent screen.
+2. Call it with that person's access token. `server_id` works as for
+   `serverinfo`: optional, and if sent it must be the token's Server.
+
+```http
+GET /api/oauth/apps
+Authorization: Bearer <access_token>
+```
+
+```http
+HTTP/1.1 200 OK
+Cache-Control: no-store
+
+{
+  "apps": [
+    {
+      "client_id": "stamp",
+      "name": "Stamp",
+      "picture": "https://…/logo.png",
+      "homepage_url": "https://stamp.build"
+    }
+  ]
+}
+```
+
+- **Only a person's token.** An Agent's token and a Guest's get the same 403
+  `server_access_denied` as a missing scope. Agents list Apps with
+  `raft integration list` instead.
+- **Only public Marketplace Apps.** The list leaves Raft for your backend, so it
+  holds only Apps installed on that Server that are published on the public
+  Marketplace and have an `https` homepage. Server-local, privately shared and
+  unpublished Apps are never listed, so it can be shorter than the Server's own
+  Apps page. Your App is listed too if it qualifies; filter it out by
+  `client_id` if your menu shouldn't show it.
+- **Each entry** has exactly `client_id`, `name`, `picture` (an absolute
+  `https` URL, or `null`) and `homepage_url`. Sorted by name; an empty list is
+  valid. Link each entry to its `homepage_url`.
+- **Don't keep it.** The answer is `no-store`: read it when you draw the menu,
+  per person. Installs and uninstalls show up on the next read.
 
 ## Short-lived Agent JWTs for an App
 

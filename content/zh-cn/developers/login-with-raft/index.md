@@ -679,12 +679,13 @@ granted scopes ∩ server role ∩ app availability ∩ your own policy
 
 ### 服务器范围的端点与 `server_id` {#server-scoped-endpoints-and-server-id}
 
-有三个身份端点针对单个服务器作答，第四个列出服务器。用 `?server_id=` 指明服务器：传它的 ID，绝不要传 slug。
+有四个身份端点针对单个服务器作答，第五个列出服务器。用 `?server_id=` 指明服务器：传它的 ID，绝不要传 slug。
 
 | 端点 | `server_id` | scope | 返回 |
 | --- | --- | --- | --- |
 | `GET /api/oauth/serverinfo` | 可选。传了就必须是 token 所在的服务器。 | 不需要额外的 scope | 这个服务器的元数据（[见上文](#fetching-serverinfo)） |
 | `GET /api/oauth/agents` | 与 `serverinfo` 相同 | `agent:read` | 这个服务器的 Agent 目录 |
+| `GET /api/oauth/apps` | 与 `serverinfo` 相同 | `app:read` | 这个服务器装了的 Marketplace 应用（[见下文](#listing-the-server-s-apps)） |
 | `GET /api/oauth/membership` | 必填。不传时返回 `400`，`{"error":"invalid_request","error_description":"server_id is required"}` | 不需要额外的 scope | 主体在这个服务器上的实时角色 |
 | `GET /api/oauth/servers` | 不接受 | 不需要额外的 scope | 主体能使用你的应用的服务器 |
 
@@ -896,6 +897,47 @@ Agent 通过 Raft 调用某个操作时，Raft 会带上操作参数，以及经
 在该组获批之前，用 `groups: ["agent"]` 申请安装 token，token 端点会返回 `400`。安装 token 本身有效、但不含 `agent` 组时，调用 Agent 目录会返回 `403`。无效、过期、已撤销或已失效的安装 token 返回 `401`。已禁用的应用，以及已暂停或已卸载的安装，都会失去访问权限。这些凭据有别于主体的 OAuth access token，也有别于下文的服务 JWT。
 
 已有的客户端仍可使用可选的 OAuth scope `agent:read` 和 `GET /api/oauth/agents`（在发现文档中声明为 `agents_endpoint`）。这是由主体委托的途径：scope 必须先声明并获得授予，而且仍受当前主体的成员身份和 token 所绑定服务器的约束；显式传入的 `?server_id=` 必须就是这个服务器（见[服务器范围的端点](#server-scoped-endpoints-and-server-id)）。它不是应用自有的权限开关，也不会自动转换为安装授权。
+
+## 列出服务器上的应用 {#listing-the-server-s-apps}
+
+想在你的应用里放一个「这个服务器上的应用」菜单（比如顶栏里的服务器切换），可以用
+`GET /api/oauth/apps` 读取这个人所在服务器装了哪些应用。
+
+1. 在注册/编辑应用里声明 `app:read` scope（「查看服务器装了哪些应用」），并在登录时的
+   `scope` 里请求它。这个人会在授权页上看到它。
+2. 用这个人的 access token 调用。`server_id` 与 `serverinfo` 相同：可选，传了就必须是
+   token 所在的服务器。
+
+```http
+GET /api/oauth/apps
+Authorization: Bearer <access_token>
+```
+
+```http
+HTTP/1.1 200 OK
+Cache-Control: no-store
+
+{
+  "apps": [
+    {
+      "client_id": "stamp",
+      "name": "Stamp",
+      "picture": "https://…/logo.png",
+      "homepage_url": "https://stamp.build"
+    }
+  ]
+}
+```
+
+- **只接受人的 token。** Agent 的 token 和访客（Guest）的 token 都会得到与缺少 scope 相同的
+  403 `server_access_denied`。Agent 用 `raft integration list` 列出应用。
+- **只列公开 Marketplace 上的应用。** 这份列表会离开 Raft 发到你的后端，所以只包含装在这个服务器上、
+  已在公开 Marketplace 发布、并且有 `https` 主页的应用。仅限本服务器的应用、私下分享的应用和未发布的应用
+  一律不列，所以它可能比服务器自己的应用页短。你的应用符合条件也会出现在列表里；菜单里不想显示它的话，
+  按 `client_id` 过滤掉。
+- **每一项**只有 `client_id`、`name`、`picture`（绝对 `https` URL，或 `null`）和
+  `homepage_url`。按名称排序；空列表也是合法的。每一项链接到它的 `homepage_url`。
+- **不要缓存。** 响应是 `no-store`：每次画菜单时按人读取。安装和卸载在下一次读取时就会反映出来。
 
 ## 给应用用的短期 Agent JWT {#short-lived-agent-jwts-for-an-app}
 
