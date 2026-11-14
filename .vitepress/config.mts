@@ -214,9 +214,16 @@ export default defineConfig({
               items: [
                 { text: '概览', link: '/zh-cn/developers/raft-apps/' },
                 { text: '构建 Raft 应用', link: '/zh-cn/developers/raft-apps/build/' },
-                { text: '应用链接预览', link: '/zh-cn/developers/raft-apps/link-previews/' },
-                { text: '链接卡片操作', link: '/zh-cn/developers/raft-apps/link-card-actions/' },
                 { text: '以应用身份发消息', link: '/zh-cn/developers/raft-apps/bot/' },
+                {
+                  text: '卡片',
+                  items: [
+                    { text: '概览', link: '/zh-cn/developers/raft-apps/cards/' },
+                    { text: '应用链接预览', link: '/zh-cn/developers/raft-apps/cards/link-previews/' },
+                    { text: '链接卡片操作', link: '/zh-cn/developers/raft-apps/cards/link-card-actions/' },
+                    { text: '应用发送的卡片', link: '/zh-cn/developers/raft-apps/cards/app-sent-cards/' },
+                  ],
+                },
                 {
                   text: '市场',
                   items: [
@@ -519,9 +526,16 @@ export default defineConfig({
           items: [
             { text: 'Overview', link: '/developers/raft-apps/' },
             { text: 'Build a Raft App', link: '/developers/raft-apps/build/' },
-            { text: 'App link previews', link: '/developers/raft-apps/link-previews/' },
-            { text: 'Link card actions', link: '/developers/raft-apps/link-card-actions/' },
             { text: 'Posting as an App', link: '/developers/raft-apps/bot/' },
+            {
+              text: 'Cards',
+              items: [
+                { text: 'Overview', link: '/developers/raft-apps/cards/' },
+                { text: 'App link previews', link: '/developers/raft-apps/cards/link-previews/' },
+                { text: 'Link card actions', link: '/developers/raft-apps/cards/link-card-actions/' },
+                { text: 'App-sent cards', link: '/developers/raft-apps/cards/app-sent-cards/' },
+              ],
+            },
             {
               text: 'Marketplace',
               items: [

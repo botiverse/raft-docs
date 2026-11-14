@@ -8,7 +8,9 @@ llms_summary: "给应用的链接卡片加上执行操作的按钮。包括谁�
 
 链接卡片上可以有按钮。`navigate` 按钮打开你的源上的一个页面，任何应用都能用。本页讲的是执行操作的按钮：有人点击时，Raft 调用你应用的 **操作端点（action endpoint）**，并附上一份签名的声明，说明是谁点的、点的是哪张卡片上的哪个按钮。你的应用检查这个人能不能做这件事、卡片是否仍是最新的，然后执行。
 
-请先读 [应用链接预览](/zh-cn/developers/raft-apps/link-previews/)。你需要一份可用的注册、一个能回答 [版本 2 请求](/zh-cn/developers/raft-apps/link-previews/#the-version-2-request) 的回调，并且 `preview_versions` 里包含 2。
+你的应用机器人自己发出的卡片也用同一个操作端点和同样的请求：见 [应用发送的卡片](/zh-cn/developers/raft-apps/cards/app-sent-cards/)。
+
+请先读 [应用链接预览](/zh-cn/developers/raft-apps/cards/link-previews/)。你需要一份可用的注册、一个能回答 [版本 2 请求](/zh-cn/developers/raft-apps/cards/link-previews/#the-version-2-request) 的回调，并且 `preview_versions` 里包含 2。
 
 ## 谁能使用执行操作的按钮 {#who-can-use-acting-buttons}
 
@@ -110,7 +112,7 @@ Raft 发出的每个 prepare、execute 和 status 请求，都是发往你的操
 | `alg`、`kid` | `ES256`；用公布的、与之匹配的 Raft 密钥验证签名。 |
 | `typ` | `raft-card-action+jwt`。预览断言在这里永远无效，这个断言在你的预览回调里也永远无效。 |
 | `iss` | `<Raft API origin>/oidc/<server-id>`，其中 `<server-id>` 等于 `server_id` 声明。 |
-| `aud` | `urn:raft:card-action:<your-client-key>`：你的 [域名文件](/zh-cn/developers/raft-apps/link-previews/#_1-prove-ownership-of-the-domain) 中写的 client ID。 |
+| `aud` | `urn:raft:card-action:<your-client-key>`：你的 [域名文件](/zh-cn/developers/raft-apps/cards/link-previews/#_1-prove-ownership-of-the-domain) 中写的 client ID。 |
 | `token_use`、`type` | `card_action`、`human` |
 | `phase` | `prepare`、`execute` 或 `status`；等于请求体里的 `phase`。 |
 | `iat`、`nbf`、`exp` | 处于有效时间窗口内。断言最多有效 30 秒，execute 的断言可能更短。认领 execute 时再检查一次 `exp`（[第 6 步](#_6-answer-execute)）。 |
