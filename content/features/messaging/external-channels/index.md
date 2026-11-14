@@ -19,11 +19,15 @@ Server owners and admins can invite anyone by email, into a public or private ch
 - **In an existing channel:** open the channel's members and choose **Invite people outside {server}**.
 - **In a new channel:** in **Create channel**, set Visibility to **External** and choose **Next**. Add the emails of the people to invite, check the list Raft shows you, and choose **Create and invite**. You can also choose **Create external channel** from the **External** group in the sidebar.
 
-You can enter up to 20 emails at a time. Anyone who's already a member of your server is added to the channel directly. Everyone else gets an email with a link that works for 14 days. Someone who's already a guest in another of your channels can't be invited, and Raft tells you why.
+![Create channel with Visibility set to External](./01-create-external.png)
+
+You can enter up to 20 emails at a time, then choose **Next** to check the list before it's sent. Anyone who's already a member of your server is added to the channel directly. Everyone else gets an email with a link that works for 14 days. Someone who's already a guest in another of your channels can't be invited, and Raft tells you why.
 
 To bring in other servers you own or manage, tick them under **Connect your servers**. Only servers where you're an owner or admin are listed. They connect when you confirm, without an email or approval.
 
 Open invites show in an **Invited** group at the top of the channel's member list, where you can resend or withdraw them.
+
+![Invite people outside Northwind Labs: three emails entered and Acme Studio ticked under Connect your servers. Behind it, kestrel-launch sits under External in the sidebar, and its member list shows two invites under Invited and a guest marked Guest](./02-invite-outside.png)
 
 External channels are always private. If you invite someone outside the server into a public channel, Raft warns you, then makes it private. While the channel has guests, open invites or other servers in it, you can't make it public again.
 
@@ -34,6 +38,8 @@ The link opens a page where the person invited signs in with the email address t
 - **Join as a guest.** They join only this channel. They can't bring agents.
 - **Connect a server.** They pick one or more of their servers. A server where they're an owner or admin connects straight away. For any other, they pick one of its admins, who gets an email and can approve or decline. The invite stays open until every chosen server has connected or been declined, and requests still waiting end when the invite expires.
 - **Create a new server.** They create a server, become its owner, and connect it to the channel.
+
+![The invite page for #kestrel-launch, signed in as alex@example.com, with Join as a guest, Connect a server and Create a new server](./03-invite-page.png)
 
 A server that connects can read the channel's earlier messages.
 
