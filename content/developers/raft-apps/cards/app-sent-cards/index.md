@@ -242,15 +242,16 @@ Your App can send acting buttons on a Server only while **all** of these hold:
 
 1. The sender is your App's bot on that Server. Your App is enabled and its installation on that Server is active.
 2. Your App has a link-preview registration that isn't suspended, and Raft has confirmed its domain file within the last 72 hours. Raft checks the file again by itself; keep serving it.
-3. Your App is one of these two kinds:
+3. Your App may use card buttons on this Server, in one of these ways:
    - **An official App:** one Raft approved as official, with an action endpoint in force. Raft reviews a new or changed action endpoint before it is in force. It works on every Server where your App is installed.
-   - **An App made on this Server:** a server-local App, not published and never shared by link. A person who can manage integrations on this Server must [allow its card actions](/developers/raft-apps/cards/link-card-actions/#_2-allow-card-actions-on-your-own-server) for the exact action endpoint it has now. Once you share the App by link or publish it, this no longer applies anywhere, even if you revoke the link.
+   - **A server-local App on its own Server:** not published and never shared by link. Its card buttons work there by default while it has an action endpoint, unless a person who can manage integrations there [switched them off](/developers/raft-apps/cards/link-card-actions/#_2-allow-card-actions-on-your-own-server).
+   - **A shared or published App:** on any Server where it's installed, its own included, a person who can manage integrations on that Server must [allow its action endpoint](/developers/raft-apps/cards/link-card-actions/#_2-allow-card-actions-on-your-own-server), the exact one in force now. Once you share a server-local App by link or publish it, its own Server needs this too, even if you revoke the link.
 4. The conversation is not a joint channel or a thread in one.
 5. Each acting button's `action.url` is `https` on your registration's origin.
 
-Raft hasn't reviewed an App made on a Server. So for such an App, Raft asks the person to confirm every press, and shows its acting buttons only in clients that do this. The web app and the mobile app 1.25 and later do.
+Raft treats every App that isn't official as one it hasn't reviewed. So for such an App, Raft asks the person to confirm every press, and shows its acting buttons only in clients that do this. The web app and the mobile app 1.25 and later do.
 
-Any other App can't send acting buttons. It can still send cards with `navigate` buttons.
+On a Server where your App doesn't meet these rules, it can't send acting buttons. It can still send cards with `navigate` buttons.
 
 ## Client support {#client-support}
 
@@ -266,14 +267,14 @@ Any other App can't send acting buttons. It can still send cards with `navigate`
 
 | Symptom | Check |
 | --- | --- |
-| The send is refused because your App can't run card actions on this Server | Go through [Who can send acting buttons](#who-can-send-acting-buttons). For an App made on this Server: card actions aren't allowed yet, `action_endpoint` changed after they were allowed, or the App was shared or published. |
+| The send is refused because your App can't run card actions on this Server | Go through [Who can send acting buttons](#who-can-send-acting-buttons). For a server-local App on its own Server: someone switched its card buttons off. For a shared or published App: its action endpoint isn't allowed on this Server yet, or `action_endpoint` changed after it was allowed. Sharing or publishing a server-local App ends its default on its own Server too. |
 | The send is refused at an acting button's URL | Its `action.url` must be `https` on the origin of your link-preview registration, not just any page of yours. |
 | The send is refused at `for` | `for` is the person's `sub` from Login with Raft, not a name. They must be a member of this Server, not a guest, and able to read the conversation. In a private channel, they must be in it. |
 | The buttons say "Update Raft to use this button" | The reader's app is older than Raft 1.27.0 on the web, or older than mobile app 1.25. |
 | Everyone but one person sees "Waiting for …" | Expected: the card has a `for`. |
 | The first press asks "Allow {App}?" | Expected: the person never agreed that your App may know who they are. |
-| The buttons stay disabled for someone who should be able to press | They may be a guest, may have turned your App off, or your App may no longer meet [the rules](#who-can-send-acting-buttons). For an App made on this Server, their client may not confirm presses for Apps Raft hasn't reviewed. |
+| The buttons stay disabled for someone who should be able to press | They may be a guest, may have turned your App off, or your App may no longer meet [the rules](#who-can-send-acting-buttons). For an App that isn't official, their client may not confirm presses for Apps Raft hasn't reviewed. |
 | Presses answer `410` after you updated the card | Expected: the old revision's buttons stopped. The client reads the card again. |
 | Buttons you meant to end still open a page | You updated the card without `actions`, so they became `navigate` buttons. Remove them, or give them a `disabledReason`. |
 
-Test with three people: the `for` person, another member of the conversation, and a guest. Also test a press after you updated the card, a press after you withdrew card actions or changed `action_endpoint`, and the first press of someone who never signed in to your App.
+Test with three people: the `for` person, another member of the conversation, and a guest. Also test a press after you updated the card, a press after card buttons were switched off or you changed `action_endpoint`, and the first press of someone who never signed in to your App.

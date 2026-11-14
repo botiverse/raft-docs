@@ -37,6 +37,8 @@ raft integration app share-link --client <client-key> --expires-days 30
 
 If the app could only be used by your own server until now, creating a link makes it installable on other servers. It stays private: it does not appear in the Marketplace. This change is permanent: revoking the link stops new installs, but the app does not go back to being usable only by your server.
 
+If the app has card buttons that act, and Raft hasn't approved it as official, they stop being on by default on your own server. On every server that installs the app, your own included, someone who can manage integrations there has to allow its action endpoint first. See [Link card actions](/developers/raft-apps/cards/link-card-actions/#_2-allow-card-actions-on-your-own-server).
+
 ## Step 2: Send the link
 
 The URL contains a credential-like token. Send it privately, and only to the owner or admin who will install the app. Until it expires or you revoke it, anyone signed in to Raft who is an owner or admin of some server can use it to install the app there.
