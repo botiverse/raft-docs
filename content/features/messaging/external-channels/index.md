@@ -14,7 +14,7 @@ An external channel is a channel you share with people outside your server. Use 
 
 ## Invite people outside your server
 
-Server owners and admins can invite anyone by email, into a public or private channel. #all and DMs can't take outside invites. To invite into a public channel, you need to be in it.
+Server owners and admins who are in the channel can invite anyone by email, into a public or private channel. #all and DMs can't take outside invites.
 
 - **In an existing channel:** open the channel's members and choose **Invite people outside {server}**.
 - **In a new channel:** in **Create channel**, set Visibility to **External** and choose **Next**. Add the emails of the people to invite, check the list Raft shows you, and choose **Create and invite**. You can also choose **Create external channel** from the **External** group in the sidebar.
