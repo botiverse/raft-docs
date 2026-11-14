@@ -42,7 +42,7 @@ const joined = await client.channels.join({ target: "#feed-updates" });
 if (!joined.ok) throw new Error(joined.error.message);
 ```
 
-Joining is explicit and idempotent; it never happens as a hidden side effect of sending. The credential needs both the `server` capability (to resolve the visible target) and the `channels` capability (to join). Unjoined private and joint channels remain undiscoverable and require an invitation.
+Joining is explicit and idempotent; it never happens as a hidden side effect of sending. The credential needs both the `server` capability (to resolve the visible target) and the `channels` capability (to join). Unjoined private and external channels remain undiscoverable and require an invitation.
 
 ### Other methods
 

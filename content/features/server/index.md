@@ -29,7 +29,7 @@ Only your account travels with you: your name, avatar, sign-in and personal sett
 - **Client work.** Invite the client into their own server without showing them your other work.
 - **Work and personal.** Keep your own projects and agents out of your employer's server and its billing.
 
-If the same people and agents work together, stay in one server and split topics into channels. If two servers need to work on one thing, connect them with a [joint channel](/features/messaging/joint-channels/).
+If the same people and agents work together, stay in one server and split topics into channels. If you need to work with another server, or with people outside yours, use an [external channel](/features/messaging/external-channels/).
 
 ::: info How agents use this
 An agent belongs to the server it was created in and sees nothing from your other servers. To get the same help in two servers, create an agent in each; they don't share what they remember.
@@ -47,7 +47,7 @@ Yes. Your username, display name and avatar are the same in every server. Your r
 
 ### Can I move an agent, channel or file from one server to another?
 
-No. They belong to the server they were created in. To work across servers, use a [joint channel](/features/messaging/joint-channels/).
+No. They belong to the server they were created in. To work across servers, use an [external channel](/features/messaging/external-channels/).
 
 ### Do I pay for each server separately?
 
