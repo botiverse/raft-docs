@@ -8,7 +8,7 @@ llms_summary: "Read when your App's bot should send a card whose buttons act, op
 
 Your App's bot can send a card message whose buttons act. When a person presses one, Raft calls your App's action endpoint, exactly as for a [link card action](/developers/raft-apps/cards/link-card-actions/). You can name the one person who may press the buttons, such as the owner who has to approve a request. Everyone else in the conversation sees the card, with the buttons disabled.
 
-App-sent cards are available from Raft 1.27.0. Sending `actions` and `for` with types needs `@botiverse/raft-sdk` 0.36.0 or later; older SDKs pass the fields through only in plain JavaScript. For which clients show the buttons, see [Client support](#client-support).
+App-sent cards are available from Raft 1.27.0. Sending `actions` and `for` with types needs an `@botiverse/raft-sdk` release after 0.35.1. Version 0.35.1 and earlier don't have the types, but in plain JavaScript they pass the fields through. For which clients show the buttons, see [Client support](#client-support).
 
 ## Before you start {#before-you-start}
 
@@ -49,7 +49,7 @@ This card asks Dana to approve an agent's use of a deploy key. **Approve** and *
 }
 ```
 
-Send it with the SDK's program layer (`@botiverse/raft-sdk` 0.36.0 or later), using the bot's key:
+Send it with the SDK's program layer (an `@botiverse/raft-sdk` release after 0.35.1), using the bot's key:
 
 ```ts
 import { createRaftClient } from "@botiverse/raft-sdk";

@@ -8,7 +8,7 @@ llms_summary: "当你的应用机器人要发出一张按钮能执行操作的�
 
 你的应用机器人可以发出一条卡片消息，上面的按钮能执行操作。有人按下其中一个时，Raft 调用你应用的操作端点，和 [链接卡片操作](/zh-cn/developers/raft-apps/cards/link-card-actions/) 完全一样。你可以指定唯一一个可以按这些按钮的人，比如要批准一个申请的所有者。对话里的其他人也能看到这张卡片，但按钮是禁用的。
 
-应用发送的卡片从 Raft 1.27.0 起可用。要带类型地发送 `actions` 和 `for`，需要 `@botiverse/raft-sdk` 0.36.0 或更高版本；更早的 SDK 只在纯 JavaScript 里会把这两个字段原样传过去。哪些客户端会显示这些按钮，见 [客户端支持](#client-support)。
+应用发送的卡片从 Raft 1.27.0 起可用。要带类型地发送 `actions` 和 `for`，需要 0.35.1 之后发布的 `@botiverse/raft-sdk`。0.35.1 及更早的版本没有这两个字段的类型，但在纯 JavaScript 里会原样传过去。哪些客户端会显示这些按钮，见 [客户端支持](#client-support)。
 
 ## 开始之前 {#before-you-start}
 
@@ -49,7 +49,7 @@ llms_summary: "当你的应用机器人要发出一张按钮能执行操作的�
 }
 ```
 
-用 SDK 的程序层（`@botiverse/raft-sdk` 0.36.0 或更高版本）和机器人的密钥发送它：
+用 SDK 的程序层（0.35.1 之后发布的 `@botiverse/raft-sdk`）和机器人的密钥发送它：
 
 ```ts
 import { createRaftClient } from "@botiverse/raft-sdk";
