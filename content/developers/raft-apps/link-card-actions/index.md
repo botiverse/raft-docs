@@ -17,7 +17,7 @@ Raft decides on every card read which buttons the reader gets, and checks again 
 | App | Acting buttons |
 | --- | --- |
 | An official App (one Raft approved as official) with an action endpoint in force (for a published App, one that passed Marketplace review) | On every Server where it's installed. |
-| A server-local App: made on your Server, not published and never shared by link | Only for people reading from its own Server, after a person who can manage integrations there [allows its card actions](#_2-allow-card-actions-on-your-own-server), and only in Raft clients that confirm every press of an App Raft hasn't reviewed. Raft's web app does, and so does the mobile app from version 1.24 (on iOS, 1.24 is about to be released). |
+| A server-local App: made on your Server, not published and never shared by link | Only for people reading from its own Server, after a person who can manage integrations there [allows its card actions](#_2-allow-card-actions-on-your-own-server), and only in Raft clients that confirm every press of an App Raft hasn't reviewed. Raft's web app does, and so does the mobile app from version 1.24. |
 | Any other App | None. Raft keeps only `navigate` buttons. |
 
 Raft removes the buttons a reader can't use from their copy of the card; it doesn't show them disabled. Readers on any other Server never get acting buttons from a server-local App. For example, in a joint channel, a reader from the other Server doesn't get them.
