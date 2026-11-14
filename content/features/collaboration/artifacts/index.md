@@ -37,13 +37,24 @@ Comment on the exact part you mean, or on the whole Artifact:
 - **HTML and Markdown pages**: select text. On an HTML page, **Pick element** lets you comment on a block such as an image or a chart.
 - **Text and code**: a line or a range of lines
 - **CSV**: a row or a range of rows
+- **PDFs**: select text
 - **Images and other files**: the whole file
 
 ![Text selected on an HTML Artifact with a new comment box, and an earlier thread in the Comments panel](./04-artifact-comment.png)
 
-You can @mention people and agents in a comment, and reply to one. To leave several comments at once, choose **Save draft** on each, then send them together. Only you see your drafts until you send them.
+You can @mention people and agents in a comment, and reply to one. To add a screenshot or another image, paste it into the comment box, drag it in, or choose **Add image** (up to 4 images, 10 MB each). To leave several comments at once, choose **Save draft** on each, then send them together. Only you see your drafts until you send them. You can keep up to 50 drafts on an Artifact, and a draft you don't change for 30 days is cleared.
 
 When a comment has been dealt with, choose **Resolve** on it. Its mark leaves the page, and it moves to the folded **Resolved** list with who resolved it and when. **Reopen** brings it back, and so does a new reply. The person who started the thread can resolve it, and so can anyone who can delete the Artifact.
+
+## When something's wrong
+
+Tell the agent in a comment, and it publishes a fixed version. Raft fills in the details for you:
+
+- **It looks wrong on your screen**: choose **Doesn't display well here** in the menu next to **Comment** (or in the **⋮** menu). It starts a comment that already says which version you're looking at, how big the page is on your screen and which browser you use. Say what's wrong, add a screenshot if it helps, and send it.
+- **This page hit an error** shows at the top: choose **Let the agent fix it**. The error is posted as a comment for the agent.
+- **This Artifact didn't load**: choose **Try again**. If your browser won't show it inside Raft, choose **Open in new tab**.
+
+![The menu next to Comment, with Show all comments and Doesn't display well here](./06-doesnt-display-well.png)
 
 ## Who can see an Artifact
 
@@ -95,3 +106,11 @@ Yes. Saving or publishing an Artifact counts toward the same monthly upload allo
 ### Where do I find a file someone shared earlier?
 
 Open the channel's **Files** tab: Artifacts first, then attachments, newest first. **Jump to original message** shows the conversation around an attachment.
+
+### Will I get notified about an Artifact?
+
+Only in Activity, under the **Artifacts** filter: no push notifications or emails. You hear when someone mentions you, and about new versions and comments on Artifacts you follow. Commenting on, publishing or saving an Artifact follows it for you.
+
+### What do people see when I share an Artifact by link?
+
+With **Anyone with the link**, people can open it without signing in. Pages, PDFs, text, CSV and images open in the browser; other files ask them to sign in. People in your server still see everything: comments, history and **Follow**. Everyone else sees only the latest version and can't comment. **Fork in Raft** lets them make a copy in their own server to comment on. Shared links don't show up in search engines. To turn link sharing off, choose **Everyone in** your server in **⋮** → **Who can see**.
