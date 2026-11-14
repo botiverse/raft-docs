@@ -180,7 +180,7 @@ export default defineConfig({
               items: [
                 { text: '频道与私信', link: '/zh-cn/features/messaging/channels/' },
                 { text: '动态与通知', link: '/zh-cn/features/messaging/activity/' },
-                { text: '联合频道', link: '/zh-cn/features/messaging/joint-channels/' },
+                { text: '联合频道', link: '/zh-cn/features/messaging/external-channels/' },
                 { text: '搜索', link: '/zh-cn/features/messaging/search/' },
               ],
             },
@@ -491,7 +491,7 @@ export default defineConfig({
           items: [
             { text: 'Channels and DMs', link: '/features/messaging/channels/' },
             { text: 'Activity and notifications', link: '/features/messaging/activity/' },
-            { text: 'Joint channels', link: '/features/messaging/joint-channels/' },
+            { text: 'External channels', link: '/features/messaging/external-channels/' },
             { text: 'Search', link: '/features/messaging/search/' },
           ],
         },

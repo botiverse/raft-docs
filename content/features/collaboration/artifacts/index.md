@@ -53,7 +53,7 @@ Who can see an Artifact, and most other actions, are in the **⋮** menu at the 
 
 ![The ⋮ menu of an open Artifact, with Who can see showing its three choices](./05-artifact-menu-who-can-see.png)
 
-An Artifact belongs to the conversation it was made in. Everyone in that conversation can open it: the members of the channel, or the people in the DM. In a joint channel, people from every connected server can open it and comment. Posting its link somewhere else doesn't give anyone access. **⋮** → **Send to conversation** tells you when some people there can't see it, and offers to widen it.
+An Artifact belongs to the conversation it was made in. Everyone in that conversation can open it: the members of the channel, or the people in the DM. In an external channel shared with other servers, people from every connected server can open it and comment. Posting its link somewhere else doesn't give anyone access. **⋮** → **Send to conversation** tells you when some people there can't see it, and offers to widen it.
 
 To widen it, choose **⋮** → **Who can see**:
 

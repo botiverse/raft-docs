@@ -21,7 +21,7 @@ App-sent cards are available from Raft 1.27.0. Sending `actions` and `for` with 
 ## How it works {#how-it-works}
 
 1. Your backend sends a card message as the App's bot. Next to the `card`, `actions` says which `Button` elements act, and `for` optionally names the one person who may press them.
-2. Raft checks the send: your App may send acting buttons here, every key of `actions` names a `Button`, the conversation isn't a joint channel, and `for` is a person who can read it. If any check fails, nothing is posted.
+2. Raft checks the send: your App may send acting buttons here, every key of `actions` names a `Button`, the conversation isn't a channel shared with another server, and `for` is a person who can read it. If any check fails, nothing is posted.
 3. Raft stores the card. Each acting button is stored as a disabled `navigate` button, so clients that can't press it still draw the whole card.
 4. When someone reads the message, their client asks Raft for the buttons they may press. Raft gives them a single-use handle for each acting button only if they may press it now.
 5. The person presses. From here everything is as for a link card: Raft's confirmation dialog or undo countdown, then the prepare and execute requests to your action endpoint, signed with who pressed.
@@ -81,7 +81,7 @@ if (sent.data.state === "sent") {
 
 | Field | Contract |
 | --- | --- |
-| `target` | Where to post, as for any message from the bot: a channel the bot is a member of, a thread, or a DM. `dm:sub:<sub>` names a DM with a person by the `sub` your App got for them from Login with Raft. Not a joint channel, nor a thread in one. |
+| `target` | Where to post, as for any message from the bot: a channel the bot is a member of, a thread, or a DM. `dm:sub:<sub>` names a DM with a person by the `sub` your App got for them from Login with Raft. Not a channel shared with another server (an external channel with connected servers), nor a thread in one. |
 | `card` | The card, in the [card message format](/developers/sdk/external-agents/card-messages/#what-a-card-can-show). |
 | `actions` | An object from a `Button` element id to that button's action: `{ "kind": "execute", "action_id": …, "confirm": "prepare" }` or `{ "kind": "execute", "action_id": …, "undoWindowMs": … }`. 1 to 4 entries. Same rules as on a link card: `action_id` matches `^[a-z][a-z0-9_]{0,31}$` and is different on every acting button, `undoWindowMs` is 1000 to 10000, and each action has exactly one of `confirm` and `undoWindowMs`. |
 | `for` | Optional. The one person who may press the acting buttons: the `sub` your App got for them from Login with Raft. Needs `actions`. It must name a member of this Server who isn't a guest and who can read the conversation now. |
@@ -183,7 +183,7 @@ Here `decidedCard` says what happened and keeps only a `navigate` button:
 
 An update follows the rules in [Update a card](/developers/sdk/external-agents/card-messages/#update-a-card), with these additions:
 
-- **`actions` replaces the acting buttons.** `raft.messages.updateCard` doesn't take `actions` yet, so an update that keeps acting buttons isn't available from the SDK for now. An update with `actions` gets the same checks as a send, against the state now: your App may still send acting buttons here, every key names a `Button` of the new card, and the conversation isn't a joint channel.
+- **`actions` replaces the acting buttons.** `raft.messages.updateCard` doesn't take `actions` yet, so an update that keeps acting buttons isn't available from the SDK for now. An update with `actions` gets the same checks as a send, against the state now: your App may still send acting buttons here, every key names a `Button` of the new card, and the conversation isn't a channel shared with another server.
 - **An update without `actions` ends the acting buttons.** Every `Button` in the new card is then an ordinary `navigate` button that opens its URL. To keep a button visible but unusable, give it your own `disabledReason`.
 - **`for` stays as you sent it.** Leave it out of updates. An update whose `for` names anyone else is refused.
 - **Every update makes a new revision.** Buttons on the old revision stop working, and clients draw the new card.
@@ -210,7 +210,7 @@ A send or update that Raft refuses posts or changes nothing. Raft never sends th
 - `actions` or `for` came without a `card`, or `for` came without `actions`.
 - `actions` doesn't have 1 to 4 entries, a key doesn't name a `Button` element of the card, an action isn't a valid execute action, or two buttons share an `action_id`.
 - Your App may not use acting buttons on this Server now. See [Who can send acting buttons](#who-can-send-acting-buttons).
-- The conversation is a joint channel or a thread in one.
+- The conversation is a channel shared with another server, or a thread in one.
 - An acting button's `action.url` isn't `https` on your link-preview registration's origin.
 - `for` doesn't name a member of this Server who isn't a guest and can read the conversation now. A `sub` that names no one gets the same answer.
 - In an update, `for` names someone other than the person the card was sent for.
@@ -245,7 +245,7 @@ Your App can send acting buttons on a Server only while **all** of these hold:
 3. Your App is one of these two kinds:
    - **An official App:** one Raft approved as official, with an action endpoint in force. Raft reviews a new or changed action endpoint before it is in force. It works on every Server where your App is installed.
    - **An App made on this Server:** a server-local App, not published and never shared by link. A person who can manage integrations on this Server must [allow its card actions](/developers/raft-apps/cards/link-card-actions/#_2-allow-card-actions-on-your-own-server) for the exact action endpoint it has now. Once you share the App by link or publish it, this no longer applies anywhere, even if you revoke the link.
-4. The conversation is not a joint channel or a thread in one.
+4. The conversation is not a channel shared with another server, or a thread in one.
 5. Each acting button's `action.url` is `https` on your registration's origin.
 
 Raft hasn't reviewed an App made on a Server. So for such an App, Raft asks the person to confirm every press, and shows its acting buttons only in clients that do this. The web app and the mobile app 1.25 and later do.

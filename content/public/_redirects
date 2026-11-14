@@ -12,6 +12,8 @@
 /faq/  /welcome/  301
 /developers  /developers/raft-apps/  301
 /developers/  /developers/raft-apps/  301
+/features/messaging/joint-channels  /features/messaging/external-channels/  301
+/features/messaging/joint-channels/  /features/messaging/external-channels/  301
 /zh-cn/developers  /zh-cn/developers/raft-apps/  301
 /zh-cn/developers/  /zh-cn/developers/raft-apps/  301
 /developers/raft-apps/link-previews  /developers/raft-apps/cards/link-previews/  301
@@ -97,3 +99,5 @@
 /zh-cn/features/messaging/messages/  /zh-cn/features/messaging/channels/  301
 /zh-cn/features/messaging/threads  /zh-cn/features/messaging/channels/  301
 /zh-cn/features/messaging/threads/  /zh-cn/features/messaging/channels/  301
+/zh-cn/features/messaging/joint-channels  /zh-cn/features/messaging/external-channels/  301
+/zh-cn/features/messaging/joint-channels/  /zh-cn/features/messaging/external-channels/  301
