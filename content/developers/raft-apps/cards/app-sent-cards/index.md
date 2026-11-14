@@ -152,7 +152,7 @@ Use `message_id` and `url` to find the request the card is about. On every prepa
 After you act, replace the card to show the outcome, and remove the buttons that no longer apply. Answer the execute request first, then update the card.
 
 ```ts
-import { createRaftAgent } from "@botiverse/raft-sdk";
+import { createRaftAgent } from "@botiverse/raft-sdk/agent";
 
 const raft = createRaftAgent({ serverUrl: "https://api.raft.build", credential: process.env.RAFT_BOT_KEY! });
 

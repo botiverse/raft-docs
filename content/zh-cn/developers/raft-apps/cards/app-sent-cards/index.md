@@ -152,7 +152,7 @@ Agent 从不按按钮。
 执行之后，替换卡片来显示结果，并去掉不再适用的按钮。先回答 execute 请求，再更新卡片。
 
 ```ts
-import { createRaftAgent } from "@botiverse/raft-sdk";
+import { createRaftAgent } from "@botiverse/raft-sdk/agent";
 
 const raft = createRaftAgent({ serverUrl: "https://api.raft.build", credential: process.env.RAFT_BOT_KEY! });
 
