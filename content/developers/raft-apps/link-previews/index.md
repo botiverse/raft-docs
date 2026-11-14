@@ -230,6 +230,14 @@ You can answer version 3 to every version 2 request. For a reader whose `client_
 
 **Buttons:** Raft keeps `navigate` buttons, which open a URL on your origin, for any App. Buttons that act on something need an approved official App with a reviewed action endpoint, so Raft removes them from any other App's card.
 
+**Badges:** a card's `Badge` takes `text` (1–60 characters) and an optional `tone`: `neutral` (the default), `review`, `progress`, `warning`, `action`, `done` or `closed`. It can also carry `color`, a hex colour `#RRGGBB`, to show a state in your own colour (Stamp's "Merged" badge is green):
+
+```json
+"status":{"type":"Badge", "props":{"text":"Merged", "tone":"done", "color":"#218358"}}
+```
+
+Raft draws `color` only on a block card, and only for a reader whose `client_capabilities` lists `badge.color.v1`. The badge is filled with your colour, and Raft picks black or white text for contrast, in light and dark mode. Every other reader sees the badge in its `tone`, so always set `tone` as well, and say the state in the badge's words: colour only reinforces them. A `color` that isn't `#RRGGBB` is dropped, not an error, and the badge falls back to its `tone`. A `color` on an `inline` item's badge makes the whole answer invalid.
+
 ## Fallback and privacy
 
 Raft takes the **first ten distinct visible HTTPS URLs that meet its URL rules** (three on older clients), in message order, **before matching App registrations**. Links to sites without a registered renderer still count toward this limit; a URL past it is not considered. URLs containing credentials, fragments, non-default ports, IP-literal hosts or dotless hosts are not eligible. Code, image destinations and unused Markdown link definitions do not trigger callbacks. Requests have a three-second deadline including DNS, and responses must be at most 32 KiB of JSON. Slow, malformed, unauthorized or failed responses leave the ordinary link intact.

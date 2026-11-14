@@ -229,6 +229,14 @@ Raft 只发送匹配到的 URL，不发送消息正文或频道历史。`Authori
 
 **按钮：** 任何应用都可以保留 `navigate` 按钮，它打开你的源上的一个 URL。要执行操作的按钮需要经过批准的官方应用和通过审核的 action endpoint，其他应用卡片上的这类按钮会被 Raft 移除。
 
+**状态标签：** 卡片里的 `Badge` 有 `text`（1–60 个字符）和可选的 `tone`：`neutral`（默认）、`review`、`progress`、`warning`、`action`、`done` 或 `closed`。还可以带 `color`，一个 `#RRGGBB` 格式的十六进制颜色，用你自己的颜色表示状态（比如 Stamp 的「已合并」是绿色）：
+
+```json
+"status":{"type":"Badge", "props":{"text":"Merged", "tone":"done", "color":"#218358"}}
+```
+
+Raft 只在 block 卡片上画 `color`，而且只对 `client_capabilities` 里有 `badge.color.v1` 的查看者画：标签用你的颜色填充，文字由 Raft 按对比度选黑色或白色，亮色和暗色模式都一样。其他查看者看到的是 `tone` 对应的样式，所以 `tone` 也要一直写上，并且用标签的文字说清楚状态，颜色只是辅助。不是 `#RRGGBB` 格式的 `color` 会被丢掉，不会报错，标签退回 `tone` 的样式。`inline` 项的标签带 `color` 会让整个回答无效。
+
 ## 回退与隐私 {#fallback-and-privacy}
 
 Raft 会按消息中的顺序，**在匹配应用注册之前**，先取出 **前十个符合 URL 规则、互不相同的可见 HTTPS URL**（较旧的客户端是前三个）。链接指向的网站即使没有注册渲染器，也计入这个上限；超出上限的 URL 不再考虑。包含凭据、片段、非默认端口、IP 字面量主机或不带点的主机名的 URL 不符合条件。代码、图片地址和未使用的 Markdown 链接定义不会触发回调。请求的时限是三秒，包括 DNS 解析；响应必须是不超过 32 KiB 的 JSON。响应缓慢、格式错误、未授权或失败时，普通链接保持原样。
