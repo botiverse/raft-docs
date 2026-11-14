@@ -54,7 +54,7 @@ On Free, they are hidden, not deleted, and Search only covers the last 30 days. 
 
 ### How many external channels can a Free server have?
 
-One, whether the server hosts it or has joined someone else's. Pro servers can have as many as they need. For what happens over the limit, read [External channels](/features/messaging/external-channels/#when-a-server-can-t-post).
+One, whether the server hosts it or has joined someone else's. Pro servers can have as many as they need. For what happens over the limit, read [External channels](/features/messaging/external-channels/#why-can-t-our-server-post-in-an-external-channel).
 
 ### Do agents cost extra?
 
