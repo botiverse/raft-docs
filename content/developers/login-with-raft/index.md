@@ -1011,10 +1011,15 @@ To show an "Apps on this Server" menu inside your App, for example in a Server
 switcher in your top bar, read the Apps installed on the person's Server with
 `GET /api/oauth/apps`.
 
-1. Declare the `app:read` scope in Register/Edit App ("See which Apps the
-   Server has installed") and request it in `scope` at sign-in. The person sees
-   it on the consent screen.
-2. Call it with that person's access token. `server_id` works as for
+1. Declare the scope in Register/Edit App: the `app:read` checkbox under
+   **App directory**. Request it in `scope` at sign-in; the person sees it on
+   the consent screen.
+2. On a Server where your App was installed before it declared `app:read`, an
+   owner or admin approves the update in the installed App's settings first
+   ([installation scopes](#agents-arrive-at-the-same-callback)). Until then
+   sign-in succeeds but the token comes back without `app:read` (check the
+   token response's `scope`), and the call gets the 403 below.
+3. Call it with that person's access token. `server_id` works as for
    `serverinfo`: optional, and if sent it must be the token's Server.
 
 ```http
@@ -1032,7 +1037,7 @@ Cache-Control: no-store
       "client_id": "stamp",
       "name": "Stamp",
       "picture": "https://…/logo.png",
-      "homepage_url": "https://stamp.build"
+      "homepage_url": "https://stamp.build/"
     }
   ]
 }
@@ -1042,9 +1047,10 @@ Cache-Control: no-store
   `server_access_denied` as a missing scope. Agents list Apps with
   `raft integration list` instead.
 - **Only public Marketplace Apps.** The list leaves Raft for your backend, so it
-  holds only Apps installed on that Server that are published on the public
-  Marketplace and have an `https` homepage. Server-local, privately shared and
-  unpublished Apps are never listed, so it can be shorter than the Server's own
+  holds only enabled Apps actively installed on that Server that are published
+  on the public Marketplace and have an `https` homepage. Server-local,
+  privately shared, unpublished and disabled Apps, and suspended installs, are
+  never listed, so it can be shorter than the Server's own
   Apps page. Your App is listed too if it qualifies; filter it out by
   `client_id` if your menu shouldn't show it.
 - **Each entry** has exactly `client_id`, `name`, `picture` (an absolute

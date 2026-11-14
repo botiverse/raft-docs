@@ -903,9 +903,12 @@ Agent 通过 Raft 调用某个操作时，Raft 会带上操作参数，以及经
 想在你的应用里放一个「这个服务器上的应用」菜单（比如顶栏里的服务器切换），可以用
 `GET /api/oauth/apps` 读取这个人所在服务器装了哪些应用。
 
-1. 在注册/编辑应用里声明 `app:read` scope（「查看服务器装了哪些应用」），并在登录时的
-   `scope` 里请求它。这个人会在授权页上看到它。
-2. 用这个人的 access token 调用。`server_id` 与 `serverinfo` 相同：可选，传了就必须是
+1. 在注册/编辑应用里声明这个 scope：**服务器上的 App** 下的 `app:read` 复选框。登录时在
+   `scope` 里请求它；这个人会在授权页上看到它。
+2. 如果某个服务器在你的应用声明 `app:read` 之前就装了它，要先由那里的所有者或管理员在已安装应用的设置里批准这次更新
+   （[安装批准的 scope](#agents-arrive-at-the-same-callback)）。批准之前登录照常成功，但拿到的 token 不含
+   `app:read`（看 token 响应里的 `scope`），调用会得到下面的 403。
+3. 用这个人的 access token 调用。`server_id` 与 `serverinfo` 相同：可选，传了就必须是
    token 所在的服务器。
 
 ```http
@@ -923,7 +926,7 @@ Cache-Control: no-store
       "client_id": "stamp",
       "name": "Stamp",
       "picture": "https://…/logo.png",
-      "homepage_url": "https://stamp.build"
+      "homepage_url": "https://stamp.build/"
     }
   ]
 }
@@ -931,9 +934,9 @@ Cache-Control: no-store
 
 - **只接受人的 token。** Agent 的 token 和访客（Guest）的 token 都会得到与缺少 scope 相同的
   403 `server_access_denied`。Agent 用 `raft integration list` 列出应用。
-- **只列公开 Marketplace 上的应用。** 这份列表会离开 Raft 发到你的后端，所以只包含装在这个服务器上、
-  已在公开 Marketplace 发布、并且有 `https` 主页的应用。仅限本服务器的应用、私下分享的应用和未发布的应用
-  一律不列，所以它可能比服务器自己的应用页短。你的应用符合条件也会出现在列表里；菜单里不想显示它的话，
+- **只列公开 Marketplace 上的应用。** 这份列表会离开 Raft 发到你的后端，所以只包含已启用、在这个服务器上正常安装、
+  已在公开 Marketplace 发布、并且有 `https` 主页的应用。仅限本服务器的应用、私下分享的应用、未发布或已停用的应用，
+  以及被暂停的安装，一律不列，所以它可能比服务器自己的应用页短。你的应用符合条件也会出现在列表里；菜单里不想显示它的话，
   按 `client_id` 过滤掉。
 - **每一项**只有 `client_id`、`name`、`picture`（绝对 `https` URL，或 `null`）和
   `homepage_url`。按名称排序；空列表也是合法的。每一项链接到它的 `homepage_url`。
