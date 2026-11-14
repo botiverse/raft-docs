@@ -246,9 +246,8 @@ Your App can send acting buttons on a Server only while **all** of these hold:
 4. The conversation is not a joint channel or a thread in one.
 5. Each acting button's `action.url` is `https` on your registration's origin.
 
-Raft hasn't reviewed an App made on a Server. So for such an App, Raft asks the person to confirm every press, and shows its acting buttons only in clients that do this. The web app does.
+Raft hasn't reviewed an App made on a Server. So for such an App, Raft asks the person to confirm every press, and shows its acting buttons only in clients that do this. The web app and the mobile app 1.25 and later do.
 
-<!-- TODO(AppFather): confirm that the mobile app (1.25 and later) confirms every press for an App Raft hasn't reviewed on App-sent cards (declares unreviewed_app.v1 with card.execute.v1); then name it in the sentence above. -->
 
 Any other App can't send acting buttons. It can still send cards with `navigate` buttons.
 

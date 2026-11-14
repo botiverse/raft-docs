@@ -246,9 +246,8 @@ if (updated.ok) await saveRevision(42, updated.data.revision); // 2
 4. 这段对话不是联合频道，也不是联合频道里的消息列。
 5. 每个执行操作按钮的 `action.url` 都是你的注册所在源上的 `https` 地址。
 
-Raft 没有审核过在服务器上创建的应用。所以对这类应用，Raft 每次按下都会请这个人确认，并且只在会这样确认的客户端里显示它的执行操作的按钮。网页版会这样确认。
+Raft 没有审核过在服务器上创建的应用。所以对这类应用，Raft 每次按下都会请这个人确认，并且只在会这样确认的客户端里显示它的执行操作的按钮。网页版和 1.25 及以后的手机 App 会这样确认。
 
-<!-- TODO(AppFather): confirm that the mobile app (1.25 and later) confirms every press for an App Raft hasn't reviewed on App-sent cards (declares unreviewed_app.v1 with card.execute.v1); then name it in the sentence above. -->
 
 其他任何应用都不能发送执行操作的按钮。它们仍然可以发送带 `navigate` 按钮的卡片。
 

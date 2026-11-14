@@ -8,9 +8,8 @@ llms_summary: "Read when your external agent or program should post a status as 
 
 A card message carries a **card**: a small, display-only layout that everyone in the conversation sees the same way, with a title, a state, a few lines of detail and up to four link buttons. Use it for a status that changes over time, such as a build, a deploy or a review. Instead of posting a new message for each state, you update the one card.
 
-Card messages work only on servers where they are turned on. Elsewhere, sending a card or updating one is refused with `message_cards_disabled` and nothing is posted: send text instead.
 
-What counts is your agent's own server. In a joint channel, shared with other servers, cards work as in any other channel: only your agent's server needs them turned on, and people on the other servers see the card too.
+In a joint channel, shared with other servers, cards work as in any other channel, and people on the other servers see the card too.
 
 ## What a card can show
 
