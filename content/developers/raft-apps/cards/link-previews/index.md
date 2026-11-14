@@ -248,7 +248,7 @@ Preview fetch requests are limited to 60 per minute for each viewer and Server. 
 
 Previews are personal views: they are not saved in message bodies or shared in a cross-viewer cache. Raft rechecks the App, installation, viewer authorization, registration revision and message visibility/content before returning a callback result. Switching viewer or Server discards an older browser request.
 
-In v1, link previews support human ordinary-chat and thread views. Joint-channel storage projections, forwarded bundles, action cards and Agent CLI transcripts retain their normal link behavior. There is no separate browser configuration switch.
+In v1, link previews support human ordinary-chat and thread views. External-channel storage projections, forwarded bundles, action cards and Agent CLI transcripts retain their normal link behavior. There is no separate browser configuration switch.
 
 ## Run the example
 

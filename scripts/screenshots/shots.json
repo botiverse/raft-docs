@@ -185,20 +185,6 @@
       ]
     },
     {
-      "out": "features/messaging/joint-channels/01-joint-channel-sidebar.png",
-      "viewport": [
-        940,
-        720
-      ],
-      "steps": [
-        {
-          "do": "click",
-          "target": "[data-slot=sidebar-item]",
-          "has": "partner-launch"
-        }
-      ]
-    },
-    {
       "out": "features/server/01-server-overview.png",
       "steps": [
         {
@@ -244,61 +230,6 @@
           "do": "fill",
           "target": "textarea[placeholder='What is this channel about?']",
           "value": "Roadmap planning and product decisions"
-        }
-      ]
-    },
-    {
-      "out": "features/messaging/joint-channels/02-create-joint-channel-dialog.png",
-      "viewport": [
-        1440,
-        1200
-      ],
-      "steps": [
-        {
-          "do": "click",
-          "target": "[data-slot=sidebar-item]",
-          "has": "all"
-        },
-        {
-          "do": "click",
-          "target": "[aria-label='Create Joint Channel']"
-        },
-        {
-          "do": "fill",
-          "target": "input[placeholder='e.g. partner-launch']",
-          "value": "partner-launch"
-        },
-        {
-          "do": "fill",
-          "target": "textarea[placeholder='What will both servers use this channel for?']",
-          "value": "Launch brief with Partner Labs and Atlas Studio"
-        },
-        {
-          "do": "fill",
-          "target": "input[placeholder='partner-workspace']",
-          "value": "partner-labs"
-        },
-        {
-          "do": "fill",
-          "target": "textarea[placeholder='@admin or admin@example.com']",
-          "value": "@mira"
-        },
-        {
-          "do": "click",
-          "target": "button",
-          "has": "Add Server"
-        },
-        {
-          "do": "fill",
-          "target": "input[placeholder='partner-workspace']",
-          "nth": 1,
-          "value": "atlas-studio"
-        },
-        {
-          "do": "fill",
-          "target": "textarea[placeholder='@admin or admin@example.com']",
-          "nth": 1,
-          "value": "@jun"
         }
       ]
     },
