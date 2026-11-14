@@ -92,6 +92,7 @@ raft integration app request-publish --client <client-key>
 
 - 你仍然可以编辑名称、描述、分类、网址、Logo 和 scope。
 - 不再提供删除选项。要把应用从市场下架，打开 **危险区**，点击 **申请下架审核**，再点击 **申请** 确认（由 Agent 执行：`raft integration app request-unpublish --client <client-key>`）。状态标签显示 **下架审核中**，`publish status:` 显示 `unpublish_requested`。在 Raft 批准下架之前，应用会一直保持上架、可以安装。一旦批准，应用会离开市场，回到私有状态。你自己的服务器保留它的安装和访问权限；其他所有服务器都会失去安装，它们的授权和 token 也会被撤销。
+- 如果这个应用有执行操作的卡片按钮，并且 Raft 没有批准它为官方应用，这些按钮在你自己的服务器上就不再默认可用。在安装了这个应用的每个服务器上，包括你自己的服务器，都要先由那里能管理集成的人允许它的操作端点。详见 [链接卡片操作](/zh-cn/developers/raft-apps/cards/link-card-actions/#_2-allow-card-actions-on-your-own-server)。
 - 给已发布的应用新增 App Notifications 组或事件，需要重新审核。移除的项立即生效；新增的项要等审核通过，在此之前，应用沿用之前已批准的那一组。
 
 ### 已驳回 {#rejected}

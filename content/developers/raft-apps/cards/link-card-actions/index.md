@@ -14,19 +14,19 @@ Start with [App link previews](/developers/raft-apps/cards/link-previews/). You 
 
 ## Who can use acting buttons {#who-can-use-acting-buttons}
 
-Raft decides on every card read which buttons the reader gets, and checks again on every click.
+Raft decides on every card read which buttons the reader gets, and checks again on every click. It decides by the reader's Server: your App's installation there, and what that Server allowed.
 
 | App | Acting buttons |
 | --- | --- |
 | An official App (one Raft approved as official) with an action endpoint in force (for a published App, one that passed Marketplace review) | On every Server where it's installed. |
-| A server-local App: made on your Server, not published and never shared by link | Only for people reading from its own Server, after a person who can manage integrations there [allows its card actions](#_2-allow-card-actions-on-your-own-server), and only in Raft clients that confirm every press of an App Raft hasn't reviewed. Raft's web app does, and so does the mobile app from version 1.24. |
-| Any other App | None. Raft keeps only `navigate` buttons. |
+| A server-local App: made on a Server, not published and never shared by link | On its own Server, by default, while it has an action endpoint. A person who can manage integrations there can [switch them off](#_2-allow-card-actions-on-your-own-server), and on again. |
+| A shared or published App that isn't official | On each Server where it's installed, its own Server included, once a person who can manage integrations on that Server [allows](#_2-allow-card-actions-on-your-own-server) the exact action endpoint in force. |
 
-Raft removes the buttons a reader can't use from their copy of the card; it doesn't show them disabled. Readers on any other Server never get acting buttons from a server-local App. For example, in a joint channel, a reader from the other Server doesn't get them.
+Where your App isn't installed, its buttons only navigate. For example, in a joint channel, a reader from the other Server gets acting buttons only if your App is installed on their Server and may act there. Raft removes the buttons a reader can't use from their copy of the card; it doesn't show them disabled.
 
-Raft hasn't reviewed a server-local App, so Raft asks the person to confirm every press of its acting buttons. The confirmation names your App, says Raft didn't review it, and says your App will know who pressed. For a `confirm: "prepare"` button it is part of Raft's prepare dialog, so your App gets the prepare request, with who pressed, as soon as the person clicks, before they confirm anything. Buttons with an undo window ask first, before anything is sent. Only clients that show this confirmation get the App's acting buttons; in any other client, such as a mobile app older than 1.24, the person sees `navigate` buttons only.
+Raft treats every App that isn't official as one it hasn't reviewed, published Apps included. So for such an App, Raft asks the person to confirm every press of its acting buttons, on every Server. The confirmation names your App, says Raft didn't review it, and says your App will know who pressed. For a `confirm: "prepare"` button it is part of Raft's prepare dialog, so your App gets the prepare request, with who pressed, as soon as the person clicks, before they confirm anything. Buttons with an undo window ask first, before anything is sent. Only clients that show this confirmation get such an App's acting buttons. Raft's web app does, and so does the mobile app from version 1.24. In any other client, such as a mobile app older than 1.24, the person sees `navigate` buttons only.
 
-Once an App has a [private share link](/developers/raft-apps/share/), or is published to the Marketplace, it is no longer made for your Server alone, even if you revoke the link later. It can't use own-Server card actions anywhere, its own Server included.
+Once an App has a [private share link](/developers/raft-apps/share/), or is published to the Marketplace, it is no longer server-local, even if you revoke the link later. Its buttons are no longer on by default, on its own Server either: that Server has to allow its action endpoint like any other.
 
 Only people can click. Agents don't get link cards. As for any preview, the person must have signed in to your App through Login with Raft and must still be able to read the message.
 
@@ -36,7 +36,7 @@ Only people can click. Agents don't get link cards. As for any preview, the pers
 
 1. Your callback answers a version 2 request with a card that has an `execute` button.
 2. Raft checks that your App may use acting buttons for this reader, signs a single-use handle for each enabled `execute` button, and gives the handles to the reader's client. Nothing is stored yet.
-3. The person clicks. For a button with `confirm: "prepare"`, Raft sends your action endpoint a **prepare** request, then shows your confirmation text in its own dialog (for a server-local App, with Raft's notice that it didn't review the App). For a button with `undoWindowMs`, the client counts down with an **Undo** button; for a server-local App it asks the person to confirm first.
+3. The person clicks. For a button with `confirm: "prepare"`, Raft sends your action endpoint a **prepare** request, then shows your confirmation text in its own dialog (for an App that isn't official, with Raft's notice that it didn't review the App). For a button with `undoWindowMs`, the client counts down with an **Undo** button; for an App that isn't official it asks the person to confirm first.
 4. Raft checks the handle against the current state, records one **operation** for the click, and sends your action endpoint one **execute** request.
 5. Your App checks, acts and answers with a status. If it needs longer, it answers `accepted` and reports the outcome later, with a [terminal update](#_7-finish-later-with-a-terminal-update) or in a [status answer](#_8-answer-status-requests).
 6. Raft shows the person the outcome and reads the card again.
@@ -63,17 +63,24 @@ Add `action_endpoint` to the registration you send with `PUT /api/oauth/link-pre
 
 Prepare, execute and status requests all go to this one URL. Tell them apart by the body's `phase`.
 
-## 2. Allow card actions on your own Server {#_2-allow-card-actions-on-your-own-server}
+## 2. Allow card buttons on each Server {#_2-allow-card-actions-on-your-own-server}
 
-Official Apps skip this step. For a server-local App, registering the action endpoint isn't enough: a person with permission to manage integrations on your Server allows card actions for the App in its settings. They confirm the exact action endpoint URL, so what they allow is what Raft calls.
+Official Apps skip this step. For any other App, each Server where it's installed decides whether its card buttons act there. A person with permission to manage integrations on that Server makes the decision.
 
-They do this in the App editor: **Settings → Apps →** your App **→ Edit app → Card buttons**, which shows the action endpoint and asks them to confirm it. The section appears only for a server-local App that has a link-preview registration.
+**A server-local App on its own Server.** Its acting buttons work by default, as soon as its action endpoint is registered. They follow the endpoint: when you change it, the buttons call the new one. A person who can manage integrations on your Server can switch them off, and on again, in the App editor: **Settings → Apps →** your App **→ Edit app → Card buttons**, with **Revoke** and **Allow card buttons to run actions**. The section appears only for a server-local App that has a link-preview registration. If your Server had withdrawn its allowance before Raft 1.28.0, the buttons stay off until someone switches them on.
 
-- The permission is for this exact URL. While the App's action endpoint points anywhere else, its buttons only open links. If the endpoint points back to the allowed URL, they act again. To use a different URL, someone has to allow that one.
-- Withdrawing the allowance turns acting buttons off at once, also on cards people already have open: their next click is refused.
+**A shared or published App, on any Server.** This includes your own Server once the App is shared or published. Its acting buttons work on a Server only after a person who can manage integrations there allows the App's action endpoint. They allow the exact URL in force, so what they allow is what Raft calls. Tell the people who install your App which URL that is. In the web app it's **Card buttons** on the App's page under the Server's Apps (from the web release after 1.28.0).
+
+- Only the endpoint in force can be allowed. For a published App, a new or changed endpoint waiting for Marketplace review can't be allowed until it passes.
+- The allowance is for this exact URL. When the App's action endpoint changes, its buttons only open links until someone allows the new one. If the endpoint changes back to the allowed URL, they act again.
+- The allowance belongs to the App's installation on that Server. Uninstalling the App deletes it, and a reinstall starts without one.
+
+**On every Server:**
+
+- Switching the buttons off, or withdrawing the allowance, turns acting buttons off at once, also on cards people already have open: their next click is refused.
 - While the registration is suspended (its domain proof failed, or the domain file names another App), acting buttons are off too. They come back when the proof succeeds again.
-- Even when allowed, the buttons act only in clients that confirm every press for an App Raft hasn't reviewed ([above](#who-can-use-acting-buttons)).
-- A click that Raft admitted just before a withdrawal can still reach your endpoint. Status requests and terminal updates for operations already started keep working.
+- Even when on, the buttons act only in clients that confirm every press for an App Raft hasn't reviewed ([above](#who-can-use-acting-buttons)).
+- A click that Raft admitted just before the buttons were turned off can still reach your endpoint. Status requests and terminal updates for operations already started keep working.
 
 ## 3. Add acting buttons to the card {#_3-add-acting-buttons-to-the-card}
 
@@ -99,7 +106,7 @@ Buttons go in the `card` of a version 2 or version 3 answer. A `Button` element 
 - Use `confirm: "prepare"` for actions that are hard to undo, and `undoWindowMs` for quick ones where a short undo is enough.
 - Every card answer carries `card_revision` and `business_revision` (each 1–512 characters; an answer without them is invalid). They are how you refuse a stale click.
 
-**Client capabilities.** The request's `client_capabilities` lists what the reader's client can do. A reader gets buttons only with `button.v1`, a `confirm` button only with `confirm.v1`, and an `undoWindowMs` button only with `undo.v1`; Raft removes the rest from that reader's card. The web client declares all three. A server-local App's acting buttons also need `unreviewed_app.v1`, which a client declares when it confirms every press of an App Raft hasn't reviewed; without it the reader gets `navigate` buttons only. Your App declares nothing: these are between Raft and its clients. You can always send the full card. Read `client_capabilities` only if you want to show something else in place of a button the reader won't get.
+**Client capabilities.** The request's `client_capabilities` lists what the reader's client can do. A reader gets buttons only with `button.v1`, a `confirm` button only with `confirm.v1`, and an `undoWindowMs` button only with `undo.v1`; Raft removes the rest from that reader's card. The web client declares all three. Acting buttons of an App that isn't official also need `unreviewed_app.v1`, which a client declares when it confirms every press of an App Raft hasn't reviewed; without it the reader gets `navigate` buttons only. Your App declares nothing: these are between Raft and its clients. You can always send the full card. Read `client_capabilities` only if you want to show something else in place of a button the reader won't get.
 
 ## 4. Verify the request {#_4-verify-the-request}
 
@@ -120,7 +127,7 @@ Raft sends every prepare, execute and status request as an HTTP **POST** to your
 | `body_sha256` | SHA-256 hex digest of the exact request body bytes. |
 | `url_sha256` | For prepare and execute: SHA-256 hex digest of the body's `url` string as UTF-8. Don't normalize the URL yourself. A status body has no `url`. |
 | `message_id` | The Raft message the card is on. |
-| `server_id`, `installation_id` | The Server and installation you expect. A server-local App only ever gets its own Server. |
+| `server_id`, `installation_id` | The Server and installation you expect. A server-local App only ever gets its own Server. A shared or published App gets each Server where its buttons may act. |
 | `sub` | The person who clicked: the same human ID as Login with Raft. Apply your permissions to it. In a status request, it's the person who clicked originally. |
 | `server_role` | `owner`, `admin`, `member` or `guest`: their role on that Server when Raft signed. It describes this request; it isn't a permission. Treat a missing or other value as `guest`. |
 
@@ -317,7 +324,7 @@ The body is at most 8 KiB of strict JSON with only these fields.
 | `429` `RATE_LIMITED` or `LOCK_TIMEOUT` | Too many updates, or Raft was busy. Wait for `Retry-After` and retry with the same `update_id`. |
 | `500` | Retry with the same `update_id`. |
 
-Retrying with the same `update_id` and the same content returns the first answer again, even after the token expired, until about 24 hours after the operation became final. After that Raft has deleted the used token and answers `410` `UPDATE_TOKEN_INVALID`. Raft accepts an update after the App was uninstalled, after card actions were withdrawn or after a registration change, but not once your App's credentials are disabled.
+Retrying with the same `update_id` and the same content returns the first answer again, even after the token expired, until about 24 hours after the operation became final. After that Raft has deleted the used token and answers `410` `UPDATE_TOKEN_INVALID`. Raft accepts an update after the App was uninstalled, after its card buttons were switched off or withdrawn, or after a registration change, but not once your App's credentials are disabled.
 
 ## 8. Answer status requests {#_8-answer-status-requests}
 
@@ -374,7 +381,7 @@ Both are strings you choose, 1–512 characters. After every refused or finished
 | --- | --- | --- |
 | Prepare | 30 per person per Server per minute | `429` `RATE_LIMITED` |
 | Execute | 30 per person per Server per minute, for all Apps together | `429` `RATE_LIMITED` |
-| Execute for a server-local App | Also 10 per person per Server per App per minute | `429` `RATE_LIMITED` |
+| Execute for an App that isn't official | Also 10 per person per Server per App per minute | `429` `RATE_LIMITED` |
 | Open operations of one person | 20 per Server, counting operations still in progress or unconfirmed | `429` `OPEN_OPERATIONS_CAP` |
 | Open operations of one installation | 1,000, also counting those waiting for reconciliation | `429` `OPEN_OPERATIONS_CAP` |
 | Open operations in one person's view of a card | 1: while one is open, that person's next click on the card is refused; other readers can still click | `409` `VIEW_PENDING` |
@@ -389,7 +396,7 @@ When you test in a browser, a click can get these answers from Raft:
 | `409` `HANDLE_USED` | This button was already used. |
 | `410` `HANDLE_INVALID` | The card is out of date ([above](#revisions-and-stale-clicks)). The client reads it again. |
 | `410` `PREPARED_INVALID` | The confirmation expired after 5 minutes, or doesn't match. Click again. |
-| `410` `PROVIDER_NOT_ELIGIBLE` | Your App can't use acting buttons for this person now. For a server-local App: card actions aren't allowed on this Server, or the allowance was withdrawn. |
+| `410` `PROVIDER_NOT_ELIGIBLE` | Your App can't use acting buttons for this person now. For an App that isn't official: its card buttons were switched off on this Server, or its action endpoint isn't allowed there (or changed since it was allowed). |
 | `429` `RATE_LIMITED`, `OPEN_OPERATIONS_CAP` | A limit above. |
 | `429` `LOCK_TIMEOUT` | Raft was briefly busy; the client retries the same request. |
 | `502` `PREPARE_FAILED` | Your prepare answer didn't arrive within 2.5 seconds, or was invalid. |
@@ -410,7 +417,7 @@ Drafts is a server-local support App. When a question comes in, it writes a repl
 }
 ```
 
-Then an owner or admin allows card actions for `https://drafts.example/raft/actions` in the App's settings.
+Drafts is server-local, so its acting buttons work on its own Server as soon as this is registered. Nobody has to allow them, though an owner or admin could switch them off in the App's settings.
 
 **Answer the version 2 request.** For a reader who can see draft 42, return a block card. `business_revision` is the draft's version, and `card_revision` names the draft and its version:
 
@@ -480,15 +487,15 @@ Drafts can include a toast in that answer, such as `{"status":"done", "toast":{"
 
 | Symptom | Check |
 | --- | --- |
-| Only `navigate` buttons show, for people on your own Server | Card actions aren't allowed for the App yet (**Card buttons** in the App's settings), you changed `action_endpoint` after they were allowed, or the registration is suspended. Otherwise the reader's client doesn't confirm presses for Apps Raft hasn't reviewed (`unreviewed_app.v1`), such as a mobile app older than 1.24. |
-| Only `navigate` buttons show, for people on another Server | Expected. Only people reading from the App's own Server get its acting buttons. |
-| Acting buttons stopped after you created a share link or published the App | Expected. The App is no longer made for your Server alone, so it can't use own-Server card actions anywhere, your own Server included. Revoking the link doesn't change that. |
+| Only `navigate` buttons show, for people on your own Server | For a server-local App: someone switched its card buttons off (**Card buttons** in the App's settings). For a shared or published App: its action endpoint isn't allowed on your Server, or you changed `action_endpoint` after it was allowed. Or the registration is suspended. Otherwise the reader's client doesn't confirm presses for Apps Raft hasn't reviewed (`unreviewed_app.v1`), such as a mobile app older than 1.24. |
+| Only `navigate` buttons show, for people on another Server | Your App isn't installed there, or a person who can manage integrations there hasn't allowed its action endpoint, or you changed `action_endpoint` after they allowed it. The same client check applies. |
+| Acting buttons stopped after you created a share link or published the App | Expected. The App is no longer server-local, so its buttons aren't on by default anymore, your own Server included. Ask someone who can manage integrations there to allow its action endpoint. Revoking the link doesn't bring the default back. |
 | One kind of acting button is missing, others show | The reader's client didn't declare `confirm.v1` or `undo.v1` for that kind of button. |
 | The whole card is a plain link | The answer is invalid. Check that each `execute` action has exactly one of `confirm` and `undoWindowMs`, that `action_id`s are unique, and that the card has at most 4 buttons. |
 | Clicks keep answering `410` | Something bound into the handle keeps changing. A deploy script that sends a different registration on every start, for example a different action endpoint or set of paths, stops every button on screen each time. |
-| Clicks answer `429` | A [limit](#limits). A server-local App gets 10 executes per person per minute. |
+| Clicks answer `429` | A [limit](#limits). An App that isn't official gets 10 executes per person per minute. |
 | People see that your App couldn't prepare the action | Your prepare answer took longer than 2.5 seconds, wasn't HTTP `200` with `application/json`, had fields besides `status` and `description`, had IDs that differ from the request's, or broke the description rules. |
 | People keep seeing that the result isn't confirmed | You didn't answer execute within 2.5 seconds, or answered `accepted` or `unknown` and never finished. Send a terminal update within 10 minutes, or answer status with a final status. |
 | A terminal update returns `410` `UPDATE_TOKEN_INVALID` | The token is older than 10 minutes, or belongs to another App. Answer the next status request instead. |
 
-Test with two people: the one who may act and one who may not. Also test a click on a card read before the object changed, an execute answer slower than 2.5 seconds, a status request for an `operation_id` you never saw, withdrawing card actions while a card is open, and an `exp` that passed while the execute waited in your queue. In each case, nothing may happen twice, and nothing may happen for a person your App doesn't allow.
+Test with two people: the one who may act and one who may not. Also test a click on a card read before the object changed, an execute answer slower than 2.5 seconds, a status request for an `operation_id` you never saw, switching card buttons off while a card is open, and an `exp` that passed while the execute waited in your queue. In each case, nothing may happen twice, and nothing may happen for a person your App doesn't allow.

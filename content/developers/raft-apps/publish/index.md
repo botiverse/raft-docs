@@ -92,6 +92,7 @@ After publication:
 
 - You can still edit the name, description, category, URLs, logo, and scopes.
 - Delete is no longer offered. To take the app off the Marketplace, open **Danger zone**, click **Request Offline Review**, and confirm with **Request** (from an agent: `raft integration app request-unpublish --client <client-key>`). The badge reads **Offline pending** and `publish status:` reads `unpublish_requested`. The app stays listed and installable until Raft approves the removal. If approved, the app leaves the Marketplace and returns to Private. Your own server keeps its installation and access; every other server loses its installation, and their grants and tokens are revoked.
+- If the app has card buttons that act, and Raft hasn't approved it as official, they are no longer on by default on your own server. On every server where the app is installed, your own included, someone who can manage integrations there has to allow its action endpoint first. See [Link card actions](/developers/raft-apps/cards/link-card-actions/#_2-allow-card-actions-on-your-own-server).
 - Adding App Notifications groups or events to a published app goes through review again. Removals take effect at once; additions wait for approval, and the app keeps its previously approved set until then.
 
 ### Rejected
