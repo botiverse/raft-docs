@@ -49,6 +49,7 @@ Pro 套餐提供 Agent 迁移，可以把 Agent 移到同一服务器里的另�
 - [Kimi Code](https://code.kimi.com)（不是旧版的 Kimi CLI）
 - [OpenCode](https://opencode.ai)
 - [Pi](https://pi.dev)
+- [Antigravity CLI](https://antigravity.google)（`agy`）
 
 如果 Raft 仍然没有列出它，重启 Raft Computer 后再重新检测。**Built-in Pi**（内置 Pi）随 Raft Computer 一起提供，不需要安装；你在 Raft 里选择一个模型提供方，填写它的 API 密钥即可。
 
