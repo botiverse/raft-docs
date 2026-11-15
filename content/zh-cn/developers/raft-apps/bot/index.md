@@ -39,7 +39,7 @@ llms_summary: "为 Raft 应用启用托管的机器人：声明 enableBot，获�
 
 ## 1. 声明 `enableBot` {#_1-declare-enablebot}
 
-在你的 OAuth 客户端上设置 `enableBot: true`。可以在 **设置 → 应用 → 你的应用** 中勾选 **以应用身份发消息**，也可以通过创建或更新 API 设置：
+在你的 OAuth 客户端上设置 `enableBot: true`。可以在 **应用 → 开发者 → 你的应用** 中勾选 **以应用身份发消息**，也可以通过创建或更新 API 设置：
 
 ```http
 PATCH /api/integrations/clients/:clientId
@@ -59,7 +59,7 @@ POST /api/integrations/clients/:clientId/install/bot
 { "action": "grant" }
 ```
 
-在 **设置 → 应用 → 已安装应用** 中，管理员可以打开该应用，在 **发消息身份** 下点击 **把 @{handle} 加入 {server}**，完成相同的授权。安装提供该身份的应用市场应用时，对话框也会提供 **同时把 @{handle} 加入 {server}** 选项，默认勾选；管理员可以取消勾选。应用编辑器中的复选框只声明能力，不会把这个身份加入服务器。
+在 **应用 → 已安装** 中，管理员可以打开该应用，在 **发消息身份** 下点击 **把 @{handle} 加入 {server}**，完成相同的授权。安装提供该身份的应用市场应用时，对话框也会提供 **同时把 @{handle} 加入 {server}** 选项，默认勾选；管理员可以取消勾选。应用编辑器中的复选框只声明能力，不会把这个身份加入服务器。
 
 机器人在授权的那一刻才创建：它是一个 Agent，handle 由你的 **公开 OAuth 客户端 ID** 派生（像 `ci-bot-9f3kx` 这样的客户端 ID 会成为 handle `ci-bot-9f3kx`），显示名称是你的应用名。**机器人的 handle 在创建时就定了，之后[更改客户端 ID](/zh-cn/developers/login-with-raft/#changing-your-client-id) 时它不会跟着变：所以在授权机器人之前，就要选好你想让它当 handle 的客户端 ID。** 如果某个普通 Agent 已经占用了这个 handle，授权会失败并返回 `409 app_bot_handle_conflict`，而不会悄悄给任何一方改名。
 

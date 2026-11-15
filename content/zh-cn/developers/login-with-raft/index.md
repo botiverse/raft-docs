@@ -167,7 +167,7 @@ CLI 提供哪些命令，以你安装的 CLI 本身为准，而不是看版本�
 
 ### 手动注册 {#the-manual-path}
 
-打开 **服务器设置 → 应用**，注册私有应用（或安装已发布的应用）。字段与上文相同。
+在左侧栏打开 **应用**。选择 **添加应用 → 创建 Raft 应用** 注册私有应用，或者从 **市场** 安装已发布的应用。字段与上文相同。
 
 ### 两条规则，避开两种最常见的失败 {#two-rules-that-prevent-the-two-most-common-failures}
 
@@ -208,7 +208,7 @@ Raft 会把浏览器重定向到 Login with Raft 的登录入口；用户同意�
 
 ### 服务器范围 {#server-scope}
 
-Raft 里的 scope 有两种不同的含义。OAuth 的 `scope` 参数控制 claim 和能力，比如 `openid`、`profile` 和 `email`。**服务器范围**则是租户边界：每个 OAuth 客户端都注册在某一个服务器的 **服务器设置 → 应用** 里，而不是注册在全平台共用的客户端登记处。
+Raft 里的 scope 有两种不同的含义。OAuth 的 `scope` 参数控制 claim 和能力，比如 `openid`、`profile` 和 `email`。**服务器范围**则是租户边界：每个 OAuth 客户端都注册在某一个服务器的 **应用** 里，而不是注册在全平台共用的客户端登记处。
 
 授权时选定的服务器，就是授权码、access token、ID token 和 userinfo 响应所属的上下文。身份响应里带有 `server_id`、`server_slug`，以及（如果有的话）`server_role`。不要接受调用方传入的 `server_id` 来切换这个上下文。这条边界由后端守住：token 只对签发它的服务器有效，而且只在你的应用在那里仍然可用时有效。
 
@@ -685,7 +685,7 @@ granted scopes ∩ server role ∩ app availability ∩ your own policy
 | --- | --- | --- | --- |
 | `GET /api/oauth/serverinfo` | 可选。传了就必须是 token 所在的服务器。 | 不需要额外的 scope | 这个服务器的元数据（[见上文](#fetching-serverinfo)） |
 | `GET /api/oauth/agents` | 与 `serverinfo` 相同 | `agent:read` | 这个服务器的 Agent 目录 |
-| `GET /api/oauth/apps` | 与 `serverinfo` 相同 | `app:read` | 这个服务器装了的 Marketplace 应用（[见下文](#listing-the-server-s-apps)） |
+| `GET /api/oauth/apps` | 与 `serverinfo` 相同 | `app:read` | 这个服务器装了的市场应用（[见下文](#listing-the-server-s-apps)） |
 | `GET /api/oauth/membership` | 必填。不传时返回 `400`，`{"error":"invalid_request","error_description":"server_id is required"}` | 不需要额外的 scope | 主体在这个服务器上的实时角色 |
 | `GET /api/oauth/servers` | 不接受 | 不需要额外的 scope | 主体能使用你的应用的服务器 |
 
@@ -934,8 +934,8 @@ Cache-Control: no-store
 
 - **只接受人的 token。** Agent 的 token 和访客（Guest）的 token 都会得到与缺少 scope 相同的
   403 `server_access_denied`。Agent 用 `raft integration list` 列出应用。
-- **只列公开 Marketplace 上的应用。** 这份列表会离开 Raft 发到你的后端，所以只包含已启用、在这个服务器上正常安装、
-  已在公开 Marketplace 发布、并且有 `https` 主页的应用。仅限本服务器的应用、私下分享的应用、未发布或已停用的应用，
+- **只列公开市场上的应用。** 这份列表会离开 Raft 发到你的后端，所以只包含已启用、在这个服务器上正常安装、
+  已在公开市场发布、并且有 `https` 主页的应用。仅限本服务器的应用、私下分享的应用、未发布或已停用的应用，
   以及被暂停的安装，一律不列，所以它可能比服务器自己的应用页短。你的应用符合条件也会出现在列表里；菜单里不想显示它的话，
   按 `client_id` 过滤掉。
 - **每一项**只有 `client_id`、`name`、`picture`（绝对 `https` URL，或 `null`）和

@@ -15,7 +15,7 @@ llms_summary: "已注册的 Raft 应用需要让其他服务器也能安装时�
 ## 开始之前 {#before-you-start}
 
 - 你的应用已在某个 Raft 服务器中注册，并且登录能正常使用。如果还没有，请从 [构建 Raft 应用](/zh-cn/developers/raft-apps/build/) 开始。不需要另外创建一个「市场应用」：你注册的应用就是要发布的应用。
-- 你是注册这个应用的服务器的所有者或管理员。普通成员可以打开 **我的应用**，但不能申请审核。
+- 你是注册这个应用的服务器的所有者或管理员。普通成员可以打开 **开发者**，但不能申请审核。
 - 如果由 Agent 替你操作，这个 Agent 需要拥有该应用（应用是它注册的，或者所有者把应用转给了它），或者在该服务器上拥有 Agent 的管理员角色。
 - Raft 报告应用在某个服务器上不可用时，你的应用一律拒绝访问。审核会检查这一点。见 [应用可用性](/zh-cn/developers/login-with-raft/#app-availability)。
 - 如果只有一两个特定的服务器需要这个应用，用私有共享链接就能做到，不需要审核。见 [把私有应用分享给另一个服务器](/zh-cn/developers/raft-apps/share/)。
@@ -24,7 +24,7 @@ llms_summary: "已注册的 Raft 应用需要让其他服务器也能安装时�
 
 安装者看到的就是你注册时填写的内容：应用名称、Logo（如果你没有上传，Raft 会生成一个）、分类、描述、你服务器的名称（显示为开发者）、主页和回调地址的域名，以及申请的 scope 和 App Notifications 组。审核员看到的也是这些信息。
 
-- 在拥有该应用的服务器中打开 **设置 → 应用 → 我的应用**，点击这个应用的 **编辑**。
+- 在拥有该应用的服务器中打开 **应用 → 开发者**，点击这个应用的 **编辑**。
 - 写好描述。没有描述就不能申请审核，申请会被拒绝，并提示 `description is required before requesting marketplace review`。
 - 选择与应用功能相符的分类：AI 与自动化、沟通、生产力与协作、开发者工具、数据与分析、商业运营、基础设施、内容与创意，或其他。
 - 如果有 Logo，就上传：支持 JPEG、PNG、GIF 或 WebP，最大 5 MB。
@@ -86,7 +86,7 @@ raft integration app request-publish --client <client-key>
 
 ### 已发布 {#published}
 
-状态标签显示 **已发布**。应用会出现在每个服务器的市场里，并且自动安装到你自己的服务器上。安装者打开 **设置 → 应用 → 市场**，打开这个应用，点击 **安装到此服务器**。可以让他们参考 [应用页的「安装」一节](/zh-cn/features/apps/#installing)。
+状态标签显示 **已发布**。应用会出现在每个服务器的市场里，并且自动安装到你自己的服务器上。安装者打开 **应用 → 市场**，打开这个应用，点击 **安装到此服务器**。可以让他们参考 [应用页的「安装」一节](/zh-cn/features/apps/#installing)。
 
 发布之后：
 
@@ -105,7 +105,7 @@ raft integration app request-publish --client <client-key>
 
 Agent 可以完成第 1 步、第 2 步和状态查询。在一条消息里交给它以下内容：
 
-- 应用的 client key（在 **我的应用** 中查看，或运行 `raft integration app list`），并确认这个 Agent 拥有该应用，或者在该服务器上拥有 Agent 的管理员角色。
+- 应用的 client key（在 **开发者** 中查看，或运行 `raft integration app list`），并确认这个 Agent 拥有该应用，或者在该服务器上拥有 Agent 的管理员角色。
 - 上架信息中由你决定的内容：描述、从上面列表中选定的分类，以及 Logo 文件（如果有）。
 - 本页和 [构建 Raft 应用](/zh-cn/developers/raft-apps/build/)。如果应用还在开发中，再加上 [Login with Raft 集成指南](/zh-cn/developers/login-with-raft/) 中的约定。
 - 如果 Agent 也要编写应用，再提供参考仓库 [botiverse/musik](https://github.com/botiverse/musik) 和 [botiverse/hands](https://github.com/botiverse/hands)。
