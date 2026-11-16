@@ -8,7 +8,7 @@ llms_summary: "Read when your App's bot should send a card whose buttons act, op
 
 Your App's bot can send a card message whose buttons act. When a person presses one, Raft calls your App's action endpoint, exactly as for a [link card action](/developers/raft-apps/cards/link-card-actions/). You can name the one person who may press the buttons, such as the owner who has to approve a request. Everyone else in the conversation sees the card, with the buttons disabled.
 
-App-sent cards are available from Raft 1.27.0. Sending `actions` and `for` with types needs an `@botiverse/raft-sdk` release after 0.35.1. Version 0.35.1 and earlier don't have the types, but in plain JavaScript they pass the fields through. For which clients show the buttons, see [Client support](#client-support).
+App-sent cards are available from Raft 1.27.0. Sending `actions` and `for` with types needs `@botiverse/raft-sdk` 0.36.0 or later. Keeping acting buttons when you update a card needs 0.37.0 or later (see [Update the card](#_4-update-the-card)). Version 0.35.1 and earlier don't have the types, but in plain JavaScript they pass the fields through. For which clients show the buttons, see [Client support](#client-support).
 
 ## Before you start {#before-you-start}
 
@@ -49,7 +49,7 @@ This card asks Dana to approve an agent's use of a deploy key. **Approve** and *
 }
 ```
 
-Send it with the SDK's program layer (an `@botiverse/raft-sdk` release after 0.35.1), using the bot's key:
+Send it with the SDK's program layer (`@botiverse/raft-sdk` 0.36.0 or later), using the bot's key:
 
 ```ts
 import { createRaftClient } from "@botiverse/raft-sdk";
@@ -183,7 +183,7 @@ Here `decidedCard` says what happened and keeps only a `navigate` button:
 
 An update follows the rules in [Update a card](/developers/sdk/external-agents/card-messages/#update-a-card), with these additions:
 
-- **`actions` replaces the acting buttons.** `raft.messages.updateCard` doesn't take `actions` yet, so an update that keeps acting buttons isn't available from the SDK for now. An update with `actions` gets the same checks as a send, against the state now: your App may still send acting buttons here, every key names a `Button` of the new card, and the conversation isn't a joint channel.
+- **`actions` replaces the acting buttons.** The agent layer's `raft.messages.updateCard` doesn't take `actions`, so to keep acting buttons, update through the program layer, as shown below. An update with `actions` gets the same checks as a send, against the state now: your App may still send acting buttons here, every key names a `Button` of the new card, and the conversation isn't a joint channel.
 - **An update without `actions` ends the acting buttons.** Every `Button` in the new card is then an ordinary `navigate` button that opens its URL. To keep a button visible but unusable, give it your own `disabledReason`.
 - **`for` stays as you sent it.** Leave it out of updates. An update whose `for` names anyone else is refused.
 - **Every update makes a new revision.** Buttons on the old revision stop working, and clients draw the new card.
@@ -191,6 +191,25 @@ An update follows the rules in [Update a card](/developers/sdk/external-agents/c
 - **After 14 days you can't update the card.** Its acting buttons keep working while your App may use them, so refuse presses on requests you already decided.
 
 An update notifies no one, not even the `for` person.
+
+To keep acting buttons, for example to show progress while the person can still press **Deny**, send the update with `actions` through the program layer's `client.routes.messages.updateCard`. Its `messageId` path parameter has the SDK's `MessageId` type, so turn the id you stored as a plain string into one with `asMessageId`, exported from `@botiverse/raft-sdk` 0.37.0 and later:
+
+```ts
+import { asMessageId, createRaftClient } from "@botiverse/raft-sdk";
+
+const client = createRaftClient({ serverUrl: "https://api.raft.build", credential: process.env.RAFT_BOT_KEY! });
+
+const kept = await client.routes.messages.updateCard({
+  params: { messageId: asMessageId(messageId) }, // the stored plain string
+  body: {
+    card: pendingCard, // still has the "deny" Button
+    actions: { deny: { kind: "execute", action_id: "deny", undoWindowMs: 5000 } },
+    expectedRevision: 1,
+    idempotencyKey: "access-request-42-pending",
+  },
+});
+if (!kept.ok) throw new Error(kept.error.message);
+```
 
 ## Errors {#errors}
 
