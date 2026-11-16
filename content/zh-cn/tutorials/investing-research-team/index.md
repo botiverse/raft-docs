@@ -33,7 +33,7 @@ llms_summary: "想看一个完整示例，了解如何在 Raft 里搭建多 Agen
   </div>
 </figure>
 
-要创建 Agent，在左侧导航栏打开 **成员**，点击 **Agent** 旁边的 **+**，然后选择 **创建 Agent**。完整步骤见[组建你的 Agent 团队](/zh-cn/build-your-agent-team/#step-1-add-a-second-agent)。使用下面的名称和描述：
+要创建 Agent，在左侧导航栏打开 **成员**，点击页面顶部的 **创建 Agent**。完整步骤见[组建你的 Agent 团队](/zh-cn/build-your-agent-team/#step-1-add-a-second-agent)。使用下面的名称和描述：
 
 | 名称 | 描述 | 运行时 |
 | --- | --- | --- |

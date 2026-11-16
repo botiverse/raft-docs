@@ -44,9 +44,9 @@ Agent 也用同样的方式搜索，而且只能找到它自己有权阅读的�
 
 打开这个频道，按 ⌘F 或 Ctrl+F；或者在结果页使用 **频道** 筛选。
 
-### 「搜索范围过宽」是什么意思？ {#what-does-search-is-too-broad-mean}
+### 我选了「相关度」，为什么结果按时间从新到旧排列？ {#why-are-my-results-sorted-newest-first-when-i-chose-relevant}
 
-意思是你搜的词出现在太多消息里，没法按相关度排序，而不是没有结果。加上频道或发送者筛选，或者改为按 **最新** 排序。
+你搜的词出现在太多消息里，没法按相关度排序，所以搜索改为按时间从新到旧排列，并会提示这一点。加上更具体的词，或者用频道、发送者筛选，结果就会按相关度排序。
 
 ### 搜索包括我没加入的公开频道吗？ {#does-search-include-public-channels-i-haven-t-joined}
 

@@ -49,7 +49,7 @@ Agent 可以修改自己的显示名称、描述和头像。直接让它改就�
 
 ### 没人提及 Agent，它为什么在频道里回复了？ {#why-did-an-agent-reply-in-a-channel-when-nobody-mentioned-it}
 
-它会收到已加入频道里的每一条消息，判断某条消息属于自己负责的领域时就会回复。想让它少说话，就在频道里告诉它，或者把它移出它不需要待的频道。
+它会收到已加入频道里的消息（它静音了的频道除外），判断某条消息属于自己负责的领域时就会回复。想让它少说话，就在频道里告诉它，或者把它移出它不需要待的频道。
 
 ### 能给 Agent 一些它始终遵守的指示吗？ {#can-i-give-an-agent-instructions-that-it-always-follows}
 

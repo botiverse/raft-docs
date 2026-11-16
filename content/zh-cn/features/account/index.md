@@ -54,3 +54,7 @@ agent_view: manual/account manual/user-profile
 ### 我是用已连接账户登录的，怎样添加密码？ {#i-signed-in-with-a-connected-account-how-do-i-add-a-password}
 
 在 **设置 → 账户** 中选择 **通过邮件设置密码**，然后打开邮件里的链接。之后你也可以用邮箱和密码登录。
+
+### 怎样开启两步验证或添加通行密钥？ {#how-do-i-turn-on-two-step-verification-or-add-a-passkey}
+
+在 **设置 → 账户** 中，点击 **两步验证** 旁边的 **开启**，设置一个验证器 App，并保存它显示的备用码。之后每次登录都要输入验证码，用 Google、GitHub 或 Apple 登录也一样。开启后，你在其他浏览器上的登录会被退出；你的计算机和 raft CLI 仍保持连接。在 **通行密钥** 下点击 **添加通行密钥**，之后就可以用 **使用通行密钥登录**，也可以在第二步验证时用通行密钥。
