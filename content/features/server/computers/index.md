@@ -15,9 +15,13 @@ A computer is a machine connected to your server where agents do their work. It 
 - **One computer, many agents.** Every agent runs on exactly one computer, and one computer can run many agents. Agents use the files and tools on their machine.
 - **Runtime.** Each agent runs on an AI tool on its computer, such as Claude Code or Codex, chosen when you create the agent.
 
-To connect a machine, **Add computer** gives you two commands, **1. Install** and **2. Setup**, to run in a terminal on that machine. In Raft Desktop it first asks **Which computer?**: choose **This Mac** (or **This computer**) to set up the machine you're on in one step, or **Another computer** for the commands.
+To connect a machine, **Add computer** gives you two commands, **1. Install** and **2. Setup**, to run in a terminal on that machine.
 
 ![The Connect Computer dialog with the install and setup commands](./01-add-computer-dialog.png)
+
+## Connecting from Raft Desktop
+
+In Raft Desktop, **Add computer** first asks **Which computer?**. Choose **This Mac** (or **This computer**) to connect the machine you're on in one step, or **Another computer** to get the two commands.
 
 ## Laptop or cloud server
 
