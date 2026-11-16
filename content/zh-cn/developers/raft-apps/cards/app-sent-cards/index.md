@@ -8,7 +8,7 @@ llms_summary: "当你的应用机器人要发出一张按钮能执行操作的�
 
 你的应用机器人可以发出一条卡片消息，上面的按钮能执行操作。有人按下其中一个时，Raft 调用你应用的操作端点，和 [链接卡片操作](/zh-cn/developers/raft-apps/cards/link-card-actions/) 完全一样。你可以指定唯一一个可以按这些按钮的人，比如要批准一个申请的所有者。对话里的其他人也能看到这张卡片，但按钮是禁用的。
 
-应用发送的卡片从 Raft 1.27.0 起可用。要带类型地发送 `actions` 和 `for`，需要 0.35.1 之后发布的 `@botiverse/raft-sdk`。0.35.1 及更早的版本没有这两个字段的类型，但在纯 JavaScript 里会原样传过去。哪些客户端会显示这些按钮，见 [客户端支持](#client-support)。
+应用发送的卡片从 Raft 1.27.0 起可用。要带类型地发送 `actions` 和 `for`，需要 `@botiverse/raft-sdk` 0.36.0 或更新的版本。更新卡片时保留执行操作的按钮，需要 0.37.0 或更新的版本（见 [更新卡片](#_4-update-the-card)）。0.35.1 及更早的版本没有这两个字段的类型，但在纯 JavaScript 里会原样传过去。哪些客户端会显示这些按钮，见 [客户端支持](#client-support)。
 
 ## 开始之前 {#before-you-start}
 
@@ -49,7 +49,7 @@ llms_summary: "当你的应用机器人要发出一张按钮能执行操作的�
 }
 ```
 
-用 SDK 的程序层（0.35.1 之后发布的 `@botiverse/raft-sdk`）和机器人的密钥发送它：
+用 SDK 的程序层（`@botiverse/raft-sdk` 0.36.0 或更新的版本）和机器人的密钥发送它：
 
 ```ts
 import { createRaftClient } from "@botiverse/raft-sdk";
@@ -183,7 +183,7 @@ if (updated.ok) await saveRevision(42, updated.data.revision); // 2
 
 更新遵循 [更新卡片](/zh-cn/developers/sdk/external-agents/card-messages/#update-a-card) 里的规则，另外还有这些：
 
-- **`actions` 替换执行操作的按钮。** `raft.messages.updateCard` 目前还不接受 `actions`，所以暂时不能用 SDK 做保留执行按钮的更新。带 `actions` 的更新会按当前状态做和发送时一样的检查：你的应用仍然可以在这里发送执行操作的按钮，每个键都对应新卡片里的一个 `Button`，对话不是联合频道。
+- **`actions` 替换执行操作的按钮。** Agent 层的 `raft.messages.updateCard` 不接受 `actions`，所以要保留执行操作的按钮，就通过程序层更新，见下面的例子。带 `actions` 的更新会按当前状态做和发送时一样的检查：你的应用仍然可以在这里发送执行操作的按钮，每个键都对应新卡片里的一个 `Button`，对话不是联合频道。
 - **不带 `actions` 的更新会结束执行操作的按钮。** 这时新卡片里的每个 `Button` 都是会打开 URL 的普通 `navigate` 按钮。想让按钮留在卡片上但不能用，就给它写上你自己的 `disabledReason`。
 - **`for` 保持发送时的值。** 更新时不要写它。`for` 指定了其他人的更新会被拒绝。
 - **每次更新都产生一个新的修订版本。** 旧修订版本上的按钮停止工作，客户端会画出新卡片。
@@ -191,6 +191,25 @@ if (updated.ok) await saveRevision(42, updated.data.revision); // 2
 - **14 天后就不能再更新卡片。** 只要你的应用还能使用执行操作的按钮，它们就会继续工作，所以对已经处理过的申请，要拒绝之后的按下。
 
 更新不会通知任何人，`for` 指定的人也不会收到通知。
+
+要保留执行操作的按钮，比如显示处理进度、同时让对方还能按 **Deny**，就通过程序层的 `client.routes.messages.updateCard` 发送带 `actions` 的更新。它的路径参数 `messageId` 是 SDK 的 `MessageId` 类型，所以要用 `asMessageId` 把你存下的普通字符串 id 转换一下，它从 `@botiverse/raft-sdk` 0.37.0 起导出：
+
+```ts
+import { asMessageId, createRaftClient } from "@botiverse/raft-sdk";
+
+const client = createRaftClient({ serverUrl: "https://api.raft.build", credential: process.env.RAFT_BOT_KEY! });
+
+const kept = await client.routes.messages.updateCard({
+  params: { messageId: asMessageId(messageId) }, // the stored plain string
+  body: {
+    card: pendingCard, // still has the "deny" Button
+    actions: { deny: { kind: "execute", action_id: "deny", undoWindowMs: 5000 } },
+    expectedRevision: 1,
+    idempotencyKey: "access-request-42-pending",
+  },
+});
+if (!kept.ok) throw new Error(kept.error.message);
+```
 
 ## 错误 {#errors}
 
