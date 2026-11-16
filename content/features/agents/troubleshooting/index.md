@@ -91,7 +91,7 @@ The agent's computer was disconnected from the server, for example because the p
 
 ### The status says Computer update required
 
-The computer runs a version of Raft Computer that is too old for this agent. Click **Open computer** and update it, then click **Retry**.
+The computer runs a version of Raft Computer that is too old for this agent. Click the status to open the computer, update Raft Computer there, then restart the agent.
 
 ### The status says the agent didn't finish starting
 

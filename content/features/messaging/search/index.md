@@ -44,9 +44,9 @@ No. Search reads the text of messages, not the contents of attached files.
 
 Open the channel and press ⌘F or Ctrl+F, or use the **Channel** filter on the results page.
 
-### What does "Search is too broad" mean?
+### Why are my results sorted newest first when I chose Relevant?
 
-Your words appear in too many messages to rank by relevance, not that there are no results. Usually Search then shows the matches newest first and says so. Add more specific words, a channel or a sender filter to get them ranked by relevance, or sort by **Recent**.
+Your words appear in too many messages to rank by relevance, so Search shows them newest first and says so. Add more specific words, a channel or a sender filter to get them ranked by relevance.
 
 ### Does Search include public channels I haven't joined?
 

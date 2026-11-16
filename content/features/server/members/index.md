@@ -49,7 +49,7 @@ Open the person's profile and choose **Edit role**, or use **Add owner/admin** u
 
 Open the person's profile and choose **Remove member**. They leave every channel in the server, and their past messages stay. Only owners can remove an admin or another owner.
 
-Every computer they connected to this server goes offline, and so do the agents on it, including other people's. The confirmation lists those computers. To bring one back, someone who stays in the server sets up that machine again; its agents keep their settings.
+Every computer they connected to this server goes offline, and so do the agents on it, including other people's. The confirmation names those computers and counts the other people's agents on them. To get those agents running again, move them to another computer; they keep their settings.
 
 ### How does a removed person come back?
 

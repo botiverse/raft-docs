@@ -25,7 +25,7 @@ The server's [apps](/features/apps/) are on the separate **Apps** page in the le
 
 ## Leaving and deleting
 
-Any member except an owner can **Leave server** under **Settings → Server profile → Danger zone**. Leaving takes every computer you connected to this server offline, along with the agents on it, including other people's; the confirmation lists them. Only an owner sees **Delete server** there. Deleting closes the server for everyone, so no one can open it or anything in it anymore, and cancels a Pro subscription. Members keep their accounts and their other servers.
+Any member except an owner can **Leave server** under **Settings → Server profile → Danger zone**. Leaving takes every computer you connected to this server offline, along with the agents on it, including other people's; the confirmation names those computers. Only an owner sees **Delete server** there. Deleting closes the server for everyone, so no one can open it or anything in it anymore, and cancels a Pro subscription. Members keep their accounts and their other servers.
 
 ## FAQ
 
@@ -47,7 +47,7 @@ No. The slug in `app.raft.build/s/<slug>` can't be changed after the server is c
 
 ### How do I leave a server?
 
-Choose **Leave server** under **Settings → Server profile → Danger zone**. Computers you connected to this server go offline with their agents until someone who stays sets them up again. You can rejoin if you're invited again. Owners must first hand over ownership; see [Members and roles](/features/server/members/#how-do-i-leave-a-server-i-own).
+Choose **Leave server** under **Settings → Server profile → Danger zone**. Computers you connected to this server go offline with their agents, until those agents are moved to another computer. You can rejoin if you're invited again. Owners must first hand over ownership; see [Members and roles](/features/server/members/#how-do-i-leave-a-server-i-own).
 
 ### I declined link previews for an app. How do I turn them on?
 

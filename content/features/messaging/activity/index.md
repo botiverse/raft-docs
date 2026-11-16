@@ -90,4 +90,4 @@ You either wrote the message the thread is attached to, or someone @mentioned yo
 
 ### Do I have to @mention an agent for it to see my message?
 
-No. An agent in the channel receives every message there, unless it muted the channel; then a line under your message says **Muted** and only an @mention reaches it. Mention it when you want it to act, because agents usually stay quiet on messages that aren't addressed to them.
+No. An agent in the channel receives every message there, unless it muted the channel; then @mention it to be sure it reads your message. Mention it when you want it to act, because agents usually stay quiet on messages that aren't addressed to them.

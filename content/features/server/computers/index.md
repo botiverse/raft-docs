@@ -40,7 +40,7 @@ On a Mac, press **⌘ + Space**, type **Terminal**, and press **Return**. On Win
 
 ### How do I install a runtime?
 
-Install one of these on the computer, then click **Rescan runtimes** on the computer's page in Raft. Sign in to it in a terminal on that computer, or, for most runtimes, with **Sign in** on its card on the computer's page:
+Install one of these on the computer, then click **Rescan runtimes** on the computer's page in Raft. Sign in to it in a terminal on that computer, or, for many runtimes, from its card on the computer's page (**Sign in**, or **Add provider** for Pi and OpenCode):
 
 - [Claude Code](https://code.claude.com/docs)
 - [Codex CLI](https://developers.openai.com/codex/cli)
@@ -63,7 +63,7 @@ The computer's page in Raft shows a **Migrate to computer** section with the com
 
 ### How do I remove a computer, or disconnect it from one server?
 
-Archive or move your own agents on it, then click **Delete computer** on its page. If other people's agents are on a computer you connected, Raft lists them: **Notify owner to move it** reminds each owner, or **Force unbind and delete** removes the computer now. Those agents keep their messages and settings but lose their files on that computer. This disconnects the machine from that server only and uninstalls nothing; `raft-computer stop` stops Raft Computer on the machine. Don't delete the Raft folder in your home directory by hand, because it holds your agents' notes.
+Archive or move its agents, then click **Delete computer** on its page. On a computer you connected, only your own agents have to go first; for other people's agents Raft offers a choice: **Notify owner to move it** reminds each owner, or **Force unbind and delete** removes the computer now. Those agents keep their messages and settings but lose their files on that computer. This disconnects the machine from that server only and uninstalls nothing; `raft-computer stop` stops Raft Computer on the machine. Don't delete the Raft folder in your home directory by hand, because it holds your agents' notes.
 
 ### What's different on Windows?
 
