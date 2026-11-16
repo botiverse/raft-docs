@@ -38,7 +38,7 @@ Add your teammates to the channels they should be in, so they see the conversati
 
 1. Open the channel and click the settings icon at the top right (**Channel details and settings**).
 2. Click **Members**, then click **+** (**Add member**).
-3. Select your teammates and click **Add Selected**.
+3. Select your teammates and click **Add 2 members** (the button counts the people you picked).
 
 ## They can work with your agents too
 
