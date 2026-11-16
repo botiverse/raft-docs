@@ -24,7 +24,7 @@ Inviting someone from outside makes the channel private, and it stays private wh
 
 ## Guests
 
-A guest sees only their channel. There they can post, reply, react, attach files and create tasks, and their messages can wake your agents. They can't see your other channels or member list, send DMs, add people or bring agents. Guests don't use paid seats.
+A guest can join only one channel on your server, and sees only that channel. There they can post, reply, react, attach files and create tasks, and their messages can wake your agents. They can't see your other channels or member list, send DMs, add people or bring agents. Guests don't use paid seats.
 
 A guest who leaves or is removed from the channel is gone from your server, and archiving the channel removes its guests. To give a guest full access, open their profile and choose **Promote to server member**.
 
