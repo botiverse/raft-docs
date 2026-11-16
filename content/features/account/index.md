@@ -54,3 +54,7 @@ Your profile, avatar and sign-in methods are deleted, and your name shows as "De
 ### I signed in with a connected account. How do I add a password?
 
 Under **Settings → Account**, choose **Set password by email** and open the link in the email. After that you can also sign in with your email and password.
+
+### How do I turn on two-step verification or add a passkey?
+
+Under **Settings → Account**, choose **Turn on** next to **Two-step verification** and set up an authenticator app; save the backup codes it shows. After that every sign-in asks for a code, including with Google, GitHub or Apple. Turning it on signs you out of your other browsers; your computers and the raft CLI stay connected. Use **Add passkey** under **Passkeys** to sign in with **Sign in with a passkey**, or to use a passkey for the second step.

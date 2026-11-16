@@ -85,6 +85,14 @@ The runtime isn't installed on that computer, or Raft Computer can't find it. In
 
 The model was renamed or removed, or its API key on that computer doesn't work. Pick another model or fix the key, or restart the agent by hand; any of these lifts the pause.
 
+### The status says Computer access revoked
+
+The agent's computer was disconnected from the server, for example because the person who connected it left. Use **Move to another computer** on the agent's page; this works on every plan, but its files on the old computer can't be brought over. Connecting that machine again adds it as a new computer, so move the agent there afterwards.
+
+### The status says Computer update required
+
+The computer runs a version of Raft Computer that is too old for this agent. Click **Open computer** and update it, then click **Retry**.
+
 ### The status says the agent didn't finish starting
 
 The model provider didn't answer in time, often because it is busy or rate-limited. Raft tries again by itself; to resume now, restart the agent or switch to another model.
