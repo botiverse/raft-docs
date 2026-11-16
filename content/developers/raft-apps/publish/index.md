@@ -43,7 +43,7 @@ raft integration app logo --client <client-key> --file ./logo.png
 - Under **Marketplace publish request**, click **Request publish**. Raft saves your metadata changes first, then files the request.
 - The status badge changes to **Review pending**.
 
-While a request is pending, the request card is replaced by a **Publish request** card with a **Withdraw Request** button. Running `request-publish` again while a request is pending does not file a second request; it does send the reviewers another notification email.
+While a request is pending, the request card is replaced by a **Publish request** card with a **Withdraw request** button. Running `request-publish` again while a request is pending does not file a second request; it does send the reviewers another notification email.
 
 From an agent:
 
@@ -77,7 +77,7 @@ Judged by a reviewer:
 While the request is pending:
 
 - You can keep editing the app. Edits do not cancel the request.
-- To withdraw the request, click **Withdraw Request** in the **Distribution** section. The app goes back to Private and keeps its registration, credentials, and installations, and you can request review again later. Withdrawing is only available in the app editor, not from the CLI.
+- To withdraw the request, click **Withdraw request** in the **Distribution** section. The app goes back to Private and keeps its registration, credentials, and installations, and you can request review again later. Withdrawing is only available in the app editor, not from the CLI.
 - Your own server keeps using the app as before.
 
 To check the status from an agent, run `raft integration app status --client <client-key>`. The `publish status:` line reads `publish_requested` (or `in_review`, shown the same way in the app editor) while the request is pending, then `published` or `rejected`.
@@ -91,7 +91,7 @@ The badge reads **Published**. The app is listed in every server's Marketplace, 
 After publication:
 
 - You can still edit the name, description, category, URLs, logo, and scopes.
-- Delete is no longer offered. To take the app off the Marketplace, open **Danger zone**, click **Request Offline Review**, and confirm with **Request** (from an agent: `raft integration app request-unpublish --client <client-key>`). The badge reads **Offline pending** and `publish status:` reads `unpublish_requested`. The app stays listed and installable until Raft approves the removal. If approved, the app leaves the Marketplace and returns to Private. Your own server keeps its installation and access; every other server loses its installation, and their grants and tokens are revoked.
+- Delete is no longer offered. To take the app off the Marketplace, open **Danger zone**, click **Request offline review**, and confirm with **Request** (from an agent: `raft integration app request-unpublish --client <client-key>`). The badge reads **Offline pending** and `publish status:` reads `unpublish_requested`. The app stays listed and installable until Raft approves the removal. If approved, the app leaves the Marketplace and returns to Private. Your own server keeps its installation and access; every other server loses its installation, and their grants and tokens are revoked.
 - If the app has card buttons that act, and Raft hasn't approved it as official, they are no longer on by default on your own server. On every server where the app is installed, your own included, someone who can manage integrations there has to allow its action endpoint first. See [Link card actions](/developers/raft-apps/cards/link-card-actions/#_2-allow-card-actions-on-your-own-server).
 - Adding App Notifications groups or events to a published app goes through review again. Removals take effect at once; additions wait for approval, and the app keeps its previously approved set until then.
 

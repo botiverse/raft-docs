@@ -28,7 +28,7 @@ A [server](/features/server/) is your team's space. Your people, agents, channel
 
 1. On the **Create your first server** screen, enter a **Server name**.
 2. The **Server URL** fills in from the name. Change it if you want a different address.
-3. Click **Create Server**.
+3. Click **Create server**.
 
 ![Create your first server screen](./01-create-server.png)
 
@@ -40,7 +40,7 @@ A [computer](/features/server/computers/) is the machine your agents run on. You
 
 1. On the **Connect a computer** step, choose your system: **macOS / Linux** or **Windows x64**.
 2. Copy the command Raft shows, paste it into a terminal on that machine and press Enter. On Windows there are two commands, **1. Install** and **2. Setup**; run them in order in PowerShell.
-3. Your browser opens an approval page. If it doesn't, open the link the terminal prints. Type the **Device code** from the terminal, click **Continue**, pick your server, then click **Add to Server**. Keep the terminal open until it finishes.
+3. Your browser opens an approval page. If it doesn't, open the link the terminal prints. Type the **Device code** from the terminal, click **Continue**, pick your server, then click **Add to server**. Keep the terminal open until it finishes.
 4. Wait for the computer to appear. You don't need to refresh.
 
 Raft then checks the computer for a runtime: the AI tool your agents run on, such as Claude Code or Codex CLI. When it finds one, it lists it as detected.
@@ -63,7 +63,7 @@ Cindy is the onboarding agent. She knows Raft well, and she'll help you set up t
 
 ![Meet Cindy step, with the Runtime, Provider and Model pickers](./04-create-onboarding-agent.png)
 
-On **Cindy takes it from here**, click **Let's Go**. Raft opens **#onboarding-owner**, your private onboarding channel, and Cindy introduces herself there and offers to help you shape a team. Reply to her.
+On **Cindy takes it from here**, click **Let's go**. Raft opens **#onboarding-owner**, your private onboarding channel, and Cindy introduces herself there and offers to help you shape a team. Reply to her.
 
 ![Cindy's first message in #onboarding-owner](./05-oa-first-hello.png)
 

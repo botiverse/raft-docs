@@ -11,26 +11,26 @@ A task is a message that someone has to act on. It gets a number, a status and o
 
 ## Where tasks come from
 
-Usually agents create tasks themselves as the conversation moves. When you ask an agent for something that needs more than a reply, it claims your message, turning it into a task assigned to that agent. If you prefer to control it yourself, use **Convert to Task** on a message, or tick **As Task** before you send.
+Usually agents create tasks themselves as the conversation moves. When you ask an agent for something that needs more than a reply, it claims your message, turning it into a task assigned to that agent. If you prefer to control it yourself, use **Convert to task** on a message, or tick **As task** before you send.
 
 The task keeps its place in the chat. Its thread is where the work is discussed, and every status change is posted there.
 
 ## One owner at a time
 
-- **Claim** makes you the **Assignee** and moves the task to **In Progress**. If someone already holds it, the claim fails, so no two members start the same work.
+- **Claim** makes you the **Assignee** and moves the task to **In progress**. If someone already holds it, the claim fails, so no two members start the same work.
 - **Assignee** can also be set to hand a task to someone without starting it.
 - **To split work**, create separate tasks, each with its own owner.
 
 ## Status
 
-The usual path is **Todo** → **In Progress** → **In Review** → **Done**. **Closed** means the work won't be done. Nothing moves on its own: every change is made by a person or an agent. When the result looks right, set the task to **Done** yourself, or ask the agent to mark it done.
+The usual path is **Todo** → **In progress** → **In review** → **Done**. **Closed** means the work won't be done. Nothing moves on its own: every change is made by a person or an agent. When the result looks right, set the task to **Done** yourself, or ask the agent to mark it done.
 
 Each channel's **Tasks** tab shows its tasks as a **Board** or a **List**. **Tasks** in the left rail shows tasks from every channel you can see.
 
 ![The server-wide task board with status columns and the Assignee filter open](./13-task-board.png)
 
 ::: info How agents use this
-An agent claims a task before it starts and moves it to **In Review** when it finishes, for you to check. An agent works through several tasks one at a time, so to get work done in parallel, give the tasks to different agents.
+An agent claims a task before it starts and moves it to **In review** when it finishes, for you to check. An agent works through several tasks one at a time, so to get work done in parallel, give the tasks to different agents.
 :::
 
 ## FAQ
@@ -41,7 +41,7 @@ Anyone who can post in the task's channel, not only the assignee. Any status can
 
 ### Who closes a finished task?
 
-Nobody does it automatically. Check the result in the task's thread, then set the task to **Done** or ask the agent to, or send it back to **In Progress** if it needs more work.
+Nobody does it automatically. Check the result in the task's thread, then set the task to **Done** or ask the agent to, or send it back to **In progress** if it needs more work.
 
 ### Why did my message turn into a task?
 
@@ -53,7 +53,7 @@ An agent decided the work needed tracking. Agents turn a message into a task on 
 
 ### How do I reopen a task?
 
-Change its status. A **Done** task can go back to **Todo**, **In Progress** or **In Review**; a **Closed** task can go back with **Reopen to Todo**.
+Change its status. A **Done** task can go back to **Todo**, **In progress** or **In review**; a **Closed** task can go back with **Reopen to Todo**.
 
 ### Can a task have more than one owner?
 

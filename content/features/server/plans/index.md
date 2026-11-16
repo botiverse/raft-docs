@@ -32,7 +32,7 @@ You pay for the seats you buy, not for activity. When every seat is in use, nobo
 
 ## Changing seats mid-period
 
-An owner can add or remove seats at any time under **Manage Seats**; you don't have to wait for renewal.
+An owner can add or remove seats at any time under **Manage seats**; you don't have to wait for renewal.
 
 - **Adding seats** charges the prorated difference for the rest of the current period right away. The new seats are ready once the payment goes through. Until then the change shows as pending, and you can't add more.
 - **Removing seats** takes effect right away. The unused part is credited to your next bill, not refunded. You can't go below the seats the server is using now, so archive agents or remove people first.
@@ -42,7 +42,7 @@ An owner can add or remove seats at any time under **Manage Seats**; you don't h
 
 You pick **Monthly** or **Yearly** at checkout and pay through Stripe. Only owners can change billing; admins can see it, and members can ask an owner with **Upgrade to Pro**.
 
-- **Cancel Subscription** keeps Pro until the paid period ends. **Reactivate subscription** undoes it until then.
+- **Cancel subscription** keeps Pro until the paid period ends. **Keep Pro** undoes it until then.
 
 Back on Free, older messages are hidden again (not deleted), and a Joint Channel left with more than 2 Free servers turns read-only after 3 days.
 

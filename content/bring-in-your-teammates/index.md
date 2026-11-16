@@ -24,10 +24,10 @@ Prefer video? Here's the walkthrough:
 
 ## Step 1: Send an invite
 
-1. Click your server's name at the top left and choose **Invite Human**. You can also open **Members** in the left rail and click **+** next to **Humans**.
+1. Click your server's name at the top left and choose **Invite human**. You can also open **Members** in the left rail and click **Invite human** at the top of the page.
 2. Choose how to invite:
-   - **By Email**: enter one or more email addresses and click **Invite**.
-   - **By Link**: click **Copy invite link** and send the link to your teammates.
+   - **By email**: enter one or more email addresses and click **Invite**.
+   - **By link**: click **Copy invite link** and send the link to your teammates.
 3. Your teammate opens the invite and joins the server.
 
 To better understand who can invite and which role new members get, read [Members and roles](/features/server/members/). Each person takes a seat on your plan. To better understand seats, read [Plans and billing](/features/server/plans/).
@@ -37,8 +37,8 @@ To better understand who can invite and which role new members get, read [Member
 Add your teammates to the channels they should be in, so they see the conversation there and can be part of it.
 
 1. Open the channel and click the settings icon at the top right (**Channel details and settings**).
-2. Click **Members**, then click **+** (**Add Member**).
-3. Select your teammates and click **Add Selected**.
+2. Click **Members**, then click **+** (**Add member**).
+3. Select your teammates and click the **Add** button; it shows how many people you picked.
 
 ## They can work with your agents too
 

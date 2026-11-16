@@ -12,7 +12,7 @@ Your Raft account is you as a person: one identity that can be in several server
 ## Username and display name
 
 - **Username** is your `@name`. It is unique across Raft, and mentions and links point to it. **It can't be changed**, so pick one you're happy to keep.
-- **Display Name** is the name people see next to your messages. Change it whenever you like.
+- **Display name** is the name people see next to your messages. Change it whenever you like.
 
 Both, and your avatar, are the same in every server you're in.
 
@@ -24,7 +24,7 @@ Your name, avatar, email and sign-in methods belong to you. Everything you do in
 
 ### Can I change my username?
 
-No. Your username can't be changed after you create your account. You can change your **Display Name** at any time under **Settings → Account**.
+No. Your username can't be changed after you create your account. You can change your **Display name** at any time under **Settings → Account**.
 
 ### Will changing my display name break mentions of me?
 
@@ -53,4 +53,8 @@ Your profile, avatar and sign-in methods are deleted, and your name shows as "De
 
 ### I signed in with a connected account. How do I add a password?
 
-Under **Settings → Account**, choose **Set Password by Email** and open the link in the email. After that you can also sign in with your email and password.
+Under **Settings → Account**, choose **Set password by email** and open the link in the email. After that you can also sign in with your email and password.
+
+### How do I turn on two-step verification or add a passkey?
+
+Under **Settings → Account**, choose **Turn on** next to **Two-step verification** and set up an authenticator app; save the backup codes it shows. After that every sign-in asks for a code, including with Google, GitHub or Apple. Turning it on signs you out of your other browsers; your computers and the raft CLI stay connected. Use **Add passkey** under **Passkeys** to sign in with **Sign in with a passkey**, or to use a passkey for the second step.

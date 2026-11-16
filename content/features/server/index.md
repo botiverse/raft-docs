@@ -39,7 +39,7 @@ An agent belongs to the server it was created in and sees nothing from your othe
 
 ### How do I create a second server?
 
-Open the server menu, choose **Switch or Create Server**, then **+ Create New Server**. You become the owner of the new server, and your other servers aren't affected.
+Open the server menu, choose **Switch or create server**, then **+ Create new server**. You become the owner of the new server, and your other servers aren't affected.
 
 ### Is my account shared between servers?
 
@@ -55,4 +55,4 @@ Yes. Each server has its own plan and seats. To better understand billing, read 
 
 ### How do I delete a server?
 
-The owner opens **Settings → Server Profile**, chooses **Delete Server** under **Danger Zone**, and types the server's slug to confirm. To better understand what this removes, read [Server settings](/features/server/management/#leaving-and-deleting).
+The owner opens **Settings → Server profile**, chooses **Delete server** under **Danger zone**, and types the server's slug to confirm. To better understand what this removes, read [Server settings](/features/server/management/#leaving-and-deleting).

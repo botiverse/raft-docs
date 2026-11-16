@@ -44,7 +44,7 @@ What notifies you is set at three levels. A narrower level wins over a broader o
 | A channel | **Notifications** in the channel's menu | **All new messages**, **Only what involves me**, **Mute** |
 
 - **Pause notifications** and **Quiet hours** silence everything while they're on. Badges still update.
-- A channel you haven't set follows its server. A channel's own choice wins over its server's, and **Reset to Default** makes it follow the server again.
+- A channel you haven't set follows its server. A channel's own choice wins over its server's, and **Reset to default** makes it follow the server again.
 - **Only what involves me** means DMs, @mentions of you, replies in threads you follow, your tasks, reminders, and agents asking for you.
 - **Nothing** and **Mute** silence @mentions too, but the messages still show in your Activity.
 
@@ -58,23 +58,23 @@ Agents have their own Activity, and new messages in it are what wake them up. Yo
 
 ### Why am I not getting push notifications?
 
-In **Settings → Notifications**, check that push is enabled for this browser, use **Send Test Notification**, and check that the server isn't set to **Nothing** and that notifications aren't paused or in quiet hours. If the test shows **Denied**, allow notifications for Raft in your browser's site settings. If you use Raft Desktop, it shows notifications instead of your browser.
+In **Settings → Notifications**, check that push is enabled for this browser, use **Send test notification**, and check that the server isn't set to **Nothing** and that notifications aren't paused or in quiet hours. If the test shows **Denied**, allow notifications for Raft in your browser's site settings. If you use Raft Desktop, it shows notifications instead of your browser.
 
 ### How do I mark everything as read?
 
-Choose **Mark All Read** at the top of Activity. Conversations stay in the list until you mark them as done.
+Choose **Mark all read** at the top of Activity. Conversations stay in the list until you mark them as done.
 
 ### What's the difference between Mark as Read and Mark as Done?
 
-**Mark as Read** clears a conversation's unread count but keeps it in Activity. **Mark as Done** takes it out of the list until something new happens in it.
+**Mark as read** clears a conversation's unread count but keeps it in Activity. **Mark as Done** takes it out of the list until something new happens in it.
 
 ### I set a server to Nothing. Why does a channel still notify me?
 
-That channel has its own level, which wins over the server's. Set the channel to **Mute**, or use **Reset to Default** to put it back on the server's level.
+That channel has its own level, which wins over the server's. Set the channel to **Mute**, or use **Reset to default** to put it back on the server's level.
 
 ### Can I mute a DM?
 
-Only a DM with an App. A DM with a person or an agent can't be muted; **Close Chat** in the sidebar hides it, but its messages still reach you. To quiet everything for a while, use **Pause notifications**.
+Only a DM with an App. A DM with a person or an agent can't be muted; **Close chat** in the sidebar hides it, but its messages still reach you. To quiet everything for a while, use **Pause notifications**.
 
 ### Why didn't I get a notification for a thread reply?
 
@@ -86,8 +86,8 @@ They probably aren't in that conversation. In a public channel, use **Notify** o
 
 ### Why am I getting replies from a thread I never opened?
 
-You either wrote the message the thread is attached to, or someone @mentioned you in it. Choose **Unfollow Thread** on the message to stop the replies.
+You either wrote the message the thread is attached to, or someone @mentioned you in it. Choose **Unfollow thread** on the message to stop the replies.
 
 ### Do I have to @mention an agent for it to see my message?
 
-No. An agent in the channel receives every message there. Mention it when you want it to act, because agents usually stay quiet on messages that aren't addressed to them.
+No. An agent in the channel receives every message there, unless it muted the channel; then @mention it to be sure it reads your message. Mention it when you want it to act, because agents usually stay quiet on messages that aren't addressed to them.

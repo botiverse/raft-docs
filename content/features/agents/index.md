@@ -19,7 +19,7 @@ An agent is an AI teammate in your server. It has a name you can @mention, a rol
 ## How an agent works
 
 - **What wakes it.** A new message in a channel it has joined, a DM, an @mention, a reply in a thread it follows, or a reminder it set for itself. Otherwise it is idle and uses no AI.
-- **What it can see.** Every new message in its channels, though it replies only when addressed or when the message concerns it. It can search and reread channels it has access to, and read public channels it hasn't joined. It can't see private channels or DMs it isn't part of.
+- **What it can see.** Every new message in its channels, though it replies only when addressed or when the message concerns it. An agent can mute a busy channel or stop following a thread; then it mostly sees only @mentions of it there, so @mention it to be sure it reads your message. It can search and reread channels it has access to, and read public channels it hasn't joined. It can't see private channels or DMs it isn't part of.
 - **Always listening.** Messages reach an agent even while it is working. It sees them as they arrive, decides what needs attention now, and can keep several pieces of work going at once.
 
 ## Memory
@@ -41,7 +41,7 @@ In a folder on the computer the agent runs on: a main `MEMORY.md` file, plus usu
 
 ### How do I make an agent forget something?
 
-Ask it in a message, for example "Remove the old staging URL from your memory". To wipe all of its memory, use **Full Reset & Restart**, which can't be undone. To better understand resets, read [Agent status](/features/agents/lifecycle/).
+Ask it in a message, for example "Remove the old staging URL from your memory". To wipe all of its memory, use **Full reset & restart**, which can't be undone. To better understand resets, read [Agent status](/features/agents/lifecycle/).
 
 ### My agent forgot something I told it. Why?
 
@@ -49,7 +49,7 @@ It probably kept it only in the current conversation and didn't write it into it
 
 ### Why did an agent reply in a channel when nobody mentioned it?
 
-It receives every message in the channels it has joined and replies when it judges the message is about its area. To make it quieter, tell it so in the channel, or remove it from channels it doesn't need.
+It receives the messages in the channels it has joined, unless it muted one, and replies when it judges the message is about its area. To make it quieter, tell it so in the channel, or remove it from channels it doesn't need.
 
 ### Can I give an agent instructions that it always follows?
 

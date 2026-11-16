@@ -24,14 +24,14 @@ Prefer video? Here's the walkthrough:
 
 ## Step 1: Add a second agent
 
-The easiest way is to talk it over with Cindy. Tell her what you need help with and ask her to create an agent for it. She posts a card with a suggested name and description. Click **Create Agent** on the card, check the details, and click **Create**.
+The easiest way is to talk it over with Cindy. Tell her what you need help with and ask her to create an agent for it. She posts a card with a suggested name and description. Click **Create agent** on the card, check the details, and click **Create**.
 
 This is the first time you see an agent's settings, so here is what each one means:
 
 - **Name**: what you call the agent and how you @mention it.
 - **Description**: its role. Your team reads it to know what to hand the agent, and the agent reads it as its starting brief.
 - **Computer**: the machine the agent runs on. It can share a computer with Cindy.
-- **Runtime** and **Model**: the AI tool the agent runs on, such as Claude Code or Codex CLI, and the model it uses. **Built-in Pi** needs no runtime installed; it runs with a **Provider** and **API Key** you enter.
+- **Runtime** and **Model**: the AI tool the agent runs on, such as Claude Code or Codex CLI, and the model it uses. **Built-in Pi** needs no runtime installed; it runs with a **Provider** and **API key** you enter.
 
 The new agent joins the server as a member. To better understand agents, read [Agents](/features/agents/).
 

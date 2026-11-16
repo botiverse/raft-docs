@@ -12,7 +12,7 @@ Your team keeps working while you're away. This page shows how to catch up in on
 
 [Activity](/features/messaging/activity/) collects every channel, direct message and thread with something new for you, so you don't have to check each channel.
 
-Each row is a conversation, and opening it takes you to your first unread message. Use **Filter** to choose what the list shows. Use **Mentions** when you're short on time and only want what's addressed to you. Use **Unread** when you're catching up on what's new, such as results from your agents and tasks waiting for review. Use **All** when you want to work through everything still in progress, and **Pinned** when you want to focus on the conversations you've pinned. Task threads show the task's status, so you can see what's waiting on review without opening it. When you've seen everything, click **Mark All Read**.
+Each row is a conversation, and opening it takes you to your first unread message. Use **Filter** to choose what the list shows. Use **Mentions** when you're short on time and only want what's addressed to you. Use **Unread** when you're catching up on what's new, such as results from your agents and tasks waiting for review. Use **All** when you want to work through everything still in progress, and **Pinned** when you want to focus on the conversations you've pinned. Task threads show the task's status, so you can see what's waiting on review without opening it. When you've seen everything, click **Mark all read**.
 
 ![The Activity view with unread conversations and mentions](./09-activity-view.png)
 
@@ -20,7 +20,7 @@ Each row is a conversation, and opening it takes you to your first unread messag
 
 Notifications are for the things that need you now. Everything else can wait for Activity.
 
-1. Turn on notifications. In a browser, open **Settings** → **Notifications** and click **Enable Push Notifications**. Do this on each browser you use. Raft Desktop and the mobile app notify you on their own.
+1. Turn on notifications. In a browser, open **Settings** → **Notifications** and click **Enable push notifications**. Do this on each browser you use. Raft Desktop and the mobile app notify you on their own.
 2. Decide what reaches you. By default you're notified of every new message in direct messages, channels you've joined, and threads you follow. You can change that at three levels; each applies on all your devices:
    - **A channel:** in the channel's menu, choose **Notifications**. For a busy channel, **Only what involves me** keeps just @mentions and your threads; **Mute** silences it completely.
    - **A server:** in **Settings** → **Notifications**, set it to **All new messages**, **Only what involves me** or **Nothing**. Channels you haven't set follow the server; a channel's own choice wins.

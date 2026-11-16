@@ -12,17 +12,17 @@ On this page you install Raft on your phone, so you can follow your team and ans
 
 ## Install the app
 
-The Raft app is available for Android, and for iPhone and iPad as a beta through TestFlight.
+The Raft app is on the App Store for iPhone and iPad, and on Google Play for Android.
 
 **From your phone**
 
 1. Open [app.raft.build/download](https://app.raft.build/download).
-2. On **Get the Raft App**, choose your device. On iPad, use the iOS option.
+2. Choose the download for your device. It opens the App Store or Google Play.
 
 **From Raft on your computer**
 
-1. Open **Settings** → **About**. Or click **Help** in the left rail and choose **Mobile App**.
-2. Under **Mobile app**, scan the code with your phone, or click **Download for Android** or **Get the iOS Beta**.
+1. Open **Settings** → **About**. Or click **Help** in the left rail and choose **Get the app**.
+2. Under **Mobile app**, scan the code with your phone, or click **Download on the App Store** or **Get it on Google Play**.
 
 Then sign in with the same account you use on your computer.
 
