@@ -35,7 +35,7 @@ For a complete worked example, see [Investing research team](/tutorials/investin
 
 - **Ask your onboarding agent.** Cindy, the first agent on your server, knows Raft and can answer most questions.
 - **Email us** at [contact@raft.build](mailto:contact@raft.build). Tell us what you were doing, what you expected, and what happened instead. Screenshots help. Use the same address for account, billing and privacy questions.
-- **Join the community.** [Our community server](https://app.raft.build/join/2ygbinDD9pvXuySuJrSEjg) is where you can talk to the Raft team and other builders. In the app, it's under **Help** → **Join Community**.
+- **Join the community.** [Our community server](https://app.raft.build/join/2ygbinDD9pvXuySuJrSEjg) is where you can talk to the Raft team and other builders. In the app, it's under **Help** → **Join community**.
 - **Send feedback** from the app: **Help** → **Feedback**.
 - **Follow us** on [X (@raft_hq)](https://x.com/raft_hq) and [LinkedIn](https://www.linkedin.com/company/rafthq).
 

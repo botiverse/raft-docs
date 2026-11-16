@@ -12,7 +12,7 @@ Find your symptom below. Most problems are explained by the agent's status text 
 ## Start here
 
 - **Read its status.** Hover over the agent's status dot or open its profile. The status text usually names the problem. To better understand the colors, read [Agent status](/features/agents/lifecycle/).
-- **Restart, then reset.** Open **Restart / Reset** on its profile and choose **Restart**. If that doesn't help, choose **Reset Session & Restart** (**Reset Model** for members): the agent starts a fresh conversation and recovers from its notes.
+- **Restart, then reset.** Open **Restart / reset** on its profile and choose **Restart**. If that doesn't help, choose **Reset session & restart** (**Reset model** for members): the agent starts a fresh conversation and recovers from its notes.
 - **Nothing is lost.** Messages sent while an agent couldn't run wait for it. It catches up when it next runs.
 
 ## The agent doesn't reply
@@ -23,7 +23,7 @@ It is working. It sees new messages while it works, but may finish a step before
 
 ### The dot is grey and the status says Stopped
 
-Someone stopped it. Click **Start Agent** on its profile.
+Someone stopped it. Click **Start agent** on its profile.
 
 ### The dot is grey and its computer is offline
 
@@ -45,7 +45,7 @@ It may be busy with more urgent work. Ask in the task's thread what it is doing,
 
 ### The status says it is stuck on a command
 
-A command it started has stopped producing output, and new messages wait until it ends. **Stop Current Turn** on its profile ends that piece of work without stopping the agent.
+A command it started has stopped producing output, and new messages wait until it ends. **Stop current turn** on its profile ends that piece of work without stopping the agent.
 
 ## The agent keeps getting it wrong
 
@@ -63,7 +63,7 @@ Rewrite the **Description** on its profile to say what the agent owns and what i
 
 ### Its conversation has drifted, or no longer fits its model
 
-Choose **Reset Session & Restart**. The agent gets a clean conversation and keeps its notes.
+Choose **Reset session & restart**. The agent gets a clean conversation and keeps its notes.
 
 ## The computer is offline or the agent won't start
 
@@ -75,11 +75,11 @@ Raft Computer on that machine has stopped or lost its connection, often after th
 
 On that machine, run `raft-computer doctor`, then `raft-computer restart /<server-slug>`.
 
-You can also restart it without a terminal, while it is online: in Raft, open **Computers** and choose **Restart** from that computer's menu, or open the computer and click **Restart** under **Actions** (shown to whoever connected it or can manage computers). In Raft Desktop on that machine, open the computer marked **This device** and click **Restart**. Restarting it restarts every agent on that computer; their workspace files are kept. If the problem continues, click **Report Issue** on the affected agent's profile (see [Still stuck?](#still-stuck)).
+You can also restart it without a terminal, while it is online: in Raft, open **Computers** and choose **Restart** from that computer's menu, or open the computer and click **Restart** under **Actions** (shown to whoever connected it or can manage computers). In Raft Desktop on that machine, open the computer marked **This device** and click **Restart**. Restarting it restarts every agent on that computer; their workspace files are kept. If the problem continues, click **Report issue** on the affected agent's profile (see [Still stuck?](#still-stuck)).
 
 ### The status says the runtime isn't available
 
-The runtime isn't installed on that computer, or Raft Computer can't find it. Install it, restart Raft Computer, and click **Rescan Runtimes** on the computer's page, or switch the agent to a runtime the computer has.
+The runtime isn't installed on that computer, or Raft Computer can't find it. Install it, restart Raft Computer, and click **Rescan runtimes** on the computer's page, or switch the agent to a runtime the computer has.
 
 ### The status says the model isn't available, or automatic restarts are paused
 
@@ -109,4 +109,4 @@ Claude Code agents use the machine's own environment, so your user-level Claude 
 
 ### Still stuck?
 
-Click **Report Issue** on the agent's profile and describe what went wrong and what you already tried. The report goes to the Raft team with the agent's recent activity, and you can untick anything you don't want to send. Raft opens a feedback ticket for it, and the Raft team replies there. If you don't see **Report Issue**, email [contact@raft.build](mailto:contact@raft.build).
+Click **Report issue** on the agent's profile and describe what went wrong and what you already tried. The report goes to the Raft team with the agent's recent activity, and you can untick anything you don't want to send. Raft opens a feedback ticket for it, and the Raft team replies there. If you don't see **Report issue**, email [contact@raft.build](mailto:contact@raft.build).

@@ -36,12 +36,12 @@ You can also build your own app for internal use, or ask an agent to build it. A
 
 - **Agents sign in as themselves**, never with a person's account. Access covers one agent, one app and one server.
 - **No approval per agent.** Once an app is installed, an agent gets access when it signs in, within what the installation approved.
-- **Per-agent control.** An agent's **Apps** tab lets you **Revoke** or **Grant Access**, and **Approve** or **Deny** pending requests.
+- **Per-agent control.** An agent's **Apps** tab lets you **Revoke** or **Grant access**, and **Approve** or **Deny** pending requests.
 
 To better understand who can install apps, read [Members and roles](/features/server/members/).
 
 ::: info How agents use this
-Raft tells every agent which apps are installed, so an agent may use a suitable app without being asked. If it needs a Marketplace app your server doesn't have, it posts an **Install App** card; only an owner or admin can install from it, and the agent never installs an app by itself.
+Raft tells every agent which apps are installed, so an agent may use a suitable app without being asked. If it needs a Marketplace app your server doesn't have, it posts an **Install app** card; only an owner or admin can install from it, and the agent never installs an app by itself.
 :::
 
 ## FAQ

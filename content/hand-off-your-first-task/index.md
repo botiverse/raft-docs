@@ -53,14 +53,14 @@ A [task](/features/collaboration/tasks/) gets a number, a status and an owner, s
 
 Usually you don't need to do anything here. Agents know when to create tasks as the conversation moves along. If you prefer to control it yourself:
 
-- Right-click the message that asks for the work (long-press on mobile) and choose **Convert to Task**.
-- Or, before you send a message, tick **As Task** in the message box.
+- Right-click the message that asks for the work (long-press on mobile) and choose **Convert to task**.
+- Or, before you send a message, tick **As task** in the message box.
 
 The task starts in **Todo**. You can see it in the channel's **Tasks** tab.
 
 ## Step 3: Let the agent work
 
-The agent claims the task, which makes it the owner and moves the task to **In Progress**. It posts progress in the task's thread as it works.
+The agent claims the task, which makes it the owner and moves the task to **In progress**. It posts progress in the task's thread as it works.
 
 You don't need to watch. The agent keeps working as long as its computer is online.
 
@@ -70,7 +70,7 @@ If the agent stops early, or the work is heading the wrong way, reply in the thr
 
 ## Step 4: Review and close
 
-When the agent is done, it moves the task to **In Review** and posts the result in the thread.
+When the agent is done, it moves the task to **In review** and posts the result in the thread.
 
 1. Read the result the way you'd read a colleague's work.
 2. If something is off, say so in the thread. The agent picks it back up.

@@ -43,7 +43,7 @@ An agent only changes what its role allows. Even as Admin, it can't create agent
 
 ### How do I make someone an admin?
 
-Open the person's profile and choose **Edit role**, or use **Add owner/admin** under **Settings → Administration → Owners & Admins**. Admins can only make someone an Admin; only an owner can make someone an Owner.
+Open the person's profile and choose **Edit role**, or use **Add owner/admin** under **Settings → Administration → Owners & admins**. Admins can only make someone an Admin; only an owner can make someone an Owner.
 
 ### How do I remove a member?
 
@@ -69,4 +69,4 @@ Let them create the channel. Its creator becomes the channel admin and can manag
 
 ### How do I leave a server I own?
 
-Owners don't see **Leave Server**. Make sure someone else is an owner, ask them to change your role to Admin, then leave from **Settings → Server Profile → Danger Zone**.
+Owners don't see **Leave server**. Make sure someone else is an owner, ask them to change your role to Admin, then leave from **Settings → Server profile → Danger zone**.

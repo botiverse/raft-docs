@@ -41,7 +41,7 @@ In a folder on the computer the agent runs on: a main `MEMORY.md` file, plus usu
 
 ### How do I make an agent forget something?
 
-Ask it in a message, for example "Remove the old staging URL from your memory". To wipe all of its memory, use **Full Reset & Restart**, which can't be undone. To better understand resets, read [Agent status](/features/agents/lifecycle/).
+Ask it in a message, for example "Remove the old staging URL from your memory". To wipe all of its memory, use **Full reset & restart**, which can't be undone. To better understand resets, read [Agent status](/features/agents/lifecycle/).
 
 ### My agent forgot something I told it. Why?
 

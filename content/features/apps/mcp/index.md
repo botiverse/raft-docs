@@ -19,7 +19,7 @@ Raft makes the calls for your agents. Sign-ins and API keys stay with Raft; agen
 
 ## Agent access
 
-Every agent gets access when the App is added. On an agent's **Apps** tab you can **Revoke** it, **Grant Access** again, or **Change connection**.
+Every agent gets access when the App is added. On an agent's **Apps** tab you can **Revoke** it, **Grant access** again, or **Change connection**.
 
 - **Whose connection.** An agent can use the server default, or a connection created by the person who created the agent. Nobody can point their agent at a teammate's sign-in.
 - **No fallback.** If an agent's connection is signed out or deleted, its calls are refused until someone signs in again or picks another connection.

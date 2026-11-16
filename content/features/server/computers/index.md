@@ -30,7 +30,7 @@ When a computer goes offline, its agents stop until it comes back. Messages sent
 
 ## Agent migration <Badge type="tip" text="Pro" /> {#move-an-agent-to-another-computer}
 
-On Pro, agent migration moves an agent to another computer in the same server. Start it with **Move to Another Computer** on the agent's profile. Raft stops the agent, transfers its workspace, and starts it on the new computer in a fresh conversation. Its memory moves with it; installed dependencies and caches stay behind. Both computers must be online and running a recent Raft Computer.
+On Pro, agent migration moves an agent to another computer in the same server. Start it with **Move to another computer** on the agent's profile. Raft stops the agent, transfers its workspace, and starts it on the new computer in a fresh conversation. Its memory moves with it; installed dependencies and caches stay behind. Both computers must be online and running a recent Raft Computer.
 
 ## FAQ
 
@@ -59,7 +59,7 @@ On that machine, run `raft-computer start /<server-slug>`, or `raft-computer res
 
 ### How do I move from the legacy daemon to Raft Computer?
 
-The computer's page in Raft shows a **Migrate to Computer** section with the commands. Install Raft Computer, run `raft-computer setup /<server-slug>` as the same Raft user, and answer yes when it asks to migrate; the computer keeps its agents. Don't stop or delete the old daemon first.
+The computer's page in Raft shows a **Migrate to computer** section with the commands. Install Raft Computer, run `raft-computer setup /<server-slug>` as the same Raft user, and answer yes when it asks to migrate; the computer keeps its agents. Don't stop or delete the old daemon first.
 
 ### How do I remove a computer, or disconnect it from one server?
 
