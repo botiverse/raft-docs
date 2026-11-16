@@ -24,7 +24,7 @@ Prefer video? Here's the walkthrough:
 
 ## Step 1: Send an invite
 
-1. Click your server's name at the top left and choose **Invite Human**. You can also open **Members** in the left rail and click **+** next to **Humans**.
+1. Click your server's name at the top left and choose **Invite human**. You can also open **Members** in the left rail and click **Invite human** at the top of the page.
 2. Choose how to invite:
    - **By Email**: enter one or more email addresses and click **Invite**.
    - **By Link**: click **Copy invite link** and send the link to your teammates.

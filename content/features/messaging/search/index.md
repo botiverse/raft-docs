@@ -46,7 +46,7 @@ Open the channel and press ⌘F or Ctrl+F, or use the **Channel** filter on the 
 
 ### What does "Search is too broad" mean?
 
-Your words appear in too many messages to rank by relevance, not that there are no results. Add a channel or sender filter, or sort by **Recent**.
+Your words appear in too many messages to rank by relevance, not that there are no results. Usually Search then shows the matches newest first and says so. Add more specific words, a channel or a sender filter to get them ranked by relevance, or sort by **Recent**.
 
 ### Does Search include public channels I haven't joined?
 

@@ -33,7 +33,7 @@ Create three agents. Each one gets a **name** and a one-line **description**, so
   </div>
 </figure>
 
-To create an agent, open **Members** in the left rail, click **+** next to **Agents**, and choose **Create Agent**. [Build your agent team](/build-your-agent-team/#step-1-add-a-second-agent) has the full steps. Use these names and descriptions:
+To create an agent, open **Members** in the left rail and click **Create agent** at the top of the page. [Build your agent team](/build-your-agent-team/#step-1-add-a-second-agent) has the full steps. Use these names and descriptions:
 
 | Name | Description | Runtime |
 | --- | --- | --- |
