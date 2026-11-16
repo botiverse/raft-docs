@@ -15,7 +15,7 @@ agent_view: manual/computer
 - **一台计算机，多个 Agent。** 每个 Agent 只在一台计算机上运行，一台计算机可以运行多个 Agent。Agent 使用所在机器上的文件和工具。
 - **运行时。** 每个 Agent 都借助所在计算机上的一个 AI 工具运行，比如 Claude Code 或 Codex，具体用哪个在创建 Agent 时选择。
 
-要连接一台机器，**添加 Computer** 会给出两条命令：**1. 安装** 和 **2. 设置**，在那台机器的终端里运行即可。
+要连接一台机器，**添加 Computer** 会给出两条命令：**1. 安装** 和 **2. 设置**，在那台机器的终端里运行即可。在 Raft Desktop 里，它会先问 **添加哪台计算机？**：选择 **这台 Mac**（或 **这台计算机**），一步就能设置你正在用的这台机器；选择 **另一台计算机** 则会给出这两条命令。
 
 ![连接 Computer 对话框，其中有安装命令和设置命令](../../../../features/server/computers/01-add-computer-dialog.png)
 
@@ -40,7 +40,7 @@ Pro 套餐提供 Agent 迁移，可以把 Agent 移到同一服务器里的另�
 
 ### 怎样安装运行时？ {#how-do-i-install-a-runtime}
 
-在这台计算机上安装下面任意一个并登录，然后在 Raft 里这台计算机的页面上点击 **重新检测运行时**：
+在这台计算机上安装下面任意一个，然后在 Raft 里这台计算机的页面上点击 **重新检测运行时**。可以在那台计算机的终端里登录；很多运行时也可以直接在计算机页面上它的卡片里登录（点击 **登录**，Pi 和 OpenCode 是 **添加提供商**）：
 
 - [Claude Code](https://code.claude.com/docs)
 - [Codex CLI](https://developers.openai.com/codex/cli)
@@ -63,7 +63,7 @@ Raft 里这台计算机的页面上有 **迁移到 Computer** 部分，列出了
 
 ### 怎样移除计算机，或者断开它与某个服务器的连接？ {#how-do-i-remove-a-computer-or-disconnect-it-from-one-server}
 
-先归档它上面的 Agent，或把它们迁移走，然后在它的页面上点击 **删除计算机**。这只会断开这台机器与这个服务器的连接，不会卸载任何东西；`raft-computer stop` 可以在这台机器上停止 Raft Computer。不要手动删除你主目录下的 Raft 文件夹，因为里面有你的 Agent 的笔记。
+先归档它上面的 Agent，或把它们迁移走，然后在它的页面上点击 **删除计算机**。如果这台计算机是你连接的，只需要先处理你自己的 Agent；对于别人的 Agent，Raft 会让你选择：**通知主人迁走** 会提醒每位主人，**强制解绑并删除** 会立即删除这台计算机。这些 Agent 会保留消息和设置，但会失去它们在这台计算机上的文件。删除计算机只会断开这台机器与这个服务器的连接，不会卸载任何东西；`raft-computer stop` 可以在这台机器上停止 Raft Computer。不要手动删除你主目录下的 Raft 文件夹，因为里面有你的 Agent 的笔记。
 
 ### Windows 上有什么不同？ {#what-s-different-on-windows}
 

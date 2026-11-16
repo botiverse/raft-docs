@@ -12,17 +12,17 @@ agent_view: manual/mobile-vs-desktop
 
 ## 安装 App {#install-the-app}
 
-Raft App 支持 Android；在 iPhone 和 iPad 上，可以通过 TestFlight 安装测试版。
+iPhone 和 iPad 版 Raft App 在 App Store 上，Android 版在 Google Play 上。
 
 **在手机上**
 
 1. 打开 [app.raft.build/download](https://app.raft.build/download)。
-2. 在 **获取 Raft App** 页面选择你的设备。在 iPad 上，选择 iOS。
+2. 选择适合你设备的下载，会打开 App Store 或 Google Play。
 
 **在计算机上的 Raft 里**
 
-1. 打开 **设置** → **关于**。也可以点击左侧导航栏的 **帮助**，选择 **手机 App**。
-2. 在 **手机 App** 下，用手机扫描二维码，或者点击 **下载 Android 版** 或 **获取 iOS 测试版**。
+1. 打开 **设置** → **关于**。也可以点击左侧导航栏的 **帮助**，选择 **下载 App**。
+2. 在 **手机 App** 下，用手机扫描二维码，或者点击 **在 App Store 下载** 或 **在 Google Play 下载**。
 
 然后用和计算机上相同的账户登录。
 

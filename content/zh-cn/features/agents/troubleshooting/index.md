@@ -85,6 +85,14 @@ Agent 只会留住写进笔记的内容。在消息列里纠正它，并让它�
 
 模型已改名或下架，或者那台计算机上的 API 密钥无效。换一个模型、修正密钥，或者手动重启 Agent，任何一种做法都能解除暂停。
 
+### 状态显示 Computer 访问权限已撤销 {#the-status-says-computer-access-revoked}
+
+Agent 所在的计算机已经和服务器断开了连接，比如连接这台计算机的人离开了服务器。在 Agent 的页面上使用 **迁移到另一台计算机**；所有套餐都可以这样做，但它在旧计算机上的文件没法带过去。重新连接那台机器，会把它作为一台新的计算机加进来，之后再把 Agent 迁过去。
+
+### 状态显示 Computer 需要更新 {#the-status-says-computer-update-required}
+
+这台计算机上的 Raft Computer 版本太旧，这个 Agent 用不了。点击状态打开这台计算机，在那里更新 Raft Computer，然后重启 Agent。
+
 ### 状态显示 Agent 没有完成启动 {#the-status-says-the-agent-didn-t-finish-starting}
 
 模型服务商没有及时响应，通常是因为它太忙或触发了速率限制。Raft 会自己重试；想立即恢复，就重启 Agent 或换一个模型。
