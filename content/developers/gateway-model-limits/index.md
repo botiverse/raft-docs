@@ -77,6 +77,18 @@ On OpenAI-compatible gateways Raft doesn't read a bare `max_tokens`, because cat
 
 Built-in Pi's **OpenRouter** provider also takes a model ID that isn't in its list. For such a model, Raft reads OpenRouter's own model list the same way, with the agent's OpenRouter key, and looks the model up by its OpenRouter ID. OpenRouter already lists `context_length` and `top_provider.max_completion_tokens`, so nothing needs to change on OpenRouter's side. The same order, caching and fallback apply.
 
+## Supported formats
+
+Raft understands these model-list formats:
+
+| Format | Where Raft reads it | Fields |
+| --- | --- | --- |
+| Generic (OpenAI, Anthropic, vLLM, LiteLLM and others) | The request above | The `data` list and the field names above |
+| OpenRouter | The request above | `context_length` and `top_provider.max_completion_tokens` |
+| [CLIProxyAPI](https://github.com/router-for-me/CLIProxyAPI) | `<Base URL>/models?client_version=pi` (Anthropic-compatible: `<Base URL>/v1/models?client_version=pi`) | `models[].slug`, `context_window` (or `max_context_window`), `max_tokens` |
+
+**CLIProxyAPI works with no changes** (Raft Computer 1.22.0 and later). Its plain `/v1/models` lists models without limits, but with `client_version` in the query it returns the richer catalog its own Pi plugin reads. When the plain list gives a model no valid limit, Raft makes one more request for that catalog, with the same API key, timeout, size cap and caching, and no redirects. Raft uses the catalog only when it gives that exact model a valid limit. If that request fails, the agent starts just as it would have without it.
+
 ## What Raft will do with them
 
 Each number is decided on its own, in this order:
