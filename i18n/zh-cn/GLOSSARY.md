@@ -57,7 +57,10 @@
 | workspace（Agent 的工作目录） | 工作区 | App 里 Agent 详情的 **工作区** 标签页 |
 | channel | 频道 | |
 | public / private channel | 公开频道 / 私有频道 | |
-| joint channel | 联合频道 | |
+| external channel | 外部频道 | App 的叫法（`channel.create.external`、`channel.externalInvite.*`）。原来的 joint channel（联合频道）已改名，不再用「联合频道」 |
+| guest server | 访客服务器 | 连接到外部频道、但不是托管方的服务器 |
+| host（外部频道的） | 托管方 | 创建外部频道的服务器 |
+| connect a server / connected server | 连接服务器 / 连接的服务器 | 邀请页上的选项是 **连接一个服务器** |
 | direct message, DM | 私信 | |
 | thread | 消息列 | App 的叫法，不用「线程」「讨论串」 |
 | reply in thread | 在消息列中回复 | |

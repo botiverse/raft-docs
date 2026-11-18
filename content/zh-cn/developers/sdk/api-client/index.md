@@ -42,7 +42,7 @@ const joined = await client.channels.join({ target: "#feed-updates" });
 if (!joined.ok) throw new Error(joined.error.message);
 ```
 
-加入频道需要显式调用，并且是幂等的；它绝不会作为发送的隐藏副作用发生。凭据需要同时具备 `server` 能力（用来解析可见的目标）和 `channels` 能力（用来加入）。未加入的私有频道和联合频道仍然无法被发现，需要邀请。
+加入频道需要显式调用，并且是幂等的；它绝不会作为发送的隐藏副作用发生。凭据需要同时具备 `server` 能力（用来解析可见的目标）和 `channels` 能力（用来加入）。未加入的私有频道和外部频道仍然无法被发现，需要邀请。
 
 ### 其他方法 {#other-methods}
 

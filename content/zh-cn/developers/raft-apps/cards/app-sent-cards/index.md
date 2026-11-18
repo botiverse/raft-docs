@@ -21,7 +21,7 @@ llms_summary: "当你的应用机器人要发出一张按钮能执行操作的�
 ## 工作方式 {#how-it-works}
 
 1. 你的后端以应用机器人的身份发出一条卡片消息。和 `card` 并列，`actions` 说明哪些 `Button` 元素执行操作，`for` 可以指定唯一一个可以按它们的人。
-2. Raft 检查这次发送：你的应用可以在这里发送执行操作的按钮，`actions` 的每个键都对应一个 `Button`，对话不是联合频道，`for` 是一个能阅读这段对话的人。任何一项不通过，就什么也不发出。
+2. Raft 检查这次发送：你的应用可以在这里发送执行操作的按钮，`actions` 的每个键都对应一个 `Button`，对话不是和其他服务器共享的频道，`for` 是一个能阅读这段对话的人。任何一项不通过，就什么也不发出。
 3. Raft 保存这张卡片。每个执行操作的按钮都保存为禁用的 `navigate` 按钮，这样不能按它的客户端也能画出整张卡片。
 4. 有人阅读这条消息时，他的客户端向 Raft 询问他可以按哪些按钮。只有他现在可以按的执行操作的按钮，Raft 才会为它给出一个只能用一次的 handle。
 5. 这个人按下按钮。从这里开始，一切都和链接卡片一样：Raft 的确认对话框或撤销倒计时，然后是发往你的操作端点、带有按下者签名的 prepare 和 execute 请求。
@@ -81,7 +81,7 @@ if (sent.data.state === "sent") {
 
 | 字段 | 约定 |
 | --- | --- |
-| `target` | 发到哪里，和机器人发的任何消息一样：机器人所在的频道、一个消息列，或一个私信。`dm:sub:<sub>` 用你的应用从 Login with Raft 得到的某人的 `sub` 指定和这个人的私信。不能是联合频道，也不能是联合频道里的消息列。 |
+| `target` | 发到哪里，和机器人发的任何消息一样：机器人所在的频道、一个消息列，或一个私信。`dm:sub:<sub>` 用你的应用从 Login with Raft 得到的某人的 `sub` 指定和这个人的私信。不能是和其他服务器共享的频道（连接了其他服务器的外部频道），也不能是这种频道里的消息列。 |
 | `card` | 卡片，使用 [卡片消息的格式](/zh-cn/developers/sdk/external-agents/card-messages/#what-a-card-can-show)。 |
 | `actions` | 一个对象，键是 `Button` 元素的 ID，值是这个按钮的操作：`{ "kind": "execute", "action_id": …, "confirm": "prepare" }` 或 `{ "kind": "execute", "action_id": …, "undoWindowMs": … }`。1 到 4 项。规则和链接卡片相同：`action_id` 匹配 `^[a-z][a-z0-9_]{0,31}$`，每个执行操作的按钮各不相同；`undoWindowMs` 为 1000 到 10000；每个操作只能有 `confirm` 和 `undoWindowMs` 中的一个。 |
 | `for` | 可选。唯一一个可以按这些执行操作的按钮的人：你的应用从 Login with Raft 得到的这个人的 `sub`。需要同时有 `actions`。它必须是这个服务器上的成员，不是访客，并且现在能阅读这段对话。 |
@@ -183,7 +183,7 @@ if (updated.ok) await saveRevision(42, updated.data.revision); // 2
 
 更新遵循 [更新卡片](/zh-cn/developers/sdk/external-agents/card-messages/#update-a-card) 里的规则，另外还有这些：
 
-- **`actions` 替换执行操作的按钮。** Agent 层的 `raft.messages.updateCard` 不接受 `actions`，所以要保留执行操作的按钮，就通过程序层更新，见下面的例子。带 `actions` 的更新会按当前状态做和发送时一样的检查：你的应用仍然可以在这里发送执行操作的按钮，每个键都对应新卡片里的一个 `Button`，对话不是联合频道。
+- **`actions` 替换执行操作的按钮。** Agent 层的 `raft.messages.updateCard` 不接受 `actions`，所以要保留执行操作的按钮，就通过程序层更新，见下面的例子。带 `actions` 的更新会按当前状态做和发送时一样的检查：你的应用仍然可以在这里发送执行操作的按钮，每个键都对应新卡片里的一个 `Button`，对话不是和其他服务器共享的频道。
 - **不带 `actions` 的更新会结束执行操作的按钮。** 这时新卡片里的每个 `Button` 都是会打开 URL 的普通 `navigate` 按钮。想让按钮留在卡片上但不能用，就给它写上你自己的 `disabledReason`。
 - **`for` 保持发送时的值。** 更新时不要写它。`for` 指定了其他人的更新会被拒绝。
 - **每次更新都产生一个新的修订版本。** 旧修订版本上的按钮停止工作，客户端会画出新卡片。
@@ -229,7 +229,7 @@ if (!kept.ok) throw new Error(kept.error.message);
 - `actions` 或 `for` 没有和 `card` 一起发送，或者 `for` 没有和 `actions` 一起发送。
 - `actions` 不是 1 到 4 项，某个键没有对应卡片里的 `Button` 元素，某个操作不是有效的 execute 操作，或者两个按钮用了同一个 `action_id`。
 - 你的应用现在不能在这个服务器上使用执行操作的按钮。见 [谁可以发送执行操作的按钮](#who-can-send-acting-buttons)。
-- 这段对话是联合频道，或者联合频道里的消息列。
+- 这段对话是和其他服务器共享的频道，或者这种频道里的消息列。
 - 某个执行操作按钮的 `action.url` 不是你的链接预览注册所在源上的 `https` 地址。
 - `for` 指定的不是这个服务器上、不是访客、并且现在能阅读这段对话的成员。指不到任何人的 `sub` 也得到同样的回答。
 - 在更新里，`for` 指定的人不是发送卡片时指定的那个人。
@@ -265,7 +265,7 @@ if (!kept.ok) throw new Error(kept.error.message);
    - **官方应用**：Raft 批准为官方、并且有生效中操作端点的应用。新的或改动过的操作端点要先经过 Raft 审核才会生效。它在安装了你的应用的每个服务器上都可用。
    - **服务器本地应用，在它自己的服务器上**：没有发布，也从未通过链接分享。只要它有操作端点，它的卡片按钮在那里默认可用，除非那里能管理集成的人 [关闭了它们](/zh-cn/developers/raft-apps/cards/link-card-actions/#_2-allow-card-actions-on-your-own-server)。
    - **通过链接分享或已发布的应用**：在安装了它的任何服务器上（包括它自己的服务器），必须由那个服务器上能管理集成的人 [允许它的操作端点](/zh-cn/developers/raft-apps/cards/link-card-actions/#_2-allow-card-actions-on-your-own-server)，也就是现在生效的这一个。一旦你通过链接分享了服务器本地应用或发布了它，它自己的服务器也需要这样允许，之后撤销链接也一样。
-4. 这段对话不是联合频道，也不是联合频道里的消息列。
+4. 这段对话不是和其他服务器共享的频道，也不是这种频道里的消息列。
 5. 每个执行操作按钮的 `action.url` 都是你的注册所在源上的 `https` 地址。
 
 凡是不是官方的应用，Raft 都当作没有审核过的应用。所以对这类应用，Raft 每次按下都会请这个人确认，并且只在会这样确认的客户端里显示它的执行操作的按钮。网页版和 1.25 及以后的手机 App 会这样确认。
