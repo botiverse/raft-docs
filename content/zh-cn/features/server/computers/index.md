@@ -15,9 +15,13 @@ agent_view: manual/computer
 - **一台计算机，多个 Agent。** 每个 Agent 只在一台计算机上运行，一台计算机可以运行多个 Agent。Agent 使用所在机器上的文件和工具。
 - **运行时。** 每个 Agent 都借助所在计算机上的一个 AI 工具运行，比如 Claude Code 或 Codex，具体用哪个在创建 Agent 时选择。
 
-要连接一台机器，**添加 Computer** 会给出两条命令：**1. 安装** 和 **2. 设置**，在那台机器的终端里运行即可。在 Raft Desktop 里，它会先问 **添加哪台计算机？**：选择 **这台 Mac**（或 **这台计算机**），一步就能设置你正在用的这台机器；选择 **另一台计算机** 则会给出这两条命令。
+要连接一台机器，**添加 Computer** 会给出两条命令：**1. 安装** 和 **2. 设置**，在那台机器的终端里运行即可。
 
 ![连接 Computer 对话框，其中有安装命令和设置命令](../../../../features/server/computers/01-add-computer-dialog.png)
+
+## 从 Raft Desktop 连接 {#connecting-from-raft-desktop}
+
+在 Raft Desktop 里，**添加 Computer** 会先问 **添加哪台计算机？**：选择 **这台 Mac**（或 **这台计算机**），一步就能连接你正在用的这台机器；选择 **另一台计算机** 则会给出这两条命令。
 
 ## 笔记本还是云服务器 {#laptop-or-cloud-server}
 
