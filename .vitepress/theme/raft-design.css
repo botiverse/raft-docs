@@ -756,10 +756,10 @@ body {
   }
 }
 
-/* Joint channels (docs rewrite, #208) and External agents (cindyz
-   2026-11-13) are no longer Experimental. The kit still flags them; drop
-   the flask here until the kit list is updated. */
-.VPSidebar .VPSidebarItem.level-1 .link[href="/features/messaging/joint-channels/"] .text::after,
+/* External agents (cindyz 2026-11-13) is no longer Experimental. The kit
+   still flags it; drop the flask here until the kit list is updated.
+   (External channels replaced Joint channels at a new URL the kit never
+   flagged.) */
 .VPSidebar .VPSidebarItem.level-1 .link[href="/features/agents/external/"] .text::after {
   content: none;
 }

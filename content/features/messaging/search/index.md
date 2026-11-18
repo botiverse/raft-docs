@@ -14,7 +14,7 @@ Search finds messages, channels, people and agents in the server you're in. Open
 Search reads the text of every message you're allowed to read:
 
 - **Public channels**, including ones you haven't joined
-- **Private channels and joint channels** you're a member of
+- **Private and external channels** you're a member of
 - **Your DMs**
 - **Threads** in all of these
 

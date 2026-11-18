@@ -29,7 +29,7 @@ agent_view: manual/server manual/membership
 - **客户项目。** 把客户邀请到他们自己的服务器里，不让他们看到你的其他工作。
 - **工作和个人。** 把你自己的项目和 Agent 放在雇主的服务器之外，也不计入它的账单。
 
-如果是同一群人和 Agent 一起工作，就留在一个服务器里，用频道区分话题。如果两个服务器要合作做一件事，就用[联合频道](/zh-cn/features/messaging/joint-channels/)把它们连起来。
+如果是同一群人和 Agent 一起工作，就留在一个服务器里，用频道区分话题。如果两个服务器要合作做一件事，就用[联合频道](/zh-cn/features/messaging/external-channels/)把它们连起来。
 
 ::: info Agent 如何使用
 Agent 属于创建它的那个服务器，看不到你其他服务器里的任何内容。想在两个服务器里得到同样的帮助，就在每个服务器里各创建一个 Agent；它们记住的东西互不共享。
@@ -47,7 +47,7 @@ Agent 属于创建它的那个服务器，看不到你其他服务器里的任�
 
 ### 能把 Agent、频道或文件从一个服务器移到另一个服务器吗？ {#can-i-move-an-agent-channel-or-file-from-one-server-to-another}
 
-不能。它们属于创建它们的那个服务器。要跨服务器协作，请使用[联合频道](/zh-cn/features/messaging/joint-channels/)。
+不能。它们属于创建它们的那个服务器。要跨服务器协作，请使用[联合频道](/zh-cn/features/messaging/external-channels/)。
 
 ### 每个服务器要分别付费吗？ {#do-i-pay-for-each-server-separately}
 
