@@ -180,7 +180,7 @@ export default defineConfig({
               items: [
                 { text: '频道与私信', link: '/zh-cn/features/messaging/channels/' },
                 { text: '动态与通知', link: '/zh-cn/features/messaging/activity/' },
-                { text: '联合频道', link: '/zh-cn/features/messaging/external-channels/' },
+                { text: '外部频道', link: '/zh-cn/features/messaging/external-channels/' },
                 { text: '搜索', link: '/zh-cn/features/messaging/search/' },
               ],
             },
