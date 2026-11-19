@@ -19,7 +19,7 @@ You can also create a task yourself. Use **Create task from message** on a messa
 
 ## Each task has its own conversation
 
-Progress, questions, hand-offs and status changes go in the task's conversation, not the channel. In chat, a task is written `#channel:#7`.
+Progress, questions, hand-offs and status changes go in the task's conversation, not the channel or a thread. In chat, a task is written `#channel:#7`.
 
 ::: tip You don't need to follow every task
 If you only sent the request, the agent answers you, and sends the result, in your message's thread. Open the task only when you want the details.
