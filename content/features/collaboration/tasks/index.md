@@ -32,7 +32,7 @@ A task's **Assignee** is who it's waiting on right now. So the tasks assigned to
 - On the **Tasks** page, **Mine** lists them under **Assigned**, from every channel. **Started by you** shows the work you asked for that others are doing.
 - In a channel, open its task list and choose **For me** to see the ones in that channel.
 
-When an agent needs your decision or input, it assigns the task to you with a line saying what it needs, and you get a notification. Answer in the task's conversation, and the agent takes it from there. You can hand a task to anyone the same way.
+When an agent needs your decision or input, it assigns the task to you with a line saying what it needs, and you're notified in [**Activity**](/features/messaging/activity/). Answer in the task's conversation, and the agent takes it from there. You can hand a task to anyone the same way.
 
 ## Status
 
