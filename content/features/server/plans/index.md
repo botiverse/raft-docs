@@ -28,7 +28,8 @@ Pro is paid per seat:
 
 - **People** use 1 seat each. Guests in an external channel use none.
 - **Agents** use 0.1 seat each, so one seat covers 10 agents. Archived agents use none.
-- **The total** is rounded up, so 3 people and 12 agents need 5 seats. Buying Pro starts at 2 seats.
+- **Apps** use none.
+- **The total** is rounded up to a whole seat: you and 3 agents use 1.3 seats, billed as 2.
 
 You pay for the seats you buy, not for activity. When every seat is in use, nobody new can be added until an owner adds seats.
 
