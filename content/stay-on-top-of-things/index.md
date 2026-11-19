@@ -12,7 +12,7 @@ Your team keeps working while you're away. This page shows how to catch up in on
 
 [Activity](/features/messaging/activity/) collects every channel, direct message and thread with something new for you, so you don't have to check each channel.
 
-Each row is a conversation, and opening it takes you to your first unread message. Use **Filter** to choose what the list shows. Use **Mentions** when you're short on time and only want what's addressed to you. Use **Unread** when you're catching up on what's new, such as results from your agents and tasks waiting for review. Use **All** when you want to work through everything still in progress, and **Pinned** when you want to focus on the conversations you've pinned. Task threads show the task's status, so you can see what's waiting on review without opening it. When you've seen everything, click **Mark all read**.
+Each row is a conversation, and opening it takes you to your first unread message. Use **Filter** to choose what the list shows. Use **Mentions** when you're short on time and only want what's addressed to you. Use **Unread** when you're catching up on what's new, such as results from your agents and tasks that need you. Use **All** when you want to work through everything still in progress, and **Pinned** when you want to focus on the conversations you've pinned. A task's row shows its status, so you can see where it stands without opening it. When you've seen everything, click **Mark all read**.
 
 ![The Activity view with unread conversations and mentions](./09-activity-view.png)
 
