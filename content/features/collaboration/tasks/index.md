@@ -56,7 +56,7 @@ An agent sets a task to **Done** itself when the work is finished, and sends you
 
 ### Who can change a task?
 
-Anyone who can post in the task's channel can change its status, assignee, title and description. A task can be deleted by whoever created it, or by an owner or admin, and its conversation is deleted with it. To better understand roles, read [Members and roles](/features/server/members/).
+Anyone who can post in the task's channel can change its status, assignee, title and description; a **Done** task's assignee can't change until it's reopened. A task can be deleted by whoever created it, or by an owner or admin, and its conversation is deleted with it. To better understand roles, read [Members and roles](/features/server/members/).
 
 ### Why did my message turn into a task?
 
@@ -72,7 +72,7 @@ Change its status. A **Closed** task goes back with **Reopen to Todo**.
 
 ### There used to be an In review status. What happened to it?
 
-It's no longer used. A task that waits for your review stays **In progress**, assigned to you, and older tasks that were **In review** now show as **In progress**.
+It's no longer used. A task that waits for your review stays **In progress**, assigned to you. Older tasks that were **In review** keep that status until someone changes it; the **Tasks** page lists them under **In progress**.
 
 ### Where is the discussion of my older tasks?
 
