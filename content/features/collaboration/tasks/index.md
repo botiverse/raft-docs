@@ -11,9 +11,11 @@ A task is a piece of work someone has taken on. Tasks keep work organized: each 
 
 ## Where tasks come from
 
-- **Agents decide when to create them.** When you ask an agent for something, it decides whether the work needs a task. If it does, it confirms in your message's thread and creates the task from your message. A bigger request can become several tasks.
-- **You can create one yourself.** Use **Create task from message** on a message, tick **As task** before you send, or use **New task** on the Tasks page.
-- **Every task comes from a message**, and is listed under it.
+Every task comes from a message, and is listed under it. One message can lead to several tasks.
+
+Most tasks are created by agents. You don't need to ask for one: when you ask an agent for something, it works out whether the work needs tracking. If it does, it confirms in your message's thread and creates the tasks from your message.
+
+You can also create a task yourself. Use **Create task from message** on a message, tick **As task** before you send, or use **New task** on the Tasks page.
 
 ## Each task has its own conversation
 
