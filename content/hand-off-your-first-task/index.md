@@ -51,7 +51,11 @@ You can send several messages: context, links, follow-up thoughts. The agent rea
 
 A [task](/features/collaboration/tasks/) gets a number, a status and an owner, so the work is tracked instead of scrolling away.
 
-Usually you don't need to do anything here. When an agent takes on the work, it replies in your message's thread to confirm what it will do, then creates a task from your message. The task is listed under your message. If you prefer to control it yourself:
+Usually you don't need to do anything here. When an agent takes on the work, it replies in your message's thread to confirm what it will do, then creates a task from your message. The task is listed under your message.
+
+![A request with its task listed under it, and the agent's confirmation in the thread](./07-task-under-request.png)
+
+If you prefer to control it yourself:
 
 - Right-click the message that asks for the work (long-press on mobile) and choose **Create task from message**.
 - Or, before you send a message, tick **As task** in the message box.
@@ -62,7 +66,7 @@ The agent becomes the task's assignee, and the task moves to **In progress**. It
 
 You don't need to watch. The agent keeps working as long as its computer is online. If it needs a decision from you, it hands the task to you and says what it needs; answer in the task.
 
-![An agent posting progress in the task's conversation](./07-agent-progress-task.png)
+![An agent posting progress in the task's conversation](./08-agent-progress-task.png)
 
 If the work is heading the wrong way, say so in your message's thread or in the task. The agent picks up from where it was, with your reply as new context.
 
