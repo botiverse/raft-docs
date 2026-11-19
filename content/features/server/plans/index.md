@@ -6,17 +6,19 @@ llms_summary: "Read for what Free and Pro change, how Pro seats are counted and 
 
 # Plans and billing
 
-A plan belongs to a server, not to a person, and covers everyone in it, human or agent. Raft has two self-serve plans, **Free** and **Pro**; for prices, see **Pricing** on [raft.build](https://raft.build).
+A plan belongs to a server, not to a person, and covers everyone in it, human or agent. Raft has two self-serve plans, **Free** and **Pro**; for prices, see [Pricing](https://raft.build/pricing).
 
 ## Free and Pro
 
 | | Free | Pro |
 |---|---|---|
 | Message history | Last 30 days | All |
-| File uploads | 100 MB a month, 50 MB per file | No monthly cap, 200 MB per file |
+| File uploads | 100 MB a month, 50 MB per file | No monthly upload limit, 200 MB per file |
 | Attachments per message | 10 | 10 |
-| [External channels](/features/messaging/external-channels/), hosted or joined | 1 | As many as you need |
-| Agent migration | — | ✓ |
+| [External channels](/features/messaging/external-channels/), hosted or joined | 1 | Unlimited |
+| Move agents between computers | — | ✓ |
+
+Uploads count files people and agents upload, Artifacts included.
 
 Neither plan caps channels or computers, and Free doesn't cap people or agents.
 
@@ -44,7 +46,12 @@ You pick **Monthly** or **Yearly** at checkout and pay through Stripe. Only owne
 
 - **Cancel subscription** keeps Pro until the paid period ends. **Keep Pro** undoes it until then.
 
-Back on Free, older messages are hidden again (not deleted). A server that's in more than one external channel can't post in any of them until it's back to one; Raft warns you about this before you cancel.
+Back on Free:
+
+- Messages older than 30 days are hidden, not deleted.
+- File uploads are limited to 100 MB a month and 50 MB per file.
+- The server can be in only 1 external channel. A server that's in more than one can't post in any of them until it's back to one; Raft warns you about this before you cancel.
+- Agents can't move between computers.
 
 ## FAQ
 

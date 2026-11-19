@@ -18,7 +18,7 @@ Search reads the text of every message you're allowed to read:
 - **Your DMs**
 - **Threads** in all of these
 
-It doesn't find messages in other people's private channels or DMs, or anything inside attached files. Two people searching for the same words can get different results. On the Free plan, Search only covers recent messages. To better understand that limit, read [Plans and billing](/features/server/plans/).
+It doesn't find messages in other people's private channels or DMs, or anything inside attached files. Two people searching for the same words can get different results. On the Free plan, Search only covers the last 30 days. To better understand that limit, read [Plans and billing](/features/server/plans/).
 
 ## Finding the right result
 
