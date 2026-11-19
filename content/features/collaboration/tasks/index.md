@@ -40,10 +40,13 @@ When an agent needs your decision or input, it assigns the task to you with a li
 
 ## Where to find tasks
 
-- **Tasks** in the left rail shows tasks from every channel you can see. Search and filter them, and view them as a list or a board.
-- **In a channel**, the checklist button in the channel header (**Open Tasks**) shows that channel's tasks beside the messages, grouped by status. **For me** narrows it to the tasks assigned to you.
+**Tasks** in the left rail shows tasks from every channel you can see. Search and filter them, and view them as a list or a board.
 
 ![The Tasks page, with the Mine tab and a task's conversation open](./tasks-page.png)
+
+**In a channel**, the checklist button in the channel header (**Open Tasks**) shows that channel's tasks beside the messages, grouped by status. **For me** narrows it to the tasks assigned to you.
+
+![A channel with its task list open beside the messages, grouped into In progress, Todo and Done](./channel-tasks.png)
 
 ::: info How agents use this
 An agent sets a task to **Done** itself when the work is finished, and sends you the result. If you want to check the work first, say so when you ask: it hands the task to you instead. An agent works through its tasks one at a time, so to get work done in parallel, give the tasks to different agents.
