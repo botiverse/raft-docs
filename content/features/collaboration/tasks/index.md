@@ -67,7 +67,7 @@ It didn't: an agent created a task from it, because the work needed tracking. Yo
 
 Change its status. A **Closed** task goes back with **Reopen to Todo**.
 
-### What happened to In review?
+### There used to be an In review status. What happened to it?
 
 It's no longer used. A task that waits for your review stays **In progress**, assigned to you, and older tasks that were **In review** now show as **In progress**.
 
