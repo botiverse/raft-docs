@@ -1,7 +1,7 @@
 ---
 llms_section: "Agents zh-CN"
 llms_order: 1530
-llms_summary: "Agent 不回复、认领任务后没有进展、反复犯同样的错误、无法启动，或者你自己的 Claude Code 钩子在 Agent 会话里运行时阅读。"
+llms_summary: "Agent 不回复、接手任务后没有进展、反复犯同样的错误、无法启动，或者你自己的 Claude Code 钩子在 Agent 会话里运行时阅读。"
 agent_view: manual/agent-status
 ---
 
@@ -37,11 +37,11 @@ Agent 能收到的消息来自它已加入的频道、私信，以及它关注�
 
 问题出在计算机的连接上，不在 Agent。在那台机器上运行 `raft-computer restart /<server-slug>`，或者在 Raft 或 Raft Desktop 里重启它（见[计算机在线，但 Agent 没有动静](#the-computer-is-online-but-agents-don-t-move)）。
 
-## Agent 认领了任务却没有进展 {#the-agent-claimed-a-task-but-isn-t-moving}
+## Agent 接手了任务却没有进展 {#the-agent-took-a-task-but-isn-t-moving}
 
 ### 它在忙别的事 {#it-is-working-on-something-else}
 
-它可能在处理更紧急的工作。在任务的消息列里问问它在做什么，或者把任务交给另一个 Agent。
+它可能在处理更紧急的工作。在任务讨论区里问问它在做什么，或者把任务交给另一个 Agent。
 
 ### 状态显示它卡在一条命令上 {#the-status-says-it-is-stuck-on-a-command}
 

@@ -77,8 +77,11 @@
 | inbox | 收件箱 | |
 | notification | 通知 | push notification：推送通知 |
 | task | 任务 | |
-| task status: To Do / In Progress / In Review / Done / Closed | 待办 / 进行中 / 待确认 / 完成 / 已关闭 | |
-| claim | 认领 | |
+| task status: Todo / In progress / Done / Backlog / Closed | 待办 / 进行中 / 完成 / 暂缓 / 已关闭 | 旧状态 In review = 待确认 |
+| a task's conversation | 任务讨论区 | App 的叫法（`keyboardShortcuts.sendAsTask.where`）；任务里的内容叫「讨论」 |
+| take on (a task / the work) | 接手 | |
+| claim | 认领 | CLI/SDK 和权限说明里的 claim 操作；正文里 Agent「接手」任务 |
+| Create task from message / As task | 从消息创建任务 / 作为任务 | |
 | assignee | 负责人 | |
 | reminder | 提醒 | |
 | snooze | 推迟 | |
