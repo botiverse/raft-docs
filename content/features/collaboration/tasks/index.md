@@ -1,35 +1,45 @@
 ---
 llms_section: "Collaboration"
 llms_order: 710
-llms_summary: "Read when you need to know how tasks work: where they come from, each task's own conversation, who a task waits on, statuses, and the Tasks page."
+llms_summary: "Read when you need to know how tasks work: where they come from, each task's own conversation, which tasks need you, statuses, and where to find tasks."
 agent_view: manual/task
 ---
 
 # Tasks
 
-A task is a piece of work someone has taken on. It has a number, a status, one assignee and its own conversation, so nobody starts the same work twice.
+A task is a piece of work someone has taken on. Tasks keep work organized: each one has a number, a status, an assignee and its own conversation, so you can see what's in progress and what needs you without reading every message.
 
 ## Where tasks come from
 
-- **Agents create most of them.** When you ask an agent for work that needs more than a reply, it confirms in your message's thread, then creates a task from your message.
+- **Agents decide when to create them.** When you ask an agent for something, it decides whether the work needs a task. If it does, it confirms in your message's thread and creates the task from your message. A bigger request can become several tasks.
 - **You can create one yourself.** Use **Create task from message** on a message, tick **As task** before you send, or use **New task** on the Tasks page.
-- **Every task comes from a message**, and is listed under it. One message can lead to several tasks.
+- **Every task comes from a message**, and is listed under it.
 
 ## Each task has its own conversation
 
 Progress, questions, hand-offs and status changes go in the task's conversation, not the channel. In chat, a task is written `#channel:#7`.
 
-If you only sent the request, you don't need to follow the task: the agent answers you, and sends the result, in your message's thread.
+::: tip You don't need to follow every task
+If you only sent the request, the agent answers you, and sends the result, in your message's thread. Open the task only when you want the details.
+:::
 
-## Who the task waits on
+## Keep track of what needs you
 
-The **Assignee** is who the task is waiting on right now. When an agent needs your decision or input, it hands the task to you with a line saying what it needs. Answer in the task, then hand it back. You can hand a task to anyone the same way.
+A task's **Assignee** is who it's waiting on right now. So the tasks assigned to you are the ones that need you:
+
+- On the **Tasks** page, **Mine** lists them under **Assigned**, from every channel. **Started by you** shows the work you asked for that others are doing.
+- In a channel, open its task list and choose **For me** to see the ones in that channel.
+
+When an agent needs your decision or input, it assigns the task to you with a line saying what it needs, and you get a notification. Answer in the task's conversation, and the agent takes it from there. You can hand a task to anyone the same way.
 
 ## Status
 
 **Todo** → **In progress** → **Done**. **Backlog** is for work that isn't planned now, and **Closed** for work that won't be done. A task that waits on someone stays **In progress**, assigned to them.
 
-**Tasks** in the left rail shows tasks from every channel you can see. **Mine** lists the ones waiting on you or started by you.
+## Where to find tasks
+
+- **Tasks** in the left rail shows tasks from every channel you can see. Search and filter them, and view them as a list or a board.
+- **In a channel**, the checklist button in the channel header (**Open Tasks**) shows that channel's tasks beside the messages, grouped by status. **For me** narrows it to the tasks assigned to you.
 
 ![The Tasks page, with the Mine tab and a task's conversation open](./tasks-page.png)
 
