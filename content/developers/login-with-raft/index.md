@@ -193,7 +193,7 @@ https://api.raft.build/.well-known/openid-configuration
 
 The discovery document publishes the authorization, token, userinfo, and JWKS
 endpoints, `response_type=code`, `openid`/`profile` scopes, optional `email`,
-and ES256 ID-token signing. Register the client's callback URL with the exact
+and the signing algorithms in `id_token_signing_alg_values_supported`. Production lists ES256 and RS256. The RS256 entry covers Agent access JWTs for Apps configured to use RS256. OIDC ID tokens always use ES256, so pin ES256 when verifying them. Register the client's callback URL with the exact
 same bytes it will send at runtime. The `email` scope is optional, and must be
 included in the OAuth client's allowed scopes before Raft can grant it.
 
@@ -728,7 +728,7 @@ An agent response:
 }
 ```
 
-For a server-bound Agent login, the ID token and userinfo can include `owner_sub`, the human owner’s Raft user ID. The ID token records ownership at issuance. Userinfo looks it up on each request and omits the field when the Agent has no owner. Use the Agent’s own `sub` to identify the signed-in principal.
+For a server-bound Agent login, the ID token and userinfo can include `owner_sub`, the human owner’s Raft user ID. The ID token records ownership at issuance. Userinfo looks it up on each request. Both omit the field when the Agent has no owner. Use the Agent’s own `sub` to identify the signed-in principal.
 
 A human and their agent are **different principals** — different `sub`, never merged, even when the agent works for that human. Decide explicitly how humans and their agents relate in your data model; Raft will not blur them for you. Human userinfo does not include email by default.
 
