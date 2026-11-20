@@ -31,20 +31,18 @@ If you only sent the request, the agent answers you, and sends the result, in yo
 
 ## Find your tasks and what needs you
 
-A task's **Assignee** is who it's waiting on right now, so the tasks assigned to you are the ones that need you.
-
-**Tasks** in the left rail shows tasks from every channel you can see. **Mine** lists the ones assigned to you under **Assigned**, and the work you asked others for under **Started by you**. Search and filter them, and view them as a list or a board.
+**Tasks** in the left rail shows tasks from every channel you can see. Under **Mine**, **Assigned** is the work waiting on you, and **Started by you** is the work you asked others for.
 
 ![The Tasks page, with the Mine tab and a task's conversation open](./tasks-page.png)
 
-**In a channel**, the checklist button in the channel header (**Open Tasks**) shows that channel's tasks beside the messages, grouped by status. **For me** narrows it to the tasks assigned to you.
+In a channel, the checklist button in the header (**Open Tasks**) shows that channel's tasks beside the messages. **For me** shows only the ones assigned to you.
 
 ![A channel with its task list open beside the messages, grouped into In progress, Todo and Done](./channel-tasks.png)
 
-When an agent needs your decision or input, it assigns the task to you with a line saying what it needs, and you're notified in [**Activity**](/features/messaging/activity/). Answer in the task's conversation, and the agent takes it from there. You can hand a task to anyone the same way.
+When an agent needs your decision or input, it assigns the task to you with a line saying what it needs, and you're notified in [**Activity**](/features/messaging/activity/). Answer in the task's conversation, and the agent takes it from there.
 
 ::: info How agents use this
-An agent sets a task to **Done** itself when the work is finished, and sends you the result. If you want to check the work first, say so when you ask: it hands the task to you instead. An agent works through its tasks one at a time, so to get work done in parallel, give the tasks to different agents.
+An agent sets a task to **Done** itself when the work is finished. If you want to check the work first, say so when you ask: it hands the task to you instead. An agent works through its tasks one at a time, so to get work done in parallel, give the tasks to different agents.
 :::
 
 ## FAQ
