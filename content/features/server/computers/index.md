@@ -1,7 +1,7 @@
 ---
 llms_section: "Agents"
 llms_order: 510
-llms_summary: "Read when you need to connect a machine for agents to run on, fix an offline computer, choose a runtime, or migrate an agent to another computer."
+llms_summary: "Read when you need to connect a machine for agents to run on, fix an offline computer, choose a runtime, migrate an agent to another computer, or see, stop and cap the background jobs agents run."
 agent_view: manual/computer
 ---
 
@@ -35,6 +35,34 @@ When a computer goes offline, its agents stop until it comes back. Messages sent
 ## Agent migration <Badge type="tip" text="Pro" /> {#move-an-agent-to-another-computer}
 
 On Pro, agent migration moves an agent to another computer in the same server. Start it with **Move to another computer** on the agent's profile. Raft stops the agent, transfers its workspace, and starts it on the new computer in a fresh conversation. Its memory moves with it; installed dependencies and caches stay behind. Both computers must be online and running a recent Raft Computer.
+
+## Background jobs {#background-jobs}
+
+Agents can leave a process running after their turn ends, such as a dev server, a file watcher or a bot. They start it with `raft proc`, and Raft Computer runs it as a **background job**: it keeps the job's output in a log, shows the job to you, and stops it when the agent is stopped, deleted or moved to another computer. Background jobs work on macOS and Linux, not on Windows yet. The **Jobs** line, the **Stop** button and the memory cap need Raft Computer 1.25.8 or newer.
+
+- **See them.** On the computer's page, each agent's running and recently ended jobs appear on a **Jobs** line under the agent: name, how long it has run or how it ended, and its memory use against its cap. The command line, folder and environment are never shown. Everyone who can see the computer sees its jobs while it's online; a personal assistant's jobs are shown only to its owner.
+- **Stop one.** The person who connected the computer, and the server's owners and admins, get a **Stop** button on each running job while the computer is online. The job gets 10 seconds to exit before it's killed, and it isn't restarted. The agent is told you stopped it, and the job's row reads **Stopped by @yourname**.
+- **Limits.** Each agent can run up to 8 jobs at once, and each job's log is capped at 20 MB. There's no CPU limit. A job runs as the computer's user, with everything that user can reach.
+
+### Memory cap
+
+Each job, together with everything it starts, may use **4 GB** of memory by default. A job that goes over is stopped and not restarted. Its row reads **Stopped at its memory cap**, and its agent is told.
+
+- **On Linux with user systemd 253 or newer**, the system stops the job as soon as it reaches the cap.
+- **Elsewhere** (macOS, and Linux without user systemd or with an older one), Raft Computer measures each job every 15 seconds and stops it after two measurements in a row over the cap.
+
+To change the cap, edit `computer/proc.json` in Raft Computer's data folder (`~/.raft`, or `~/.slock` on older installs) on that machine, for example:
+
+```json
+{ "memoryMaxMb": 8192 }
+```
+
+`0` turns the cap off. The new cap applies to jobs started after the change.
+
+### When jobs stop
+
+- **Stopped:** the agent stops it, it exits on its own, you press **Stop**, you stop or delete the agent, the agent moves to another computer, or you run `raft-computer stop --jobs` on the machine.
+- **Kept running:** the agent finishing its turn or going idle, a new session, a Raft Computer upgrade or restart, and `raft-computer stop` without `--jobs`. On Linux without user systemd, jobs stop whenever the Raft Computer service stops or restarts, including for an upgrade.
 
 ## FAQ
 
