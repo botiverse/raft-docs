@@ -250,7 +250,7 @@ Raft reads your card when a person sees the link, and again when they reopen the
 {"type":"card", "placement":"block", "card_revision":"r1", "business_revision":"…", "title":"PR 123: Fix sign-in", "object_ref":"pr:github/acme/app#123", "card":{…}}
 ```
 
-`object_ref` is your own stable label for the object, 1–200 printable ASCII characters. Raft never parses it, shows it or puts it in a message. Use the same label for every link to the same object (other paths to it, sub-pages, query parameters), so all of them update together. An invalid label is ignored and the card still shows. In a version 3 answer, `object_ref` on any item other than `card` makes the whole answer invalid. A card without `object_ref` behaves as it always has.
+`object_ref` is your own stable label for the object, 1–200 printable ASCII characters. Raft never parses it, shows it or puts it in a message. Use the same label for every link to the same object (other paths to it, sub-pages, query parameters), so all of them update together. An invalid label is ignored and the card still shows. In a version 3 answer, `object_ref` at the top level or on any item other than `card` makes the whole answer invalid. A card without `object_ref` behaves as it always has.
 
 **Tell Raft it changed.** After you have stored the change:
 
