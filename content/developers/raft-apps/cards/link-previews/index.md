@@ -242,21 +242,21 @@ Raft draws `color` only on a block card, and only for a reader whose `client_cap
 
 ## 6. Keep a card up to date {#card-changed}
 
-Raft reads your card when a person sees the link, and again when they reopen the message or press Refresh. When the thing a card shows changes somewhere else (a PR merged from the command line, CI turning green), you can tell Raft, and pages that are showing the card read it again.
+Raft reads your card when a person sees the link, and again when they reopen the message or press Refresh. When the thing a card shows changes somewhere else (a PR merged from the command line, CI turning green), you can tell Raft, and Raft's web app reads the card again where it is on screen.
 
 **Name the object a card shows.** Add `object_ref` to your answer: at the top of a version 1 or 2 answer, or on the `card` item of a version 3 answer:
 
 ```json
-{"type":"card", "placement":"block", "title":"PR 123: Fix sign-in", "object_ref":"pr:github/acme/app#123", "card":{…}}
+{"type":"card", "placement":"block", "card_revision":"r1", "business_revision":"…", "title":"PR 123: Fix sign-in", "object_ref":"pr:github/acme/app#123", "card":{…}}
 ```
 
-`object_ref` is your own stable label for the object, 1–200 printable ASCII characters. Raft never parses it, shows it or puts it in a message. Use the same label for every link to the same object (other paths to it, sub-pages, query parameters), so all of them update together. An invalid label is ignored and the card still shows. A card without `object_ref` behaves as it always has.
+`object_ref` is your own stable label for the object, 1–200 printable ASCII characters. Raft never parses it, shows it or puts it in a message. Use the same label for every link to the same object (other paths to it, sub-pages, query parameters), so all of them update together. An invalid label is ignored and the card still shows. In a version 3 answer, `object_ref` on any item other than `card` makes the whole answer invalid. A card without `object_ref` behaves as it always has.
 
 **Tell Raft it changed.** After you have stored the change:
 
 ```http
 POST /api/oauth/link-preview/changed
-Authorization: Basic <client_id:client_secret>
+Authorization: Basic <base64(client_id:client_secret)>
 Content-Type: application/json
 
 {"objects": ["pr:github/acme/app#123"]}
@@ -266,9 +266,9 @@ Content-Type: application/json
 - The answer is `202 {"accepted": n}`, whether or not anyone is viewing. Raft never tells you who reads your cards.
 - The limit is 600 labels per App per minute. Over it you get `429` with a `Retry-After` header: wait that long before the next call.
 - If a call fails, log it and carry on. Don't retry it and don't block your own work on it: the card is read fresh the next time it's displayed anyway.
-- Several changes to one object within 5 seconds reach readers as at most two re-reads, and the last one always comes after the last change.
+- You don't need to batch changes yourself: several changes to one object in quick succession reach readers as at most two re-reads, the last one normally after the last change.
 
-**What readers get.** People who were shown the card in the last 24 hours, and are still members of the Server they read it on, get a signal with no content. A page that is showing the card waits up to two seconds, then reads it again through the normal request, with that person's own access. Nothing about who may see what changes. Someone who lost access in your App but is still a member of the Server may get the signal for up to 24 hours, but their re-read gets whatever you answer them now.
+**What readers get.** People who recently viewed the card (within the last 24 hours), and are still members of the Server they read it on, get a signal with no content. Raft's web app then reads the card again shortly, once it is on screen and the person isn't interacting with it, through the normal request, with that person's own access. Other clients, such as the mobile app, don't act on the signal yet: they show the new state the next time they display the card. Nothing about who may see what changes. Someone who lost access in your App but is still a member of the Server may get the signal for up to 24 hours, but their re-read gets whatever you answer them now.
 
 This is rolling out Server by Server. You can add `object_ref` and the calls now: until it's on for a Server, Raft accepts your calls and does nothing more.
 
