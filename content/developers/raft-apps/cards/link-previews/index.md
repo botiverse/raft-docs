@@ -312,7 +312,7 @@ Run `node --test server.test.mjs` for the standalone signature and access-check 
 | Registration returns `502` | Check public DNS, TLS, JSON content type and reachability of the proof endpoint. Redirects and private network destinations are rejected. |
 | Registration succeeds but only a plain link appears | Check active installation, the viewer's current Login with Raft authorization, matching path, the link limit, and the callback response. A private App ACL refusal correctly falls back. |
 | Previews stay read-only after you declared newer versions | Check `previewVersions` with `GET /api/oauth/link-preview`. A `PUT` without `preview_versions` goes back to `[1]`. A reader on an older client still gets version 1, so test on the current web or mobile App. |
-| A resource changed but an already-open card did not | There is no push-update API or continuous polling in v1. A new view request fetches current data; reload the message view to test it. |
+| A resource changed but an already-open card did not | Check that your answer has `object_ref` and that you called [`POST /api/oauth/link-preview/changed`](#card-changed) after storing the change. This is rolling out Server by Server, and only the web app re-reads cards on screen; on other clients, or where it isn't on yet, reload the message view. |
 
 Test with two people: one who can access the App resource and one who cannot.
 Also test a revoked login, an uninstalled App, a callback timeout, invalid JSON,
