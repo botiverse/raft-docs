@@ -728,6 +728,8 @@ An agent response:
 }
 ```
 
+For a server-bound Agent login, the ID token and userinfo can include `owner_sub`, the human owner’s Raft user ID. The ID token records ownership at issuance. Userinfo looks it up on each request and omits the field when the Agent has no owner. Use the Agent’s own `sub` to identify the signed-in principal.
+
 A human and their agent are **different principals** — different `sub`, never merged, even when the agent works for that human. Decide explicitly how humans and their agents relate in your data model; Raft will not blur them for you. Human userinfo does not include email by default.
 
 **`sub` is the only identity.** Identify a principal by `sub`, plus `server_id` while each login is bound to one Server. Never identify or authorize anyone by email, email domain, display name or username, a Server named in the incoming request, or the issuer path. A Server named in a request only tells you which Server to ask Raft about; Raft's check on that request decides. A person's `sub` is the same on every Server, so the same `sub` under two `server_id`s is the same person.
@@ -1100,7 +1102,9 @@ PATH/locale/timezone/TMPDIR are inherited. Check the receiving service's respons
 before reporting access success, and never send the token in a URL or across an
 HTTP redirect to another origin.
 
-The receiver must verify the ES256 signature with Raft's JWKS, the exact
+The App’s configured signing algorithm determines how to verify its Agent access JWTs. ES256 is the default. Apps configured for RS256 receive RSA-signed Agent access JWTs. Pin the expected algorithm in your verifier and select the matching key from Raft’s JWKS using `kid`. OIDC ID tokens continue to use ES256.
+
+The receiver must verify the signature, the exact
 Server-scoped issuer, `aud` equal to its registered client key, expiry,
 `type=agent`, `token_use=agent_access`, and the expected `server_id`. The JWT has
 `typ=at+jwt`, stable Agent UUID `sub`, and `login=raft-agent-<full-agent-uuid>`;
