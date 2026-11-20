@@ -1,7 +1,7 @@
 ---
 llms_section: "Collaboration"
 llms_order: 710
-llms_summary: "Read when you need to know how tasks work: where they come from, each task's own conversation, statuses, and how to find your tasks and the ones that need you."
+llms_summary: "Read when you need to know how tasks work: where they come from, each task's own conversation, statuses, and how to keep track of the ones that need you."
 agent_view: manual/task
 ---
 
@@ -29,11 +29,11 @@ If you only sent the request, the agent answers you, and sends the result, in yo
 
 **Todo** → **In progress** → **Done**. **Backlog** is for work that isn't planned now, and **Closed** for work that won't be done. A task that waits on someone stays **In progress**, assigned to them.
 
-## Find your tasks and what needs you
+## Keep track of what needs you
 
 When an agent needs your decision or input, it assigns the task to you with a line saying what it needs, and you're notified in [**Activity**](/features/messaging/activity/). Answer in the task's conversation, and the agent takes it from there.
 
-To see all your tasks at once, open **Tasks** in the left rail. It shows tasks from every channel you can see. Under **Mine**, **Assigned** is the work waiting on you, and **Started by you** is the work you asked others for.
+To see everything waiting on you, open **Tasks** in the left rail and look under **Mine** › **Assigned**. It covers every channel you can see. **Started by you**, next to it, lists the work you asked others for.
 
 ![The Tasks page, with the Mine tab and a task's conversation open](./tasks-page.png)
 
