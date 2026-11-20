@@ -184,7 +184,7 @@ Open WebUI、LibreChat 等遵循标准的客户端，可以把 Raft 当作 OpenI
 https://api.raft.build/.well-known/openid-configuration
 ```
 
-发现文档公布了授权、token、userinfo 和 JWKS 端点，并声明了 `response_type=code`、`openid`/`profile` 两个 scope、可选的 `email`，以及 ID token 采用 ES256 签名。注册客户端的回调地址时，要与它运行时实际发送的值逐字节一致。`email` scope 是可选的；只有先把它加入 OAuth 客户端允许的 scope，Raft 才能授予它。
+发现文档公布了授权、token、userinfo 和 JWKS 端点，并声明了 `response_type=code`、`openid`/`profile` 两个 scope、可选的 `email`，以及 `id_token_signing_alg_values_supported` 中的签名算法。生产环境列出 ES256 和 RS256。其中 RS256 用于 Raft 为配置了 RS256 的 App 签发的 Agent 访问 JWT。OIDC ID token 始终使用 ES256，校验时请固定 ES256。注册客户端的回调地址时，要与它运行时实际发送的值逐字节一致。`email` scope 是可选的；只有先把它加入 OAuth 客户端允许的 scope，Raft 才能授予它。
 
 授权请求使用标准参数：
 
@@ -650,6 +650,8 @@ Agent 的响应：
 }
 ```
 
+对于绑定到某个 Server 的 Agent 登录，ID token 和 userinfo 里可能带有 `owner_sub`，即这个 Agent 的人类所有者的 Raft 用户 ID。ID token 记录签发时的所有者，userinfo 每次请求都会重新查询。Agent 没有所有者时，两者都不带这个字段。识别当前登录的主体，仍然用 Agent 自己的 `sub`。
+
 人类和他的 Agent 是**不同的主体**：`sub` 不同，永远不会合并，即使这个 Agent 是在替这个人工作。在你的数据模型里，要明确决定人类和他们的 Agent 是什么关系；Raft 不会替你把两者混为一谈。人类的 userinfo 默认不包含邮箱。
 
 **`sub` 是唯一的身份标识**。用 `sub` 识别主体；在每个登录只绑定一个服务器的情况下，再加上 `server_id`。绝不要根据邮箱、邮箱域名、显示名称或用户名、传入请求里指明的服务器，或 issuer 路径来识别或授权任何人。请求里指明的服务器，只告诉你该向 Raft 问哪个服务器；能不能访问，由 Raft 对这次请求的检查决定。同一个人在每个服务器上的 `sub` 都相同，所以两个 `server_id` 下的同一个 `sub` 就是同一个人。
@@ -966,7 +968,9 @@ raft integration token --service <registered-client-key> \
 
 在 Linux/macOS 上，子进程从文件描述符 3（`RAFT_INTEGRATION_TOKEN_FD`）读取一个以换行符结尾的 JWT。token 不会出现在 argv、普通的 token 环境变量或持久化的会话文件中。`--timeout` 接受 1–300 秒。子进程以同一个操作系统用户运行，必须是可信的；它只继承 PATH、区域设置、时区和 TMPDIR。在报告访问成功之前，先检查接收方服务的响应；绝不要把 token 放进 URL，也不要让它跟随 HTTP 重定向发往其他源。
 
-接收方必须校验以下各项：用 Raft 的 JWKS 验证 ES256 签名；issuer 与该服务器专属的 issuer 完全一致；`aud` 等于自己注册的 client key；未过期；`type=agent`；`token_use=agent_access`；`server_id` 是预期的值。这个 JWT 带有 `typ=at+jwt`、取值为 Agent 稳定 UUID 的 `sub`，以及 `login=raft-agent-<full-agent-uuid>`；不会编造人类邮箱。资源权限按你自己的规则执行。不要接受 OIDC ID token 来代替它，也不要拿这个 JWT 去调用 Raft 的 OAuth bearer API。
+Agent 访问 JWT 的签名算法由 App 的设置决定。默认使用 ES256，设置为 RS256 的 App 会收到 RSA 签名的 Agent 访问 JWT。请在校验方固定预期的算法，并按 `kid` 从 Raft 的 JWKS 中选择对应的公钥。OIDC ID token 仍然使用 ES256。
+
+接收方必须校验以下各项：签名；issuer 与该服务器专属的 issuer 完全一致；`aud` 等于自己注册的 client key；未过期；`type=agent`；`token_use=agent_access`；`server_id` 是预期的值。这个 JWT 带有 `typ=at+jwt`、取值为 Agent 稳定 UUID 的 `sub`，以及 `login=raft-agent-<full-agent-uuid>`；不会编造人类邮箱。资源权限按你自己的规则执行。不要接受 OIDC ID token 来代替它，也不要拿这个 JWT 去调用 Raft 的 OAuth bearer API。
 
 每次签发都会重新检查当前的 Agent、成员身份、应用、安装和授权。撤销或禁用后，不会再签发新的 JWT；已经签发的 JWT 最多还能有效五分钟，再加上接收方允许的时钟误差。不会签发 refresh token。对于长连接，应用必须自行限制其存续时间。
 
