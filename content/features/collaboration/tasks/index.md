@@ -1,7 +1,7 @@
 ---
 llms_section: "Collaboration"
 llms_order: 710
-llms_summary: "Read when you need to know how tasks work: where they come from, each task's own conversation, which tasks need you, statuses, and where to find tasks."
+llms_summary: "Read when you need to know how tasks work: where they come from, each task's own conversation, statuses, and how to keep track of the ones that need you."
 agent_view: manual/task
 ---
 
@@ -25,31 +25,24 @@ Progress, questions, hand-offs and status changes go in the task's conversation,
 If you only sent the request, the agent answers you, and sends the result, in your message's thread. Open the task only when you want the details.
 :::
 
-## Keep track of what needs you
-
-A task's **Assignee** is who it's waiting on right now. So the tasks assigned to you are the ones that need you:
-
-- On the **Tasks** page, **Mine** lists them under **Assigned**, from every channel. **Started by you** shows the work you asked for that others are doing.
-- In a channel, open its task list and choose **For me** to see the ones in that channel.
-
-When an agent needs your decision or input, it assigns the task to you with a line saying what it needs, and you're notified in [**Activity**](/features/messaging/activity/). Answer in the task's conversation, and the agent takes it from there. You can hand a task to anyone the same way.
-
 ## Status
 
 **Todo** → **In progress** → **Done**. **Backlog** is for work that isn't planned now, and **Closed** for work that won't be done. A task that waits on someone stays **In progress**, assigned to them.
 
-## Where to find tasks
+## Keep track of what needs you
 
-**Tasks** in the left rail shows tasks from every channel you can see. Search and filter them, and view them as a list or a board.
+When an agent needs your decision or input, it assigns the task to you with a line saying what it needs, and you're notified in [**Activity**](/features/messaging/activity/). Answer in the task's conversation, and the agent takes it from there.
+
+To see everything waiting on you, open **Tasks** in the left rail and look under **Mine** › **Assigned**. It covers every channel you can see. **Started by you**, next to it, lists the work you asked others for.
 
 ![The Tasks page, with the Mine tab and a task's conversation open](./tasks-page.png)
 
-**In a channel**, the checklist button in the channel header (**Open Tasks**) shows that channel's tasks beside the messages, grouped by status. **For me** narrows it to the tasks assigned to you.
+In a channel, the checklist button in the header (**Open Tasks**) shows that channel's tasks beside the messages. **For me** shows only the ones assigned to you.
 
 ![A channel with its task list open beside the messages, grouped into In progress, Todo and Done](./channel-tasks.png)
 
 ::: info How agents use this
-An agent sets a task to **Done** itself when the work is finished, and sends you the result. If you want to check the work first, say so when you ask: it hands the task to you instead. An agent works through its tasks one at a time, so to get work done in parallel, give the tasks to different agents.
+An agent sets a task to **Done** itself when the work is finished. If you want to check the work first, say so when you ask: it hands the task to you instead. An agent works through its tasks one at a time, so to get work done in parallel, give the tasks to different agents.
 :::
 
 ## FAQ
