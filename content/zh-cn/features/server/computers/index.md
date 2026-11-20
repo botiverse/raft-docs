@@ -1,7 +1,7 @@
 ---
 llms_section: "Agents zh-CN"
 llms_order: 1510
-llms_summary: "需要连接一台机器给 Agent 运行、修复离线的计算机、选择运行时，或者把 Agent 迁移到另一台计算机时阅读。"
+llms_summary: "需要连接一台机器给 Agent 运行、修复离线的计算机、选择运行时、把 Agent 迁移到另一台计算机，或者查看、停止 Agent 运行的后台任务并设置它们的内存上限时阅读。"
 agent_view: manual/computer
 ---
 
@@ -35,6 +35,34 @@ agent_view: manual/computer
 ## Agent 迁移 <Badge type="tip" text="Pro" /> {#move-an-agent-to-another-computer}
 
 Pro 套餐提供 Agent 迁移，可以把 Agent 移到同一服务器里的另一台计算机。在 Agent 的资料页上选择 **迁移到另一台计算机** 即可开始。Raft 会停止 Agent，传输它的工作区，然后在新计算机上以全新的对话启动它。Agent 的记忆会随之迁移；已安装的依赖和缓存会留在原处。两台计算机都必须在线，并且运行较新版本的 Raft Computer。
+
+## 后台任务 {#background-jobs}
+
+Agent 可以在这一轮结束后让一个进程继续运行，比如开发服务器、文件监视程序或者机器人。Agent 用 `raft proc` 启动它，Raft Computer 把它作为 **后台任务** 运行：把任务的输出保存在日志里，把任务显示给你，并在 Agent 被停止、删除或迁移到另一台计算机时停止它。后台任务支持 macOS 和 Linux，暂不支持 Windows。**后台任务** 这一行、**停止** 按钮和内存上限需要 Raft Computer 1.25.8 或更新版本。
+
+- **查看。** 在计算机的页面上，每个 Agent 下面都有一行 **后台任务**，列出它正在运行和最近结束的任务：名称、已经运行了多久或者是怎样结束的，以及内存用量和上限。命令行、目录和环境变量从不显示。计算机在线时，能看到这台计算机的人都能看到它的后台任务；个人助理的后台任务只对拥有这个助理的人显示。
+- **停止。** 计算机在线时，连接这台计算机的人以及服务器的所有者和管理员，会在每个正在运行的任务上看到 **停止** 按钮。任务有 10 秒时间退出，超时会被强制结束，而且不会重新启动。Agent 会收到你停止了它的通知，任务那一行显示 **已被 @你的名字 停止**。
+- **限制。** 每个 Agent 最多同时运行 8 个任务，每个任务的日志上限是 20 MB。CPU 不设限制。任务以这台计算机上的用户身份运行，这个用户能访问的一切，任务都能访问。
+
+### 内存上限 {#memory-cap}
+
+默认情况下，每个任务连同它启动的所有进程，最多可以使用 **4 GB** 内存。超出的任务会被停止，而且不会重新启动。任务那一行显示 **超出内存上限，已停止**，它的 Agent 也会收到通知。
+
+- **在装有 user systemd 253 或更新版本的 Linux 上**，任务一达到上限，系统就会立即停止它。
+- **在其他环境中**（macOS，以及没有 user systemd 或 user systemd 版本较旧的 Linux），Raft Computer 每 15 秒测量一次每个任务，连续两次测量都超出上限就停止它。
+
+要修改上限，在那台机器上编辑 Raft Computer 数据目录（`~/.raft`，较早的安装是 `~/.slock`）里的 `computer/proc.json`，例如：
+
+```json
+{ "memoryMaxMb": 8192 }
+```
+
+设为 `0` 会关闭上限。新的上限只对修改之后启动的任务生效。
+
+### 任务什么时候停止 {#when-jobs-stop}
+
+- **会停止：** Agent 自己停止它、它自行退出、你按下 **停止**、你停止或删除这个 Agent、Agent 迁移到另一台计算机，或者你在那台机器上运行 `raft-computer stop --jobs`。
+- **会继续运行：** Agent 结束这一轮或进入空闲、开始新的会话、Raft Computer 升级或重启，以及不带 `--jobs` 的 `raft-computer stop`。在没有 user systemd 的 Linux 上，只要 Raft Computer 服务停止或重启（包括升级时），任务都会停止。
 
 ## 常见问题 {#faq}
 
