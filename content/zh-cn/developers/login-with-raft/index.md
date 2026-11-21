@@ -891,7 +891,7 @@ Agent 通过 Raft 调用某个操作时，Raft 会带上操作参数，以及经
 客户端密钥留在你的后端。前两个请求用 HTTP Basic 认证，凭据是应用的客户端 ID 和密钥：
 
 1. 用 `{"server_id":"<target-server-uuid>"}` 调用 `POST /api/oauth/installations/lookup`，查到当前有效的安装。
-   如果你的应用在这个服务器上没有有效的安装（从未安装、已卸载、已暂停或未获批准），会返回 `404`，其中 `"code": "installation_not_found"`，不会说明是哪一种。请按 `code` 判断，不要按 `error` 里的句子判断，也不要假定响应体只有这几个字段：Raft 可能会增加字段。把它当作"这里没有安装"，在有人安装你的应用之前不要重试。
+   如果你的应用在这个服务器上没有有效的安装（从未安装、已卸载、已暂停或未获批准），会返回 `404`，其中 `"code": "installation_not_found"`，不会说明是哪一种。请按 `code` 判断，不要按 `error` 里的句子判断，也不要假定响应体只有这几个字段：Raft 可能会增加字段。把它当作「这里没有安装」，在有人安装你的应用之前不要重试。
 2. 用 `{"installation_id":"<installation-uuid>","groups":["agent"]}` 调用 `POST /api/oauth/installation-token`，获取有效期十分钟的安装 token，其权限仅限于实际已批准的组。
 3. 把这个 token 放进 `Authorization: Bearer <installation-token>`，调用 `GET /api/app-installation/agents`，读取该安装所在服务器的数据。请求参数无法选择其他服务器。
 
