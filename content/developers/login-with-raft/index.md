@@ -375,13 +375,13 @@ If your server serves your HTML (server-rendered apps, Go/Node gateways, Edge Wo
 2. **Prevent redirect loops with three guards:**
    - **Attempt guard cookie:** before issuing the `302`, set a short-lived first-party cookie (for example `raft_host_signin_guard=attempted; Path=/; HttpOnly; SameSite=Lax; Max-Age=600; Secure`). If that cookie is already present, render the normal page instead of redirecting.
    - **Explicit logout guard:** when the person clicks Sign out, set the same guard cookie (for example `raft_host_signin_guard=logged_out`) so they stay on your normal sign-in screen instead of bouncing back in. Clear it after a successful manual sign-in if you want future expired sessions to auto-sign in again.
-   - **OAuth callback and error bypass:** never auto-redirect on your login/callback routes (including Setup URL callbacks that carry `?code=...` without `state`) or when the URL query carries `error` (such as `?error=access_denied`) or an in-flight OAuth callback (`?code=...&state=...`).
+   - **OAuth callback and error bypass:** never auto-redirect on your login/callback routes (including Setup URL callbacks that carry `?code=...` without `state`) or when the URL query carries `error` (such as `?error=access_denied`) or an in-flight OAuth callback (`?code=...&state=...`). Because the `?error=` bypass applies to any path, an App page opened with `?error=...` in its query also skips auto sign-in.
 3. **Handle cancel on your callback.** If the person cancels Raft's first-time consent sheet, Raft redirects the tab to your registered return URL with `?error=access_denied` (and your `state`, if your authorize request sent one). Validate `state` as usual and show your normal sign-in screen rather than an error loop.
 4. **Keep caches separated.** Add `Vary: Raft-Host` on `GET` and `HEAD` document responses whenever a CDN or reverse proxy sits in front of your HTML (including responses to normal browsers without `Raft-Host`), and send `Cache-Control: no-store` on the `302` redirect.
 
 #### TypeScript / JavaScript (`@botiverse/raft-sdk/app`)
 
-`@botiverse/raft-sdk/app` wraps the header check, loop guards, `Vary: Raft-Host`, and `Cache-Control: no-store` into one helper that works in Web Standard runtimes (Cloudflare Workers, Next.js, Hono, Deno, Bun) and Node/Express:
+`@botiverse/raft-sdk/app` (`@botiverse/raft-sdk` `>= 0.40.0`) wraps the header check, loop guards, `Vary: Raft-Host`, and `Cache-Control: no-store` into one helper that works in Web Standard runtimes (Cloudflare Workers, Next.js, Hono, Deno, Bun) and Node/Express:
 
 ```ts
 import { createRaftHostAutoSignIn } from "@botiverse/raft-sdk/app";
@@ -400,7 +400,7 @@ app.use(autoSignIn.nodeMiddleware({ isAuthenticated: (req) => Boolean(req.sessio
 // Or Web Fetch (Cloudflare Workers `(request, env, ctx)` / Hono / Deno):
 export default { fetch: autoSignIn.handle(appFetch) };
 
-// On explicit sign-out: keep the user signed out
+// On explicit sign-out: keep the user signed out (pass `{ secure: false }` on local plain-HTTP localhost)
 res.appendHeader("Set-Cookie", autoSignIn.logoutCookie());
 
 // After a successful manual sign-in: clear the guard so future expired sessions auto-sign in again
@@ -413,7 +413,7 @@ if (autoSignIn.isCancelledCallback(req.url)) {
 }
 ```
 
-If your `isAuthenticated` check needs per-request bindings (such as Cloudflare Workers `env`), call `autoSignIn.evaluate(request, { isAuthenticated })` directly and merge `decision.varyHeader` onto continued responses.
+If your `isAuthenticated` check needs per-request bindings (such as Cloudflare Workers `env`), call `autoSignIn.evaluate(request, { isAuthenticated })` directly and merge `decision.varyHeader` onto continued responses (`evaluate()` requires either a configured `isAuthenticated` option or an explicit `{ isAuthenticated: boolean }` override, throwing `invalid_options` otherwise). `logoutCookie()` and `clearGuardCookie()` default to `Secure`; pass `{ secure: false }` during local plain-HTTP `localhost` development.
 
 #### Other languages (Go example)
 
