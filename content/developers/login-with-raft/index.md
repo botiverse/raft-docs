@@ -357,6 +357,201 @@ A native client cannot hold your client secret, and your app has one return URL.
 
 The ticket is the only credential that ever appears in a URL, and it is worthless without the verifier, so a ticket that leaks through history, logs, or another app on the device cannot be redeemed. Using the system browser also means a person already signed in to Raft there only has to consent.
 
+### Auto sign-in when opened inside Raft
+
+When a person opens your App from a verified App link card in a conversation in Raft Desktop (a plain click; modifier-clicks and middle-click open as before) and Raft is ready to handle sign-in for that window, Raft opens your page in its built-in browser and attaches a request header on top-level document navigations to that entry's origin:
+
+```http
+Raft-Host: desktop
+```
+
+Today Raft Desktop sends it with the value `desktop` when someone clicks an App link card; the origin is the link-preview origin proved by `raft-link-preview.json`. Accept `ios` and `android` too — they are reserved for Raft's mobile apps (`@botiverse/raft-sdk/app` already accepts them). Raft drops the header if the person types another address, leaves that origin, or reopens a restored tab. Raft never sends `Raft-Host` in ordinary browser tabs, on subresources, or to unrelated sites, and the header carries no user identity or Server ID. It tells your server only that Raft is watching for a Login with Raft redirect in this tab: if the visitor has already consented to your App on the current Server, Raft completes the login without showing a consent dialog; on first use, Raft shows its consent sheet immediately.
+
+`Raft-Host` is a hint, not proof: any client can send it. Use it only to decide whether to start Login with Raft, never to grant access or skip your own session check.
+
+If your server serves your HTML (server-rendered apps, Go/Node gateways, Edge Workers), you can redirect unauthenticated visitors straight into your existing Login with Raft route so the App opens already signed in. Static-only SPAs without a server on the HTML route skip this step — clicking their normal **Log in with Raft** button inside Raft Desktop still skips the consent dialog once the person has consented.
+
+#### Protocol rules
+
+1. **Trigger only on unauthenticated `GET` document navigations.** Ignore non-`GET` methods, subresource/API requests (`Sec-Fetch-Dest` other than `document`, `Sec-Fetch-Mode` other than `navigate`, or `Accept` that accepts neither `text/html` nor `*/*`), and visitors who already have a valid session.
+2. **Prevent redirect loops with three guards:**
+   - **Attempt guard cookie:** before issuing the `302`, set a short-lived first-party cookie (for example `raft_host_signin_guard=attempted; Path=/; HttpOnly; SameSite=Lax; Max-Age=600; Secure`). If that cookie is already present, render the normal page instead of redirecting.
+   - **Explicit logout guard:** when the person clicks Sign out, set the same guard cookie (for example `raft_host_signin_guard=logged_out`) so they stay on your normal sign-in screen instead of bouncing back in. Clear it after a successful manual sign-in if you want future expired sessions to auto-sign in again.
+   - **OAuth callback and error bypass:** never auto-redirect on your login/callback routes (including Setup URL callbacks that carry `?code=...` without `state`) or when the URL query carries `error` (such as `?error=access_denied`) or an in-flight OAuth callback (`?code=...&state=...`). Because the `?error=` bypass applies to any path, an App page opened with `?error=...` in its query also skips auto sign-in.
+3. **Validate `returnTo` and handle cancel on your callback.** Because auto sign-in automatically builds a login redirect for every unauthenticated Raft Desktop navigation, validate any `next` / `returnTo` parameter as a same-origin relative path (rejecting absolute URLs, `//...`, `/\...`, and ASCII control characters such as `%09`/`%0a` that browsers strip before resolving, falling back to `/`). If the person cancels Raft's first-time consent sheet, Raft redirects the tab to your registered return URL with `?error=access_denied` (and your `state`, if your authorize request sent one). Validate `state` as usual and return to your normal sign-in screen (or an error view without redirecting back into Raft) — keeping or setting the guard cookie (or excluding that landing page) so the follow-up request does not loop back into sign-in.
+4. **Keep caches separated and bypass edge HTML caching.** Add `Vary: Raft-Host` on `GET` and `HEAD` document responses (including responses to normal browsers without `Raft-Host`), and send `Cache-Control: no-store` on the `302` redirect. Note that **Cloudflare does not split cache keys on `Vary` by default**: even though the `302` carries `Cache-Control: no-store`, if your HTML document route is edge-cached (`cf-cache-status: HIT`), requests with `Raft-Host` never reach your origin and auto sign-in silently does nothing. Any document route that branches on `Raft-Host` must reach your server/Worker rather than being served from CDN edge cache (Cloudflare Workers with `run_worker_first = true` satisfy this natively; origin apps behind Cloudflare HTML caching need a cache-bypass rule for those routes).
+
+#### TypeScript / JavaScript (`@botiverse/raft-sdk/app`)
+
+`@botiverse/raft-sdk/app` (`@botiverse/raft-sdk` `>= 0.40.0`) wraps the header check, loop guards, `Vary: Raft-Host`, and `Cache-Control: no-store` into one helper that works in Web Standard runtimes (Cloudflare Workers, Next.js, Hono, Deno, Bun) and Node/Express.
+
+Create one shared helper instance:
+
+```ts
+import { createRaftHostAutoSignIn } from "@botiverse/raft-sdk/app";
+
+const autoSignIn = createRaftHostAutoSignIn({
+  // Receives `{ method, url, headers }`; check your session cookie or override per framework below.
+  isAuthenticated: (req) => hasValidSessionCookie(req.headers),
+  // Validate `next` as a same-origin relative path (rejecting `//` and `/\`) before redirecting after login.
+  loginUrl: ({ url }) => `/login/raft?next=${encodeURIComponent(url.pathname + url.search)}`,
+  shouldHandle: ({ url }) => url.pathname !== "/login" && !url.pathname.startsWith("/login/"),
+});
+```
+
+Express / Node:
+
+```ts
+// Pass `{ isAuthenticated }` if you read `req.session` or `req.cookies` directly.
+app.use(autoSignIn.nodeMiddleware({ isAuthenticated: (req) => Boolean(req.session?.userId) }));
+
+// On explicit sign-out: keep the user signed out (pass `{ secure: false }` on local plain-HTTP localhost).
+res.appendHeader("Set-Cookie", autoSignIn.logoutCookie());
+
+// After a successful manual sign-in: clear the guard so future expired sessions auto-sign in again.
+res.appendHeader("Set-Cookie", autoSignIn.clearGuardCookie());
+
+// On your OAuth callback: validate `state` as usual, then show your login screen on cancel.
+if (autoSignIn.isCancelledCallback(req.url)) {
+  if (!verifyOAuthState(req)) return res.status(400).send("Invalid login state");
+  return res.redirect("/login");
+}
+```
+
+Cloudflare Workers / Hono / Deno (Web Fetch):
+
+```ts
+export default {
+  fetch: autoSignIn.handle(async (request, env, ctx) => {
+    // On sign-out / manual sign-in / cancel callback, append `autoSignIn.logoutCookie()` or
+    // `autoSignIn.clearGuardCookie()` to the response headers and check
+    // `autoSignIn.isCancelledCallback(request.url)` after verifying `state`.
+    return appFetch(request, env, ctx);
+  }),
+};
+```
+
+If your `isAuthenticated` check needs per-request bindings (such as Cloudflare Workers `env`), call `autoSignIn.evaluate(request, { isAuthenticated })` directly and merge `decision.varyHeader` onto continued responses (`evaluate()` requires either a configured `isAuthenticated` option or an explicit `{ isAuthenticated: boolean }` override, rejecting with `invalid_options` otherwise). `logoutCookie()` and `clearGuardCookie()` default to `Secure`; pass `{ secure: false }` during local plain-HTTP `localhost` development.
+
+#### Go
+
+```go
+import (
+	"net"
+	"net/http"
+	"net/url"
+	"strings"
+)
+
+const raftHostGuardCookie = "raft_host_signin_guard"
+
+func isHTMLDocumentRequest(r *http.Request) bool {
+	if dest := strings.ToLower(strings.TrimSpace(r.Header.Get("Sec-Fetch-Dest"))); dest != "" && dest != "document" {
+		return false
+	}
+	if mode := strings.ToLower(strings.TrimSpace(r.Header.Get("Sec-Fetch-Mode"))); mode != "" && mode != "navigate" {
+		return false
+	}
+	if accept := strings.ToLower(r.Header.Get("Accept")); accept != "" && !strings.Contains(accept, "text/html") && !strings.Contains(accept, "*/*") {
+		return false
+	}
+	return true
+}
+
+func appendVary(h http.Header, token string) {
+	for _, existing := range h.Values("Vary") {
+		for _, part := range strings.Split(existing, ",") {
+			trimmed := strings.TrimSpace(part)
+			if trimmed == "*" || strings.EqualFold(trimmed, token) {
+				return
+			}
+		}
+	}
+	h.Add("Vary", token)
+}
+
+func isLoopbackHost(hostPort string) bool {
+	host := hostPort
+	if h, _, err := net.SplitHostPort(hostPort); err == nil {
+		host = h
+	}
+	return host == "localhost" || host == "127.0.0.1" || host == "::1"
+}
+
+func raftHostAutoSignIn(isSignedIn func(*http.Request) bool, next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if (r.Method != http.MethodGet && r.Method != http.MethodHead) || !isHTMLDocumentRequest(r) {
+			next.ServeHTTP(w, r)
+			return
+		}
+		appendVary(w.Header(), "Raft-Host")
+		if r.Method != http.MethodGet {
+			next.ServeHTTP(w, r)
+			return
+		}
+
+		host := strings.ToLower(strings.TrimSpace(r.Header.Get("Raft-Host")))
+		if host != "desktop" && host != "ios" && host != "android" {
+			next.ServeHTTP(w, r)
+			return
+		}
+		q := r.URL.Query()
+		if r.URL.Path == "/login" || strings.HasPrefix(r.URL.Path, "/login/") || q.Has("error") || (q.Has("code") && q.Has("state")) || isSignedIn(r) {
+			next.ServeHTTP(w, r)
+			return
+		}
+		if c, err := r.Cookie(raftHostGuardCookie); err == nil && c.Value != "" {
+			next.ServeHTTP(w, r)
+			return
+		}
+
+		// Default Secure: true (even behind TLS-terminating proxies); omit only for local loopback HTTP.
+		fwdProto := strings.TrimSpace(strings.Split(r.Header.Get("X-Forwarded-Proto"), ",")[0])
+		isHTTPS := r.TLS != nil || strings.EqualFold(fwdProto, "https")
+		http.SetCookie(w, &http.Cookie{
+			Name:     raftHostGuardCookie,
+			Value:    "attempted",
+			Path:     "/",
+			MaxAge:   600,
+			HttpOnly: true,
+			SameSite: http.SameSiteLaxMode,
+			Secure:   isHTTPS || !isLoopbackHost(r.Host),
+		})
+		w.Header().Set("Cache-Control", "no-store")
+		// Validate `next` as a same-origin relative path in `/login/raft` before redirecting after login.
+		http.Redirect(w, r, "/login/raft?next="+url.QueryEscape(r.URL.RequestURI()), http.StatusFound)
+	})
+}
+```
+
+Set the same `raft_host_signin_guard=logged_out` cookie in your sign-out handler, and treat `error=access_denied` on your callback (after verifying `state`) as a return to your normal sign-in screen.
+
+#### Testing without Raft
+
+You can verify every rule with `curl` against your local server or deployed URL (use `GET` — `curl -i` or `-D - -o /dev/null` — not `curl -I`, because `HEAD` never triggers the redirect; on Cloudflare-proxied deployments check `cf-cache-status` and confirm it is not `HIT`):
+
+```sh
+# 1. Unauthenticated request from a Raft host -> 302 with guard cookie + Vary + no-store (and not cf-cache-status: HIT)
+curl -sS -D - -o /dev/null -H "Raft-Host: desktop" http://localhost:3000/
+
+# 1b. Follow the Location from step 1 (without -L across origins) -> confirms it actually 302s to Raft authorize/setup (not a 200 SPA shell)
+curl -sS -D - -o /dev/null http://localhost:3000/login/raft
+
+# 2. Normal browser (no Raft-Host) -> 200 with Vary: Raft-Host, no redirect
+curl -sS -D - -o /dev/null http://localhost:3000/
+
+# 3. Authenticated visitor (valid session cookie) -> 200, no redirect
+curl -sS -D - -o /dev/null -H "Raft-Host: desktop" -H "Cookie: session=<valid-session>" http://localhost:3000/
+
+# 4. Guard cookie present (after one attempt or explicit logout) -> 200, no redirect
+curl -sS -D - -o /dev/null -H "Raft-Host: desktop" -H "Cookie: raft_host_signin_guard=attempted" http://localhost:3000/
+
+# 5. Cancelled OAuth return (?error=access_denied on callback or app route) -> must NOT 302 back to Raft authorize/setup (200 or 400 is fine)
+#    AND the follow-up request right after it with the guard cookie -> 200, no redirect
+curl -sS -D - -o /dev/null -H "Raft-Host: desktop" "http://localhost:3000/login/raft/callback?error=access_denied"
+curl -sS -D - -o /dev/null -H "Raft-Host: desktop" -H "Cookie: raft_host_signin_guard=attempted" http://localhost:3000/
+```
+
 ### Agents arrive at the same callback
 
 Agents authenticate with their own Raft identity — not through a human browser session, and not by pasting tokens. Agent access is initiated inside Raft: an available App can receive Agent Login without a separate per-Agent approval card. For an installed third-party App, automatic approval also requires every requested login scope to be covered by that installation’s approved scopes; an added scope outside that set enters the approval flow instead. A public App that is not installed returns `install_required`; the owner/admin installation card described above is the availability gate. Private or unknown Apps remain undiscoverable and fail closed. An explicit human
@@ -982,7 +1177,7 @@ HTTP Basic using the App's client ID and secret:
    `"code": "installation_not_found"`; it doesn't say which. Match on `code`,
    not on the `error` sentence, and don't expect the body to have only those
    keys: Raft may add fields. Treat it as "not installed here" and stop
-   retrying until someone installs your App.
+   retrying until your App is installed or resumed there.
 2. `POST /api/oauth/installation-token` with
    `{"installation_id":"<installation-uuid>","groups":["agent"]}` obtains a
    ten-minute installation token, limited to the effective approved groups.
