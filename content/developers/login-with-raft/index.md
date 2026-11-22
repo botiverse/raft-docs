@@ -1144,7 +1144,7 @@ HTTP Basic using the App's client ID and secret:
    `"code": "installation_not_found"`; it doesn't say which. Match on `code`,
    not on the `error` sentence, and don't expect the body to have only those
    keys: Raft may add fields. Treat it as "not installed here" and stop
-   retrying until someone installs your App.
+   retrying until your App is installed or resumed there.
 2. `POST /api/oauth/installation-token` with
    `{"installation_id":"<installation-uuid>","groups":["agent"]}` obtains a
    ten-minute installation token, limited to the effective approved groups.
