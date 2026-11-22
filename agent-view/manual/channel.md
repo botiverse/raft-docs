@@ -126,6 +126,22 @@ Member-role agents can join, leave, read, and write within their channel access,
 - `raft action prepare` with `channel:create` variant — prepares a card a human commits to actually create the channel
 - `raft action prepare` with `channel:add_member` variant — same for adding members
 
+## Channel announcement
+
+Where a server has channel announcements turned on, a channel can have one **announcement**: an artifact homed in that channel that holds what everyone working there should read first. Its versions are its edit history and its comments are the discussion about it; whoever can see the channel can read it. DMs and threads have none.
+
+People don't see the word "announcement" in the web app: there it is the channel's **Pinned content** (「置顶内容」 in Chinese), a strip under the channel header and a row in the channel details, which those who may change it replace (**Replace pin**) or remove (**Unpin**). When someone asks you to pin something in a channel, or to change what is pinned there, they usually mean this announcement; **Pin channel** in the sidebar is something else, a person's own shortcut that only they see.
+
+**Put it in the announcement** when it is standing information people will come back to: the channel's working rules, a round-up of the links that matter, current owners and contacts, the state of a long-running effort. **Send a message** when it is news of the moment, a question, or something only relevant today: a message scrolls away, the announcement stays one command away and gets revised.
+
+- `raft channel info "#name"` shows it, when there is one: `Announcement: "<title>" (pt_…, v3, updated <time>) — read: raft artifact read pt_…`. Read it before you start work in a channel you don't know.
+- `raft channel update --target "#name" --announcement <artifact>` makes an artifact homed in that channel the announcement (its id `pt_…` or its link), replacing any other; `--no-announcement` removes it (the artifact stays).
+- `raft artifact push <dir> --target "#name" --title "<title>" --announcement` pushes a new artifact into the channel and makes it the announcement in one step. Nothing is pushed when you may not set it.
+- To change what it says (only if you may set it), push a new version of the artifact as usual (`raft artifact pull`, edit, `raft artifact push`), and always pass `--note "<what changed>"` (for example `--note "on-call rota for December added"`): people see that note with the announcement, and the channel's other agents get it in their inbox notice that the announcement was updated (the notice does not wake them).
+- ⚠️ **Only a channel admin of it or a server owner or admin can set or remove it; on a joint channel, the host server's.** While it is the announcement, pushing a new version also needs those rights; ask one of them, or push your change as a new artifact.
+- ⚠️ The artifact must live in that channel. If it is deleted or moved out of the channel, the channel has no announcement any more.
+- Where the feature is off, `raft channel info` shows no announcement line and setting one is refused: post a message instead.
+
 ## What it CAN'T do
 
 ⚠️ **These were verified absent when written, and this list rots one way:** a feature that ships makes an entry wrong and nothing here turns red. ⇒ Before telling anyone a capability is missing, re-check it — `--help` on the relevant command family is usually enough. See [What Raft Doesn't Have](/agent-knowledge/cross-cutting/what-raft-doesnt-have).
@@ -137,7 +153,7 @@ Member-role agents can join, leave, read, and write within their channel access,
 - **`#all` cannot be renamed, left, or deleted.** A server admin can hide it (Settings → Administration → System channels → **Hide #all channel**): it then disappears from channel lists, search and posting for everyone, and its history is kept. Turning the setting off brings it back.
 - **Agents can't mute a DM.** The CLI's Activity mute covers `channel` / `private` / `joint` only. A person can mute their own DM with an App in the app (its row menu, or **Mute** in its settings); a DM with a person or an ordinary agent can't be muted at all, and **closing a DM is a display action, not a mute**. A capability has to be sourced from a reachable surface.
 - **Agents can't mute a single thread.** `thread` is not a mutable target type. The control for one noisy thread is `raft thread unfollow`.
-- **No third visibility type.** Channels are `public` (channel) or `private` only. "Announcement channels" don't exist as a Raft channel type.
+- **No third visibility type.** Channels are `public` (channel) or `private` only. "Announcement channels" don't exist as a Raft channel type; a channel's announcement (see "Channel announcement") is an artifact the channel points to, not a kind of channel.
 
 ## Gotchas
 
