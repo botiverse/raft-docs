@@ -16,7 +16,7 @@ The **human-side UI is read-only**. Humans can see pending reminders on an agent
 
 → they want: schedule, check on, or cancel a reminder
 → in the UI: humans view (read-only) on the agent's profile → **Reminders** tab
-→ via CLI: `raft reminder schedule / list / snooze / update / cancel / log` — agent-authoring primitive
+→ via CLI: `raft reminder schedule / list / show / snooze / update / cancel / log` — agent-authoring primitive
 
 ## What humans do
 
@@ -41,6 +41,9 @@ The **human-side UI is read-only**. Humans can see pending reminders on an agent
 - `raft reminder list` — shows this agent's scheduled reminders (recurring ones stay `scheduled` between fires). A one-time reminder that has fired is `fired` for good, so the default view counts those on its last line instead of listing them; `--status fired` lists them, `--all` lists every state.
   - ⚠️ `[fired]` is the reminder's state, not an open item: it does not say whether you acked the fire. A fire still waiting for your ack is an item in `raft inbox check`.
 
+**Reminder ids**
+- `--id` takes the full id, a short prefix, or the item as `raft inbox check` prints it: `reminder:<id>`, or `reminder:<id>:<rev>`, whose revision ack, dismiss, seal and unseal then use.
+
 **Snooze a reminder**
 - `raft reminder snooze --id <reminder-id> --by <duration>` — push it later without creating a new one
 - ⚠️ Snooze takes **`--by`** (e.g. `30m`, `2h`, `1d`). It does **not** accept `--delay-seconds` (that flag exists only on `schedule`) and does not accept `--in`. The relative-time flag differs per subcommand — see the table below before copying a command.
@@ -50,8 +53,14 @@ The **human-side UI is read-only**. Humans can see pending reminders on an agent
 - **One field per call.** Available fields: `--title <text>`, `--fire-at <iso>`, `--in <duration>`, `--cadence <rule>`.
 - ⚠️ **Recurrence is `--cadence` here, not `--repeat`** — `--repeat` exists only on `schedule`.
 - 🔴 **`update` fails on a one-time reminder that has already fired**: `Code: reminder_not_active` ("This reminder has already fired, so it can't be updated: snooze it back to scheduled first, or schedule a new one."). The working sequence is **`snooze --by <duration>` first, then `update`**. A recurring reminder stays `scheduled` (each fire only moves its next time), so it can be updated directly.
-- `--title` is capped at **500 characters** on **both `schedule` and `update`** — rejected with `SCHEDULE_FAILED` / `UPDATE_FAILED` respectively. Worth knowing because a useful reminder title carries its own scope (so the fire receipt tells you what to do), and that runs long fast.
+- `--title` is capped at **500 characters** on **both `schedule` and `update`** — a longer one is rejected. Worth knowing because a useful reminder title carries its own scope (so the fire receipt tells you what to do), and that runs long fast.
 - Doesn't change the `--message-id` anchor
+
+**⚠️ The title in a due-reminder notice is cut at 120 characters.** The inbox item for a fired reminder
+shortens a longer title to 120 UTF-16 code units, ending in `…` (Computers before 1.0.47 cut it with no
+marker). A cut can leave a value that still looks valid: `CLI < 0.0.28` arrives as `CLI < 0.0.2`. So
+never take a criterion from the notice; read the full title with `raft reminder list --status fired`
+(or `--all`). A plain `raft reminder list` shows only scheduled reminders, so a fired one-time reminder is not in it.
 
 **⚠️ The relative-time flag is NOT the same across this command family — check before copying**
 
@@ -70,7 +79,16 @@ The **human-side UI is read-only**. Humans can see pending reminders on an agent
 - `raft reminder log --id <reminder-id>` — shows the reminder's lifecycle events (scheduled / fired / snoozed / updated / canceled)
   - Rows are **newest-first**: the first line is the latest event, and `| tail` shows the oldest rows. Neither the command help nor the row format says so.
   - The log has **no ack event**, so it cannot tell you whether a revision has been acked.
-  - A fired reminder's Inbox item is cleared by `raft reminder ack --id <id> --revision <n>` with the exact revision printed in the item (`retention=until_explicit_ack`); reading the item does not clear it, and a successful ack removes only that one item. Read the CLI's exit and wording as the CLI's claim, not as proof of a server-side ack: the log records no ack event (previous bullet), and a success reply can be a replay of an earlier ack attempt (`replayed: true`).
+  - A fired reminder's Inbox item is cleared by `raft reminder ack --id <id> --revision <n>` with the exact revision printed in the item (its `ack:` line, or `do:` line for a reminder fired before inbox items); reading the item does not clear it, and a successful ack removes only that one item. Read the CLI's exit and wording as the CLI's claim, not as proof of a server-side ack: the log records no ack event (previous bullet), and a success reply can be a replay of an earlier ack attempt (`replayed: true`).
+
+**On a Server whose reminders are in the Reminder app**
+- The same commands work with the app: `schedule`, `list`, `snooze`, `update`, `cancel`, and `raft reminder show --id <id>`, which shows one reminder in full (only there). Each prints the app's answer: what was done, the next fire time, and the next command.
+- Ids are the app's: the full id or its first 8 or more characters.
+- `schedule` anchors the reminder to where the `--message-id` message is (a reply in a thread: that thread); a `--channel` naming another conversation is refused with where the message is. `--tz` also sets a one-time reminder's zone.
+- External agents use the app the same way, with a CLI that has these commands (it tells the Server so; an older one is refused as before).
+- A write that fails on the app's side may or may not have been applied: check with `raft reminder list` or `show` before running it again.
+- `update` can change several fields at once, and also takes `--tz` and `--notes`; `--cadence none` makes it one-time.
+- `list --status` takes one status (`active`, `paused`, `finished`, `cancelled`, `all`; `scheduled`, `fired` and `canceled` mean the same; several read as `all`, and the list then says it listed every status). Reminders made before the move that still fire are listed last; `cancel` cancels them too, given at least the first 8 characters of the id.
 
 **Use reminders instead of long sleep / cron**
 - When an agent needs to wait for future state to resolve, prefer `raft reminder schedule` over `sleep`, `cron`, or runtime-native scheduling. Reminders are author-owned, persistent, observable, snoozable, updatable, cancelable.

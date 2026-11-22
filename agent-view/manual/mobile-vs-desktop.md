@@ -15,10 +15,10 @@ There are also native mobile apps: Android on Google Play (or as an APK download
 ## Desktop layout (default — wide screens)
 
 - **Left Rail** vertical bar on far left → server switcher, tabs (Chat, Activity, Tasks, Members, **Computers**, Apps), help + settings
-- **Sidebar** left column → Channels / DMs / Agents / Activity / Search / Saved. **Computers** is not in the sidebar: its rail tab opens a full page
+- **Sidebar** left column (the Chat tab) → **Saved**, then Pinned / Channels / Direct messages and any sections you made. Agents are not in the sidebar: agents and people are on the **Members** page (its rail tab), and **Computers** is a full page from its rail tab too
 - **Main Panel** center (active conversation)
 - **Detail Panel** opens to the right (when an agent / human / thread clicked)
-- **+ actions** are buttons next to section headers in Sidebar (e.g. **+** next to Channels for "Create / Join channel")
+- **+ actions** are buttons next to section headers in Sidebar (e.g. **+** next to Channels, tooltip "Create channel")
 
 ## Mobile layout (narrow screens)
 
@@ -41,8 +41,8 @@ There are also native mobile apps: Android on Google Play (or as an APK download
 **Access settings on desktop**: Left Rail → settings icon (gear)
 **Access settings on mobile**: Bottom Nav → the server slot (last) → **Settings**
 
-**Add a computer on desktop**: Left Rail → **Computers** → **Add Computer** → dialog
-**Add a computer on mobile**: Bottom Nav → the server slot (last) → **Computers** → **Add Computer** → dialog
+**Add a computer on desktop**: Left Rail → **Computers** → **Add computer** → dialog
+**Add a computer on mobile**: Bottom Nav → the server slot (last) → **Computers** → **Add computer** → dialog
 
 ## What it CAN'T do
 

@@ -52,7 +52,7 @@ DMs are server-scoped (you can only DM people in a server you both belong to). T
 
 - **No adding participants to an existing DM.** A DM has two fixed parties; the server refuses an add. If a user reports "I want to add someone to this DM," the practical answer is: start a new DM with all the people you want.
 - **No UI to leave a DM.** Same situation — server allows self-removal but no Leave button is shown in the DM header. Users can stop participating but can't formally exit.
-- **No "delete a DM" action.** DMs persist; you can close them from the sidebar (hide from sidebar) but the conversation itself remains.
+- **No "delete a DM" action.** DMs persist; you can close them from the sidebar (right-click → **Close chat** hides it from your sidebar) but the conversation itself remains.
 - **No DM visibility control.** DMs are always private; you can't make a DM "public to the server."
 - **No DMs across servers.** A DM is scoped to a server. You can't DM someone in a server you don't share.
 - **No "channels of DMs."** DMs don't have categories or grouping — they're flat.
@@ -60,8 +60,8 @@ DMs are server-scoped (you can only DM people in a server you both belong to). T
 ## Gotchas
 
 - **"My agent's DM with a user just started a new conversation instead of replying to the existing one"**: the agent likely used `--target dm:@handle` correctly — but if there are multiple DMs with that handle (e.g. a 1:1 and a separate group DM), the target resolution may be ambiguous. `raft message read --target dm:@handle` reads through the same target, so it cannot tell the two conversations apart; ask the user which conversation they expected, or have them check recent history in the web app. (`raft server info` lists channels only, never DMs.)
-- **"I want to leave this group DM but there's no Leave button"**: the UI doesn't expose it. The closest path today is to stop participating and hide the DM from your sidebar via the right-click → Close DM option (the hide is per-user and follows you across devices). Conversation persists for other participants.
-- **"My agent posted in a DM but the user says they didn't get a notification"**: check the user's notification preferences and server-mute setting. If they've muted the server, DM push notifications are blocked.
+- **"I want to leave this group DM but there's no Leave button"**: the UI doesn't expose it. The closest path today is to stop participating and hide the DM from your sidebar via right-click → **Close chat** (the hide is per-user and follows you across devices). Conversation persists for other participants.
+- **"My agent posted in a DM but the user says they didn't get a notification"**: check their notification settings (Settings → Notifications, and the server's level under **On {server}** → **Notifications**): a server set to **Nothing** blocks DM notifications too, and **Pause notifications** or **Quiet hours** hold every alert.
 - **"DM with a deleted user is broken"**: when a user/agent is deleted or removed from the server, their historical DM messages stay, but new sends to them will fail.
 
 ## Composition

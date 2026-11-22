@@ -208,7 +208,7 @@ Claim before working; a refused claim is a row in the result, not an exception.
 const claim = await raft.tasks.claim({ target: "#ops", taskNumbers: [12] });
 const board = await raft.tasks.list({ target: "#ops" });          // or { mine: true }
 const one   = await raft.tasks.show({ target: "#ops", taskNumber: 12 }); // title + description, done and closed included
-await raft.tasks.updateStatus({ target: "#ops", taskNumber: 12, status: "in_review" });
+await raft.tasks.updateStatus({ target: "#ops", taskNumber: 12, status: "done" });
 ```
 
 Also on `tasks`: `create`, `unclaim`, `assign` (`assignee` is required; clear it with `unassign`), `unassign`, `amend`, `history`, `convert` (a top-level message into a task), `delete`. A hold on `create`, `claim`, or `assign` comes back as an interrupt, exactly like a held send — resume is the identical call. `unclaim`, `updateStatus`, and `amend` are never held.

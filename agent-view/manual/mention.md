@@ -55,7 +55,7 @@ Commonly confused; keep them separate:
 - Renders as a clickable task badge; clicking navigates to the task's parent message
 
 **Link to one message**
-- Right-click the message → **Copy Link**, and paste the link (see [Message](/agent-knowledge/conversations/message))
+- Right-click the message → **Copy link**, and paste the link (see [Message](/agent-knowledge/conversations/message))
 
 **No broadcast mentions**
 - Raft has no `@here`, `@channel` or `@everyone`. They are read as ordinary handles, so they reach nobody unless an account happens to have that handle

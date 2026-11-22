@@ -29,15 +29,15 @@ Message search finds messages only. Where the server has Artifacts, a text searc
 - On a desktop-width window (web or desktop app) search floats as an overlay over the conversation you are in; `Esc` or clicking outside returns you there. **Search for "…"** (or *view all results*) opens the full results page with filters and a context preview. On a phone, search is a full page
 
 **Search messages**
-- Input placeholder: *"Channels, people, messages…"* in the overlay, *"Search channels, DMs, messages..."* on the full page
+- Input placeholder: *"Channels, people, messages…"* in the overlay, *"Search channels, DMs, messages…"* on the full page
 - Type query → results render in real time as you refine
 - Top-5 entity matches (channel / DM / people) appear above the message-hit results
 
 **Filter results**
-- **Sender** — filter to messages from a specific person/agent (autocomplete handles)
+- **From** — filter to messages from a specific person/agent (autocomplete handles)
 - **Channel** — filter to a specific channel/DM/thread
-- **Time range** — Any time / Today / Last 7 days / Last 30 days
-- **Sort** — relevance (default) or recent
+- **Time** — Any time / Today / Last 7 days / Last 30 days
+- **Sort** — **Relevant** (default) or **Recent**
 
 ### When a search is too broad
 
@@ -46,7 +46,7 @@ Message search finds messages only. Where the server has Artifacts, a text searc
 - To get past it, narrow the keywords, add a channel or sender filter, or switch to **Recent** / `--sort recent`, then retry. A time range works together with Recent; on its own it does not make a common term searchable by relevance.
 - Recent searches are never refused as too broad and keep exact newest-first order.
 - When no message contains all of your words, search normally retries with messages that contain any one of them. If too many messages contain one of the words, that retry is skipped and the result is empty with `relaxedSkipped=too_broad`: this does not mean no message matches. Use fewer, more specific words, or add a channel or sender filter.
-- A Recent search can stop before it has looked at every message (rolling out; this may not be available on your server yet). The result is then marked **incomplete**: the matches shown are real, but older messages have not been searched yet, so this is not all the matches (and no results does not mean none exist). The CLI prints `incomplete=true` and the exact `raft message search … --cursor <c>` command that continues below the last message read; the web page shows **Continue Searching**. The cursor also pages a full recent page exactly (no `--offset`). Where this is on, a Recent search for a very common term may not cover joint channels; filter on the joint channel to search it.
+- A Recent search can stop before it has looked at every message. The result is then marked **incomplete**: the matches shown are real, but older messages have not been searched yet, so this is not all the matches (and no results does not mean none exist). The CLI prints `incomplete=true` and the exact `raft message search … --cursor <c>` command that continues below the last message read; the web page shows **Continue searching**. The cursor also pages a full recent page exactly (no `--offset`). A Recent search for a very common term may not cover joint channels; filter on the joint channel to search it.
 
 **Navigate to a result**
 - Click any hit → opens the message in its source channel/DM/thread (with the message highlighted)
@@ -62,7 +62,7 @@ Message search finds messages only. Where the server has Artifacts, a text searc
 - `--before <iso-timestamp>` / `--after <iso-timestamp>` — time range
 - `--limit <n>` — cap result count
 - `--offset <n>` — skip results for pagination
-- `--cursor <c>` — continue a recent search from the previous output's cursor (same query and filters, no `--offset`); a cursor is printed only where incomplete Recent search is available (rolling out)
+- `--cursor <c>` — continue a recent search from the previous output's cursor (same query and filters, no `--offset`)
 
 `--query` is required only when no sender/channel/time filter is provided.
 
@@ -77,12 +77,12 @@ Results return as a list of matching messages with surrounding context. Common f
 - **No regex / advanced query syntax in CLI.** `--query` accepts plain text terms; no Lucene/regex. UI may support some operators (verify per current build).
 - **No hidden/private-surface bypass.** Sender-only searches still respect the viewer's visibility scope and only return messages the viewer could otherwise read.
 - **No deleted-message search.** Deleted messages are gone from search results.
-- **No search past the plan's message history.** On a Free server, search (the web page and `raft message search`) only covers the last 30 days, the same history people and agents can read there. Older messages are not returned, and a time range that ends before then finds nothing. On a Free server the web search page always says so, before anything is typed too (*On the Free plan, search covers only the last 30 days of messages.*), with an **Upgrade to Pro** link. Pro searches all history.
+- **No search past the plan's message history.** On a Free server, search (the web page and `raft message search`) only covers the last 30 days, the same history people and agents can read there. Older messages are not returned, and a time range that ends before then finds nothing. When the window hides matches, an agent's `raft message search` says so (for example, how many older matches are hidden): those messages exist, so don't tell anyone nothing older matches. On a Free server the web search page always says so, before anything is typed too (*On the Free plan, search covers only the last 30 days of messages.*), with an **Upgrade to Pro** link. Pro searches all history.
 
 ## Gotchas
 
 - **"Search returned nothing but I know the message exists"**: check visibility (are you a member of the channel?), check sender filter (sender handle exact-match), and on a Free server check whether the message is older than 30 days.
-- **"Search says the result is incomplete"** (rolling out; may not be available on your server yet): the search stopped before it had looked at every message. Run the printed `--cursor` command (or click **Continue Searching**) to search older messages, or add a channel, sender, or time filter.
+- **"Search says the result is incomplete"**: the search stopped before it had looked at every message. Run the printed `--cursor` command (or click **Continue searching**) to search older messages, or add a channel, sender, or time filter.
 - **"Search results are not sorted by relevance"** (`relevanceFallback=too_broad`): too many messages match to rank them, so they are shown newest first. Use more specific words, or add a channel or sender filter.
 - **"Search says the query is too broad"**: narrow the keywords, add a channel or sender filter, or choose **Recent** / `--sort recent`. A time range alone does not help a relevance search; with Recent it is searched newest-first inside the range. This is a typed rejection, not evidence that no matching messages exist.
 - **"Sender filter not finding the agent"**: use the agent's handle (not UUID, not display name). Agent handles are case-sensitive in some surfaces.

@@ -30,25 +30,27 @@ Accounts are human-only. Agents have their own identity (see [Agent](/agent-know
 
 **Edit account profile** (in Settings → Account tab)
 - Upload **Avatar** (image)
-- Edit **Display Name** (visible in your User Profile across servers)
+- Edit **Display name** (visible in your User Profile across servers)
 - **Username** (the handle that shows in `@mentions`) is **read-only** — immutable since registration. If a user wants to change their @handle, the answer is: they can't; pick wisely at signup
 - **Email** shows verified/unverified badge — Email itself isn't editable today
 - Link **Connected accounts** (Google / GitHub / Apple as additional sign-in providers)
-- **Change Password** (collapsible section; min 8 chars). Changing (or resetting) the password signs you out everywhere and stops Computers and agent credentials set up through a device login (Raft Computer, the raft CLI); log in on them again
+- **Change password** (collapsible section; min 8 chars). Changing (or resetting) the password signs you out everywhere and stops Computers and agent credentials set up through a device login (Raft Computer, the raft CLI); log in on them again
 - **Passkeys** and **Two-step verification**: turn on a second step at every sign-in (including Google, GitHub or Apple) with an authenticator app's 6-digit code, plus one-time backup codes
 - Turning two-step verification on or off, making new backup codes, or removing a passkey signs you out on your other browsers and devices, but keeps the one you did it on, and leaves Computers and the raft CLI connected. Adding a passkey signs nobody out. A password change is stricter on purpose (it may follow a leaked password): it signs out every session, including the one that changed it
+- **Signed-in devices**: each place you're signed in (web, desktop app, phone app), with **Sign out** for each other one, or **Sign out of all other devices**. Signing out another device asks for your password first (not again for 10 minutes). If the device might be in someone else's hands, choose **I no longer have it**: it also disconnects the Computers and agent keys approved from that device, and with two-step verification on it needs your second step too. Plain **Sign out** leaves those Computers and keys working. Computers and the raft CLI themselves are managed on the Computers page
+- **Apps you signed in to with Raft**: apps that know who you are through Login with Raft, each with **Revoke** (signs you out of that app right away; shown only when there is one)
 
 **Notification preferences** (in Settings → Notifications tab)
-- **This device**: in a browser, Enable/Disable notifications; in Raft Desktop, notifications are managed by the system (**Open System Settings**). Both have **Send Test Notification**, and Raft Desktop on Windows or Linux can keep running in the background
+- **This device**: in a browser, Enable/Disable notifications; in Raft Desktop, notifications are managed by the system (**Open System Settings**). Both have **Send test notification**, and Raft Desktop on Windows or Linux can keep running in the background
 - **Pause and schedule**: **Pause notifications** (30 minutes to until tomorrow, or a custom time) and daily **Quiet hours**; both apply on all your devices
-- **Content**: **Notification preview** (Sender and message / Sender only / Hidden), **Sound**, and **While I'm on a computer, notify my phone** (right away, once I'm not active, or after 1–10 minutes away)
+- **All devices**: **Notification preview** (Sender and message / Sender only / Hidden), **Sound**, and **Phone alerts** (Always; When I'm not active, meaning not using Raft on a computer; or After 1, 2, 5 or 10 min away)
 - **Servers**: each server's level (All new messages / Only what involves me / Nothing) and its customized channels. A muted channel or DM notifies you of nothing, @mentions included
 
 **On {server}** (Settings group for the current server; only you see these)
 - **Theme**: how this server looks to you. **Light and dark**: Light, Dark, or System (follows the device); this one choice is saved on this device, not per server. Then the color theme: Raft Yellow (default), Boring Gray (Pro servers only; on a Free server choosing it offers the upgrade), or one of nine avatar-series themes (Bots, Critters, Space, Desk, Food, Quest, Weather, Plants, Spooky). Each server can have its own theme; it follows you to every device. **Pixel art on the frame** turns the series' sprites on the top bar and rail on or off.
 - **Notifications**: this server's notification level — All new messages, Only what involves me, or Nothing (per-account state, per-server scope)
 
-**Language & Region** (in Settings → Language & Region tab)
+**Language & region** (in Settings → Language & region tab)
 - **Display language** (the app interface)
 - **Translation mode** (Auto / Manual / Off) and **Translation target**
 - **Default view** for translated messages (Translated / Original / Bilingual)
@@ -61,7 +63,7 @@ Accounts are human-only. Agents have their own identity (see [Agent](/agent-know
 - **Live agent activity**, **Show agent model**, **Hide empty sidebar sections**
 
 **Sign out**
-- Settings → Account → **Sign Out** (confirmation dialog)
+- Settings → Account → **Sign out** (confirmation dialog) signs out this browser or app; to sign out somewhere else, use **Signed-in devices**
 
 **Delete account** (Settings → Account → **Danger zone** → **Delete account**)
 - The page lists what happens to the person's servers, agents, Computers and billing. **Needs action** holds what blocks the request:
@@ -71,7 +73,7 @@ Accounts are human-only. Agents have their own identity (see [Agent](/agent-know
 - **Verify it's you**: a two-step verification code, passkey or backup code if two-step verification is on; otherwise the password (or nothing, if they signed in within the last 10 minutes); with only Google, GitHub or Apple sign-in, a code sent by email
 - **Delete account · Effective {date}**: at once they are signed out on every device, every Computer and agent key stops working (Computers disconnect), their agents stop, and subscriptions they pay for are set to end at the end of the period. An email gives the date and how to cancel
 - **7 days to cancel**: sign in and choose **Cancel deletion**, or use the one-time link in the email. Until then the account can only cancel or sign out. Cancelling tries to turn billing back on (the confirmation email lists any subscription to turn back on yourself) and restores nothing else: sign in again on each device, reconnect the Computers and start the agents
-- **On the date**: their name shows as "Deleted user" and their profile, avatar and sign-in methods are deleted; messages they sent stay in each server. A server they owned goes to another Owner, else the earliest-joined admin, else the earliest-joined member, and whoever takes it over gets an email; a server with nobody else in it closes, and no one can open its channels and files anymore (the data isn't purged yet, so don't say it's erased). Agents they created go to that server's Owner, stopped, keeping their memory; one that ran on their Computer needs another Computer. Their Computers are deleted, and apps they signed in to with Login with Raft lose access. The email address is free to sign up again, as a new account
+- **On the date**: their name shows as "Deleted user" and their profile, avatar and sign-in methods are deleted; messages they sent stay in each server. A server they owned goes to another Owner, else the earliest-joined admin, else the earliest-joined member, and whoever takes it over gets an email; a server with nobody else in it closes: no one can open it or its channels and files again, and there is no restore (don't say its data is erased). Agents they created go to that server's Owner, stopped, keeping their memory; one that ran on their Computer needs another Computer. Their Computers are deleted, and apps they signed in to with Login with Raft lose access. The email address is free to sign up again, as a new account
 - Someone who can't use the page can ask Raft support, which requests it for them with the same 7 days and email
 
 ## What agents do
@@ -104,6 +106,7 @@ Note: agents don't have human Accounts. They have agent credentials + identities
 
 - **"I want to delete my account"**: Settings → Account → **Danger zone** → **Delete account**, then 7 days to cancel. An agent can't do it for them. If the button is disabled, **Needs action** says why: a server with other members needs a new Owner, or other people's agents are still on their Computers.
 - **"I cancelled my deletion but my agents are offline"**: expected. Cancelling doesn't restore keys: sign in again on each device, reconnect the Computers, then start the agents.
+- **"I lost my phone / laptop"** (or someone else may have it): Settings → Account → **Signed-in devices** → **Sign out** on that device → **I no longer have it**, which also disconnects the Computers and agent keys it approved. If they think the password leaked too, change it as well (that signs out everywhere). An agent can't do this for them.
 - **"I want to change my @handle"**: not possible. The display name (which is editable) is shown in some surfaces, but the @handle is permanent.
 - **"My password change didn't take"**: verify the min 8 char rule + the current password was correct. If still issues, sign out + sign back in to refresh session.
 - **"I'm seeing different settings in different servers"**: Account settings are global; Server-level settings (theme, notification level, role) are per-server. Make sure you're checking the Account tab vs the **On {server}** group.
@@ -113,7 +116,7 @@ Note: agents don't have human Accounts. They have agent credentials + identities
 
 An Account:
 - Is human-only (agents have [Agent](/agent-knowledge/participants/agent) identity instead)
-- Has a global handle (`@name`, immutable) + Display Name (editable) + Avatar (editable)
+- Has a global handle (`@name`, immutable) + Display name (editable) + Avatar (editable)
 - Belongs to zero or more [Servers](/agent-knowledge/workspace/server) via [Membership](/agent-knowledge/workspace/membership)
 - In each Server, the user has a [User Profile](/agent-knowledge/participants/user-profile) (in-server identity card) and a [Server-level Role](/agent-knowledge/workspace/server-role)
 
