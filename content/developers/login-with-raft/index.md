@@ -359,7 +359,7 @@ The ticket is the only credential that ever appears in a URL, and it is worthles
 
 ### Auto sign-in when opened inside Raft
 
-When a person opens your App from a verified App link card in a conversation in Raft Desktop (a plain click; modifier-clicks and middle-click open as before), Raft opens your page in its built-in browser and attaches a request header on top-level document navigations to that entry's origin:
+When a person opens your App from a verified App link card in a conversation in Raft Desktop (a plain click; modifier-clicks and middle-click open as before) and Raft is ready to handle sign-in for that window, Raft opens your page in its built-in browser and attaches a request header on top-level document navigations to that entry's origin:
 
 ```http
 Raft-Host: desktop
@@ -378,8 +378,8 @@ If your server serves your HTML (server-rendered apps, Go/Node gateways, Edge Wo
    - **Attempt guard cookie:** before issuing the `302`, set a short-lived first-party cookie (for example `raft_host_signin_guard=attempted; Path=/; HttpOnly; SameSite=Lax; Max-Age=600; Secure`). If that cookie is already present, render the normal page instead of redirecting.
    - **Explicit logout guard:** when the person clicks Sign out, set the same guard cookie (for example `raft_host_signin_guard=logged_out`) so they stay on your normal sign-in screen instead of bouncing back in. Clear it after a successful manual sign-in if you want future expired sessions to auto-sign in again.
    - **OAuth callback and error bypass:** never auto-redirect on your login/callback routes (including Setup URL callbacks that carry `?code=...` without `state`) or when the URL query carries `error` (such as `?error=access_denied`) or an in-flight OAuth callback (`?code=...&state=...`). Because the `?error=` bypass applies to any path, an App page opened with `?error=...` in its query also skips auto sign-in.
-3. **Handle cancel on your callback.** If the person cancels Raft's first-time consent sheet, Raft redirects the tab to your registered return URL with `?error=access_denied` (and your `state`, if your authorize request sent one). Validate `state` as usual and show your normal sign-in screen rather than an error loop.
-4. **Keep caches separated.** Add `Vary: Raft-Host` on `GET` and `HEAD` document responses whenever a CDN or reverse proxy sits in front of your HTML (including responses to normal browsers without `Raft-Host`), and send `Cache-Control: no-store` on the `302` redirect.
+3. **Validate `returnTo` and handle cancel on your callback.** Because auto sign-in automatically builds a login redirect for every unauthenticated Raft Desktop navigation, validate any `next` / `returnTo` parameter as a same-origin relative path (rejecting absolute URLs, `//...`, `/\...`, and ASCII control characters such as `%09`/`%0a` that browsers strip before resolving, falling back to `/`). If the person cancels Raft's first-time consent sheet, Raft redirects the tab to your registered return URL with `?error=access_denied` (and your `state`, if your authorize request sent one). Validate `state` as usual and return to your normal sign-in screen (or an error view without redirecting back into Raft) — keeping or setting the guard cookie (or excluding that landing page) so the follow-up request does not loop back into sign-in.
+4. **Keep caches separated and bypass edge HTML caching.** Add `Vary: Raft-Host` on `GET` and `HEAD` document responses (including responses to normal browsers without `Raft-Host`), and send `Cache-Control: no-store` on the `302` redirect. Note that **Cloudflare does not split cache keys on `Vary` by default**: even though the `302` carries `Cache-Control: no-store`, if your HTML document route is edge-cached (`cf-cache-status: HIT`), requests with `Raft-Host` never reach your origin and auto sign-in silently does nothing. Any document route that branches on `Raft-Host` must reach your server/Worker rather than being served from CDN edge cache (Cloudflare Workers with `run_worker_first = true` satisfy this natively; origin apps behind Cloudflare HTML caching need a cache-bypass rule for those routes).
 
 #### TypeScript / JavaScript (`@botiverse/raft-sdk/app`)
 
@@ -526,22 +526,30 @@ func raftHostAutoSignIn(isSignedIn func(*http.Request) bool, next http.Handler) 
 
 Set the same `raft_host_signin_guard=logged_out` cookie in your sign-out handler, and treat `error=access_denied` on your callback (after verifying `state`) as a return to your normal sign-in screen.
 
-#### Testing locally without Raft
+#### Testing without Raft
 
-You can verify every rule with `curl` against your local server:
+You can verify every rule with `curl` against your local server or deployed URL (use `GET` — `curl -i` or `-D - -o /dev/null` — not `curl -I`, because `HEAD` never triggers the redirect; on Cloudflare-proxied deployments check `cf-cache-status` and confirm it is not `HIT`):
 
 ```sh
-# 1. Unauthenticated request from a Raft host -> 302 with guard cookie + Vary + no-store
-curl -i -H "Raft-Host: desktop" http://localhost:3000/
+# 1. Unauthenticated request from a Raft host -> 302 with guard cookie + Vary + no-store (and not cf-cache-status: HIT)
+curl -sS -D - -o /dev/null -H "Raft-Host: desktop" http://localhost:3000/
+
+# 1b. Follow the Location from step 1 (without -L across origins) -> confirms it actually 302s to Raft authorize/setup (not a 200 SPA shell)
+curl -sS -D - -o /dev/null http://localhost:3000/login/raft
 
 # 2. Normal browser (no Raft-Host) -> 200 with Vary: Raft-Host, no redirect
-curl -i http://localhost:3000/
+curl -sS -D - -o /dev/null http://localhost:3000/
 
-# 3. Guard cookie present (after one attempt or logout) -> 200, no redirect
-curl -i -H "Raft-Host: desktop" -H "Cookie: raft_host_signin_guard=attempted" http://localhost:3000/
+# 3. Authenticated visitor (valid session cookie) -> 200, no redirect
+curl -sS -D - -o /dev/null -H "Raft-Host: desktop" -H "Cookie: session=<valid-session>" http://localhost:3000/
 
-# 4. Cancelled OAuth return (?error=access_denied) -> 200, no redirect
-curl -i -H "Raft-Host: desktop" "http://localhost:3000/?error=access_denied"
+# 4. Guard cookie present (after one attempt or explicit logout) -> 200, no redirect
+curl -sS -D - -o /dev/null -H "Raft-Host: desktop" -H "Cookie: raft_host_signin_guard=attempted" http://localhost:3000/
+
+# 5. Cancelled OAuth return (?error=access_denied on callback or app route) -> must NOT 302 back to Raft authorize/setup (200 or 400 is fine)
+#    AND the follow-up request right after it with the guard cookie -> 200, no redirect
+curl -sS -D - -o /dev/null -H "Raft-Host: desktop" "http://localhost:3000/login/raft/callback?error=access_denied"
+curl -sS -D - -o /dev/null -H "Raft-Host: desktop" -H "Cookie: raft_host_signin_guard=attempted" http://localhost:3000/
 ```
 
 ### Agents arrive at the same callback
