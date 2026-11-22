@@ -359,15 +359,17 @@ The ticket is the only credential that ever appears in a URL, and it is worthles
 
 ### Auto sign-in when opened inside Raft
 
-When a person opens your App from a Raft App entry — a verified App link card in a conversation, or the Apps page on clients that open Apps in-app — Raft opens your page in its built-in browser and attaches a request header on top-level document navigations to that entry's origin:
+When a person opens your App from a verified App link card in a conversation in Raft Desktop (a plain click; modifier-clicks and middle-click open as before), Raft opens your page in its built-in browser and attaches a request header on top-level document navigations to that entry's origin:
 
 ```http
 Raft-Host: desktop
 ```
 
-The value is `desktop`, `ios`, or `android`. For a verified App link card, the origin is the link-preview origin proved by `raft-link-preview.json`; for the Apps page, it is your App's configured homepage origin. Raft drops the header if the person types another address, leaves that origin, or reopens a restored tab. Raft never sends `Raft-Host` in ordinary browser tabs, on subresources, or to unrelated sites, and the header carries no user identity or Server ID. It tells your server only that Raft is watching for a Login with Raft redirect in this tab: if the visitor has already consented to your App on the current Server, Raft completes the login without showing a consent dialog; on first use, Raft shows its consent sheet immediately.
+Today Raft Desktop sends it with the value `desktop` when someone clicks an App link card; the origin is the link-preview origin proved by `raft-link-preview.json`. Accept `ios` and `android` too — they are reserved for Raft's mobile apps (`@botiverse/raft-sdk/app` already accepts them). Raft drops the header if the person types another address, leaves that origin, or reopens a restored tab. Raft never sends `Raft-Host` in ordinary browser tabs, on subresources, or to unrelated sites, and the header carries no user identity or Server ID. It tells your server only that Raft is watching for a Login with Raft redirect in this tab: if the visitor has already consented to your App on the current Server, Raft completes the login without showing a consent dialog; on first use, Raft shows its consent sheet immediately.
 
-If your server serves your HTML (server-rendered apps, Go/Node gateways, Edge Workers), you can redirect unauthenticated visitors straight into your existing Login with Raft route so the App opens already signed in. Static-only SPAs without a server on the HTML route skip this step — clicking their normal **Log in with Raft** button still skips the consent dialog once the person has consented.
+`Raft-Host` is a hint, not proof: any client can send it. Use it only to decide whether to start Login with Raft, never to grant access or skip your own session check.
+
+If your server serves your HTML (server-rendered apps, Go/Node gateways, Edge Workers), you can redirect unauthenticated visitors straight into your existing Login with Raft route so the App opens already signed in. Static-only SPAs without a server on the HTML route skip this step — clicking their normal **Log in with Raft** button inside Raft Desktop still skips the consent dialog once the person has consented.
 
 #### Protocol rules
 
@@ -381,7 +383,9 @@ If your server serves your HTML (server-rendered apps, Go/Node gateways, Edge Wo
 
 #### TypeScript / JavaScript (`@botiverse/raft-sdk/app`)
 
-`@botiverse/raft-sdk/app` (`@botiverse/raft-sdk` `>= 0.40.0`) wraps the header check, loop guards, `Vary: Raft-Host`, and `Cache-Control: no-store` into one helper that works in Web Standard runtimes (Cloudflare Workers, Next.js, Hono, Deno, Bun) and Node/Express:
+`@botiverse/raft-sdk/app` (`@botiverse/raft-sdk` `>= 0.40.0`) wraps the header check, loop guards, `Vary: Raft-Host`, and `Cache-Control: no-store` into one helper that works in Web Standard runtimes (Cloudflare Workers, Next.js, Hono, Deno, Bun) and Node/Express.
+
+Create one shared helper instance:
 
 ```ts
 import { createRaftHostAutoSignIn } from "@botiverse/raft-sdk/app";
@@ -393,31 +397,52 @@ const autoSignIn = createRaftHostAutoSignIn({
   loginUrl: ({ url }) => `/login/raft?next=${encodeURIComponent(url.pathname + url.search)}`,
   shouldHandle: ({ url }) => url.pathname !== "/login" && !url.pathname.startsWith("/login/"),
 });
+```
 
-// Express / Node: pass `{ isAuthenticated }` if you read `req.session` or `req.cookies` directly
+Express / Node:
+
+```ts
+// Pass `{ isAuthenticated }` if you read `req.session` or `req.cookies` directly.
 app.use(autoSignIn.nodeMiddleware({ isAuthenticated: (req) => Boolean(req.session?.userId) }));
 
-// Or Web Fetch (Cloudflare Workers `(request, env, ctx)` / Hono / Deno):
-export default { fetch: autoSignIn.handle(appFetch) };
-
-// On explicit sign-out: keep the user signed out (pass `{ secure: false }` on local plain-HTTP localhost)
+// On explicit sign-out: keep the user signed out (pass `{ secure: false }` on local plain-HTTP localhost).
 res.appendHeader("Set-Cookie", autoSignIn.logoutCookie());
 
-// After a successful manual sign-in: clear the guard so future expired sessions auto-sign in again
+// After a successful manual sign-in: clear the guard so future expired sessions auto-sign in again.
 res.appendHeader("Set-Cookie", autoSignIn.clearGuardCookie());
 
-// On your OAuth callback: validate `state` as usual, then show your login screen on cancel
+// On your OAuth callback: validate `state` as usual, then show your login screen on cancel.
 if (autoSignIn.isCancelledCallback(req.url)) {
   if (!verifyOAuthState(req)) return res.status(400).send("Invalid login state");
   return res.redirect("/login");
 }
 ```
 
-If your `isAuthenticated` check needs per-request bindings (such as Cloudflare Workers `env`), call `autoSignIn.evaluate(request, { isAuthenticated })` directly and merge `decision.varyHeader` onto continued responses (`evaluate()` requires either a configured `isAuthenticated` option or an explicit `{ isAuthenticated: boolean }` override, throwing `invalid_options` otherwise). `logoutCookie()` and `clearGuardCookie()` default to `Secure`; pass `{ secure: false }` during local plain-HTTP `localhost` development.
+Cloudflare Workers / Hono / Deno (Web Fetch):
 
-#### Other languages (Go example)
+```ts
+export default {
+  fetch: autoSignIn.handle(async (request, env, ctx) => {
+    // On sign-out / manual sign-in / cancel callback, append `autoSignIn.logoutCookie()` or
+    // `autoSignIn.clearGuardCookie()` to the response headers and check
+    // `autoSignIn.isCancelledCallback(request.url)` after verifying `state`.
+    return appFetch(request, env, ctx);
+  }),
+};
+```
+
+If your `isAuthenticated` check needs per-request bindings (such as Cloudflare Workers `env`), call `autoSignIn.evaluate(request, { isAuthenticated })` directly and merge `decision.varyHeader` onto continued responses (`evaluate()` requires either a configured `isAuthenticated` option or an explicit `{ isAuthenticated: boolean }` override, rejecting with `invalid_options` otherwise). `logoutCookie()` and `clearGuardCookie()` default to `Secure`; pass `{ secure: false }` during local plain-HTTP `localhost` development.
+
+#### Go
 
 ```go
+import (
+	"net"
+	"net/http"
+	"net/url"
+	"strings"
+)
+
 const raftHostGuardCookie = "raft_host_signin_guard"
 
 func isHTMLDocumentRequest(r *http.Request) bool {
