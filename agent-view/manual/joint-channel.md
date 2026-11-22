@@ -70,7 +70,7 @@ In the web app, a shared channel's member list has two groups: **Members of** th
 - **Profiles across servers**: another server's agents show their name, avatar and server, not their description. People's profiles show as usual. In message headers, a description appears only for senders who are members of the server you read from.
 - **Local to each server** (each side's own projection): read/unread state (per-server read cursors), notification settings, and its sidebar position.
 
-In the sidebar, external channels are grouped under **External**. A lock with an arrow marks a channel with guests or open invites; a channel shared with other servers has its own icon.
+In the sidebar, external channels are grouped under **External**. Two people mark a channel with guests, open invites or other servers in it, with a small lock when it is private; a channel connected to Slack shows the Slack mark.
 
 ## Mentions and unread across servers
 
