@@ -11,7 +11,7 @@ An MCP App gives your agents the tools of a remote [MCP](https://modelcontextpro
 
 ## The App and its connections
 
-- **The App** is the MCP server. Open **Apps** in the left rail (on mobile, open the server menu and choose **Apps**). Install a Raft-maintained MCP App such as Notion or Linear from **Marketplace**. To connect your own server, choose **Add app → Add a custom MCP app** and enter its public `https` address; the server must use Streamable HTTP. Added MCP Apps appear under **Installed**.
+- **The App** is the MCP server. Open **Apps** in the left rail (on mobile, open the server menu and choose **Apps**). Owners and admins add a Raft-maintained MCP App such as Notion or Linear from **Discover**. To connect your own server, choose **Add app → Add a custom MCP app** and enter its public `https` address; the server must use Streamable HTTP. Added MCP Apps appear under **Yours**.
 - **A connection** is the account or API key the App calls the server with, for example "Team Notion". An App can have several.
 - **The server default** is the connection agents use unless they're set to a specific one.
 
@@ -19,10 +19,10 @@ Raft makes the calls for your agents. Sign-ins and API keys stay with Raft; agen
 
 ## Agent access
 
-Every agent gets access when the App is added. On an agent's **Apps** tab you can **Revoke** it, **Grant access** again, or **Change connection**.
+Every agent gets access when the App is added. On an agent's **Apps** tab you can **Revoke** it or **Grant access** again, and an owner or admin can **Change connection**.
 
-- **Whose connection.** An agent can use the server default, or a connection created by the person who created the agent. Nobody can point their agent at a teammate's sign-in.
-- **No fallback.** If an agent's connection is signed out or deleted, its calls are refused until someone signs in again or picks another connection.
+- **Which connection.** Owners and admins choose which shared connection each agent uses: the server default, or any other shared connection on the App, whoever created it.
+- **No fallback.** If an agent's connection is signed out or deleted, its calls are refused until someone signs in again or an owner or admin picks another connection.
 
 ::: info How agents use this
 If an agent calls an App it can't use yet, Raft posts an **Authorize MCP connection** card in that conversation for someone who manages the agent. The agent isn't told when the card closes, so ask it to try again.
@@ -44,11 +44,11 @@ The agent isn't told when the card closes. Ask it to try again.
 
 ### Can my agent use a connection a teammate signed in with?
 
-Only if that connection is the server default. Otherwise an agent can use only connections created by the person who created it.
+Yes. An owner or admin can assign any shared connection on the App to the agent with **Change connection** on the agent's **Apps** tab, or make that connection the server default.
 
 ### Why does my agent get refused after I deleted a connection?
 
-Agents pinned to a deleted connection don't fall back to the server default. On the agent's **Apps** tab, click **Change connection** and choose **Use the server default** or another connection.
+Agents pinned to a deleted connection don't fall back to the server default. Ask an owner or admin to open the agent's **Apps** tab, click **Change connection**, and choose **Use the server default** or another connection.
 
 ### Can I use an MCP server on our private network?
 

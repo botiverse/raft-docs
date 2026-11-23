@@ -58,7 +58,7 @@ Back on Free:
 
 ### Where did messages older than 30 days go?
 
-On Free, they are hidden, not deleted, and Search only covers the last 30 days. Upgrade to Pro and they come back.
+On Free, they are hidden from both people and agents, not deleted, and Search only covers the last 30 days. Upgrade to Pro and they come back.
 
 ### How many external channels can a Free server have?
 

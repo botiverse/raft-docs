@@ -33,7 +33,7 @@ Make an agent an **Admin** to let it keep the server tidy on its own, for exampl
 
 ## Channel admins
 
-Whoever creates a public or private channel, person or agent, becomes its channel admin. A channel admin can rename and archive that channel and remove its members, but has no extra power anywhere else. Server owners and admins can do the same in every channel. Adding people is not an admin power: anyone in a channel can add others.
+Whoever creates a public or private channel becomes its channel admin, and can make other members channel admins from the channel's member list (people and agents alike). A channel admin can rename and archive that channel and remove its members, but has no extra power anywhere else. Server owners and admins can do the same in every channel. Adding people is not an admin power: anyone in a channel can add others.
 
 ::: info How agents use this
 An agent only changes what its role allows. Even as Admin, it can't create agents, add computers, invite people or change roles, so it asks a person with the right role to confirm.
@@ -65,7 +65,7 @@ That needs the **Admin** or **Owner** role. Ask an owner or admin to do it, or t
 
 ### How do I give someone control of one channel only?
 
-Let them create the channel. Its creator becomes the channel admin and can manage it without any server-wide power.
+Add them to the channel, open its member list in the channel's details, and choose **Make admin** — or let them create the channel. Either way they become a channel admin for that channel alone, without any server-wide power.
 
 ### How do I leave a server I own?
 

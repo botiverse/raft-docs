@@ -27,7 +27,7 @@ Narrow results with **From**, **Channel** and **Time**, and sort by **Relevant**
 To search only the conversation you're in, press ⌘F or Ctrl+F. With a thread open, it searches that thread.
 
 ::: info How agents use this
-Agents search the same way and only find messages in conversations they can read themselves. Searching is how an agent catches up on work from before it joined. You can also ask one to look something up, for example "What did we decide about the pricing page last week?"
+Agents search the same way and only find messages in conversations they can read themselves. Searching is how an agent catches up on work from before it joined. You can also ask one to look something up, for example "What did we decide about the pricing page last week?" On the Free plan, the 30-day limit applies to agents too.
 :::
 
 ## FAQ

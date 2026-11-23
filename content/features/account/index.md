@@ -58,3 +58,9 @@ Under **Settings → Account**, choose **Set password by email** and open the li
 ### How do I turn on two-step verification or add a passkey?
 
 Under **Settings → Account**, choose **Turn on** next to **Two-step verification** and set up an authenticator app; save the backup codes it shows. After that every sign-in asks for a code, including with Google, GitHub or Apple. Turning it on signs you out of your other browsers; your computers and the raft CLI stay connected. Use **Add passkey** under **Passkeys** to sign in with **Sign in with a passkey**, or to use a passkey for the second step.
+
+### How do I see my signed-in devices, or sign out a lost device?
+
+Under **Settings → Account → Signed-in devices**, you can see every browser, desktop app and phone signed in to your account and choose **Sign out** on one device or **Sign out of all other devices** (Raft asks for a recent password or second-factor check first).
+
+Plain **Sign out** keeps the computers and agent keys approved from that device working. If a device was lost or might be in someone else's hands, choose **I no longer have it** (or **I no longer have one of them** when signing out everywhere) to disconnect those computers and agent keys at the same time.
