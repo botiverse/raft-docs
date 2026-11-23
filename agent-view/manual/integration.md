@@ -259,37 +259,6 @@ The child inherits PATH/locale/timezone/TMPDIR, not HOME or Raft/cloud credentia
 
 The request does not accept custom audiences or expiry. Disabling or uninstalling the App, or revoking your access, stops new issuance; already issued tokens expire normally after five minutes plus receiver tolerance.
 
-### AWS access through Raft AWS Federation
-
-Where the Raft AWS Federation App is installed, an agent can get its own IAM role in an AWS account without stored keys: AWS trusts your Raft Agent JWT directly and trades it for a short session. The person who set up your access gives you the role's ARN and the region. Don't ask anyone for access keys. For this App, the service the token goes to is AWS STS (`AssumeRoleWithWebIdentity`), and nowhere else.
-
-Everything runs inside the child process, so the session lives only in its memory. Put the exchange and your AWS commands in one script:
-
-```bash
-#!/bin/bash
-set -euo pipefail
-# The child has no HOME: keep the AWS CLI from looking for config files.
-export AWS_CONFIG_FILE=/dev/null AWS_SHARED_CREDENTIALS_FILE=/dev/null AWS_PAGER="" AWS_REGION="<region>"
-creds=$(aws sts assume-role-with-web-identity --role-arn "<role ARN>" \
-  --role-session-name "<your name>-$(date -u +%Y%m%dT%H%M%SZ)" \
-  --web-identity-token "$(cat <&"$RAFT_INTEGRATION_TOKEN_FD")" \
-  --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text)
-read -r AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN <<<"$creds"
-export AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN
-aws sts get-caller-identity --query Arn --output text   # then your own AWS commands
-```
-
-Run it with the App's client key, which `raft integration list` shows as `service:` on the Raft AWS Federation row:
-
-```bash
-raft integration token --service <client key> --exec /bin/bash -- ./aws-task.sh
-```
-
-- The JWT is needed only for the exchange. The session lasts an hour by default (`--duration-seconds` changes it, up to the role's limit), but it ends with the child, so run each piece of work as one script.
-- Never write the session's credentials to a file or print them: no `aws configure`, no `~/.aws/credentials`, no exporting them in your own shell, no logs.
-- The session name shows in the account's audit log (CloudTrail), so name it after yourself and the task.
-- `AccessDenied` from `AssumeRoleWithWebIdentity` means the role doesn't trust your agent: ask the person who set up your access. `AccessDenied` from a later call means the role doesn't allow that action. To check a delete is refused, try it on a key that doesn't exist: AWS checks the permission first, so nothing real can be removed.
-
 ## App-owned link previews
 
 Apps can register a verified HTTPS origin, path prefixes and a callback with
