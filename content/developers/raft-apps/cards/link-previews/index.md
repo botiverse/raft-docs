@@ -242,7 +242,7 @@ Raft draws `color` only on a block card, and only for a reader whose `client_cap
 
 ## 6. Keep a card up to date {#card-changed}
 
-Raft reads your card when a person sees the link, and again when they reopen the message or press Refresh. When the thing a card shows changes somewhere else (a PR merged from the command line, CI turning green), you can tell Raft, and Raft's web app reads the card again where it is on screen.
+Raft reads your card when a person sees the link, and again when they reopen the message or press Refresh. When the thing a card shows changes somewhere else (a PR merged from the command line, CI turning green), you can tell Raft, and Raft's web app and mobile app (1.28+) read the card again where it is on screen.
 
 **Name the object a card shows.** Add `object_ref` to your answer: at the top of a version 1 or 2 answer, or on the `card` item of a version 3 answer:
 
@@ -268,7 +268,7 @@ Content-Type: application/json
 - If a call fails, log it and carry on. Don't retry it and don't block your own work on it: the card is read fresh the next time it's displayed anyway.
 - You don't need to batch changes yourself: several changes to one object in quick succession reach readers as at most two re-reads, the last one normally after the last change.
 
-**What readers get.** People who recently viewed the card (within the last 24 hours), and are still members of the Server they read it on, get a signal with no content. Raft's web app then reads the card again shortly, once it is on screen and the person isn't interacting with it, through the normal request, with that person's own access. Other clients, such as the mobile app, don't act on the signal yet: they show the new state the next time they display the card. Nothing about who may see what changes. Someone who lost access in your App but is still a member of the Server may get the signal for up to 24 hours, but their re-read gets whatever you answer them now.
+**What readers get.** People who recently viewed the card (within the last 24 hours), and are still members of the Server they read it on, get a signal with no content. Raft's web app and mobile app (1.28+) then read the card again shortly, once it is on screen and the person isn't interacting with it, through the normal request, with that person's own access. Older mobile versions and other clients don't act on the signal: they show the new state the next time they display the card. Nothing about who may see what changes. Someone who lost access in your App but is still a member of the Server may get the signal for up to 24 hours, but their re-read gets whatever you answer them now.
 
 This is rolling out Server by Server. You can add `object_ref` and the calls now: until it's on for a Server, Raft accepts your calls and does nothing more.
 
@@ -312,7 +312,7 @@ Run `node --test server.test.mjs` for the standalone signature and access-check 
 | Registration returns `502` | Check public DNS, TLS, JSON content type and reachability of the proof endpoint. Redirects and private network destinations are rejected. |
 | Registration succeeds but only a plain link appears | Check active installation, the viewer's current Login with Raft authorization, matching path, the link limit, and the callback response. A private App ACL refusal correctly falls back. |
 | Previews stay read-only after you declared newer versions | Check `previewVersions` with `GET /api/oauth/link-preview`. A `PUT` without `preview_versions` goes back to `[1]`. A reader on an older client still gets version 1, so test on the current web or mobile App. |
-| A resource changed but an already-open card did not | Check that your answer has `object_ref` and that you called [`POST /api/oauth/link-preview/changed`](#card-changed) after storing the change. This is rolling out Server by Server, and only the web app re-reads cards on screen; on other clients, or where it isn't on yet, reload the message view. |
+| A resource changed but an already-open card did not | Check that your answer has `object_ref` and that you called [`POST /api/oauth/link-preview/changed`](#card-changed) after storing the change. This is rolling out Server by Server, and only the web app and mobile app (1.28+) re-read cards on screen; on older mobile versions, other clients, or where it isn't on yet, reload the message view. |
 
 Test with two people: one who can access the App resource and one who cannot.
 Also test a revoked login, an uninstalled App, a callback timeout, invalid JSON,
