@@ -26,11 +26,11 @@ It never gets your messages, channels or files. To build an app that uses it, re
 
 ## Installing
 
-Open **Apps** in the left rail (on mobile, open the server menu and choose **Apps**). Most apps come from its **Marketplace**, and Raft reviews every listing. An owner or admin installs an app once for the whole server, which approves exactly the permissions it lists. If the app later asks for more, it keeps only what was approved until reviewed. Uninstalling revokes every sign-in and token the app has on your server at once.
+Open **Apps** in the left rail (on mobile, open the server menu and choose **Apps**). **Yours** lists every app on your server; owners and admins also see **Discover**, where they browse listings reviewed by Raft and click **Add** to install one for the whole server, approving the permissions it lists. If the app later asks for more, it keeps only what was approved until reviewed. Uninstalling revokes every sign-in and token the app has on your server at once.
 
 Raft may also install some official apps for you.
 
-You can also build your own app for internal use, or ask an agent to build it. A private app needs no Marketplace review, and you can share it with other servers by link. To get started, read [Build a Raft App](/developers/raft-apps/build/).
+You can also build your own app for internal use with **Add app**, or ask an agent to build it. A private app needs no listing review, and you can share it with other servers by link. To get started, read [Build a Raft App](/developers/raft-apps/build/).
 
 ## Agents and apps
 
@@ -41,14 +41,14 @@ You can also build your own app for internal use, or ask an agent to build it. A
 To better understand who can install apps, read [Members and roles](/features/server/members/).
 
 ::: info How agents use this
-Raft tells every agent which apps are installed, so an agent may use a suitable app without being asked. If it needs a Marketplace app your server doesn't have, it posts an **Install app** card; only an owner or admin can install from it, and the agent never installs an app by itself.
+Raft tells every agent which apps are installed, so an agent may use a suitable app without being asked. If it needs an app from **Discover** that your server doesn't have, it posts an **Install app** card; only an owner or admin can install from it, and the agent never installs an app by itself.
 :::
 
 ## FAQ
 
 ### Who can install an app?
 
-Server owners and admins. Members can browse the Marketplace and see installed apps, but can't install, edit or remove them.
+Server owners and admins. Only they see **Discover** and can add, edit or uninstall apps. Members see **Yours** — the apps your server already has — and can't add, edit or remove them.
 
 ### My agent posted an Install App card. What do I do?
 
@@ -64,7 +64,7 @@ The app isn't installed on that server, and you're not an owner or admin there. 
 
 ### Why is there an app installed that nobody here installed?
 
-Raft can install official apps by default. An owner or admin can uninstall one under **Apps → Installed**, and it then stays off.
+Raft can install official apps by default. An owner or admin can open it under **Apps → Yours** and click **Uninstall**, and it then stays off.
 
 ### How do I stop one agent from using an app?
 

@@ -51,4 +51,4 @@ Choose **Leave server** under **Settings → Server profile → Danger zone**. C
 
 ### I declined link previews for an app. How do I turn them on?
 
-Open **Apps → Installed**, then **Manage** beside **Link previews** at the bottom. Find the app under **Declined** and choose **Allow**. Guests can manage their own link previews under **Settings → Apps**.
+Open **Apps → Yours**, then **Manage** beside **Link previews** at the bottom. Find the app under **Declined** and choose **Allow**. Guests can manage their own link previews under **Settings → Apps**.

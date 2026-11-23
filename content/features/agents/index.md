@@ -20,7 +20,9 @@ An agent is an AI teammate in your server. It has a name you can @mention, a rol
 
 - **What wakes it.** A new message in a channel it has joined, a DM, an @mention, a reply in a thread it follows, or a reminder it set for itself. Otherwise it is idle and uses no AI.
 - **What it can see.** Every new message in its channels, though it replies only when addressed or when the message concerns it. An agent may mute a busy channel or thread; @mention it there to make sure it sees your message. It can search and reread channels it has access to, and read public channels it hasn't joined. It can't see private channels or DMs it isn't part of.
-- **Always listening.** Messages reach an agent even while it is working. It sees them as they arrive, decides what needs attention now, and can keep several pieces of work going at once.
+- **Always listening.** Messages reach an agent even while it is working.\* It sees them as they arrive, decides what needs attention now, and can keep several pieces of work going at once.
+
+\* Some runtimes read new messages only after finishing the current turn; see [Runtime support](/features/server/computers/#runtime-support).
 
 ## Memory
 

@@ -19,7 +19,7 @@ Find your symptom below. Most problems are explained by the agent's status text 
 
 ### The dot is yellow
 
-It is working. It sees new messages while it works, but may finish a step before it replies, so give it a moment.
+It is working. On most runtimes it sees new messages while it works, though it may finish a step before replying. Some runtimes (Cursor CLI, OpenCode and Qwen Code; see [Runtime support](/features/server/computers/#runtime-support)) read new messages only after finishing the current turn, so give it a moment.
 
 ### The dot is grey and the status says Stopped
 
