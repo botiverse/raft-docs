@@ -20,16 +20,29 @@ for (const raw of args) {
   const ids = [...doc.matchAll(/<h([1-6])[^>]*\sid="([^"]+)"/g)].map((m) => ({ depth: +m[1], id: decodeURIComponent(m[2]) }));
   const file = path.join(root, "content", "zh-cn", slug, "index.md");
   const lines = fs.readFileSync(file, "utf8").split("\n");
-  let inFence = null, fmDone = lines[0] !== "---", k = 0;
+  let inFence = null, fmDone = lines[0] !== "---", k = 0, zhOnlyDepth = 0;
+  const zhOnlyIds = new Set();
   const heads = [];
   for (let i = fmDone ? 0 : 1; i < lines.length; i++) {
     const l = lines[i];
-    if (!fmDone) { if (l === "---") fmDone = true; continue; }
+    if (!fmDone) {
+      if (l === "---") fmDone = true;
+      else {
+        const kv = l.match(/^zh_only_sections:\s*(.*)$/);
+        if (kv) for (const id of kv[1].replace(/^"(.*)"$/, "$1").split(/[\s,]+/).filter(Boolean)) zhOnlyIds.add(id);
+      }
+      continue;
+    }
     const f = l.match(/^\s*(`{3,}|~{3,})/);
     if (f) { if (!inFence) inFence = f[1]; else if (f[1][0] === inFence[0] && f[1].length >= inFence.length && !l.trim().slice(f[1].length).trim()) inFence = null; continue; }
     if (inFence) continue;
-    const h = l.match(/^(#{1,6})\s+(.*?)\s*(\{#[^}]+\})?\s*$/);
-    if (h) heads.push({ i, depth: h[1].length, text: h[2] });
+    const h = l.match(/^(#{1,6})\s+(.*?)\s*(\{#([^}]+)\})?\s*$/);
+    if (h) {
+      const depth = h[1].length, id = h[4] ?? null;
+      if (zhOnlyDepth && depth <= zhOnlyDepth) zhOnlyDepth = 0;
+      if (!zhOnlyDepth && id && zhOnlyIds.has(id)) zhOnlyDepth = depth;
+      if (!zhOnlyDepth) heads.push({ i, depth, text: h[2] });
+    }
   }
   if (heads.length !== ids.length || heads.some((h, j) => h.depth !== ids[j].depth)) {
     console.error(`${slug}: headings ${heads.map((h) => h.depth).join(",")} != English ${ids.map((x) => x.depth).join(",")}; not changed`);

@@ -1,7 +1,7 @@
 ---
 llms_section: "Billing and management"
 llms_order: 840
-llms_summary: "Read for Free vs. Pro limits, how Pro seats are counted and billed (mid-period seat changes, cancelling), how owners get invoices and receipts, and what happens back on Free."
+llms_summary: "Read for Free vs. Pro limits, how Pro seats are counted and billed (card subscriptions, prepaid Alipay, mid-period seat changes, cancelling), how owners get invoices, and what happens back on Free."
 ---
 
 # Plans and billing
@@ -76,6 +76,12 @@ No. Pro stays on until the end of the period you've paid for, then the server go
 ### How do I get Enterprise?
 
 Enterprise, for private deployment and SSO, isn't self-serve. [Get in touch](/welcome/#get-help).
+
+### Can I pay with Alipay?
+
+Yes, as a one-time prepaid purchase for **1 month** (**Monthly**) or **12 months** (**Yearly**) rather than an auto-renewing subscription. When Raft or your browser language is Chinese—or your time zone is in Mainland China, Hong Kong, Macau, or Taiwan—an owner on a Free server can click **Prefer Alipay?** under the total in the upgrade dialog.
+
+Prepaid Pro doesn't renew on its own: Raft reminds owners before it ends and gives a **3-day grace period** after the end date, and an owner can click **Renew** under **Settings → Plan & billing** at any time to add another 1 or 12 months without a break (or wait until prepaid Pro ends and the server is back on Free to switch to a card subscription). Mid-period, owners can **Add seats** for the remaining days with Alipay; seat reductions apply when you next renew.
 
 ### How do I get an invoice or receipt?
 

@@ -81,20 +81,25 @@ for (const slug of slugs) {
 
   // Front matter
   for (const k of Object.keys(en.fm)) if (!(k in zh.fm)) e.push(`front matter: no ${k}`);
-  for (const k of Object.keys(zh.fm)) if (!(k in en.fm)) w.push(`front matter: extra ${k}`);
+  for (const k of Object.keys(zh.fm)) if (!(k in en.fm) && k !== "zh_only_sections") w.push(`front matter: extra ${k}`);
+  for (const id of zh.zhOnlyIds) if (!zh.headings.some((h) => h.id === id)) e.push(`front matter zh_only_sections: no heading {#${id}}`);
   if (en.fm.llms_section && zh.fm.llms_section !== `${en.fm.llms_section} zh-CN`) e.push(`llms_section should be "${en.fm.llms_section} zh-CN", is "${zh.fm.llms_section}"`);
   if (en.fm.llms_order && +zh.fm.llms_order !== +en.fm.llms_order + 1000) e.push(`llms_order should be ${+en.fm.llms_order + 1000}, is ${zh.fm.llms_order}`);
   for (const k of ["llms_summary", "title", "description"]) if (zh.fm[k] && en.fm[k] && hanCount(zh.fm[k]) === 0) e.push(`front matter ${k} is not translated`);
 
   // Headings
+  const zhSyncedHeadings = zh.headings.filter((h) => !h.zhOnly);
+  for (const h of zh.headings.filter((x) => x.zhOnly && x.depth > 1)) {
+    if (!h.id) (strictAnchors ? e : w).push(`L${h.line} zh-only heading "${h.text}" has no {#id}`);
+  }
   const shapeEn = en.headings.map((h) => h.depth).join(",");
-  const shapeZh = zh.headings.map((h) => h.depth).join(",");
+  const shapeZh = zhSyncedHeadings.map((h) => h.depth).join(",");
   if (shapeEn !== shapeZh) e.push(`headings ${shapeZh} != English ${shapeEn}`);
   else {
     let ids = builtIds(slug);
     if (ids === "stale") { w.push(`out/${slug}/index.html is older than the English page: run pnpm build to check the anchors`); ids = null; }
     else if (!ids) w.push(`no built English page (out/${slug}/index.html with a vp-doc): run pnpm build to check the anchors`);
-    zh.headings.forEach((h, i) => {
+    zhSyncedHeadings.forEach((h, i) => {
       if (h.depth === 1) return;
       if (!h.id) (strictAnchors ? e : w).push(`L${h.line} heading "${h.text}" has no {#id}`);
       else if (ids && ids[i] && h.id !== ids[i].id) e.push(`L${h.line} heading anchor #${h.id}, English #${ids[i].id}`);
@@ -102,28 +107,31 @@ for (const slug of slugs) {
   }
 
   // Code fences: verbatim
-  if (en.fences.length !== zh.fences.length) e.push(`${zh.fences.length} code blocks, English ${en.fences.length}`);
+  const zhSyncedFences = zh.fences.filter((f) => !f.zhOnly);
+  if (en.fences.length !== zhSyncedFences.length) e.push(`${zhSyncedFences.length} code blocks, English ${en.fences.length}`);
   else en.fences.forEach((f, i) => {
-    const z = zh.fences[i];
+    const z = zhSyncedFences[i];
     if (f.info !== z.info) e.push(`L${z.line} code block info "${z.info}" != "${f.info}"`);
     if (stripComments(f.text, f.info) !== stripComments(z.text, z.info)) e.push(`L${z.line} code block differs from English L${f.line} (only comments may be translated)`);
   });
 
   // Containers
+  const zhSyncedContainers = zh.containers.filter((c) => !c.zhOnly);
   const cEn = en.containers.map((c) => c.type).join(" ");
-  const cZh = zh.containers.map((c) => c.type).join(" ");
+  const cZh = zhSyncedContainers.map((c) => c.type).join(" ");
   if (cEn !== cZh) e.push(`containers [${cZh}] != English [${cEn}]`);
   else en.containers.forEach((c, i) => {
-    const z = zh.containers[i];
+    const z = zhSyncedContainers[i];
     if (c.type === "==tab" && c.title !== z.title && !CJK.test(z.title)) w.push(`L${z.line} tab "${z.title}" != "${c.title}"`);
     if (c.title && c.type !== "==tab" && !z.title) e.push(`L${z.line} ::: ${c.type} lost its title "${c.title}"`);
     if (c.title && z.title && c.type !== "==tab" && hanCount(z.title) === 0 && /[a-z]{3,}\s+[a-z]{3,}/i.test(z.title)) w.push(`L${z.line} ::: ${c.type} title not translated: "${z.title}"`);
   });
 
   // Tables
-  if (en.tables.length !== zh.tables.length) e.push(`${zh.tables.length} tables, English ${en.tables.length}`);
+  const zhSyncedTables = zh.tables.filter((t) => !t.zhOnly);
+  if (en.tables.length !== zhSyncedTables.length) e.push(`${zhSyncedTables.length} tables, English ${en.tables.length}`);
   else en.tables.forEach((t, i) => {
-    const z = zh.tables[i];
+    const z = zhSyncedTables[i];
     if (t.rows !== z.rows || t.cols !== z.cols) e.push(`L${z.line} table ${z.rows}x${z.cols}, English ${t.rows}x${t.cols}`);
   });
 
@@ -142,15 +150,16 @@ for (const slug of slugs) {
     const abs = path.resolve(zhDir, url.split("#")[0]);
     return "file:" + abs + (url.includes("#") ? "#" + url.split("#")[1] : "");
   };
+  const zhOnlyHeadingIds = new Set(zh.headings.filter((h) => h.zhOnly && h.id).map((h) => h.id));
   const ms = (xs) => xs.slice().sort();
   const enLinks = ms(en.links.map((l) => mapEnLink(l.url)));
-  const zhLinks = ms(zh.links.map((l) => normZhLink(l.url)));
+  const zhLinks = ms(zh.links.filter((l) => !l.zhOnly && !(l.url.startsWith("#") && zhOnlyHeadingIds.has(l.url.slice(1)))).map((l) => normZhLink(l.url)));
   const missing = enLinks.filter((u) => { const i = zhLinks.indexOf(u); if (i >= 0) { zhLinks.splice(i, 1); return false; } return true; });
   const llmsOk = (u) => u === "/llms.txt" || u === "/zh-cn/llms.txt";
   for (const u of missing) if (!(llmsOk(u) && zhLinks.some(llmsOk))) e.push(`link missing or changed: ${u.replace("file:" + content, "content")}`);
   for (const u of zhLinks) if (!llmsOk(u) || !missing.some(llmsOk)) e.push(`extra link: ${u.replace("file:" + content, "content")}`);
   const enImgs = ms(en.images.map((l) => mapEnLink(l.url)));
-  const zhImgs = ms(zh.images.map((l) => normZhLink(l.url)));
+  const zhImgs = ms(zh.images.filter((l) => !l.zhOnly).map((l) => normZhLink(l.url)));
   if (enImgs.join("|") !== zhImgs.join("|")) e.push(`images differ: ${zhImgs.filter((x) => !enImgs.includes(x)).map((x) => x.replace("file:" + content, "content")).join(", ") || "(missing) " + enImgs.filter((x) => !zhImgs.includes(x)).map((x) => x.replace("file:" + content, "content")).join(", ")}`);
   for (const img of zh.images) {
     if (/^https?:/.test(img.url)) continue;
