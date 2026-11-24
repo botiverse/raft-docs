@@ -1222,6 +1222,8 @@ HTTP Basic using the App's client ID and secret:
 
 1. `POST /api/oauth/installations/lookup` with
    `{"server_id":"<target-server-uuid>"}` resolves the active installation.
+   On success, `login_mode` gives your App’s configured login mode
+   (`server` or `account`).
    When your App has no active installation on that Server (never installed,
    uninstalled, suspended or not approved), the answer is `404` with
    `"code": "installation_not_found"`; it doesn't say which. Match on `code`,
@@ -1283,7 +1285,7 @@ that has left this Server, or an unknown id. Responses carry
 next need it, and fail closed on `null`, `404` or any error.
 
 Requesting an installation token with `groups: ["agent"]` before that group is
-approved returns `400` at the token endpoint. Calling the Agent directory with
+approved returns `403` with code `group_not_granted` at the token endpoint. Calling the Agent directory with
 an otherwise valid installation token that lacks the `agent` group returns
 `403`. Invalid, expired, revoked or stale installation tokens return `401`. Disabled Apps and suspended or uninstalled
 installations lose access. These credentials are distinct from principal OAuth
