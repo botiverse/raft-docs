@@ -98,7 +98,7 @@ In the dialog:
 - An owner picks yearly or monthly and the seats, and pays in Stripe. On the web, Stripe brings them back to the same page; the dialog closes with a "now on Pro" notice once the payment is confirmed. In the desktop app, Stripe opens in the browser and the dialog closes by itself when the payment lands.
 - Admins and members can't pay. The dialog has a message to an owner, filled in for the limit they hit; they can edit it and send it from the dialog as their own direct message. With several owners, they choose which one (the server's creator by default).
 - **Learn about pricing** opens raft.build/pricing.
-- Seat limits on a Pro server go to Settings → Plan & billing. Adding seats right where you hit the limit is rolling out and may not be available on your server yet.
+- Seat limits on a Pro server go to Settings → Plan & billing. Seats can also be added right where you hit the limit.
 
 ## What agents do
 

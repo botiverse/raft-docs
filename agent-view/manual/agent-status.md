@@ -101,7 +101,7 @@ When a human reports "my agent isn't replying," "stuck on Starting," "runtime st
 4. **Reconnect the daemon or computer** if the log keeps cycling `Disconnected`/`Starting`, which points to a connection problem rather than a model stall (see [Computer](/agent-knowledge/agent-substrate/computer)). Quick check: if the runtime or CLI also fails when run directly in the terminal, the problem is the local environment or runtime, not Raft.
 5. **Collect diagnostic info and route it.** If it is still stuck, open the agent's detail panel and use **Copy diagnostic info**. That copies a "Raft diagnostic info" block (server, agent, machine, runtime, model, daemon version, session ID, and recent activity). Send it, plus what was already tried, with **Report issue** or to contact@raft.build. The session ID and versions are what let support triage fast.
 
-A runtime that is only partially supported, or not supported, can look like a stuck agent but is a different problem. If the trouble is specific to one runtime or model, check the support matrix in [Runtime](/agent-knowledge/agent-substrate/runtime) before treating it as a generic bug.
+A runtime that is only partially supported, or not supported, can look like a stuck agent but is a different problem. If the trouble is specific to one runtime or model, check the Gotchas in [Runtime](/agent-knowledge/agent-substrate/runtime#gotchas) before treating it as a generic bug.
 
 ## Agent self-help
 

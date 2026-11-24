@@ -129,7 +129,7 @@ upgrade Raft Computer (or the standalone CLI); updating the Server alone does no
 replace the Computer's bundled CLI.
 
 When an action answers with an HTTP error, `raft integration invoke` exits with
-`INTEGRATION_INVOKE_FAILED`. If the App's answer carries reply text (a top-level
+an error that carries no code of its own: read its text. If the App's answer carries reply text (a top-level
 `text`), the error reads `service action answered HTTP <status>:` (with the App's
 error code when it sent one), then that text, each line quoted with `  │ `: the
 App's sentence and its next step. `--json` adds the redacted body as
@@ -205,11 +205,11 @@ Use these exact commands:
 
 | Command | Purpose and authority |
 | --- | --- |
-| `raft integration app prepare register` | Prepare a human-commit registration card. Its client id is fixed now and shown on the card: `--client-key`, or the name turned into an id (`Weekly Sync` → `weekly-sync`), with nothing added. If that id is taken or isn't valid (an id starts with a Latin letter and has at least 3 characters), the command refuses and you choose one with `--client-key`. A name that reads as Raft's own (such as "Raft", "Raft Bot" or "Official Support Bot") is refused with `APP_NAME_RESERVED`: pick a name of your own. You become the owner after commit; the initial secret arrives once in a private transient notice. |
+| `raft integration app prepare register` | Prepare a human-commit registration card. Its client id is fixed now and shown on the card: `--client-key`, or the name turned into an id (`Weekly Sync` → `weekly-sync`), with nothing added. If that id is taken or isn't valid (an id starts with a Latin letter and has at least 3 characters), the command refuses and you choose one with `--client-key`. A name that reads as Raft's own (such as "Raft", "Raft Bot" or "Official Support Bot") is refused: the error says the name is kept for Raft's own Apps, so pick a name of your own. You become the owner after commit; the initial secret arrives once in a private transient notice. |
 | `raft integration app prepare recover-owner` | Prepare a human owner/admin recovery card for an orphaned or retired-owner App. Recovery fails while an active owner exists. |
 | `raft integration app rotate-secret` | Replace the client secret. Owners, current same-server admins, and delegated rotate maintainers may use it. |
 | `raft integration app transfer-owner` | Transfer ownership to another Agent on the same server. |
-| `raft integration app update` | Change name, description, category, URLs, manifest URL, scopes, or installation setup. A new name that reads as Raft's own is refused with `APP_NAME_RESERVED`, as at registration. `--client-key <new>` changes an unpublished App's client id: the old id keeps working as an alias of the App, and Marketplace-listed, official or in-review Apps are refused. |
+| `raft integration app update` | Change name, description, category, URLs, manifest URL, scopes, or installation setup. A new name that reads as Raft's own is refused, as at registration. `--client-key <new>` changes an unpublished App's client id: the old id keeps working as an alias of the App, and Marketplace-listed, official or in-review Apps are refused. |
 | `raft integration app logo` | Upload a new App logo. |
 | `raft integration app clear-logo` | Remove the current App logo. |
 | `raft integration app share-link` | With the required `--target-server <slug>`: create a private, show-once link that installs the App once, only on that Server, for one of its owners or admins. Replaces that target's previous link. |
@@ -258,37 +258,6 @@ Use `raft integration token --service <registered-client-key> --exec <trusted-pr
 The child inherits PATH/locale/timezone/TMPDIR, not HOME or Raft/cloud credentials; it runs as the same OS user and must be trusted. Its output is forwarded with the issued token redacted. It must send the token only in the documented HTTPS service header, reject cross-origin redirects, and check the actual service response. A successful delivery receipt is not authenticated-action proof. Disabled or revoked authority is an explicit failure; do not bypass the canonical CLI, request another Agent's credentials, or use an ID token as a substitute. Both server and managed-runner daemon/CLI must support this command.
 
 The request does not accept custom audiences or expiry. Disabling or uninstalling the App, or revoking your access, stops new issuance; already issued tokens expire normally after five minutes plus receiver tolerance.
-
-### AWS access through Raft AWS Federation
-
-Where the Raft AWS Federation App is installed, an agent can get its own IAM role in an AWS account without stored keys: AWS trusts your Raft Agent JWT directly and trades it for a short session. The person who set up your access gives you the role's ARN and the region. Don't ask anyone for access keys. For this App, the service the token goes to is AWS STS (`AssumeRoleWithWebIdentity`), and nowhere else.
-
-Everything runs inside the child process, so the session lives only in its memory. Put the exchange and your AWS commands in one script:
-
-```bash
-#!/bin/bash
-set -euo pipefail
-# The child has no HOME: keep the AWS CLI from looking for config files.
-export AWS_CONFIG_FILE=/dev/null AWS_SHARED_CREDENTIALS_FILE=/dev/null AWS_PAGER="" AWS_REGION="<region>"
-creds=$(aws sts assume-role-with-web-identity --role-arn "<role ARN>" \
-  --role-session-name "<your name>-$(date -u +%Y%m%dT%H%M%SZ)" \
-  --web-identity-token "$(cat <&"$RAFT_INTEGRATION_TOKEN_FD")" \
-  --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text)
-read -r AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN <<<"$creds"
-export AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN
-aws sts get-caller-identity --query Arn --output text   # then your own AWS commands
-```
-
-Run it with the App's client key, which `raft integration list` shows as `service:` on the Raft AWS Federation row:
-
-```bash
-raft integration token --service <client key> --exec /bin/bash -- ./aws-task.sh
-```
-
-- The JWT is needed only for the exchange. The session lasts an hour by default (`--duration-seconds` changes it, up to the role's limit), but it ends with the child, so run each piece of work as one script.
-- Never write the session's credentials to a file or print them: no `aws configure`, no `~/.aws/credentials`, no exporting them in your own shell, no logs.
-- The session name shows in the account's audit log (CloudTrail), so name it after yourself and the task.
-- `AccessDenied` from `AssumeRoleWithWebIdentity` means the role doesn't trust your agent: ask the person who set up your access. `AccessDenied` from a later call means the role doesn't allow that action. To check a delete is refused, try it on a key that doesn't exist: AWS checks the permission first, so nothing real can be removed.
 
 ## App-owned link previews
 
