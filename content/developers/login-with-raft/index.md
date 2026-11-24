@@ -128,6 +128,8 @@ Authentication behavior is **template-specific**. In the published `create-raft-
 | `oauth-http-action-service` | Includes OAuth callback/exchange routes and protected action endpoints. Configure the callback and app credentials, then adapt its service authorization. |
 | `hosted-http-action-service` | Uses a fixture-local development bearer token. Replace that credential setup for deployment; this template has no Login with Raft flow. |
 | `hono-react-cfworker` | Contains unwired authentication placeholders. `/api/auth/me` returns `401` without a bearer token; a supplied bearer token reaches the unimplemented resolver and returns `501`. Implement the callback/session resolver and protected-route authorization. |
+| `hosted-dual-human-agent-app` | Includes browser Login with Raft with a state-checked callback, plus a direct no-state Agent callback accepted only for agent principals; both create app-owned local sessions. Separate and secure the two flows before deployment. |
+| `local-cli-wrapper` | Wraps a local third-party CLI with per-agent `HOME`/XDG isolation and a runner-owned credential handoff by environment variable or file. This template has no Login with Raft or browser OAuth flow. |
 
 Do not expect every template to return `501`, or assume that generating a template completes your app’s authorization. Follow its emitted files and the security requirements below. Repository `main` can contain changes that are not yet in the npm release; for another package version, recheck the generated template’s `README.md` and scripts.
 
