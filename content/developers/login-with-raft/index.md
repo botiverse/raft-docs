@@ -128,6 +128,8 @@ Authentication behavior is **template-specific**. In the published `create-raft-
 | `oauth-http-action-service` | Includes OAuth callback/exchange routes and protected action endpoints. Configure the callback and app credentials, then adapt its service authorization. |
 | `hosted-http-action-service` | Uses a fixture-local development bearer token. Replace that credential setup for deployment; this template has no Login with Raft flow. |
 | `hono-react-cfworker` | Contains unwired authentication placeholders. `/api/auth/me` returns `401` without a bearer token; a supplied bearer token reaches the unimplemented resolver and returns `501`. Implement the callback/session resolver and protected-route authorization. |
+| `hosted-dual-human-agent-app` | Includes browser Login with Raft with a state-checked callback, plus a direct no-state Agent callback accepted only for agent principals; both create app-owned local sessions. Separate and secure the two flows before deployment. |
+| `local-cli-wrapper` | Wraps a local third-party CLI with per-agent `HOME`/XDG isolation and a runner-owned credential handoff by environment variable or file. This template has no Login with Raft or browser OAuth flow. |
 
 Do not expect every template to return `501`, or assume that generating a template completes your app’s authorization. Follow its emitted files and the security requirements below. Repository `main` can contain changes that are not yet in the npm release; for another package version, recheck the generated template’s `README.md` and scripts.
 
@@ -1135,15 +1137,41 @@ Manifest `actions` are the product-level operations Raft can present to agents a
 | `name` | Yes | Stable action name. Letters, digits, `.`, `_`, `:`, or `-`; keep it stable once published. |
 | `description` | No | Short human/agent-readable description. |
 | `endpoint.method` | Yes | `GET`, `POST`, `PUT`, `PATCH`, or `DELETE`. |
-| `endpoint.path` | Yes | Relative service path beginning with `/`. Absolute URLs, credentials, and fragments are rejected. |
+| `endpoint.path` | Yes | Relative service path beginning with `/`. May contain `{name}` path parameters (see below). Absolute URLs, credentials, and fragments are rejected. |
 | `parameters` | No | Named parameter specs (`type`, optional `description`, optional `required`). |
 | `returns` | No | Named return-field specs (`type`, optional `description`). |
 
 When an agent invokes an action through Raft, Raft calls the declared relative endpoint with the action parameters and a service session established through the stateless Agent callback handoff. Your app should validate the parameters, re-check app-level authorization, run the operation, and return the documented response shape.
 
+`endpoint.path` is the full path on the base URL's origin: because it begins with `/`, it replaces any path in `execution.base_url` instead of being appended to it. With `base_url` `https://orbital.example.com/api`, the path `/api/raft/actions/summarize-note` is called at `https://orbital.example.com/api/raft/actions/summarize-note`.
+
 Action names should be product-semantic operations, not a mirror of every internal route — prefer `summarize-note` over exposing every note API endpoint. This keeps agent use and install-time review understandable.
 
 For `local_cli` integrations that need local credential files, set `credential_boundary.storage: "per_agent_home"` and `forbid_user_home: true` — without it, Raft may block the agent from running the CLI against the host user's global credential state. For `http_api` integrations, no local credential boundary is needed.
+
+#### Path parameters
+
+Write a path parameter as `{name}` inside `endpoint.path`, where `name` starts with a letter and continues with letters, digits, or `_`. Declare it in `parameters` with the same name and `required: true`:
+
+```json
+{
+  "name": "append-note-comment",
+  "description": "Add a comment to one note.",
+  "endpoint": { "method": "POST", "path": "/api/notes/{noteId}/comments" },
+  "parameters": {
+    "noteId": { "type": "string", "description": "Note ID", "required": true },
+    "text": { "type": "string", "description": "Comment text", "required": true }
+  }
+}
+```
+
+When the action is invoked:
+
+- Each `{name}` is replaced by the URL-encoded value of the parameter with that name. A path parameter that is missing or empty fails the invocation before your endpoint is called.
+- Path parameters are sent only in the path, not again in the query string or body.
+- The remaining parameters are sent as the query string for `GET` and as a JSON body for `POST`, `PUT`, `PATCH`, and `DELETE`.
+
+Invoking the example with `noteId=n_42` and `text=Looks good` sends `POST /api/notes/n_42/comments` with the JSON body `{"text":"Looks good"}`.
 
 ### Unsupported manifest patterns
 
