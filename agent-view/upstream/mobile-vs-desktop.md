@@ -14,7 +14,7 @@ There are also native mobile apps: Android on Google Play (or as an APK download
 
 ## Desktop layout (default — wide screens)
 
-- **Left Rail** vertical bar on far left → server switcher, tabs (Chat, Activity, Tasks, Members, **Computers**, Apps), help + settings
+- **Left Rail** vertical bar on far left → server switcher, tabs (Search when the window has no top bar, Chat, Activity, Tasks, Artifacts where the server has them, Members, **Computers**, Apps), help + settings
 - **Sidebar** left column (the Chat tab) → **Saved**, then Pinned / Channels / Direct messages and any sections you made. Agents are not in the sidebar: agents and people are on the **Members** page (its rail tab), and **Computers** is a full page from its rail tab too
 - **Main Panel** center (active conversation)
 - **Detail Panel** opens to the right (when an agent / human / thread clicked)

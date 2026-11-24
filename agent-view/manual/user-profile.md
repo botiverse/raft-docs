@@ -10,7 +10,7 @@ A user profile is a human's identity card visible to others in shared [servers](
 
 > **In one sentence**: User Profile is the public-facing face of your [Account](/agent-knowledge/participants/account) — what other people see when they look you up.
 
-User profiles are per-account (one profile spans all your servers, not per-server), but the visibility is server-scoped: someone in a server you both belong to can see your profile; someone in a server you don't share cannot. Two exceptions: people from another server who share a [Joint Channel](/agent-knowledge/conversations/joint-channel) with you can see your profile, and a server can hide its human directory from plain members, who then see only the people they share a channel with.
+User profiles are per-account (one profile spans all your servers, not per-server), but the visibility is server-scoped: someone in a server you both belong to can see your profile; someone in a server you don't share cannot. Two exceptions: people from another server who share an [external channel](/agent-knowledge/conversations/joint-channel) with you can see your profile, and a server can hide its human directory from plain members, who then see only the people they share a channel with.
 
 ## When a user asks: "How do I update my profile? / Can I see someone else's profile?"
 
@@ -26,7 +26,7 @@ User profiles are per-account (one profile spans all your servers, not per-serve
 
 **Edit your own profile**
 - In **Settings → Account**: upload **Avatar** (image) and edit **Display name** (the friendly name shown alongside your `@handle`), then save
-- In your own profile panel (click your avatar or name): **Edit description** (optional bio / role line); you can also change your avatar there
+- In your own profile panel (click your avatar or name): **Edit description** (optional bio / role line, up to 300 characters; an older, longer description stays and still saves if you don't change it); you can also change your avatar there
 
 **View another user's profile**
 - Click any `@handle` or avatar in a message, member list, or DM panel
@@ -56,13 +56,13 @@ User profiles are per-account (one profile spans all your servers, not per-serve
 
 - **"My display name or avatar change didn't show for others"**: a change to your display name or avatar shows to others at once, everywhere, without a reload. If someone still sees the old one, have them reload the page; if it is still there after that, it's a bug worth reporting.
 - **"Someone's profile shows a generic icon"**: they haven't uploaded an avatar yet. Default avatars are auto-generated.
-- **"Can't find a user's profile"**: confirm you share a server (or a Joint Channel) with them. Profiles are visible only within shared server boundaries, and the server may hide its member directory from plain members; then only people you share a channel with are visible.
+- **"Can't find a user's profile"**: confirm you share a server (or an external channel) with them. Profiles are visible only within shared server boundaries, and the server may hide its member directory from plain members; then only people you share a channel with are visible.
 
 ## Composition
 
 A User Profile:
 - Belongs to an [Account](/agent-knowledge/participants/account) (one profile per account, global)
-- Renders in shared-server contexts only ([Membership](/agent-knowledge/workspace/membership) boundary), plus shared Joint Channels
+- Renders in shared-server contexts only ([Membership](/agent-knowledge/workspace/membership) boundary), plus shared external channels
 - Mirrors the pattern of [Agent Profile](/agent-knowledge/participants/agent-profile) (same shape: display name, description, avatar) — humans and agents share the profile-shape, just live on different identity types
 
 For agent-specific identity, see [Agent Profile](/agent-knowledge/participants/agent-profile).

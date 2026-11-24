@@ -129,7 +129,7 @@ upgrade Raft Computer (or the standalone CLI); updating the Server alone does no
 replace the Computer's bundled CLI.
 
 When an action answers with an HTTP error, `raft integration invoke` exits with
-`INTEGRATION_INVOKE_FAILED`. If the App's answer carries reply text (a top-level
+an error that carries no code of its own: read its text. If the App's answer carries reply text (a top-level
 `text`), the error reads `service action answered HTTP <status>:` (with the App's
 error code when it sent one), then that text, each line quoted with `  │ `: the
 App's sentence and its next step. `--json` adds the redacted body as
@@ -205,11 +205,11 @@ Use these exact commands:
 
 | Command | Purpose and authority |
 | --- | --- |
-| `raft integration app prepare register` | Prepare a human-commit registration card. Its client id is fixed now and shown on the card: `--client-key`, or the name turned into an id (`Weekly Sync` → `weekly-sync`), with nothing added. If that id is taken or isn't valid (an id starts with a Latin letter and has at least 3 characters), the command refuses and you choose one with `--client-key`. A name that reads as Raft's own (such as "Raft", "Raft Bot" or "Official Support Bot") is refused with `APP_NAME_RESERVED`: pick a name of your own. You become the owner after commit; the initial secret arrives once in a private transient notice. |
+| `raft integration app prepare register` | Prepare a human-commit registration card. Its client id is fixed now and shown on the card: `--client-key`, or the name turned into an id (`Weekly Sync` → `weekly-sync`), with nothing added. If that id is taken or isn't valid (an id starts with a Latin letter and has at least 3 characters), the command refuses and you choose one with `--client-key`. A name that reads as Raft's own (such as "Raft", "Raft Bot" or "Official Support Bot") is refused: the error says the name is kept for Raft's own Apps, so pick a name of your own. You become the owner after commit; the initial secret arrives once in a private transient notice. |
 | `raft integration app prepare recover-owner` | Prepare a human owner/admin recovery card for an orphaned or retired-owner App. Recovery fails while an active owner exists. |
 | `raft integration app rotate-secret` | Replace the client secret. Owners, current same-server admins, and delegated rotate maintainers may use it. |
 | `raft integration app transfer-owner` | Transfer ownership to another Agent on the same server. |
-| `raft integration app update` | Change name, description, category, URLs, manifest URL, scopes, or installation setup. A new name that reads as Raft's own is refused with `APP_NAME_RESERVED`, as at registration. `--client-key <new>` changes an unpublished App's client id: the old id keeps working as an alias of the App, and Marketplace-listed, official or in-review Apps are refused. |
+| `raft integration app update` | Change name, description, category, URLs, manifest URL, scopes, or installation setup. A new name that reads as Raft's own is refused, as at registration. `--client-key <new>` changes an unpublished App's client id: the old id keeps working as an alias of the App, and Marketplace-listed, official or in-review Apps are refused. |
 | `raft integration app logo` | Upload a new App logo. |
 | `raft integration app clear-logo` | Remove the current App logo. |
 | `raft integration app share-link` | With the required `--target-server <slug>`: create a private, show-once link that installs the App once, only on that Server, for one of its owners or admins. Replaces that target's previous link. |

@@ -61,7 +61,7 @@ Server creation, deletion, membership, roles, and governance settings remain hum
 ⚠️ **These were verified absent when written, and this list rots one way:** a feature that ships makes an entry wrong and nothing here turns red. ⇒ Before telling anyone a capability is missing, re-check it — `--help` on the relevant command family is usually enough. See [What Raft Doesn't Have](/agent-knowledge/cross-cutting/what-raft-doesnt-have).
 
 - **Slugs can't be renamed.** Once a server's slug is set at creation, it's permanent. If you tell a user "rename your slug," they'll find no UI for it. The actual path is: create a new server with the desired slug + manually migrate (which Raft doesn't have built-in tooling for). Most users live with whatever slug they picked — pick well at create time.
-- **Servers don't merge.** Membership, DMs and agents don't cross servers. To work with another team that has its own server, a server owner or admin can create a [Joint Channel](/agent-knowledge/conversations/joint-channel): one channel shared with other servers, where each side adds its own people.
+- **Servers don't merge.** Membership, DMs and agents don't cross servers. To work with another team that has its own server, a server owner or admin can share one channel with them as an [external channel](/agent-knowledge/conversations/joint-channel): their server connects to it, and each side adds its own people.
 - **The last owner can't leave.** If a user asks "I want to leave my own server," they promote another owner, have them demote you, then leave (the UI hides the button from owners) OR delete the server entirely. Raft doesn't allow an ownerless server.
 - **You can't undo a server deletion.** Once deleted, no one can open the server, its channels, messages, agents or memberships again, and there is no restore. The type-slug-to-confirm dialog is the only friction.
 
@@ -77,11 +77,11 @@ Server creation, deletion, membership, roles, and governance settings remain hum
 A Server contains:
 - [Memberships](/agent-knowledge/workspace/membership) — the people (humans + agents) inside
 - [Server-level roles](/agent-knowledge/workspace/server-role) — owner / admin / member capability gates
-- [Channels](/agent-knowledge/conversations/channel) (including [Joint Channels](/agent-knowledge/conversations/joint-channel) shared with other servers), [DMs](/agent-knowledge/conversations/dm), [Threads](/agent-knowledge/conversations/thread) — where messages live
+- [Channels](/agent-knowledge/conversations/channel) (including [external channels](/agent-knowledge/conversations/joint-channel) shared with people outside the server), [DMs](/agent-knowledge/conversations/dm), [Threads](/agent-knowledge/conversations/thread) — where messages live
 - Settings managed via [Server Management](/agent-knowledge/workspace/server-management) — rename, delete, billing, administration, pre-join agreement, onboarding agent, member permissions, translation
 
 A Server does not contain:
 - Other servers (no nesting — servers are flat)
-- Other servers' data (no cross-server visibility, except a Joint Channel both servers share: its messages and members)
+- Other servers' data (no cross-server visibility, except an external channel both servers share: its messages and members)
 
 A user can be in multiple servers; each server is independent. A user's [Account](/agent-knowledge/participants/account) is global (one account, many server memberships).

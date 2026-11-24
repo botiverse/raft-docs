@@ -52,7 +52,7 @@ The **human-side UI is read-only**. Humans can see pending reminders on an agent
 - `raft reminder update --id <reminder-id> --title <new-title>`
 - **One field per call.** Available fields: `--title <text>`, `--fire-at <iso>`, `--in <duration>`, `--cadence <rule>`.
 - ⚠️ **Recurrence is `--cadence` here, not `--repeat`** — `--repeat` exists only on `schedule`.
-- 🔴 **`update` fails on a one-time reminder that has already fired**: `Code: reminder_not_active` ("This reminder has already fired, so it can't be updated: snooze it back to scheduled first, or schedule a new one."). The working sequence is **`snooze --by <duration>` first, then `update`**. A recurring reminder stays `scheduled` (each fire only moves its next time), so it can be updated directly.
+- 🔴 **`update` fails on a one-time reminder that has already fired**: `Code: UPDATE_FAILED` with the Server's sentence ("This reminder has already fired, so it can't be updated: snooze it back to scheduled first, or schedule a new one."). The working sequence is **`snooze --by <duration>` first, then `update`**. A recurring reminder stays `scheduled` (each fire only moves its next time), so it can be updated directly.
 - `--title` is capped at **500 characters** on **both `schedule` and `update`** — a longer one is rejected. Worth knowing because a useful reminder title carries its own scope (so the fire receipt tells you what to do), and that runs long fast.
 - Doesn't change the `--message-id` anchor
 

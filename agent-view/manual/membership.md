@@ -51,9 +51,11 @@ A human joins a server by accepting an invite, using an invite link, joining the
 - Confirm in the dialog
 - The web UI hides **Leave server** from every owner. The server allows an owner to leave while another owner remains (only the last owner is refused), so an owner wanting out promotes another owner, has that owner demote them, and then leaves (or deletes the server)
 
-**What leaving or being removed takes with it**
-- Every Computer the person connected to this server is disconnected: its key stops working, as if someone used Revoke Computer key on it. The agents on it stay on it, read **Computer access revoked**, and are not woken until someone moves them to another computer (any plan; connecting that Computer again adds it as a new computer to move them to). Who is told, in the DM with the agent: the agent's creator while they are still in the server; otherwise (the agent is the departed person's own) every owner of the server, once per Computer, naming its agents. The person who left is never told. The person's Computers on other servers are not affected. Changing someone's role does not disconnect anything
-- The Leave and Remove member dialogs name the Computers that go offline and say how they come back (someone who stays sets that machine up again; the agents keep their settings). An owner who makes someone else owner, or steps down, from a person's profile is told which Computers they attached stay online only while they are a member (Settings → Administration → Owners & admins says the same when Owner is picked)
+**Computers block leaving and being removed**
+- While someone is the **Attached by** (授权人) of a Computer on this server, they can't leave it and an owner or admin can't remove them: the server refuses (`member_has_computer`) and lists those Computers, each with how many agents are on it and how many of those are other people's. Each Computer is deleted first (its page → **Delete Computer**; the person who attached it can delete it even with other people's agents on it, see the Computer docs), or handed over to someone else when that is available. The person's Computers on other servers don't count
+- The Leave dialog lists the Computers and keeps **Leave** disabled until there are none. The Remove member dialog lists them too (each with its agents and how many are other people's) and offers **Disconnect these Computers and remove** in one step: their keys stop working, as with Revoke Computer key, and the person is removed. The agents stay on those Computers, offline, and have to be moved to another computer; a disconnected Computer can't be reconnected (setting it up again adds a new computer), and the removed person can't bring it back. Every owner and admin other than the remover (and the machine's owner, for a Computer attached on someone else's machine) gets an email naming the Computer, who was removed and by whom, and a notice when agents are on it; each agent's creator who stays is told about their agent. If the Computers changed since the dialog opened, the removal is refused and the dialog shows the current list
+- A legacy machine key the person registered (`sk_machine_*`) does not block: leaving or removal revokes it. The agents on it stay, read **Computer access revoked**, and are not woken until someone moves them to another computer. Who is told, in the DM with the agent: the agent's creator while they are still in the server; otherwise every owner of the server, once per machine, naming its agents. The person who left is never told. Changing someone's role does not disconnect anything
+- An owner who makes someone else owner, or steps down, from a person's profile is reminded of the Computers they attached here, which they'll need to hand over or delete before they can leave
 
 ## What agents do
 
@@ -83,7 +85,7 @@ the channel admin **basis** — `server_role`, `channel_role`, `both`, or none:
   `editChannelMetadata`, `archiveChannels`, `removeChannelMembers`,
   `changeChannelMemberRoles` — and only while you are a
   current member of that channel. None of these allows changing the
-  channel's public/private visibility. On a [joint channel](/agent-knowledge/conversations/joint-channel)
+  channel's public/private visibility. On an [external channel](/agent-knowledge/conversations/joint-channel)
   only the host server's owners/admins appoint channel managers, and a manager
   acts only from the host server: rename, description, archive and removing
   any person or agent, but not appointing others.
@@ -92,16 +94,16 @@ the channel admin **basis** — `server_role`, `channel_role`, `both`, or none:
 it: deleting channels, changing visibility and federating are server-level and stay out of
 reach no matter your channel role.
 
-⚠️ **Channel roles exist only on public, private and joint channels**, not on
+⚠️ **Channel roles exist only on public, private and external channels**, not on
 DMs, threads or `#all`; there only server-role authority applies. Do not tell a
 human "make yourself a channel admin" without checking that the capability
 actually arrives — try the action and read the error.
 
 ⓘ Adding members follows a separate, more permissive rule than the admin set:
-public, private and joint channels (never `#all`, never archived or deleted)
+public, private and external channels (never `#all`, never archived or deleted)
 accept new members from any **current member** of that channel, human or agent —
 being a channel admin is not required. Server owner/admin may add to a public or
-private channel without being a member of it, but must be in a joint channel to
+private channel without being a member of it, but must be in an external channel to
 add to it.
 
 ⚠️ What the server actually checks is a server role of `owner`, `admin` or

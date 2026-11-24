@@ -6,16 +6,16 @@ description: Full-text search across messages the viewer can see. Sidebar Search
 
 # Search
 
-Search is the discovery surface for messages across all the channels, DMs, and threads the viewer can see. Both a UI page (sidebar **Search** button or `⌘/Ctrl+K`) and a CLI command (`raft message search`) are available.
+Search is the discovery surface for messages across all the channels, DMs, and threads the viewer can see. Both a UI page (**Search** in the top bar, or the Left Rail's **Search** tab where the window has no top bar, or `⌘/Ctrl+K`) and a CLI command (`raft message search`) are available.
 
 > **In one sentence**: Search is how you find a message you remember exists but can't navigate to — by text, sender, channel, or time range.
 
-Search respects the viewer's visibility scope — you can only find messages in channels/DMs/threads you have access to. Private channels you're not a member of are invisible to your search. Joint channels and their threads are searchable for their members; a hidden #all is not.
+Search respects the viewer's visibility scope — you can only find messages in channels/DMs/threads you have access to. Private channels you're not a member of are invisible to your search. External channels and their threads are searchable for their members; a hidden #all is not.
 
 ## When a user asks: "How do I find a message about [topic] / from [person]?"
 
 → they want: locate a specific message they remember vaguely
-→ in the UI: click **Search** in the sidebar, or `⌘/Ctrl+K` for the global search overlay → type query → filter by sender / channel / time / sort
+→ in the UI: click **Search** (top bar, or the Left Rail tab), or `⌘/Ctrl+K` for the global search overlay → type query → filter by sender / channel / time / sort
 → via CLI: `raft message search --query "<terms>"` with optional `--target`, `--sender`, `--sort`, `--before`, `--after`, `--limit`, `--offset`; omit `--query` when listing messages by sender/channel/time filter only
 
 Message search finds messages only. Where the server has Artifacts, a text search (a query, at most a conversation filter, first page) ends with one more line when artifacts match the same words: `Artifacts also match "<terms>": raft artifact list --query '<terms>'`. To search artifacts directly, use `raft artifact list --query` (the `artifact` topic).
@@ -23,7 +23,7 @@ Message search finds messages only. Where the server has Artifacts, a text searc
 ## What humans do
 
 **Open search**
-- Click the **Search** button in the sidebar (top of sidebar, near the channel list)
+- Click **Search** in the top bar, or the **Search** tab in the Left Rail where the window has no top bar
 - OR press `⌘/Ctrl+K` from anywhere in the app for the global search overlay
 - Both route to the same search experience
 - On a desktop-width window (web or desktop app) search floats as an overlay over the conversation you are in; `Esc` or clicking outside returns you there. **Search for "…"** (or *view all results*) opens the full results page with filters and a context preview. On a phone, search is a full page
@@ -46,7 +46,7 @@ Message search finds messages only. Where the server has Artifacts, a text searc
 - To get past it, narrow the keywords, add a channel or sender filter, or switch to **Recent** / `--sort recent`, then retry. A time range works together with Recent; on its own it does not make a common term searchable by relevance.
 - Recent searches are never refused as too broad and keep exact newest-first order.
 - When no message contains all of your words, search normally retries with messages that contain any one of them. If too many messages contain one of the words, that retry is skipped and the result is empty with `relaxedSkipped=too_broad`: this does not mean no message matches. Use fewer, more specific words, or add a channel or sender filter.
-- A Recent search can stop before it has looked at every message. The result is then marked **incomplete**: the matches shown are real, but older messages have not been searched yet, so this is not all the matches (and no results does not mean none exist). The CLI prints `incomplete=true` and the exact `raft message search … --cursor <c>` command that continues below the last message read; the web page shows **Continue searching**. The cursor also pages a full recent page exactly (no `--offset`). A Recent search for a very common term may not cover joint channels; filter on the joint channel to search it.
+- A Recent search can stop before it has looked at every message. The result is then marked **incomplete**: the matches shown are real, but older messages have not been searched yet, so this is not all the matches (and no results does not mean none exist). The CLI prints `incomplete=true` and the exact `raft message search … --cursor <c>` command that continues below the last message read; the web page shows **Continue searching**. The cursor also pages a full recent page exactly (no `--offset`). A Recent search for a very common term may not cover external channels shared with other servers; filter on that channel to search it.
 
 **Navigate to a result**
 - Click any hit → opens the message in its source channel/DM/thread (with the message highlighted)
