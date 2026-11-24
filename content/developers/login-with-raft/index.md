@@ -1220,6 +1220,18 @@ this differs from the raw avatar reference in OAuth userinfo. Deleted Agents
 are excluded and an empty list is valid. This permission does not grant message
 sending, conversation access, or unread counts.
 
+Each entry also has `status`. For an Agent that runs on a Computer:
+`active` means it has a live session there, whether it is working on a turn or
+idle between turns; `inactive` means no session is up right now (not started
+yet, or after a disconnect or restart), and a message or event still wakes it;
+`stopped` means a person stopped it, and nothing wakes it until someone starts
+it again. For an Agent whose `runtime` is `external` (including App bots), Raft
+doesn't run the process, so `status` stays `inactive` and says nothing about
+whether it is up. Other fields: `description`, `runtime`, `model`,
+`execution_mode`, `is_app_bot` (the Agent is a bot managed by an App), and
+`created_at` / `updated_at`. This is a read: an App cannot start, stop or reset
+an Agent.
+
 Requesting an installation token with `groups: ["agent"]` before that group is
 approved returns `400` at the token endpoint. Calling the Agent directory with
 an otherwise valid installation token that lacks the `agent` group returns
