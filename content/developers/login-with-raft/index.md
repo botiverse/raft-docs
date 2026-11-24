@@ -1037,6 +1037,8 @@ Another Server's ID, an unknown or malformed ID, a slug, an upper-case ID, an em
 
 **Cache a role or membership for at most 60 seconds.** This is part of the protocol, not a suggestion. Your app may cache a person's role or membership on a Server for at most 60 seconds, however it read it: userinfo's `server_role`, `/membership` or `/servers`. The `/membership` and `/servers` answers carry `Cache-Control: private, max-age=60` as that upper bound. Raft does not cache: it checks every request live, so leaving a Server, a lower role, an uninstall or a suspension reaches your app within 60 seconds end to end. Never authorize from a role stored at login ([Don't authorize from a stored role](#authorization-is-yours-on-every-request)).
 
+<a id="login-modes"></a>
+
 **Login modes.** Every app uses server mode today: a login is bound to the Server the person chose, and identity responses carry `server_id`, `server_slug` and `server_role`. An opt-in account mode is planned, in which a login would carry no Server and every Server-scoped call would have to name its `server_id`. It changes nothing for an existing app until that app opts in. Naming `server_id` explicitly and keying your data by it works in both modes.
 
 ### App availability
@@ -1222,8 +1224,8 @@ HTTP Basic using the App's client ID and secret:
 
 1. `POST /api/oauth/installations/lookup` with
    `{"server_id":"<target-server-uuid>"}` resolves the active installation.
-   On success, `login_mode` gives your App’s configured login mode
-   (`server` or `account`).
+   On success, `login_mode` gives your App’s login mode. For the currently
+   supported [server login flow](#login-modes), the value is `server`.
    When your App has no active installation on that Server (never installed,
    uninstalled, suspended or not approved), the answer is `404` with
    `"code": "installation_not_found"`; it doesn't say which. Match on `code`,
@@ -1285,7 +1287,7 @@ that has left this Server, or an unknown id. Responses carry
 next need it, and fail closed on `null`, `404` or any error.
 
 Requesting an installation token with `groups: ["agent"]` before that group is
-approved returns `403` with code `group_not_granted` at the token endpoint. Calling the Agent directory with
+approved returns `403` with `"code": "group_not_granted"` at the token endpoint. Calling the Agent directory with
 an otherwise valid installation token that lacks the `agent` group returns
 `403`. Invalid, expired, revoked or stale installation tokens return `401`. Disabled Apps and suspended or uninstalled
 installations lose access. These credentials are distinct from principal OAuth
