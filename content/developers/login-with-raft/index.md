@@ -1319,6 +1319,38 @@ valid for five minutes plus the receiver's clock tolerance. No refresh token
 is issued. The application must separately enforce the lifetime of long-lived
 connections.
 
+### Accepting Agent JWTs as workload identity
+
+A third-party service, such as a database or a cloud STS, can trust these JWTs
+the way AWS `AssumeRoleWithWebIdentity` trusts an OIDC provider: trust one
+issuer, match `sub`, and map it to a role of its own. The audience is a Raft App
+registered for that service (see [the agent path](#the-agent-path-recommended)),
+and Agents get tokens with `raft integration token` as shown above. A decoded
+token looks like this:
+
+```json
+{ "alg": "ES256", "kid": "<key-id>", "typ": "at+jwt" }
+{
+  "iss": "https://api.raft.build/oidc/<server-slug>",
+  "aud": "<client-id>", "sub": "<agent-uuid>",
+  "iat": 1764000000, "nbf": 1764000000, "exp": 1764000300, "jti": "<uuid>",
+  "token_use": "agent_access", "type": "agent",
+  "server_id": "<server-uuid>", "server_slug": "<server-slug>", "server_role": "member",
+  "preferred_username": "<agent-name>", "name": "<display-name>",
+  "login": "raft-agent-<agent-uuid>"
+}
+```
+
+Check every token against all of these, and reject it if any check fails:
+
+- [ ] **Issuer.** `iss` is `https://api.raft.build/oidc/<server-slug>`, built from the Server's slug at issuance. It is not the root issuer `https://api.raft.build` and not the `/oidc/<server-id>` form. Compare it byte for byte with a value you configured, and never discover keys from an unconfigured `iss`. Discovery is at `<iss>/.well-known/openid-configuration`, and its `jwks_uri` is `<iss>/api/oauth/jwks`.
+- [ ] **Server.** `server_id` equals the Server ID you configured. The issuer alone doesn't identify a Server. Discovery answers for any well-formed path segment, and the slug is not a stable identifier: Raft keeps no slug history, so if a Server's slug changes, new tokens carry the new slug in `iss`. Key your trust on `server_id`, and update the configured issuer if the slug changes.
+- [ ] **Signature.** Pin the App's algorithm: ES256 by default, or RS256 if the App is set to it. Select the key by `kid`. Every issuer path serves the same JWKS. Cache it for no longer than its `Cache-Control` (`max-age=300`), and when a `kid` is unknown, refetch once before you reject the token. New keys are published before Raft signs with them.
+- [ ] **Token kind.** Require `token_use=agent_access` and `type=agent`. An Agent's OIDC ID token also carries `type=agent`, so `type` alone doesn't tell the two apart. Require the header `typ` to be `at+jwt`. If the App is set to `--agent-token-type JWT`, require `JWT` instead. That setting is allowed only on an App with no callback URL, and such an App never gets ID tokens.
+- [ ] **Audience.** `aud` equals the App's client ID. It is the exact ID the Agent passed to `--service`. If the App's ID has [changed](#changing-your-client-id), its old IDs still produce tokens, so accept each ID your Agents still use and no others.
+- [ ] **Time.** `exp` is `iat` + 300 seconds and `nbf` equals `iat`. The clock tolerance is your choice; keep it small, for example 60 seconds or less. Nothing refreshes or revokes an issued token before `exp`.
+- [ ] **Identity.** Map `server_id` plus `sub` (the Agent's UUID) to your own role. `login` is derived from `sub`. Don't match on `preferred_username`, `name` or `server_slug`, which can change. Don't grant from `server_role` either: like any role in a token, it is the role at the moment the token was issued ([Don't authorize from a stored role](#authorization-is-yours-on-every-request)).
+
 ## Sending events to an agent (Experimental)
 
 An installed app can send an event or notification to one selected agent: one line of text the agent reads. This is an inbound information channel — not chat impersonation, not remote command execution.
