@@ -19,67 +19,74 @@ export function splitFrontMatter(src) {
 /** Parse body lines into blocks: fences (verbatim), headings, containers, tables, prose lines. */
 export function parse(src) {
   const { fm, body, bodyStart } = splitFrontMatter(src.replace(/\r\n/g, "\n"));
+  const zhOnlyIds = new Set((fm.zh_only_sections || "").split(/[\s,]+/).filter(Boolean));
   const lines = body.split("\n");
-  const out = { fm, headings: [], fences: [], containers: [], tables: [], prose: [], links: [], images: [], inlineCode: [], html: [] };
+  const out = { fm, zhOnlyIds, headings: [], fences: [], containers: [], tables: [], prose: [], links: [], images: [], inlineCode: [], html: [] };
   let fence = null;
   let table = null;
+  let zhOnlyDepth = 0;
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
     const lineNo = i + 1 + bodyStart;
     const fenceOpen = line.match(/^(\s*)(`{3,}|~{3,})(.*)$/);
     if (fence) {
       if (fenceOpen && fenceOpen[2][0] === fence.marker[0] && fenceOpen[2].length >= fence.marker.length && !fenceOpen[3].trim()) {
-        out.fences.push({ info: fence.info, text: fence.lines.join("\n"), line: fence.line });
+        out.fences.push({ info: fence.info, text: fence.lines.join("\n"), line: fence.line, zhOnly: fence.zhOnly });
         fence = null;
       } else fence.lines.push(line);
       continue;
     }
     if (fenceOpen) {
-      fence = { marker: fenceOpen[2], info: fenceOpen[3].trim(), lines: [], line: lineNo };
+      fence = { marker: fenceOpen[2], info: fenceOpen[3].trim(), lines: [], line: lineNo, zhOnly: zhOnlyDepth > 0 };
       if (table) { out.tables.push(table); table = null; }
       continue;
     }
     if (/^\s*\|/.test(line)) {
       const cells = line.trim().replace(/^\||\|$/g, "").split(/(?<!\\)\|/).length;
-      if (!table) table = { line: lineNo, rows: 0, cols: cells };
+      if (!table) table = { line: lineNo, rows: 0, cols: cells, zhOnly: zhOnlyDepth > 0 };
       table.rows++;
       table.cols = Math.max(table.cols, cells);
       out.prose.push({ text: line, line: lineNo });
-      scanInline(line, lineNo, out);
+      scanInline(line, lineNo, out, zhOnlyDepth > 0);
       continue;
     } else if (table) { out.tables.push(table); table = null; }
     const h = line.match(/^(#{1,6})\s+(.*?)\s*(\{#([^}]+)\})?\s*$/);
     if (h) {
-      out.headings.push({ depth: h[1].length, text: h[2], id: h[4] ?? null, line: lineNo });
+      const depth = h[1].length;
+      const id = h[4] ?? null;
+      if (zhOnlyDepth && depth <= zhOnlyDepth) zhOnlyDepth = 0;
+      if (!zhOnlyDepth && id && zhOnlyIds.has(id)) zhOnlyDepth = depth;
+      const zhOnly = zhOnlyDepth > 0;
+      out.headings.push({ depth, text: h[2], id, line: lineNo, zhOnly });
       out.prose.push({ text: h[2], line: lineNo });
-      scanInline(h[2], lineNo, out);
+      scanInline(h[2], lineNo, out, zhOnly);
       continue;
     }
     const c = line.match(/^\s*(:{3,})\s*(\S*)\s*(.*)$/);
     if (c) {
-      out.containers.push({ type: c[2] || "/", title: c[3], line: lineNo });
+      out.containers.push({ type: c[2] || "/", title: c[3], line: lineNo, zhOnly: zhOnlyDepth > 0 });
       if (c[3]) { out.prose.push({ text: c[3], line: lineNo }); }
       continue;
     }
     const tab = line.match(/^==\s+(.*)$/);
-    if (tab) { out.containers.push({ type: "==tab", title: tab[1], line: lineNo }); continue; }
+    if (tab) { out.containers.push({ type: "==tab", title: tab[1], line: lineNo, zhOnly: zhOnlyDepth > 0 }); continue; }
     if (line.trim()) {
       out.prose.push({ text: line, line: lineNo });
-      scanInline(line, lineNo, out);
+      scanInline(line, lineNo, out, zhOnlyDepth > 0);
     }
   }
   if (table) out.tables.push(table);
   return out;
 }
 
-function scanInline(text, line, out) {
-  for (const m of text.matchAll(/`([^`]+)`/g)) out.inlineCode.push(m[1]);
+function scanInline(text, line, out, zhOnly = false) {
+  if (!zhOnly) for (const m of text.matchAll(/`([^`]+)`/g)) out.inlineCode.push(m[1]);
   const noCode = text.replace(/`[^`]*`/g, "");
   for (const m of noCode.matchAll(/(!?)\[((?:[^\]\[]|\[[^\]]*\])*)\]\(\s*<?([^)\s>]+)>?(?:\s+"[^"]*")?\s*\)/g)) {
-    (m[1] ? out.images : out.links).push({ text: m[2], url: m[3], line });
+    (m[1] ? out.images : out.links).push({ text: m[2], url: m[3], line, zhOnly });
   }
-  for (const m of noCode.matchAll(/<img[^>]*\ssrc="([^"]+)"/g)) out.images.push({ text: "", url: m[1], line });
-  for (const m of noCode.matchAll(/<a[^>]*\shref="([^"]+)"/g)) out.links.push({ text: "", url: m[1], line });
+  for (const m of noCode.matchAll(/<img[^>]*\ssrc="([^"]+)"/g)) out.images.push({ text: "", url: m[1], line, zhOnly });
+  for (const m of noCode.matchAll(/<a[^>]*\shref="([^"]+)"/g)) out.links.push({ text: "", url: m[1], line, zhOnly });
   for (const m of noCode.matchAll(/<\/?([a-zA-Z][\w-]*)/g)) out.html.push(m[1]);
 }
 
