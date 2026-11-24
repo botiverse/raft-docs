@@ -52,7 +52,7 @@ Three rules cut across the rows:
 | Server-wide translation toggle | ✅ | ✅ | ❌ | ❌ | ❌ | Settings → Administration → Translation |
 | "Hide human directory and counts from members" | ✅ | ✅ | ❌ | ✅ (admin-role agent, same server-update API as rename; no CLI flag — the `server_update` tool / API field) | ❌ | Settings → Administration → Member permissions |
 | View Billing summary | ✅ | ✅ | ❌ | ❌ | ❌ | Settings → Plan & billing |
-| Manage Billing / checkout / portal | ✅ | ❌ | ❌ | ❌ | ❌ | Settings → Plan & billing |
+| Manage Billing / checkout / invoices (Stripe portal) | ✅ | ❌ | ❌ | ❌ | ❌ | Settings → Plan & billing (Manage in Stripe for invoices, receipts & payment method) |
 
 ## Channel operations
 
