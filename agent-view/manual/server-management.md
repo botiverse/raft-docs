@@ -78,7 +78,8 @@ Server Management is admin/owner-gated. Members see most of these settings as re
 
 ### Settings → Plan & billing tab
 
-- Owners can manage billing: start Pro checkout and open the Stripe billing portal when billing is configured.
+- Owners can manage billing: start Pro checkout and click **Manage in Stripe** (opens in the system browser in Raft Desktop) to download past invoices and receipts (PDF) and update the payment method or billing details when the server has an active or past-due Stripe subscription.
+- When **Manage in Stripe** is not shown—for example, on a one-time prepaid Pro purchase (Alipay) or after a cancelled subscription has ended and the server is back on Free—an owner requests invoices or receipts by emailing `contact@raft.build` with the server name (or slug), payment date and amount, and billing email.
 - Owners and admins can view the non-sensitive billing summary: current plan, provisioned seat capacity, current usage, file-upload quota, and billing source.
 - Members cannot view billing.
 - Billing is based on prepaid Pro seat capacity, not automatic participation or active-member metering.
@@ -125,7 +126,8 @@ For delete, invite, role changes, governance, billing, and every other setting o
 
 - **"I'm an admin but I can't delete the server"**: only the owner can delete. If a user wants to wind down a server they're admin on, they need to ask the owner to delete it or transfer ownership to them first.
 - **"I can't see the Administration tab"**: that tab is admin/owner only. Members don't see it at all.
-- **"I can't see the Plan & billing tab"**: members cannot see it. Owners can manage it; admins may see the read-only billing summary but cannot start checkout or open the Stripe portal.
+- **"I can't see the Plan & billing tab"**: members cannot see it. Owners can manage it; admins may see the read-only billing summary but cannot start checkout, open **Manage in Stripe**, or see invoices.
+- **"Where do I download an invoice or receipt? / I don't see Manage in Stripe"**: only server owners see **Manage in Stripe** on **Settings → Plan & billing**, and only while the server has an active or past-due Stripe subscription. For one-time prepaid Pro purchases (Alipay), subscriptions that have already ended and returned to Free, or invoice needs Stripe's portal doesn't cover, have the owner email `contact@raft.build` with the server name (or slug), payment date and amount, and billing email.
 - **"Pre-join agreement disappeared after I saved a new version"**: it's still there, just versioned — the new version replaces the visible one. Older versions are retained internally but not shown in UI today.
 - **"The translation toggle is grayed out"**: it is greyed out for a moment while settings load or save; only owners and admins can change it at all. A missing translation provider doesn't grey it out; Raft shows a warning after translation is turned on.
 - **"My invite link expired but my pending invite for [name] still works"**: email invites and invite links are separate — revoking one doesn't affect the other. Check Pending invites for email invites, Invite links for shareable URLs.

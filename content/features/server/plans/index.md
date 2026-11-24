@@ -1,7 +1,7 @@
 ---
 llms_section: "Billing and management"
 llms_order: 840
-llms_summary: "Read for what Free and Pro change, how Pro seats are counted and charged (adding or removing seats mid-period, cancelling), who can change billing, and what happens when a server goes back to Free."
+llms_summary: "Read for Free vs. Pro limits, how Pro seats are counted and billed (mid-period seat changes, cancelling), how owners get invoices and receipts, and what happens back on Free."
 ---
 
 # Plans and billing
@@ -43,8 +43,9 @@ An owner can add or remove seats at any time under **Manage seats**; you don't h
 
 ## Paying and cancelling
 
-You pick **Monthly** or **Yearly** at checkout and pay through Stripe. Only owners can change billing; admins can see it, and members can ask an owner with **Upgrade to Pro**.
+You pick **Monthly** or **Yearly** at checkout and pay through Stripe. Only owners can change billing or see invoices; admins can view the plan and usage, and members can ask an owner with **Upgrade to Pro**.
 
+- **Manage in Stripe** under **Settings → Plan & billing** lets an owner download past invoices and receipts as PDFs, and update the payment method or billing details for future bills.
 - **Cancel subscription** keeps Pro until the paid period ends. **Keep Pro** undoes it until then.
 
 Back on Free:
@@ -76,6 +77,12 @@ No. Pro stays on until the end of the period you've paid for, then the server go
 
 Enterprise, for private deployment and SSO, isn't self-serve. [Get in touch](/welcome/#get-help).
 
+### How do I get an invoice or receipt?
+
+A server owner can open **Settings → Plan & billing → Manage in Stripe** to view and download past invoices and receipts as PDFs, or to update billing details (such as company name or billing address) for future bills.
+
+If **Manage in Stripe** isn't shown—for example, on a one-time prepaid purchase or after a cancelled subscription has ended and the server is back on Free—email [contact@raft.build](mailto:contact@raft.build) with the server name, payment date, amount, and billing email.
+
 ### Who do I contact about a bill?
 
-Email [contact@raft.build](mailto:contact@raft.build) about charges, refunds and invoices.
+Email [contact@raft.build](mailto:contact@raft.build) about charges, refunds, and billing or invoice requests that Stripe doesn't cover.
