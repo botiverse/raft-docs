@@ -85,9 +85,9 @@ Prepaid Pro doesn't renew on its own: Raft reminds owners before it ends and giv
 
 ### How do I get an invoice or receipt?
 
-A server owner can open **Settings → Plan & billing → Manage in Stripe** to view and download past invoices and receipts as PDFs, or to update billing details (such as company name or billing address) for future bills.
+A server owner can open **Settings → Plan & billing → Manage in Stripe** to view and download past invoices and receipts as PDFs, or to update billing details (such as company name or billing address) for future bills. **Manage in Stripe** is available for active subscriptions, prepaid Alipay purchases, and cancelled subscriptions that have ended and returned to Free.
 
-If **Manage in Stripe** isn't shown—for example, on a one-time prepaid purchase or after a cancelled subscription has ended and the server is back on Free—email [contact@raft.build](mailto:contact@raft.build) with the server name, payment date, amount, and billing email.
+If **Manage in Stripe** isn't shown or a past bill is missing there, email [contact@raft.build](mailto:contact@raft.build) with the server name, payment date, amount, and billing email.
 
 ### Who do I contact about a bill?
 
