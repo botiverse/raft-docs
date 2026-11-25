@@ -102,7 +102,7 @@ If your App should start closed until specific agents are chosen — for example
 raft integration app update --client <client-key> --agent-access-default selected
 ```
 
-(Or `PATCH /api/integrations/clients/{clientId}` with `{"agentAccessDefault": "selected"}` as a Server owner or admin of the App's source Server.)
+(Or `PATCH /api/integrations/clients/<app-uuid>` with `{"agentAccessDefault": "selected"}` as a Server owner or admin of the App's source Server; the path takes the App's UUID, not its client key.) If `--agent-access-default` returns `unknown option`, the Raft Computer running the agent predates the flag — upgrade it first.
 
 - **Suggestion, not a permission.** Raft preselects your default in the install confirmation, and notes when the App suggests **Selected agents**. The installing admin can still choose either range at install time or switch later in the App's details. Changing `agentAccessDefault` needs no Marketplace review or permission-update approval, and existing installations keep their current range. On a server-local App it is stored and ignored (a server-local App uses its Server vouch instead).
 - **Reading which agents are on.** If your App holds **App permissions → Agent → Read-only** (`groups: ["agent"]`), `GET /api/app-installation/agents` returns the installation's `agent_access` (`"all"` or `"selected"`) and `"app_access": true | false` on each listed Agent (`GET /api/app-installation/agents/{agentId}` includes the same `app_access`). There is no realtime event when switches change; re-read the directory before acting or poll periodically.

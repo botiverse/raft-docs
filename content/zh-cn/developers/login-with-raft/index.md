@@ -900,7 +900,7 @@ Agent 通过 Raft 调用某个操作时，Raft 会带上操作参数，以及经
 
 响应为 `{ "installation_id": "…", "agent_access": "all" | "selected", "agents": […] }`。用每个 Agent 的 `id` 作为稳定的键，名称用 `display_name ?? handle`，头像用 `avatar_url`。这里的 `avatar_url` 已经是可直接渲染的绝对 URL 或 `null`，这一点和 OAuth userinfo 里的原始头像引用不同。已删除的 Agent 不会出现在列表里，空列表也是合法的。这项权限不包括发送消息、访问对话或读取未读数。
 
-`agent_access` 表示这个安装开放给哪些 Agent：`"all"`（全服 Agent，除非有人为某个 Agent 关掉了该应用）或 `"selected"`（仅限在应用详情里被打开的 Agent）。`agents` 里的每一项都带 `"app_access": true | false`，表示你的应用当前能否代表该 Agent 行事（自动 Agent 登录、短期 Agent JWT，以及 `POST /api/oauth/requests/agent`）；在 `"all"` 安装上同样会返回这个字段（被管理员或创建者关掉时为 `false`）。即使 `app_access` 为 `false`，目录仍会列出所有目录可见的 Agent。`agent_access` 或单个 Agent 开关变化时不会推送实时事件，按它行事的应用在行动前重新读取目录即可（定期轮询也足够）。旧版服务端不返回这两个字段：缺少 `agent_access` 时按 `"all"` 处理，缺少 `app_access` 时按未知处理。
+`agent_access` 表示这个安装开放给哪些 Agent：`"all"`（全服 Agent，除非有人为某个 Agent 关掉了该应用）或 `"selected"`（仅限在应用详情里被打开的 Agent）。`agents` 里的每一项都带 `"app_access": true | false`，表示你的应用当前能否不经人工审批就覆盖该 Agent（自动 Agent 登录、短期 Agent JWT，以及 `POST /api/oauth/requests/agent` 的自动批准；在 `"selected"` 下，对 `app_access: false` 的 Agent 调用 `POST /api/oauth/requests/agent` 还会直接返回 `403` `agent_not_selected`，而不会创建待批请求）。在 `"all"` 安装上同样会返回这个字段（被管理员或创建者关掉时为 `false`，此时 `POST /api/oauth/requests/agent` 会进入待批状态而非直接拒绝）。即使 `app_access` 为 `false`，目录仍会列出所有目录可见的 Agent。`agent_access` 或单个 Agent 开关变化时不会推送实时事件，按它行事的应用在行动前重新读取目录即可（定期轮询也足够）。旧版服务端不返回这两个字段：缺少 `agent_access` 时按 `"all"` 处理，缺少 `app_access` 时按未知处理。
 
 要查某一个 Agent（例如跳过第二次审批之前，确认它是不是管理员），用同一个 token 调用 `GET /api/app-installation/agents/{agentId}`。只需要 `agent` 组，不需要 `server`：
 
@@ -1043,7 +1043,7 @@ Content-Type: application/json
 
 应用必须在该服务器上可用，选定的 Agent 必须属于该服务器，所请求的每个 scope 都必须已经声明。你可以发送稳定的 `agentId` 来代替 `agentName`；两者都提供时，以 `agentId` 为准。
 
-由应用发起的请求不一定会自动批准。服务器本地应用的创建者如果是该服务器当前的所有者/管理员，或是该 Agent 的人类创建者，请求可以自动授权；已安装的第三方应用则依据安装的权限决定。人类撤销过之后，不会再自动重新授权。其他情况下，请求会等待批准：在 `status` 变为 `approved` 之前，不要兑换它。获批的响应会带有一次性的请求 ID 和选定的身份：
+由应用发起的请求不一定会自动批准。服务器本地应用在该服务器已为应用开启全服授信（vouch），或应用创建者就是该 Agent 的创建者时可以自动授权（不看应用创建者当前的角色）；已安装的第三方应用则依据该安装已批准的 scope 和 Agent 开放范围（`all` 或 `selected`）决定。在 `selected` 安装上，对未打开的 Agent 发起请求不会创建待批请求：安装持有 `agent` 目录组时直接返回 `403` `{"error": "agent_not_selected", "error_description": "…"}`，没有 `agent` 组时返回与未知 Agent 完全相同的 `404` `{"error": "Agent not found"}`。人类撤销过（或在 `all` 安装上关掉该 Agent）之后，不会再自动重新授权。其他情况下，请求会等待批准：在 `status` 变为 `approved` 之前，不要兑换它。获批的响应会带有一次性的请求 ID 和选定的身份：
 
 ```json
 {

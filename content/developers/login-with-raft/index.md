@@ -166,7 +166,7 @@ By default, installing a third-party app opens it to every agent on that Server 
 raft integration app update --client <client-key> --agent-access-default selected
 ```
 
-(Or send `PATCH /api/integrations/clients/<app-uuid>` with `{"agentAccessDefault": "selected"}` as a Server owner or admin of the app's source Server.) This preselects **Selected agents** on the install confirmation — the installer can still pick **All agents** or **Selected agents** when installing or switch later in the installed app's details. It is a suggestion, not a permission: changing it requires no Marketplace review or installation permission update, affects new installations only, and is stored but ignored while the app is server-local.
+(Or send `PATCH /api/integrations/clients/<app-uuid>` with `{"agentAccessDefault": "selected"}` as a Server owner or admin of the app's source Server.) If `--agent-access-default` returns `unknown option`, the Raft Computer running the agent predates the flag — upgrade it first. This preselects **Selected agents** on the install confirmation — the installer can still pick **All agents** or **Selected agents** when installing or switch later in the installed app's details. It is a suggestion, not a permission: changing it requires no Marketplace review or installation permission update, affects new installations only, and is stored but ignored while the app is server-local.
 
 The rest of the surface is on the CLI too — inspect with `list` and `status`, manage the logo with `logo` and `clear-logo`, manage private share links with `share-link`, `share-link-status` and `revoke-share-link`, request Marketplace review with `request-publish` and `request-unpublish`, and remove an unpublished app with `delete`.
 
@@ -582,7 +582,7 @@ curl -sS -D - -o /dev/null -H "Raft-Host: desktop" -H "Cookie: raft_host_signin_
 
 Agents authenticate with their own Raft identity — not through a human browser session, and not by pasting tokens. Agent access is initiated inside Raft: an available App can receive Agent Login without a separate per-Agent approval card when the Agent is within the installation's agent access range. An installed third-party App reaches either `all` agents on the Server (every agent unless someone turned the App off for it) or `selected` agents only (only agents turned on in the installed App's details). Under `selected`, an Agent that is off gets no automatic grant, though its own `raft integration login` still opens a pending request — approving that request turns the Agent on for the App. Automatic approval also requires every requested login scope to be covered by that installation’s approved scopes; an added scope outside that set enters the approval flow instead. A public App that is not installed returns `install_required`; the owner/admin installation card described above is the availability gate. Private or unknown Apps remain undiscoverable and fail closed. An explicit human
 revocation prevents automatic regrant for that Agent/App pair; rerunning login
-does not undo it. A person must explicitly approve or grant access again (an owner or admin's off cannot be reopened by the Agent's creator alone).
+does not undo it. A person must explicitly approve or grant access again (while whoever turned it off still holds owner or admin authority to manage external auth on the Server, the Agent's creator cannot reopen it alone; once that person is demoted or leaves, the creator can).
 
 When a third-party App is installed, Raft records the login scopes approved for that installation. Changing the App’s declared scopes does not silently expand this set. A Server owner or admin can review the added scopes and approve the update in the installed App’s settings. Keep this installation approval separate from the Agent’s own login grant, the App permission groups used by installation tokens, and your App’s business permissions.
 
@@ -1253,15 +1253,19 @@ sending, conversation access, or unread counts.
 `agent_access` reports which Agents this installation reaches: `"all"` (every
 Agent unless someone turned the App off for it) or `"selected"` (only the
 Agents someone turned on in the App's details). Each entry in `agents` carries
-`"app_access": true | false` — whether your App may act for that Agent right
-now (automatic Agent Login, short-lived Agent JWTs, and `POST
-/api/oauth/requests/agent`). `app_access` is returned on `"all"` installations
-too (`false` when an admin or the Agent's creator turned your App off for that
-Agent). The directory still lists every directory-visible Agent even when
-`app_access` is `false`. There is no webhook event when `agent_access` or an
-Agent's switch changes, so re-read the directory before acting on it (a
-periodic read is enough). Older servers omit both fields; treat a missing
-`agent_access` as `"all"` and a missing `app_access` as unknown.
+`"app_access": true | false` — whether your App reaches that Agent without a
+person approving first (automatic Agent Login, short-lived Agent JWTs, and
+automatic approval on `POST /api/oauth/requests/agent`; under `"selected"`, an
+Agent with `app_access: false` is also refused on `POST /api/oauth/requests/agent`
+with `403` `agent_not_selected` rather than opening a pending request).
+`app_access` is returned on `"all"` installations too (`false` when an admin or
+the Agent's creator turned your App off for that Agent; there, `POST
+/api/oauth/requests/agent` opens a pending request instead of refusing). The
+directory still lists every directory-visible Agent even when `app_access` is
+`false`. There is no webhook event when `agent_access` or an Agent's switch
+changes, so re-read the directory before acting on it (a periodic read is
+enough). Older servers omit both fields; treat a missing `agent_access` as
+`"all"` and a missing `app_access` as unknown.
 
 Each entry also has `status`. For an Agent that runs on a Computer:
 `active` means it has a live session there, whether it is working on a turn or
@@ -1397,7 +1401,7 @@ your App's current client ID or one of its
 fixed at five minutes; the request does not accept a custom audience or expiry. Your App
 decides whether to accept these JWTs by verifying them as described below; an App
 that does not verify Raft JWTs is unaffected. To stop new issuance, disable or
-uninstall the App, turn the App off for the Agent, or switch the installation to `selected` agents without it.
+uninstall the App, or turn the App off for the Agent.
 
 Server, CLI and managed-runner daemon support are all required; check
 `raft integration token --help` and upgrade an unsupported runtime.
