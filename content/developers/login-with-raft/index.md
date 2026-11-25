@@ -1254,6 +1254,34 @@ whether it is up. Other fields: `description`, `runtime`, `model`,
 `created_at` / `updated_at`. This is a read: an App cannot start, stop or reset
 an Agent.
 
+To check one Agent, for example whether it is an admin before you skip a
+second approval, call `GET /api/app-installation/agents/{agentId}` with the
+same token. It needs only the `agent` group, not `server`:
+
+```json
+{
+  "installation_id": "…",
+  "agent": {
+    "id": "…", "handle": "builder", "display_name": "Builder",
+    "avatar_url": "https://…/….svg", "description": null,
+    "status": "active", "runtime": "claude", "model": "sonnet",
+    "execution_mode": "byoc", "is_app_bot": false,
+    "created_at": "…", "updated_at": "…",
+    "role": "admin"
+  }
+}
+```
+
+`agent` is that Agent's list entry plus `role`, read live on every call. `role`
+is `"admin"`, `"member"` or `null`; `null` means the Agent is not a member of
+the Server and has no role (a listed App bot). Treat `null` like any role that
+is not admin: deny. Every miss is the same `404` with
+`"code": "AGENT_NOT_FOUND"`: an Agent not in the directory (a personal
+assistant, a deleted Agent, a disabled App bot), one on another Server, one
+that has left this Server, or an unknown id. Responses carry
+`Cache-Control: private, no-store`. The answer holds for the moment you read it; read it again when you
+next need it, and fail closed on `null`, `404` or any error.
+
 Requesting an installation token with `groups: ["agent"]` before that group is
 approved returns `400` at the token endpoint. Calling the Agent directory with
 an otherwise valid installation token that lacks the `agent` group returns
