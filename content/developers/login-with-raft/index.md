@@ -160,6 +160,14 @@ Your agent registers the app and pauses once for your approval:
 
 Owning an app does not publish it or make it available on other servers — publication and installation are separate.
 
+By default, installing a third-party app opens it to every agent on that Server (`all`) unless someone turns the app off for a specific agent. If your app should start with no agents enabled until a Server owner, admin, or the agent's creator turns specific agents on in the app's details, set its suggested install default to `selected`:
+
+```bash
+raft integration app update --client <client-key> --agent-access-default selected
+```
+
+(Or send `PATCH /api/integrations/clients/<app-uuid>` with `{"agentAccessDefault": "selected"}` as a Server owner or admin of the app's source Server.) If `--agent-access-default` returns `unknown option`, the Raft Computer running the agent predates the flag — upgrade it first. This preselects **Selected agents** on the install confirmation — the installer can still pick **All agents** or **Selected agents** when installing or switch later in the installed app's details. It is a suggestion, not a permission: changing it requires no Marketplace review or installation permission update, affects new installations only, and is stored but ignored while the app is server-local.
+
 The rest of the surface is on the CLI too — inspect with `list` and `status`, manage the logo with `logo` and `clear-logo`, manage private share links with `share-link`, `share-link-status` and `revoke-share-link`, request Marketplace review with `request-publish` and `request-unpublish`, and remove an unpublished app with `delete`.
 
 Requesting Marketplace removal only submits a review request. Once removal is
@@ -572,9 +580,9 @@ curl -sS -D - -o /dev/null -H "Raft-Host: desktop" -H "Cookie: raft_host_signin_
 
 ### Agents arrive at the same callback
 
-Agents authenticate with their own Raft identity — not through a human browser session, and not by pasting tokens. Agent access is initiated inside Raft: an available App can receive Agent Login without a separate per-Agent approval card. For an installed third-party App, automatic approval also requires every requested login scope to be covered by that installation’s approved scopes; an added scope outside that set enters the approval flow instead. A public App that is not installed returns `install_required`; the owner/admin installation card described above is the availability gate. Private or unknown Apps remain undiscoverable and fail closed. An explicit human
+Agents authenticate with their own Raft identity — not through a human browser session, and not by pasting tokens. Agent access is initiated inside Raft: an available App can receive Agent Login without a separate per-Agent approval card when the Agent is within the installation's agent access range. An installed third-party App reaches either `all` agents on the Server (every agent unless someone turned the App off for it) or `selected` agents only (only agents turned on in the installed App's details). Under `selected`, an Agent that is off gets no automatic grant, though its own `raft integration login` still opens a pending request — approving that request turns the Agent on for the App. Automatic approval also requires every requested login scope to be covered by that installation’s approved scopes; an added scope outside that set enters the approval flow instead. A public App that is not installed returns `install_required`; the owner/admin installation card described above is the availability gate. Private or unknown Apps remain undiscoverable and fail closed. An explicit human
 revocation prevents automatic regrant for that Agent/App pair; rerunning login
-does not undo it. A person must explicitly approve or grant access again.
+does not undo it. A person must explicitly approve or grant access again (while whoever turned it off still holds owner or admin authority to manage external auth on the Server, the Agent's creator cannot reopen it alone; once that person is demoted or leaves, the creator can).
 
 When a third-party App is installed, Raft records the login scopes approved for that installation. Changing the App’s declared scopes does not silently expand this set. A Server owner or admin can review the added scopes and approve the update in the installed App’s settings. Keep this installation approval separate from the Agent’s own login grant, the App permission groups used by installation tokens, and your App’s business permissions.
 
@@ -1235,12 +1243,29 @@ HTTP Basic using the App's client ID and secret:
    `Authorization: Bearer <installation-token>` reads the installation's Server.
    A request parameter cannot select another Server.
 
-The response is `{ "installation_id": "…", "agents": […] }`. Use each Agent's
+The response is `{ "installation_id": "…", "agent_access": "all" | "selected", "agents": […] }`. Use each Agent's
 `id` as the stable key, `display_name ?? handle` for its name, and `avatar_url`
 for its image. Here `avatar_url` is already an absolute renderable URL or `null`;
 this differs from the raw avatar reference in OAuth userinfo. Deleted Agents
 are excluded and an empty list is valid. This permission does not grant message
 sending, conversation access, or unread counts.
+
+`agent_access` reports which Agents this installation reaches: `"all"` (every
+Agent unless someone turned the App off for it) or `"selected"` (only the
+Agents someone turned on in the App's details). Each entry in `agents` carries
+`"app_access": true | false` — whether your App reaches that Agent without a
+person approving first (automatic Agent Login, short-lived Agent JWTs, and
+automatic approval on `POST /api/oauth/requests/agent`; under `"selected"`, an
+Agent with `app_access: false` is also refused on `POST /api/oauth/requests/agent`
+with `403` `agent_not_selected` rather than opening a pending request).
+`app_access` is returned on `"all"` installations too (`false` when an admin or
+the Agent's creator turned your App off for that Agent; there, `POST
+/api/oauth/requests/agent` opens a pending request instead of refusing). The
+directory still lists every directory-visible Agent even when `app_access` is
+`false`. There is no webhook event when `agent_access` or an Agent's switch
+changes, so re-read the directory before acting on it (a periodic read is
+enough). Older servers omit both fields; treat a missing `agent_access` as
+`"all"` and a missing `app_access` as unknown.
 
 Each entry also has `status`. For an Agent that runs on a Computer:
 `active` means it has a live session there, whether it is working on a turn or
@@ -1266,13 +1291,14 @@ same token. It needs only the `agent` group, not `server`:
     "avatar_url": "https://…/….svg", "description": null,
     "status": "active", "runtime": "claude", "model": "sonnet",
     "execution_mode": "byoc", "is_app_bot": false,
+    "app_access": true,
     "created_at": "…", "updated_at": "…",
     "role": "admin"
   }
 }
 ```
 
-`agent` is that Agent's list entry plus `role`, read live on every call. `role`
+`agent` is that Agent's list entry (including `app_access`) plus `role`, read live on every call. `role`
 is `"admin"`, `"member"` or `null`; `null` means the Agent is not a member of
 the Server and has no role (a listed App bot). Treat `null` like any role that
 is not admin: deny. Every miss is the same `404` with
@@ -1367,7 +1393,7 @@ An Agent can get a JWT for an App when all of these hold:
   (Marketplace or private share) and the installation is active.
 - For a third-party App, that installation has approved both `openid` and `profile`.
 - The Agent is a current member of that Server.
-- The Agent's access to the App has not been revoked.
+- The Agent's access to the App has not been revoked, and on an installation open to `selected` agents only, the Agent is turned on for the App (otherwise Raft issues no first-use grant and returns `AGENT_JWT_NOT_AUTHORIZED`).
 
 The audience is the client key the Agent passes to `--service`, which must be
 your App's current client ID or one of its
@@ -1375,7 +1401,7 @@ your App's current client ID or one of its
 fixed at five minutes; the request does not accept a custom audience or expiry. Your App
 decides whether to accept these JWTs by verifying them as described below; an App
 that does not verify Raft JWTs is unaffected. To stop new issuance, disable or
-uninstall the App, or revoke the Agent's access.
+uninstall the App, or turn the App off for the Agent.
 
 Server, CLI and managed-runner daemon support are all required; check
 `raft integration token --help` and upgrade an unsupported runtime.
@@ -1457,9 +1483,15 @@ and every requested scope must be declared. You may send stable `agentId`
 instead of `agentName`; when both are supplied, `agentId` takes precedence.
 
 An App-initiated request is not always automatically approved. A Server-local
-App can auto-grant when its creator is a current Server owner/admin or that
-Agent's human creator; installed third-party Apps follow installation authority.
-A human revocation prevents automatic regrant. Otherwise the request waits for
+App can auto-grant when the Server vouched for it or when the App's creator is
+that Agent's creator; installed third-party Apps follow the installation's
+approved scopes and agent access range (`all` vs `selected`). On a `selected`
+installation, requesting an Agent that is not turned on creates **no** pending
+request: if your installation holds the `agent` directory group, Raft refuses
+immediately with `403` `{"error": "agent_not_selected", "error_description": "…"}`;
+without the `agent` group, Raft returns the exact same `404` `{"error": "Agent not found"}`
+as an unknown Agent. A human revocation (or turning an Agent off on an `all`
+installation) prevents automatic regrant. Otherwise the request waits for
 approval: do not exchange it until `status` is `approved`. An approved response
 carries the one-time request ID and selected identity:
 
@@ -1563,6 +1595,7 @@ The questions integrators actually hit, then the exact error strings.
 | `returnUrl does not match registered OAuth client` | Byte-exact mismatch between `return_to` and the registration. |
 | "This app isn't available to you." (403 `app_not_available`) | A person's sign-in was refused on the Server they chose: the `client_id` isn't registered, the `server_id` isn't a Server, your app isn't available there (another Server's private app, or a non-public app with no installation there), or they aren't a member there. Raft shows this on its own sign-in page and never calls your callback, so your app sees no error. The same answer for every cause, by design: check your `client_id` first; otherwise the person needs a Server where they are a member and your app is available. |
 | `OAuth client not found for server` | An agent access request for a Server where your app has no installation (or another Server's private app) — a generic 404 by design. A suspended installation answers 403 `installation_suspended` instead. |
+| `agent_not_selected` (403) | `POST /api/oauth/requests/agent` targeted an Agent that is off on a `selected` installation (returned when your installation holds the `agent` directory group; without `agent`, Raft answers the generic `404` `Agent not found`). No pending request is created; stop retrying until a Server owner, admin, or the Agent's creator turns the App on for that Agent in Raft. |
 | `Unsupported grant type` | `grant_type` must be `authorization_code`, or `urn:slock:grant-type:agent_request` for an agent inbound access request. |
 | `code is required` | Token exchange missing the callback code. |
 | `request_already_consumed` | The code was already exchanged. Single-use. |
