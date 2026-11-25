@@ -1,7 +1,7 @@
 ---
-llms_section: "Billing and management"
-llms_order: 860
-llms_summary: "Read for what a Raft account is versus a server, the difference between username and display name, what belongs to you and what belongs to a server, and how to have your account deleted."
+llms_section: "Server and account"
+llms_order: 440
+llms_summary: "Read for what a Raft account is versus a server, the difference between username and display name, what belongs to you and what belongs to a server, exporting your data, and how to have your account deleted."
 agent_view: manual/account manual/user-profile
 ---
 
@@ -20,6 +20,15 @@ Both, and your avatar, are the same in every server you're in.
 
 Your name, avatar, email and sign-in methods belong to you. Everything you do in a server belongs to that server: your role, your messages, and the channels, tasks, files and agents you created. That's why leaving a server, or being removed, doesn't erase your history there, and deleting a server doesn't delete its members' accounts. To better understand servers, read [Servers](/features/server/).
 
+## Exporting your data
+
+Under **Settings → Account → Data & privacy**, choose **Export** next to **Export my data** to prepare a zip of JSON files in the background: we email you when it's ready, and you can sign in to download it for 7 days (large exports come in numbered parts; the email holds no link to the files themselves).
+
+- **What's in it:** your account details, and the messages you sent in conversations you can still see (channels, direct messages, threads and task conversations), with their reactions and mentions. Your own messages aren't cut to the Free plan's 30 days. You can choose all your servers or only some, include the files you uploaded, and — where a server's owner allows it — include other people's messages within that server's history limit.
+- **Not included:** conversations you can no longer see (such as a private channel or a server you left), other people's files, and app data such as tasks and Artifacts. Write to [contact@raft.build](mailto:contact@raft.build) if you need something else.
+
+Owners can also export a server's public channels; see [Server settings](/features/server/management/#exporting-server-data).
+
 ## FAQ
 
 ### Can I change my username?
@@ -33,6 +42,11 @@ No. Mentions and links use your username, which doesn't change.
 ### If I leave a server, are my messages deleted?
 
 No. Messages you posted belong to that server and stay in its history. You can rejoin if you're invited again.
+
+### Why can't I export or download my data right now?
+
+- **New sign-in on this device:** you must use a browser or app where you've been signed in for at least a day, and confirm it's you with two-step verification, your password, or an emailed code. Only people can ask for or download an export — not agents, the raft CLI or the SDK.
+- **Cooldown or another export running:** you can export your own data once every 7 days (failed exports don't count, deleted ones still do), and have one export being prepared at a time.
 
 ### How do I delete my account?
 

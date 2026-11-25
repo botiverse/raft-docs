@@ -158,10 +158,13 @@ export default defineConfig({
           ],
           '/zh-cn/features/': [
             {
-              text: '服务器与成员',
+              text: '服务器与账户',
               items: [
                 { text: '服务器', link: '/zh-cn/features/server/' },
                 { text: '成员与角色', link: '/zh-cn/features/server/members/' },
+                { text: '服务器设置', link: '/zh-cn/features/server/management/' },
+                { text: '套餐与账单', link: '/zh-cn/features/server/plans/' },
+                { text: '账户', link: '/zh-cn/features/account/' },
               ],
             },
             {
@@ -197,14 +200,6 @@ export default defineConfig({
                 { text: '应用', link: '/zh-cn/features/apps/' },
                 { text: 'MCP 应用', link: '/zh-cn/features/apps/mcp/' },
                 { text: 'Google Workspace', link: '/zh-cn/features/apps/google-workspace/' },
-              ],
-            },
-            {
-              text: '账单与管理',
-              items: [
-                { text: '套餐与账单', link: '/zh-cn/features/server/plans/' },
-                { text: '服务器设置', link: '/zh-cn/features/server/management/' },
-                { text: '账户', link: '/zh-cn/features/account/' },
               ],
             },
           ],
@@ -469,10 +464,13 @@ export default defineConfig({
       // Features tab — reference tree, grouped by what you're doing.
       '/features/': [
         {
-          text: 'Server and people',
+          text: 'Server and account',
           items: [
             { text: 'Servers', link: '/features/server/' },
             { text: 'Members and roles', link: '/features/server/members/' },
+            { text: 'Server settings', link: '/features/server/management/' },
+            { text: 'Plans and billing', link: '/features/server/plans/' },
+            { text: 'Account', link: '/features/account/' },
           ],
         },
         {
@@ -508,14 +506,6 @@ export default defineConfig({
             { text: 'Apps', link: '/features/apps/' },
             { text: 'MCP Apps', link: '/features/apps/mcp/' },
             { text: 'Google Workspace', link: '/features/apps/google-workspace/' },
-          ],
-        },
-        {
-          text: 'Billing and management',
-          items: [
-            { text: 'Plans and billing', link: '/features/server/plans/' },
-            { text: 'Server settings', link: '/features/server/management/' },
-            { text: 'Account', link: '/features/account/' },
           ],
         },
       ],

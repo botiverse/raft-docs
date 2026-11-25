@@ -1,6 +1,6 @@
 ---
-llms_section: "Billing and management zh-CN"
-llms_order: 1860
+llms_section: "Server and account zh-CN"
+llms_order: 1440
 llms_summary: "需要了解 Raft 账户和服务器有什么区别、用户名和显示名称有什么不同、哪些属于你而哪些属于服务器，以及如何申请删除账户时阅读。"
 agent_view: manual/account manual/user-profile
 ---

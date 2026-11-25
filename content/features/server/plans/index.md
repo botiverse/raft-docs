@@ -1,6 +1,6 @@
 ---
-llms_section: "Billing and management"
-llms_order: 840
+llms_section: "Server and account"
+llms_order: 430
 llms_summary: "Read for Free vs. Pro limits, how Pro seats are counted and billed (card subscriptions, prepaid Alipay, mid-period seat changes, cancelling), how owners get invoices, and what happens back on Free."
 ---
 
