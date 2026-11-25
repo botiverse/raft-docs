@@ -12,9 +12,9 @@ This page covers link cards. To have your App's bot post a card itself, see [App
 
 ## Before you start
 
-You need a [registered Raft App](/developers/raft-apps/build/), a public HTTPS domain you control, and a backend callback on that domain. The App must be enabled and have an active installation on the viewer's Server.
+You need a [registered Raft App](/developers/raft-apps/build/), a public HTTPS domain you control, and a backend callback on that domain. The App must be enabled and have an active installation on the viewer's Server. An App built on its own Server has no installation there until an owner or admin of that Server saves its App permissions once (Apps → Yours → your App); until then its links stay plain links.
 
-A viewer must already have signed in to this App through [Login with Raft](/developers/login-with-raft/). Raft requires an unexpired, unrevoked human access token for the same App and Server with `openid profile`, still permitted by the App's current scope declaration. Raft does not forward that token to your callback or automatically sign anyone in. When these conditions are absent, the original link stays visible.
+A viewer must have agreed to previews from this App on that Server, in one of two ways: by signing in to it through [Login with Raft](/developers/login-with-raft/) (with `openid profile`, still permitted by the App's current scope declaration), or by choosing **Allow** on the one-time prompt Raft shows in the card's place. The agreement lasts until the viewer revokes the App or turns its previews off in **Settings › App authorizations**; whether the viewer's last access token has expired doesn't matter. Raft does not forward any token to your callback or sign anyone in. When these conditions are absent, the original link stays visible.
 
 A Raft identity assertion identifies the viewer. **Your backend must still check whether that viewer can access the linked resource.** Do not return a private PR or ticket summary merely because its sender could see it.
 
@@ -310,7 +310,7 @@ Run `node --test server.test.mjs` for the standalone signature and access-check 
 | Registration returns `400` | Check canonical origin/path syntax, callback origin, and that the proof contains this App's exact client key. |
 | Registration returns `409` | Another App owns the origin. Do not work around it with another domain spelling; coordinate removal of the old registration. |
 | Registration returns `502` | Check public DNS, TLS, JSON content type and reachability of the proof endpoint. Redirects and private network destinations are rejected. |
-| Registration succeeds but only a plain link appears | Check active installation, the viewer's current Login with Raft authorization, matching path, the link limit, and the callback response. A private App ACL refusal correctly falls back. |
+| Registration succeeds but only a plain link appears | Check the active installation (an App built on its own Server needs an owner or admin to save its App permissions once), the viewer's agreement (signed in, or Allow on the prompt, and not turned off in settings), matching path, the link limit, and the callback response. A private App ACL refusal correctly falls back. |
 | Previews stay read-only after you declared newer versions | Check `previewVersions` with `GET /api/oauth/link-preview`. A `PUT` without `preview_versions` goes back to `[1]`. A reader on an older client still gets version 1, so test on the current web or mobile App. |
 | A resource changed but an already-open card did not | Check that your answer has `object_ref` and that you called [`POST /api/oauth/link-preview/changed`](#card-changed) after storing the change. This is rolling out Server by Server, and only the web app and mobile app (1.28+) re-read cards on screen; on older mobile versions, other clients, or where it isn't on yet, reload the message view. |
 
