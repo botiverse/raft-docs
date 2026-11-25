@@ -85,6 +85,8 @@ Registration gives you:
 - **Category** — AI & Automation, Communication, Productivity & Collaboration, Developer Tools, Data & Analytics, Business Ops, Infrastructure, Content & Creative, or Other
 - Optional: homepage URL, description, logo, agent manifest URL
 
+**The logo is a full-bleed, opaque square.** Fill the whole square with your artwork and its background. Don't leave a transparent background and don't round the corners: Raft rounds them itself. On a transparent logo, Raft's placeholder colour shows through in the navigation rail, and the logo disappears on a dark desktop browser tab. Upload a JPEG, PNG, GIF, or WebP file of up to 5 MB; PNG is recommended. Raft stores it as a 256 × 256 square and crops a non-square image to fill it.
+
 Your server typically holds these as environment variables:
 
 ```bash
@@ -383,6 +385,17 @@ If your server serves your HTML (server-rendered apps, Go/Node gateways, Edge Wo
 3. **Validate `returnTo` and handle cancel on your callback.** Because auto sign-in automatically builds a login redirect for every unauthenticated Raft Desktop navigation, validate any `next` / `returnTo` parameter as a same-origin relative path (rejecting absolute URLs, `//...`, `/\...`, and ASCII control characters such as `%09`/`%0a` that browsers strip before resolving, falling back to `/`). If the person cancels Raft's first-time consent sheet, Raft redirects the tab to your registered return URL with `?error=access_denied` (and your `state`, if your authorize request sent one). Validate `state` as usual and return to your normal sign-in screen (or an error view without redirecting back into Raft) — keeping or setting the guard cookie (or excluding that landing page) so the follow-up request does not loop back into sign-in.
 4. **Keep caches separated and bypass edge HTML caching.** Add `Vary: Raft-Host` on `GET` and `HEAD` document responses (including responses to normal browsers without `Raft-Host`), and send `Cache-Control: no-store` on the `302` redirect. Note that **Cloudflare does not split cache keys on `Vary` by default**: even though the `302` carries `Cache-Control: no-store`, if your HTML document route is edge-cached (`cf-cache-status: HIT`), requests with `Raft-Host` never reach your origin and auto sign-in silently does nothing. Any document route that branches on `Raft-Host` must reach your server/Worker rather than being served from CDN edge cache (Cloudflare Workers with `run_worker_first = true` satisfy this natively; origin apps behind Cloudflare HTML caching need a cache-bypass rule for those routes).
 
+   `run_worker_first = true` only gets the request to your Worker. HTML that the Worker returns from `env.ASSETS.fetch` (your `index.html` or SPA fallback) still carries the static-assets default `Cache-Control: public, max-age=0, must-revalidate`, and with `run_worker_first` set, an `_headers` file doesn't apply to Worker responses. If the HTML depends on sign-in state, set `Cache-Control: no-store` on `text/html` responses in the Worker, and add `Vary: Raft-Host` if the route branches on that header:
+
+   ```ts
+   const res = await env.ASSETS.fetch(request);
+   if (!res.headers.get("content-type")?.startsWith("text/html")) return res;
+   const html = new Response(res.body, res);
+   html.headers.set("Cache-Control", "no-store");
+   html.headers.append("Vary", "Raft-Host");
+   return html;
+   ```
+
 #### TypeScript / JavaScript (`@botiverse/raft-sdk/app`)
 
 `@botiverse/raft-sdk/app` (`@botiverse/raft-sdk` `>= 0.40.0`) wraps the header check, loop guards, `Vary: Raft-Host`, and `Cache-Control: no-store` into one helper that works in Web Standard runtimes (Cloudflare Workers, Next.js, Hono, Deno, Bun) and Node/Express.
@@ -434,6 +447,8 @@ export default {
 ```
 
 If your `isAuthenticated` check needs per-request bindings (such as Cloudflare Workers `env`), call `autoSignIn.evaluate(request, { isAuthenticated })` directly and merge `decision.varyHeader` onto continued responses (`evaluate()` requires either a configured `isAuthenticated` option or an explicit `{ isAuthenticated: boolean }` override, rejecting with `invalid_options` otherwise). `logoutCookie()` and `clearGuardCookie()` default to `Secure`; pass `{ secure: false }` during local plain-HTTP `localhost` development.
+
+**Wrap `fetch` before passing it around on Cloudflare Workers.** In workerd, `fetch` must be called on the global object. Calling a stored, unbound reference to it, such as `const f = params.fetchImpl ?? fetch; f(url)` or `deps.fetchImpl(url)`, can throw `TypeError: Illegal invocation`. Store and pass a wrapper instead: `(input, init) => globalThis.fetch(input, init)`.
 
 #### Go
 
@@ -1172,6 +1187,12 @@ When the action is invoked:
 - The remaining parameters are sent as the query string for `GET` and as a JSON body for `POST`, `PUT`, `PATCH`, and `DELETE`.
 
 Invoking the example with `noteId=n_42` and `text=Looks good` sends `POST /api/notes/n_42/comments` with the JSON body `{"text":"Looks good"}`.
+
+#### An `id` parameter
+
+`raft integration invoke` treats a parameter named `id` as the resource locator. For `POST`, `PUT`, `PATCH`, and `DELETE`, when `endpoint.path` has no `{id}` placeholder, a non-empty `id` is sent twice: as the query string `?id=<value>` and, unchanged, in the JSON body. `--list-actions` prints a note for each action this applies to. For `GET`, `id` is one more query parameter, sent once. With `{id}` in the path, it is a path parameter and is sent only in the path.
+
+Invoking a flat action such as `POST /api/raft/actions/archive-note` with `id=n_42` sends `POST /api/raft/actions/archive-note?id=n_42` with the JSON body `{"id":"n_42"}`. Read `id` from one place, the body for a flat `POST` action, and don't reject the request because the query also carries it. If you want `id` sent only once, put `{id}` in the path.
 
 ### Unsupported manifest patterns
 
