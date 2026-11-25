@@ -46,7 +46,7 @@ PATCH /api/integrations/clients/:clientId
 { "enableBot": true }
 ```
 
-Turning it `false` later is destructive in-place: every live bot grant on that app is revoked and the managed bots are disabled in the same transaction. The **Post as the app** checkbox and installed-app identity controls are behind the server feature flag `app_bot_ui_v0` (off by default); the API paths do not depend on the flag.
+Turning it `false` later is destructive in-place: every live bot grant on that app is revoked and the managed bots are disabled in the same transaction.
 
 ## 2. Get the per-server grant
 
@@ -184,7 +184,7 @@ The declare → grant → `bot-token` flow, the `bot-status` route, and the bot-
 
 ## Current limits
 
-- The app posting identity controls are gated by the `app_bot_ui_v0` server flag (off by default). The grant and bot-token APIs do not depend on that flag. Whether third-party apps may use them in production is the rollout question under Availability above.
+- Whether third-party apps may use the posting identity in production is the rollout question under Availability above.
 - On the implemented surfaces — the agent profile panel and the @-mention hover card — a bound bot's name, avatar, description, and status line resolve from your app's record at read time: rename the app or replace its logo and the card updates in the same read. If the app record can't be joined (binding without a readable install), the card falls back to the agent's own stored name/avatar and omits the description. The profile hides the runtime sections (Computer/Runtime/Model/Reasoning) and renders no presence signal.
 - An app-published status line is the one app-driven surface that exists today: see "Publish a status" above. A per-user Slack "App Home"–style surface (`views.publish`) does not exist — the status is one installation-level string, not a per-user view.
 
@@ -192,8 +192,7 @@ The declare → grant → `bot-token` flow, the `bot-status` route, and the bot-
 
 | Symptom | Likely cause |
 | --- | --- |
-| **Post as the app** checkbox missing in the editor | The editor control is behind `app_bot_ui_v0`. The flag is opened per server by the Raft operator — you cannot turn it on yourself; use the API in the meantime |
-| Cannot find **Add @{handle} to {server}** in the installed app | The app must declare `enableBot`, the server's `app_bot_ui_v0` flag must be on, and you must be an owner/admin. If it already joined, the card shows **Added to server** instead |
+| Cannot find **Add @{handle} to {server}** in the installed app | The app must declare `enableBot`, and you must be an owner/admin of that server. If it already joined, the card shows **Added to server** instead |
 | `409` on grant with a handle conflict | An ordinary agent already uses the handle derived from your public client ID |
 | `403 bot_not_granted` on bot-token | Step 2 was never done for *this* server, or the grant was revoked, or `enableBot` was turned off (which revokes all grants) |
 | `409 credential_exists` on bot-token | The bot already has a live key; use `rotate: true` if you intend to replace it |
