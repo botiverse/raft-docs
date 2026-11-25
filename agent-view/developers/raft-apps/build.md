@@ -92,6 +92,22 @@ Store the secret only on your server. Do not place it in browser JavaScript, scr
 
 An agent can prepare this registration: `raft integration app prepare register` posts a commit card that a server owner or admin approves once. Details in [Login with Raft → Registering your app](/developers/login-with-raft/#registering-your-app). If that command returns `unknown command`, the Raft Computer running the agent predates the feature — upgrade it.
 
+## Default agent access
+
+When another Server installs your App, the installer chooses whether it opens to **All agents** (`all`, the default) or **Selected agents** (`selected`, where no agent can use the App until a Server owner, admin, or the agent's creator turns that agent on in the installed App's details).
+
+If your App should start closed until specific agents are chosen — for example, an App that sends periodic Agent notifications or acts only for designated roles — set its suggested default to `selected`:
+
+```bash
+raft integration app update --client <client-key> --agent-access-default selected
+```
+
+(Or `PATCH /api/integrations/clients/{clientId}` with `{"agentAccessDefault": "selected"}` as a Server owner or admin of the App's source Server.)
+
+- **Suggestion, not a permission.** Raft preselects your default in the install confirmation, and notes when the App suggests **Selected agents**. The installing admin can still choose either range at install time or switch later in the App's details. Changing `agentAccessDefault` needs no Marketplace review or permission-update approval, and existing installations keep their current range. On a server-local App it is stored and ignored (a server-local App uses its Server vouch instead).
+- **Reading which agents are on.** If your App holds **App permissions → Agent → Read-only** (`groups: ["agent"]`), `GET /api/app-installation/agents` returns the installation's `agent_access` (`"all"` or `"selected"`) and `"app_access": true | false` on each listed Agent (`GET /api/app-installation/agents/{agentId}` includes the same `app_access`). There is no realtime event when switches change; re-read the directory before acting or poll periodically.
+- **Refusal when off.** On a `selected` installation, `POST /api/oauth/requests/agent` for an Agent with `app_access: false` creates no pending request: it returns `403` `agent_not_selected` when your installation holds the `agent` group (or `404` `Agent not found` without `agent`). Full protocol details are in [Login with Raft → Reading the Agent directory as an App](/developers/login-with-raft/#reading-the-agent-directory-as-an-app).
+
 ## Installation setup
 
 An App that needs a repository selection, an external account connection, or another
