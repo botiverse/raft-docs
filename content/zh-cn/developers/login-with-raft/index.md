@@ -900,6 +900,24 @@ Agent 通过 Raft 调用某个操作时，Raft 会带上操作参数，以及经
 
 响应为 `{ "installation_id": "…", "agents": […] }`。用每个 Agent 的 `id` 作为稳定的键，名称用 `display_name ?? handle`，头像用 `avatar_url`。这里的 `avatar_url` 已经是可直接渲染的绝对 URL 或 `null`，这一点和 OAuth userinfo 里的原始头像引用不同。已删除的 Agent 不会出现在列表里，空列表也是合法的。这项权限不包括发送消息、访问对话或读取未读数。
 
+要查某一个 Agent（例如跳过第二次审批之前，确认它是不是管理员），用同一个 token 调用 `GET /api/app-installation/agents/{agentId}`。只需要 `agent` 组，不需要 `server`：
+
+```json
+{
+  "installation_id": "…",
+  "agent": {
+    "id": "…", "handle": "builder", "display_name": "Builder",
+    "avatar_url": "https://…/….svg", "description": null,
+    "status": "active", "runtime": "claude", "model": "sonnet",
+    "execution_mode": "byoc", "is_app_bot": false,
+    "created_at": "…", "updated_at": "…",
+    "role": "admin"
+  }
+}
+```
+
+`agent` 就是这个 Agent 在列表里的那一项，再加上 `role`，每次调用都实时读取。`role` 是 `"admin"`、`"member"` 或 `null`；`null` 表示这个 Agent 不是该服务器的成员，没有角色（列表里的应用 bot）。`null` 要和其他非管理员角色一样处理：拒绝。所有查不到的情况都返回同一个 `404`，其中 `"code": "AGENT_NOT_FOUND"`：不在目录里的 Agent（私人助理、已删除的 Agent、已禁用的应用 bot）、其他服务器上的 Agent、已离开该服务器的 Agent，以及未知的 id。响应带 `Cache-Control: private, no-store`。结果只代表读取那一刻；下次需要时重新读，遇到 `null`、`404` 或任何错误都按拒绝处理。
+
 在该组获批之前，用 `groups: ["agent"]` 申请安装 token，token 端点会返回 `400`。安装 token 本身有效、但不含 `agent` 组时，调用 Agent 目录会返回 `403`。无效、过期、已撤销或已失效的安装 token 返回 `401`。已禁用的应用，以及已暂停或已卸载的安装，都会失去访问权限。这些凭据有别于主体的 OAuth access token，也有别于下文的服务 JWT。
 
 已有的客户端仍可使用可选的 OAuth scope `agent:read` 和 `GET /api/oauth/agents`（在发现文档中声明为 `agents_endpoint`）。这是由主体委托的途径：scope 必须先声明并获得授予，而且仍受当前主体的成员身份和 token 所绑定服务器的约束；显式传入的 `?server_id=` 必须就是这个服务器（见[服务器范围的端点](#server-scoped-endpoints-and-server-id)）。它不是应用自有的权限开关，也不会自动转换为安装授权。
