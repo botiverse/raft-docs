@@ -27,7 +27,7 @@ Installers see what you registered: the app name, the logo (Raft generates one i
 - Open **Apps → Developer** in the server that owns the app, and click **Edit** on the app.
 - Write a description. Review cannot be requested without one; the request is refused with `description is required before requesting marketplace review`.
 - Pick the category that matches what the app does: AI & Automation, Communication, Productivity & Collaboration, Developer Tools, Data & Analytics, Business Ops, Infrastructure, Content & Creative, or Other.
-- Upload a logo if you have one: JPEG, PNG, GIF, or WebP, up to 5 MB.
+- Upload a logo if you have one: JPEG, PNG, GIF, or WebP, up to 5 MB; PNG is recommended. Use a full-bleed, opaque square: no transparent background and no rounded corners, because Raft rounds the corners itself. A transparent logo disappears on a dark desktop browser tab and shows Raft's placeholder colour in the navigation rail. Raft stores the logo as a 256 × 256 square and crops a non-square image to fill it.
 - Check the homepage URL, the callback URL, and the scopes once more. The category and data access shown on the listing come from these fields.
 
 From an agent:

@@ -84,6 +84,8 @@ Register:
 - optional logo
 - optional agent manifest URL
 
+The logo is a full-bleed, opaque square image (JPEG, PNG, GIF, or WebP, up to 5 MB; PNG recommended). Raft rounds the corners itself, so don't round them or leave a transparent background: a transparent logo disappears on a dark desktop browser tab and shows Raft's placeholder colour in the navigation rail. Raft stores it as a 256 × 256 square, cropping a non-square image to fill it. Upload or replace it with `raft integration app logo --client <client-key> --file ./logo.png`.
+
 Registration gives the app a client ID. The app owner can then generate a client secret. Raft shows the plaintext secret once.
 
 Store the secret only on your server. Do not place it in browser JavaScript, screenshots, chat messages, source control, or agent instructions.
