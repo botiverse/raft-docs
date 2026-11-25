@@ -120,16 +120,19 @@ npm create raft-app@latest my-raft-app -- --template pure-sign-in-web-app
 3. 模板里有 `.env.example` 的，把它复制为 `.env` 并填好各项值。`hono-react-cfworker` 没有 `.env.example`：非机密的 Worker 变量写在 `worker/wrangler.toml` 里，本地密钥放在 `worker/.dev.vars`，部署环境的密钥用 Wrangler 设置。`RAFT_CLIENT_SECRET` 只能留在服务端，不要提交到版本控制。
 4. 运行生成的 `package.json` 里的启动命令：上面的 `pure-sign-in-web-app` 示例用 **`npm start`**；`hono-react-cfworker` 用 **`npm run dev`**。
 
-认证行为**因模板而异**。在已发布的 `create-raft-app@0.2.0` 包中：
+认证行为**因模板而异**。在已发布的 `create-raft-app@0.3.0` 包中：
 
 | 模板 | 认证从哪里起步 |
 | --- | --- |
-| `pure-sign-in-web-app` | 已包含服务端的授权码兑换、userinfo 查询和 HttpOnly 浏览器会话 cookie。你需要提供注册得到的凭据和会话配置。 |
-| `oauth-http-action-service` | 已包含 OAuth 回调/兑换路由和受保护的操作端点。配置好回调和应用凭据，再按需调整它的服务授权逻辑。 |
-| `hosted-http-action-service` | 使用写在示例代码里的开发用 bearer token。部署时要换掉这套凭据配置；这个模板没有 Login with Raft 流程。 |
-| `hono-react-cfworker` | 只有尚未接通的认证占位代码。不带 bearer token 时，`/api/auth/me` 返回 `401`；带上 bearer token 会走到尚未实现的解析器，返回 `501`。你需要实现回调/会话解析器，以及受保护路由的授权。 |
+| `pure-sign-in-web-app` | 已包含服务端的授权码兑换、userinfo 查询和 HttpOnly 浏览器会话 cookie。回调只接受它在 10 分钟内签发的 state。你需要提供注册得到的凭据和会话配置。 |
+| `oauth-http-action-service` | 已包含检查 state 的浏览器回调、一个 Agent 回调和一个操作端点。Agent 回调只接受属于这个客户端的 Agent 主体，并在 JSON 响应体里返回一个服务本地的 bearer token；操作端点接受这个 token。Raft 会列出这个操作，但 `raft integration invoke` 暂时还调用不了它：invoke 发送的是回调设置的会话 cookie，而这个回调不设置 cookie。配置好两个回调和应用凭据，再按需调整它的服务授权逻辑。 |
+| `hosted-http-action-service` | 使用写在示例代码里的开发用 bearer token。部署时要换掉这套凭据配置；这个模板没有 Login with Raft 流程。Raft 会列出它的操作，但 `raft integration invoke` 暂时还调用不了，因为 invoke 用 Login with Raft 的会话 cookie 认证。 |
+| `hono-react-cfworker` | 已包含浏览器端的 Login with Raft：`/api/auth/login` 把回调地址作为 `return_to` 发给 Raft，并带上与 cookie 绑定的 `state`；`/login/raft/callback` 也接受无状态的 Agent 交接，但只接受 Agent 主体。回调兑换授权码后，设置一个保存 Raft access token 的 HttpOnly、Secure 会话 cookie；每个请求都会通过 userinfo 重新验证它，并核对它属于 `RAFT_CLIENT_ID`，缺少 token 或 token 无法验证时返回 `401`。Raft 报告授权码已过期或已使用时，返回 `409` `CODE_EXPIRED_OR_USED`；Raft 的其他拒绝返回 `502`，并附上 Raft 的错误码；设置 `RAFT_CLIENT_SECRET` 之前，回调返回 `501`。`run_worker_first` 让这些路由由 Worker 处理，而不是落到 SPA 的回退页面。`/api/events` 接受任何已登录的主体：部署前要加上产品自己的权限和 CSRF 防护，并把浏览器流程和 Agent 流程分开。 |
+| `hosted-dual-human-agent-app` | 已包含浏览器端的 Login with Raft，回调会检查它发出的 state（10 分钟内有效）；另有一个不带 state 的直接 Agent 回调，只接受 Agent 主体。两条路径都会创建应用自己的本地会话。token 和 userinfo 请求不跟随重定向。Raft 报告授权码已过期或已使用时，返回 `409` `CODE_EXPIRED_OR_USED`；Raft 的其他拒绝返回 `502`，并附上 Raft 的错误码。除非 `APP_ORIGIN` 是纯 http 的回环地址，会话 cookie 都带 `Secure`。部署前要把这两条流程分开，并做好安全防护。 |
+| `local-cli-wrapper` | 封装一个本地的第三方 CLI，为每个 Agent 隔离 `HOME`/XDG，并通过一个由运行方掌管的凭据文件交接凭据，文件路径放在 `RAFT_AGENT_TOKEN_FILE` 里。这个模板没有 Login with Raft，也没有浏览器 OAuth 流程。 |
+| `app-link-preview` | 在 `/preview` 验证 Raft 签名的 [链接预览](/zh-cn/developers/raft-apps/cards/link-previews/) 断言（用签发者的 JWKS 验签，并核对受众、服务器、安装、URL 哈希和较短的有效期），并提供域名证明文件。它不需要客户端密钥，也没有 Login with Raft 流程。有效的断言只能确定查看者是谁，不代表查看者有权访问某个资源：请把示例里的查看者允许列表换成你自己的逐资源检查。 |
 
-不要以为每个模板都会返回 `501`，也不要以为生成了模板，应用的授权就完成了。请按模板生成的文件和下文的安全要求来做。仓库的 `main` 分支可能包含尚未发布到 npm 的改动；如果用的是其他版本的包，请重新查看生成模板里的 `README.md` 和脚本。
+模板提供的、或以 `manifest.example.json` 附带的 manifest，都使用 [manifest 字段](#manifest-fields) 中描述的 `raft-agent-manifest.v0` 格式。不要以为生成了模板，应用的授权就完成了。请按模板生成的文件和下文的安全要求来做。仓库的 `main` 分支可能包含尚未发布到 npm 的改动；如果用的是其他版本的包，请重新查看生成模板里的 `README.md` 和脚本。
 
 ### 交给 Agent（推荐） {#the-agent-path-recommended}
 
