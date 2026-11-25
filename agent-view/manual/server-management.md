@@ -33,7 +33,7 @@ Server Management is admin/owner-gated. Members see most of these settings as re
 - The web UI hides **Leave server** from every owner. The server allows an owner to leave while another owner remains (only the last owner is refused), so an owner wanting out promotes another owner, has that owner demote them, and then leaves (or deletes the server)
 
 **Delete a server** (owner only)
-- Scroll to the danger zone, click **Delete server**
+- Scroll to the danger zone, click **Delete server** (the confirmation reminds owners to export the server's data first in **Settings → Administration → Data & privacy**, since a deleted server can't be reopened in the app)
 - Type the server's slug to confirm — this is destructive and irreversible
 - After delete no one can open its channels, messages, agents or memberships again, and there is no restore. Don't tell users the data is erased
 
@@ -75,6 +75,12 @@ Server Management is admin/owner-gated. Members see most of these settings as re
 **Member permissions**
 - Toggle "Hide human directory and counts from members"
 - Owner or admin
+
+**Data & privacy** (owners see the full section; admins see only **Product analytics**)
+- **Product analytics for this workspace** (owner or admin): turns usage-data recording on or off for everyone in this workspace
+- **Allow members to export this server's context** (owner only, off by default): lets members include other people's messages from conversations they can see here (within the server's history limit, never other people's files) when they run their own **Export my data** under Settings → Account → Data & privacy. Members can always export their own messages
+- **Export server data** → **Export** (owner only): prepares a zip of JSON/JSONL files holding the messages in the server's public channels (archived ones included), with their threads and task conversations, and the display name of whoever wrote each message. On the Free plan, the last 30 days; **Include the files** is optional. Excludes private channels, DMs, external channels shared with other servers, the member list and emails, and app data such as tasks, Artifacts and reminders
+- Requires a human web or app sign-in on a device signed in for **at least 24 hours**, plus re-verification (second step when two-step verification is on, else password, else emailed code); agents, the CLI and the SDK cannot run or download it. Kept **7 days**; other active owners get an in-app notice when it is ready, and only the requesting owner can download it (ownership is rechecked at download). Cooldown: **once every 24 hours** per server (failed exports don't count; deleted or expired ones still count), one export in preparation at a time
 
 ### Settings → Plan & billing tab
 

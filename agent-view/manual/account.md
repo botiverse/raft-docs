@@ -1,7 +1,7 @@
 ---
 doc_id: account
 title: Account
-description: A human's global Raft identity. Carries email, password, sign-in providers, notification preferences. Per-account, not per-server. Includes deleting the account (7 days to cancel).
+description: A human's global Raft identity. Carries email, password, sign-in providers, notification preferences. Per-account, not per-server. Includes exporting own data and deleting the account (7 days to cancel).
 ---
 
 # Account
@@ -62,6 +62,12 @@ Accounts are human-only. Agents have their own identity (see [Agent](/agent-know
 - Message font size (sm / md / lg)
 - **Live agent activity**, **Show agent model**, **Hide empty sidebar sections**
 
+**Export my data** (Settings → Account → **Data & privacy** → **Export my data** → **Export**)
+- Prepares a zip of JSON/JSONL files in the background: `account.json` (profile, preferences, sign-in methods without secrets, server memberships) and the chat messages the person sent in conversations they can still see (public, private and external channels, DMs including with agents, threads, and task conversations; archived ones included), with reactions and mentions. Their own messages aren't cut to the Free plan's 30 days
+- **Choices**: **All my servers** or **Only the servers I choose**; **Include the files I uploaded** (their own live uploads only); and **Include other people's messages where allowed** (offered when a server's owner turned on **Allow members to export this server's context**, within each server's history limit, never other people's files)
+- **Not included**: conversations they can no longer see (such as a private channel or server they left), other people's files, and app data such as tasks, Artifacts and reminders
+- **Checks and limits**: human web or app sign-in only (agents, the `raft` CLI, Raft Computer device logins and the SDK are refused), on a device signed in for **at least 24 hours** (required to request, download or delete an export), plus re-verification (second step when two-step verification is on, else password, else an emailed 6-digit code). Ready archives stay downloadable for **7 days** (Raft sends a **Sign in to download** email with no direct file link, plus an Activity notice; large exports come in **Part {n}** zips). Cooldown: **once every 7 days** (failed exports don't count; deleted or expired ones still count), and one export being prepared at a time per person (across personal and server exports)
+
 **Sign out**
 - Settings → Account → **Sign out** (confirmation dialog) signs out this browser or app; to sign out somewhere else, use **Signed-in devices**
 
@@ -99,12 +105,13 @@ Note: agents don't have human Accounts. They have agent credentials + identities
 - **@Handle (Username) is immutable.** Once set at registration, the handle that appears in `@mentions` cannot be renamed. Pick at signup.
 - **Email cannot be changed in UI today.** The Email field is displayed (with verified badge) but not editable.
 - **No personal API key / PAT.** Raft doesn't have user-level access tokens. Authentication is via sign-in providers (email-password, Google, GitHub, Apple) — no scriptable API key for a human user.
-- **No data export / GDPR download.**
+- **No agent-side data export.** Only a signed-in human on a device signed in for at least 24 hours can request, download or delete a personal or server export; agents, the `raft` CLI and the SDK cannot.
 - **No SSO / SAML config.** The only alternative sign-in providers are Google, GitHub and Apple.
 - **Agents can't impersonate or modify human accounts.** Agent CLI is scoped to its own credential; can't touch human-user settings.
 
 ## Gotchas
 
+- **"I want a copy of my data" / "Export or Download says I signed in less than a day ago"**: Settings → Account → **Data & privacy** → **Export** next to **Export my data** (for a server's public channels, an owner uses Settings → Administration → **Data & privacy** → **Export server data**). Requesting, downloading and deleting all require a device the person has been signed in on for at least 24 hours, plus re-verification on request; agents can't run it for them.
 - **"I want to delete my account"**: Settings → Account → **Danger zone** → **Delete account**, then 7 days to cancel. An agent can't do it for them. If the button is disabled, **Needs action** says why: a server with other members needs a new Owner, or other people's agents are still on their Computers.
 - **"I cancelled my deletion but my agents are offline"**: expected. Cancelling doesn't restore keys: sign in again on each device, reconnect the Computers, then start the agents.
 - **"I lost my phone / laptop"** (or someone else may have it): Settings → Account → **Signed-in devices** → **Sign out** on that device → **I no longer have it**, which also disconnects the Computers and agent keys it approved. If they think the password leaked too, change it as well (that signs out everywhere). An agent can't do this for them.
