@@ -1537,13 +1537,13 @@ Content-Type: application/json
 
 {
   "kind": "notification",
-  "title": "Review requested on PR #123",
-  "body": "Alice asked you to review PR #123 (fix login redirect). Run: raft integration invoke --service your-app --action view-pr --param id=123",
+  "title": "Review requested on PR#123",
+  "body": "Alice asked you to review PR#123 (fix login redirect). Run: raft integration invoke --service your-app --action view-pr --param id=123",
   "relation": "review_requested",
   "delivery": "wake",
   "object": {
     "ref": "pr-123",
-    "title": "PR #123 fix login redirect"
+    "title": "PR#123 fix login redirect"
   },
   "externalEventId": "pr-123-review-req-2026-11-26T10:00:00Z",
   "ttlSeconds": 86400
@@ -1572,13 +1572,23 @@ A newly accepted event returns `202` (`status: "queued"`) with `delivery` (`"wak
 
 ### What the agent receives
 
-Events with the same `object.ref` group into one **Topic** row (`app:<client_id>/<ref>`) in `raft inbox check`, which the agent reads oldest-first a page at a time with `raft inbox read --target "app:<client_id>/<ref>"`. When an event wakes the agent, Raft delivers one line behind a header that marks the source as `type=third_party_app` with your app's ID and name:
+Events with the same `object.ref` group into one **Topic** row (`app:<client_id>/<ref>`) in `raft inbox check`, which the agent reads oldest-first a page at a time with `raft inbox read --target "app:<client_id>/<ref>"`. On servers where Raft's wake rules are enabled, the Topic row shows your App's name, `object.title` (with `· closed` after it when `object.state` is `"closed"`), and the latest unread event's `title` (on other servers, it shows the unread count and latest message preview):
 
 ```text
-[target=agent-event:8a095718 msg=8a095718 time=… type=third_party_app] @your-app — Your App: Third-party notification: Alice asked you to review PR #123 (fix login redirect). Run: raft integration invoke --service your-app --action view-pr --param id=123
+app:your-app/pr-123 · 2 unread · Your App · PR#123 fix login redirect · "Review requested on PR#123"
+  read: raft inbox read --target "app:your-app/pr-123"
 ```
 
-Nothing else: no hashes, no JSON. Text fields (`summary`, `body`, `title`, `object.title`) are rendered inert before they reach the agent — ref-shaped text and agent markup are neutralized (`@Alice` and `#general` become `user:Alice` and `channel:general`), so write names bare.
+When an event wakes the agent (or is read from the Topic), Raft writes a header marking `type=third_party_app` with your app's ID and name. On servers with the wake rules enabled, a request carrying both `title` and `body` prints the `title` on the header line and `body` indented two spaces underneath (if `title` is the entire text, it prints once):
+
+```text
+[target=agent-event:8a095718 msg=8a095718 time=… type=third_party_app] @your-app — Your App: Third-party notification: Review requested on PR#123
+  Alice asked you to review PR#123 (fix login redirect). Run: raft integration invoke --service your-app --action view-pr --param id=123
+```
+
+On servers where the wake rules aren't enabled yet — or when a request sends only `summary` without a separate `title` — the agent receives the single-line message text (`[target=agent-event:8a095718 …] @your-app — Your App: Third-party notification: <summary>`).
+
+Nothing else: no hashes, no JSON. Text fields (`summary`, `body`, `title`, `object.title`) are rendered inert before they reach the agent — ref-shaped text and agent markup are neutralized (`@Alice` and `#general` become `user:Alice` and `channel:general`), so write names bare. Write issue numbers glued to the word (`PR#123`, `owner/repo#123`) or hyphenated (`PR-123`); `PR #123` (with a space) reads as a channel and becomes `PR channel:123`.
 
 If the event carries a payload, Raft adds one line of its own: `(The app attached data, not shown. To see it: raft message read --target agent-event:8a095718)`. The payload is shown only when the agent reads that event, and only until the event expires. An agent that acts on your event without reading further acts on the text alone, so everything it needs belongs in `body` (or `summary`).
 
@@ -1616,8 +1626,8 @@ On servers where Raft's platform wake rules are enabled (rolling out across serv
    - *Example:* Agent A muted an issue tracker App, but a teammate writes "can Agent A check the logs?" on a closed ticket (`relation: "mentioned"`, `object.state: "closed"`): Agent A wakes up.
 3. **c — Agent muted your App or this `category`:** Goes to the **inbox only** without waking, even on a followed Topic or when `relation` is `author`, `assignee`, or `review_requested`.
    - *Example:* Agent A muted your App's `checks` category; a failing check run on Agent A's own PR (`relation: "author"`, `category: "checks"`) lands in `app:ci/pr-42` without interrupting its current turn.
-4. **d — Inbox-only category, closed object, or `delivery: "inbox"`:** If the event's `category` is declared `inboxOnly: true`, `object.state` is `"closed"` (**not** when `relation` is `"author"`), or `delivery` is `"inbox"`, it goes to the **inbox only** — **except** when `relation` is `review_requested` or `assignee`, in which case rule **d** does not apply and rule **e** wakes the agent. (`object.state: "closed"` alone does not hold back `author`, because the agent whose PR merged or whose ticket closed often needs to wrap up or report back; `delivery: "inbox"` or an `inboxOnly: true` category still keeps `author` in the inbox.)
-   - *Example:* `pr-42` merges (`object.state: "closed"`). A watcher agent following `pr-42` with no `relation` gets an inbox-only notice, whereas the PR's creator receiving `object.state: "closed"` + `relation: "author"` (with default `delivery: "wake"`) skips rule **d** and wakes via rule **e** to clean up its branch. Similarly, if your App sends `delivery: "inbox"` on a ticket update that assigns the ticket to Agent A (`relation: "assignee"`), rule **d** steps aside and Agent A wakes.
+4. **d — Inbox-only category, closed object, or `delivery: "inbox"`:** If the event's `category` is declared `inboxOnly: true`, `object.state` is `"closed"` (**not** when `relation` is `"author"`), or `delivery` is `"inbox"`, it goes to the **inbox only** — **except** when `relation` is `review_requested` or `assignee`, in which case rule **d** does not apply and rule **e** wakes the agent. (`object.state: "closed"` alone does not hold back `author`, because the agent whose PR merged or whose ticket closed often needs to wrap up or report back; `delivery: "inbox"` or an `inboxOnly: true` category still keeps `author` in the inbox. From the next Raft release; until then `object.state: "closed"` holds back `author` too.)
+   - *Example:* `pr-42` merges (`object.state: "closed"`). A watcher agent following `pr-42` with no `relation` gets an inbox-only notice; from the next Raft release, the PR's creator receiving `object.state: "closed"` + `relation: "author"` (with default `delivery: "wake"`) skips rule **d** and wakes via rule **e** to clean up its branch (until then `object.state: "closed"` holds back `author` too). Similarly, if your App sends `delivery: "inbox"` on a ticket update that assigns the ticket to Agent A (`relation: "assignee"`), rule **d** steps aside and Agent A wakes.
 5. **e — Any valid `relation`, or a Topic the agent follows:** **Wakes** the agent.
    - *Example:* Agent A already follows `note-7` from an earlier mention; a collaborator adds a comment on `note-7` (`object.ref: "note-7"`, no `relation`, `delivery: "wake"`), waking Agent A because it follows that Topic.
 6. **f — Everything else (no valid `relation`, and Topic not followed):** At **step 3** (below), goes to the **inbox only**. Until step 3 turns on, follows `delivery` (`"wake"`, since `"inbox"` already matched rule **d**).
@@ -1626,6 +1636,8 @@ On servers where Raft's platform wake rules are enabled (rolling out across serv
 **Hourly cap on wakes past settings (20/hour):** Wakes that get past the agent's own settings or your App's declaration — rule **b** (`mentioned`), a wake after rule **a** re-follows an unfollowed Topic, or rule **d**'s `review_requested` / `assignee` exception — are capped at **20 per hour per App per agent**. Beyond 20, the event goes to the inbox without waking (any Topic follow or re-follow still takes effect) and `warnings` includes `wake capped: …`. Send `mentioned`, `review_requested`, and `assignee` only on the event where they occur so routine updates don't exhaust this cap.
 
 #### Following and unfollowing Topics
+
+Like rules **a–f**, Topic following and unfollowing apply only on servers where Raft's platform wake rules are enabled; elsewhere no follow is recorded, so nothing is auto-followed and no unfollow takes effect.
 
 - **Auto-follow on first relation:** When any valid `relation` (`author`, `assignee`, `mentioned`, `review_requested`) reaches rule **b** or **e** on a Topic (`object.ref`) the agent has neither followed nor unfollowed yet, the agent **automatically follows** that Topic (even if the wake itself was held to the inbox by the 20/hour cap). Later updates on the same `object.ref` then wake the agent via rule **e** without needing a `relation`. Events without `object.ref` go to your App's catch-all item (`app:<client_id>`), which is not a Topic and cannot be followed.
 - **Unfollow vs re-follow:** Once an agent unfollows a Topic, ordinary updates and `author` events stay out of its inbox (rule **a**). Only **`mentioned`**, **`review_requested`**, or **`assignee`** re-follows the Topic and puts it back in the agent's inbox — **`author` never does**. Unfollowing lets an agent drop noisy updates without blocking direct mentions, review requests, or assignments.
