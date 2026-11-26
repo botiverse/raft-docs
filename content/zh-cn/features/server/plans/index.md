@@ -70,7 +70,7 @@ Pro 按席位付费：
 
 ### 超过 30 天的消息去哪儿了？ {#where-did-messages-older-than-30-days-go}
 
-在免费版上，这些消息只是被隐藏，没有删除，搜索也只覆盖最近 30 天。升级到 Pro，它们就会回来。
+在免费版上，这些消息对人和 Agent 都会隐藏，但没有删除，搜索也只覆盖最近 30 天。升级到 Pro，它们就会回来。
 
 ### 免费服务器可以有多少个外部频道？ {#how-many-external-channels-can-a-free-server-have}
 

@@ -85,6 +85,8 @@ raft integration login \
 - **分类**：AI 与自动化、沟通、生产力与协作、开发者工具、数据与分析、商业运营、基础设施、内容与创意，或其他
 - 可选：主页网址、描述、Logo、Agent 清单网址（即 Agent manifest 的 URL）
 
+**Logo 要铺满整个正方形，并且不透明。** 用你的图案和它的背景填满整个正方形。不要留透明背景，也不要做圆角：圆角由 Raft 自己加。透明的 Logo 会在左侧栏里透出 Raft 的占位底色，在深色的桌面浏览器标签页上则会看不见。上传不超过 5 MB 的 JPEG、PNG、GIF 或 WebP 文件，推荐用 PNG。Raft 把它存成 256 × 256 的正方形，不是正方形的图片会被裁剪以铺满。
+
 你的服务器通常把这些值存为环境变量：
 
 ```bash
@@ -157,6 +159,14 @@ npm create raft-app@latest my-raft-app -- --template pure-sign-in-web-app
    ```
 
 拥有应用不等于发布了它，也不会让它在其他服务器上可用。发布和安装是两回事。
+
+默认情况下，第三方应用安装后会开放给该服务器上的所有 Agent（`all`），除非有人为某个 Agent 关掉了这个应用。如果你的应用应当一开始不对任何 Agent 开放，等服务器所有者、管理员或 Agent 的创建者在应用详情里逐个打开，就把它的建议安装默认值设为 `selected`：
+
+```bash
+raft integration app update --client <client-key> --agent-access-default selected
+```
+
+（也可以由应用来源服务器的所有者或管理员发送 `PATCH /api/integrations/clients/<app-uuid>`，请求体为 `{"agentAccessDefault": "selected"}`。）如果 `--agent-access-default` 返回 `unknown option`，说明运行这个 Agent 的 Raft Computer 版本早于这个参数，先升级它。设置后，安装确认页上会预先选中 **选定的 Agent**；安装者在安装时仍然可以选择 **全部 Agent** 或 **选定的 Agent**，之后也可以在已安装应用的详情里切换。这只是建议，不是权限：修改它不需要市场审核，也不需要更新安装权限，只对新的安装生效；应用还是服务器本地应用时，这个值会被保存，但不起作用。
 
 其余功能也都在 CLI 里：用 `list` 和 `status` 查看，用 `logo` 和 `clear-logo` 管理 Logo，用 `share-link`、`share-link-status` 和 `revoke-share-link` 管理私有共享链接，用 `request-publish` 和 `request-unpublish` 申请市场审核，用 `delete` 删除未发布的应用。
 
@@ -290,9 +300,217 @@ Raft 会给用户显示服务器选择器（只列出你的应用可用的服务
 
 票据是唯一会出现在 URL 里的凭据，而没有 verifier 它就毫无用处。所以即使票据通过浏览历史、日志或设备上的其他应用泄露出去，也没法兑换。使用系统浏览器还有一个好处：已经在浏览器里登录 Raft 的人，只需点同意即可。
 
+### 在 Raft 里打开时自动登录 {#auto-sign-in-when-opened-inside-raft}
+
+有人在 Raft Desktop 的对话里，从一张经过验证的应用链接卡片打开你的应用（直接点击；按住修饰键点击或用鼠标中键点击，仍和以前一样打开），并且 Raft 已经准备好为这个窗口处理登录时，Raft 会在内置浏览器里打开你的页面，并在发往这个入口所在源的顶层文档导航请求上附加一个请求头：
+
+```http
+Raft-Host: desktop
+```
+
+目前，有人点击应用链接卡片时，Raft Desktop 会发送这个请求头，值为 `desktop`；这里的源，就是 `raft-link-preview.json` 证明过的链接预览源。也要接受 `ios` 和 `android`：这两个值留给 Raft 的手机 App 使用（`@botiverse/raft-sdk/app` 已经接受它们）。如果这个人输入了别的地址、离开了这个源，或者重新打开一个恢复的标签页，Raft 就不再发送这个请求头。Raft 绝不会在普通的浏览器标签页里、在子资源请求上，或向无关的网站发送 `Raft-Host`，这个请求头也不带任何用户身份或服务器 ID。它只告诉你的服务器：Raft 正在这个标签页里等待 Login with Raft 的重定向。如果访问者已经在当前服务器上同意过你的应用，Raft 会直接完成登录，不显示同意对话框；第一次使用时，Raft 会立即显示它的同意面板。
+
+`Raft-Host` 只是提示，不是证明：任何客户端都能发送它。只用它来决定是否发起 Login with Raft，绝不要用它来授予访问权限，或跳过你自己的会话检查。
+
+如果 HTML 由你的服务器提供（服务端渲染的应用、Go/Node 网关、Edge Workers），你可以把未登录的访问者直接重定向到你现有的 Login with Raft 路由，这样应用打开时就已经登录好了。HTML 路由上没有服务器的纯静态 SPA 跳过这一步：只要这个人同意过，在 Raft Desktop 里点击它们平常的 **Log in with Raft** 按钮，仍然会跳过同意对话框。
+
+#### 协议规则 {#protocol-rules}
+
+1. **只在未登录的 `GET` 文档导航上触发。** 忽略非 `GET` 方法、子资源和 API 请求（`Sec-Fetch-Dest` 不是 `document`、`Sec-Fetch-Mode` 不是 `navigate`，或者 `Accept` 既不接受 `text/html` 也不接受 `*/*`），以及已经有有效会话的访问者。
+2. **用三道防护避免重定向循环：**
+   - **尝试防护 cookie：** 发出 `302` 之前，先设置一个短期的第一方 cookie（例如 `raft_host_signin_guard=attempted; Path=/; HttpOnly; SameSite=Lax; Max-Age=600; Secure`）。如果这个 cookie 已经存在，就渲染正常页面，不再重定向。
+   - **主动退出防护：** 这个人点击退出登录时，设置同一个防护 cookie（例如 `raft_host_signin_guard=logged_out`），让他停留在你正常的登录页面上，而不是又被自动登录回去。如果希望以后会话过期时还能自动登录，就在一次成功的手动登录之后清除它。
+   - **OAuth 回调和错误放行：** 在你的登录和回调路由上（包括带 `?code=...`、不带 `state` 的登录入口 URL 回调），以及 URL 查询里带有 `error`（例如 `?error=access_denied`）或正在进行的 OAuth 回调（`?code=...&state=...`）时，绝不要自动重定向。`?error=` 放行对任何路径都适用，所以查询里带 `?error=...` 打开的应用页面，也会跳过自动登录。
+3. **校验 `returnTo`，并在回调上处理取消。** 自动登录会为 Raft Desktop 里每一次未登录的导航自动构造登录重定向，所以要把所有 `next` / `returnTo` 参数都校验为同源的相对路径：拒绝绝对 URL、`//...`、`/\...`，以及浏览器在解析前会去掉的 ASCII 控制字符（例如 `%09`/`%0a`），校验不通过就回退到 `/`。如果这个人取消了 Raft 首次显示的同意面板，Raft 会把标签页重定向到你注册的返回网址，并带上 `?error=access_denied`（如果你的授权请求发送了 `state`，也会带上它）。照常校验 `state`，然后回到你正常的登录页面（或者显示一个错误页面，不要重定向回 Raft）；同时保留或设置防护 cookie（或者把这个落地页排除在外），免得紧接着的请求又绕回登录。
+4. **把缓存分开，并绕过边缘节点的 HTML 缓存。** 在 `GET` 和 `HEAD` 的文档响应上加 `Vary: Raft-Host`（包括对不带 `Raft-Host` 的普通浏览器的响应），并在 `302` 重定向上发送 `Cache-Control: no-store`。注意，**Cloudflare 默认不会按 `Vary` 拆分缓存键**：即使 `302` 带着 `Cache-Control: no-store`，只要你的 HTML 文档路由被边缘缓存（`cf-cache-status: HIT`），带 `Raft-Host` 的请求就永远到不了你的源站，自动登录也就悄无声息地失效了。凡是根据 `Raft-Host` 分支处理的文档路由，都必须到达你的服务器或 Worker，而不能由 CDN 边缘缓存直接返回（设置了 `run_worker_first = true` 的 Cloudflare Workers 天然满足这一点；位于 Cloudflare HTML 缓存后面的源站应用，需要为这些路由加一条绕过缓存的规则）。
+
+   `run_worker_first = true` 只是让请求到达你的 Worker。Worker 从 `env.ASSETS.fetch` 返回的 HTML（你的 `index.html` 或 SPA 回退页面）仍然带着静态资源默认的 `Cache-Control: public, max-age=0, must-revalidate`；而设置了 `run_worker_first` 后，`_headers` 文件对 Worker 的响应不起作用。如果 HTML 取决于登录状态，就在 Worker 里给 `text/html` 响应设置 `Cache-Control: no-store`；如果路由根据这个请求头分支处理，再加上 `Vary: Raft-Host`：
+
+   ```ts
+   const res = await env.ASSETS.fetch(request);
+   if (!res.headers.get("content-type")?.startsWith("text/html")) return res;
+   const html = new Response(res.body, res);
+   html.headers.set("Cache-Control", "no-store");
+   html.headers.append("Vary", "Raft-Host");
+   return html;
+   ```
+
+#### TypeScript / JavaScript (`@botiverse/raft-sdk/app`) {#typescript-javascript-botiverse-raft-sdk-app}
+
+`@botiverse/raft-sdk/app`（`@botiverse/raft-sdk` `>= 0.40.0`）把请求头检查、防循环保护、`Vary: Raft-Host` 和 `Cache-Control: no-store` 封装成一个辅助函数，在 Web 标准运行时（Cloudflare Workers、Next.js、Hono、Deno、Bun）和 Node/Express 中都能用。
+
+创建一个共用的辅助函数实例：
+
+```ts
+import { createRaftHostAutoSignIn } from "@botiverse/raft-sdk/app";
+
+const autoSignIn = createRaftHostAutoSignIn({
+  // 接收 `{ method, url, headers }`；检查你的会话 cookie，或者按下文各框架的写法覆盖它。
+  isAuthenticated: (req) => hasValidSessionCookie(req.headers),
+  // 登录后重定向之前，把 `next` 校验为同源的相对路径（拒绝 `//` 和 `/\`）。
+  loginUrl: ({ url }) => `/login/raft?next=${encodeURIComponent(url.pathname + url.search)}`,
+  shouldHandle: ({ url }) => url.pathname !== "/login" && !url.pathname.startsWith("/login/"),
+});
+```
+
+Express / Node：
+
+```ts
+// 如果你直接读取 `req.session` 或 `req.cookies`，就传入 `{ isAuthenticated }`。
+app.use(autoSignIn.nodeMiddleware({ isAuthenticated: (req) => Boolean(req.session?.userId) }));
+
+// 用户主动退出时：让他保持退出状态（在本地纯 HTTP 的 localhost 上传入 `{ secure: false }`）。
+res.appendHeader("Set-Cookie", autoSignIn.logoutCookie());
+
+// 手动登录成功后：清除防护 cookie，以后会话过期时就能再次自动登录。
+res.appendHeader("Set-Cookie", autoSignIn.clearGuardCookie());
+
+// 在你的 OAuth 回调上：照常校验 `state`，用户取消时显示你的登录页面。
+if (autoSignIn.isCancelledCallback(req.url)) {
+  if (!verifyOAuthState(req)) return res.status(400).send("Invalid login state");
+  return res.redirect("/login");
+}
+```
+
+Cloudflare Workers / Hono / Deno（Web Fetch）：
+
+```ts
+export default {
+  fetch: autoSignIn.handle(async (request, env, ctx) => {
+    // 处理退出、手动登录或取消回调时，把 `autoSignIn.logoutCookie()` 或
+    // `autoSignIn.clearGuardCookie()` 加到响应头上；校验 `state` 之后，
+    // 再检查 `autoSignIn.isCancelledCallback(request.url)`。
+    return appFetch(request, env, ctx);
+  }),
+};
+```
+
+如果你的 `isAuthenticated` 检查需要每个请求各自的绑定（例如 Cloudflare Workers 的 `env`），就直接调用 `autoSignIn.evaluate(request, { isAuthenticated })`，并把 `decision.varyHeader` 合并到继续处理的响应上（`evaluate()` 要求要么配置了 `isAuthenticated` 选项，要么显式传入 `{ isAuthenticated: boolean }` 覆盖，否则以 `invalid_options` 拒绝）。`logoutCookie()` 和 `clearGuardCookie()` 默认带 `Secure`；在本地用纯 HTTP 的 `localhost` 开发时，传入 `{ secure: false }`。
+
+**在 Cloudflare Workers 上，先包装 `fetch`，再把它传来传去。** 在 workerd 里，`fetch` 必须在全局对象上调用。调用一个存下来的、未绑定的引用，例如 `const f = params.fetchImpl ?? fetch; f(url)` 或 `deps.fetchImpl(url)`，可能会抛出 `TypeError: Illegal invocation`。请改为存储和传递一个包装函数：`(input, init) => globalThis.fetch(input, init)`。
+
+#### Go {#go}
+
+```go
+import (
+	"net"
+	"net/http"
+	"net/url"
+	"strings"
+)
+
+const raftHostGuardCookie = "raft_host_signin_guard"
+
+func isHTMLDocumentRequest(r *http.Request) bool {
+	if dest := strings.ToLower(strings.TrimSpace(r.Header.Get("Sec-Fetch-Dest"))); dest != "" && dest != "document" {
+		return false
+	}
+	if mode := strings.ToLower(strings.TrimSpace(r.Header.Get("Sec-Fetch-Mode"))); mode != "" && mode != "navigate" {
+		return false
+	}
+	if accept := strings.ToLower(r.Header.Get("Accept")); accept != "" && !strings.Contains(accept, "text/html") && !strings.Contains(accept, "*/*") {
+		return false
+	}
+	return true
+}
+
+func appendVary(h http.Header, token string) {
+	for _, existing := range h.Values("Vary") {
+		for _, part := range strings.Split(existing, ",") {
+			trimmed := strings.TrimSpace(part)
+			if trimmed == "*" || strings.EqualFold(trimmed, token) {
+				return
+			}
+		}
+	}
+	h.Add("Vary", token)
+}
+
+func isLoopbackHost(hostPort string) bool {
+	host := hostPort
+	if h, _, err := net.SplitHostPort(hostPort); err == nil {
+		host = h
+	}
+	return host == "localhost" || host == "127.0.0.1" || host == "::1"
+}
+
+func raftHostAutoSignIn(isSignedIn func(*http.Request) bool, next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if (r.Method != http.MethodGet && r.Method != http.MethodHead) || !isHTMLDocumentRequest(r) {
+			next.ServeHTTP(w, r)
+			return
+		}
+		appendVary(w.Header(), "Raft-Host")
+		if r.Method != http.MethodGet {
+			next.ServeHTTP(w, r)
+			return
+		}
+
+		host := strings.ToLower(strings.TrimSpace(r.Header.Get("Raft-Host")))
+		if host != "desktop" && host != "ios" && host != "android" {
+			next.ServeHTTP(w, r)
+			return
+		}
+		q := r.URL.Query()
+		if r.URL.Path == "/login" || strings.HasPrefix(r.URL.Path, "/login/") || q.Has("error") || (q.Has("code") && q.Has("state")) || isSignedIn(r) {
+			next.ServeHTTP(w, r)
+			return
+		}
+		if c, err := r.Cookie(raftHostGuardCookie); err == nil && c.Value != "" {
+			next.ServeHTTP(w, r)
+			return
+		}
+
+		// 默认 Secure: true（即使在终止 TLS 的代理后面也是如此）；只有本地回环 HTTP 才省略。
+		fwdProto := strings.TrimSpace(strings.Split(r.Header.Get("X-Forwarded-Proto"), ",")[0])
+		isHTTPS := r.TLS != nil || strings.EqualFold(fwdProto, "https")
+		http.SetCookie(w, &http.Cookie{
+			Name:     raftHostGuardCookie,
+			Value:    "attempted",
+			Path:     "/",
+			MaxAge:   600,
+			HttpOnly: true,
+			SameSite: http.SameSiteLaxMode,
+			Secure:   isHTTPS || !isLoopbackHost(r.Host),
+		})
+		w.Header().Set("Cache-Control", "no-store")
+		// 在 `/login/raft` 里，登录后重定向之前，把 `next` 校验为同源的相对路径。
+		http.Redirect(w, r, "/login/raft?next="+url.QueryEscape(r.URL.RequestURI()), http.StatusFound)
+	})
+}
+```
+
+在退出登录的处理程序里设置同样的 `raft_host_signin_guard=logged_out` cookie；回调收到 `error=access_denied` 时（先校验 `state`），回到你正常的登录页面。
+
+#### 不用 Raft 测试 {#testing-without-raft}
+
+你可以用 `curl` 对本地服务器或已部署的 URL 逐条验证这些规则（用 `GET`，即 `curl -i` 或 `-D - -o /dev/null`，不要用 `curl -I`，因为 `HEAD` 永远不会触发重定向；经过 Cloudflare 代理的部署，要检查 `cf-cache-status`，确认它不是 `HIT`）：
+
+```sh
+# 1. 来自 Raft 宿主的未登录请求 -> 302，带防护 cookie + Vary + no-store（并且不是 cf-cache-status: HIT）
+curl -sS -D - -o /dev/null -H "Raft-Host: desktop" http://localhost:3000/
+
+# 1b. 跟随第 1 步的 Location（跨源时不用 -L）-> 确认它真的 302 到 Raft 的 authorize/setup（而不是返回 200 的 SPA 外壳）
+curl -sS -D - -o /dev/null http://localhost:3000/login/raft
+
+# 2. 普通浏览器（不带 Raft-Host）-> 200，带 Vary: Raft-Host，不重定向
+curl -sS -D - -o /dev/null http://localhost:3000/
+
+# 3. 已登录的访问者（有效的会话 cookie）-> 200，不重定向
+curl -sS -D - -o /dev/null -H "Raft-Host: desktop" -H "Cookie: session=<valid-session>" http://localhost:3000/
+
+# 4. 已有防护 cookie（尝试过一次，或主动退出过）-> 200，不重定向
+curl -sS -D - -o /dev/null -H "Raft-Host: desktop" -H "Cookie: raft_host_signin_guard=attempted" http://localhost:3000/
+
+# 5. 取消之后的 OAuth 返回（回调或应用路由上的 ?error=access_denied）-> 绝不能 302 回 Raft 的 authorize/setup（200 或 400 都可以）
+#    并且紧接着带防护 cookie 的那个请求 -> 200，不重定向
+curl -sS -D - -o /dev/null -H "Raft-Host: desktop" "http://localhost:3000/login/raft/callback?error=access_denied"
+curl -sS -D - -o /dev/null -H "Raft-Host: desktop" -H "Cookie: raft_host_signin_guard=attempted" http://localhost:3000/
+```
+
 ### Agent 走的是同一个回调 {#agents-arrive-at-the-same-callback}
 
-Agent 用自己的 Raft 身份认证，既不借用人类的浏览器会话，也不靠粘贴 token。Agent 的访问在 Raft 内部发起：可用的应用可以直接接受 Agent 登录，不需要为每个 Agent 单独发操作卡片等人批准。对于已安装的第三方应用，自动批准还要求所请求的每个登录 scope 都在该安装已批准的 scope 之内；超出这个范围的新增 scope 会转入批准流程。未安装的公开应用会返回 `install_required`，上文所说、由所有者或管理员处理的安装卡片，就是决定应用能否使用的关口。私有或未知的应用始终无法被发现，访问一律拒绝。人类明确撤销某个 Agent 对某个应用的访问后，这一组合就不会再自动获得授权，重新运行登录也不能撤回这次撤销。必须有人明确地再次批准或授权。
+Agent 用自己的 Raft 身份认证，既不借用人类的浏览器会话，也不靠粘贴 token。Agent 的访问在 Raft 内部发起：只要 Agent 在安装的 Agent 开放范围之内，可用的应用就可以直接接受 Agent 登录，不需要为每个 Agent 单独发操作卡片等人批准。已安装的第三方应用要么开放给服务器上的 `all`（全部 Agent，除非有人为某个 Agent 关掉了这个应用），要么只开放给 `selected`（只有在已安装应用的详情里打开了的 Agent）。在 `selected` 下，关闭状态的 Agent 不会自动获得授权，不过它自己运行 `raft integration login` 仍会创建一个待批请求；批准这个请求，就会为这个 Agent 打开这个应用。自动批准还要求所请求的每个登录 scope 都在该安装已批准的 scope 之内；超出这个范围的新增 scope 会转入批准流程。未安装的公开应用会返回 `install_required`，上文所说、由所有者或管理员处理的安装卡片，就是决定应用能否使用的关口。私有或未知的应用始终无法被发现，访问一律拒绝。人类明确撤销某个 Agent 对某个应用的访问后，这一组合就不会再自动获得授权，重新运行登录也不能撤回这次撤销。必须有人明确地再次批准或授权（关掉它的人只要仍有在该服务器上管理外部认证的所有者或管理员权限，Agent 的创建者就不能独自重新打开；那个人被降级或离开之后，创建者就可以了）。
 
 安装第三方应用时，Raft 会记录这次安装所批准的登录 scope。应用之后修改声明的 scope，不会悄悄扩大这个集合。服务器所有者或管理员可以在已安装应用的设置中查看新增的 scope，并批准这次更新。要把这项安装批准，与 Agent 自己的登录授权、安装 token 所用的应用权限组，以及你应用自身的业务权限区分开。
 
@@ -865,15 +1083,47 @@ manifest 里的 `actions` 是产品层面的操作，Raft 可以在登录后把�
 | `name` | 是 | 稳定的操作名。可用字母、数字、`.`、`_`、`:` 或 `-`；发布后保持不变。 |
 | `description` | 否 | 简短说明，人和 Agent 都能读懂。 |
 | `endpoint.method` | 是 | `GET`、`POST`、`PUT`、`PATCH` 或 `DELETE`。 |
-| `endpoint.path` | 是 | 以 `/` 开头的服务相对路径。绝对 URL、凭据和片段（fragment）都会被拒绝。 |
+| `endpoint.path` | 是 | 以 `/` 开头的服务相对路径。可以包含 `{name}` 形式的路径参数（见下文）。绝对 URL、凭据和片段（fragment）都会被拒绝。 |
 | `parameters` | 否 | 具名参数的定义（`type`、可选的 `description`、可选的 `required`）。 |
 | `returns` | 否 | 具名返回字段的定义（`type`、可选的 `description`）。 |
 
 Agent 通过 Raft 调用某个操作时，Raft 会带上操作参数，以及经无状态 Agent 回调交接建立的服务会话，去请求所声明的相对端点。你的应用应校验参数、重新检查应用层面的授权、执行操作，并按文档约定的结构返回响应。
 
+`endpoint.path` 是基础 URL 所在源上的完整路径：它以 `/` 开头，所以会替换 `execution.base_url` 里的路径，而不是追加在后面。比如 `base_url` 是 `https://orbital.example.com/api` 时，路径 `/api/raft/actions/summarize-note` 的调用地址是 `https://orbital.example.com/api/raft/actions/summarize-note`。
+
 操作名应该表达产品语义，而不是照搬每个内部路由：与其暴露每个笔记 API 端点，不如提供 `summarize-note`。这样无论是 Agent 使用，还是安装时的审核，都更容易理解。
 
 对于需要本地凭据文件的 `local_cli` 集成，设置 `credential_boundary.storage: "per_agent_home"` 和 `forbid_user_home: true`。不设置的话，Raft 可能会阻止 Agent 拿宿主机用户的全局凭据状态来运行这个 CLI。`http_api` 集成不需要本地凭据边界。
+
+#### 路径参数 {#path-parameters}
+
+在 `endpoint.path` 里用 `{name}` 写路径参数，`name` 以字母开头，后面可以跟字母、数字或 `_`。在 `parameters` 里用同样的名称声明它，并设置 `required: true`：
+
+```json
+{
+  "name": "append-note-comment",
+  "description": "Add a comment to one note.",
+  "endpoint": { "method": "POST", "path": "/api/notes/{noteId}/comments" },
+  "parameters": {
+    "noteId": { "type": "string", "description": "Note ID", "required": true },
+    "text": { "type": "string", "description": "Comment text", "required": true }
+  }
+}
+```
+
+调用这个操作时：
+
+- 每个 `{name}` 都会被替换为同名参数经过 URL 编码的值。路径参数缺失或为空时，调用在请求你的端点之前就会失败。
+- 路径参数只放在路径里，不会再放进查询字符串或请求体。
+- 其余参数：`GET` 放在查询字符串里，`POST`、`PUT`、`PATCH` 和 `DELETE` 放在 JSON 请求体里。
+
+用 `noteId=n_42` 和 `text=Looks good` 调用上面的示例，发送的是 `POST /api/notes/n_42/comments`，JSON 请求体为 `{"text":"Looks good"}`。
+
+#### 名为 `id` 的参数 {#an-id-parameter}
+
+`raft integration invoke` 把名为 `id` 的参数当作资源定位符。对于 `POST`、`PUT`、`PATCH` 和 `DELETE`，如果 `endpoint.path` 里没有 `{id}` 占位符，非空的 `id` 会发送两次：一次作为查询字符串 `?id=<value>`，一次原样放在 JSON 请求体里。`--list-actions` 会为每个适用这条规则的操作打印一条说明。对于 `GET`，`id` 只是又一个查询参数，只发送一次。路径里有 `{id}` 时，它就是路径参数，只放在路径里。
+
+用 `id=n_42` 调用 `POST /api/raft/actions/archive-note` 这样的扁平操作，发送的是 `POST /api/raft/actions/archive-note?id=n_42`，JSON 请求体为 `{"id":"n_42"}`。只从一个地方读取 `id`（扁平的 `POST` 操作就读请求体），也不要因为查询字符串里同样带着它就拒绝请求。如果你希望 `id` 只发送一次，就把 `{id}` 放进路径。
 
 ### 不支持的 manifest 写法 {#unsupported-manifest-patterns}
 
@@ -894,13 +1144,15 @@ Agent 通过 Raft 调用某个操作时，Raft 会带上操作参数，以及经
 客户端密钥留在你的后端。前两个请求用 HTTP Basic 认证，凭据是应用的客户端 ID 和密钥：
 
 1. 用 `{"server_id":"<target-server-uuid>"}` 调用 `POST /api/oauth/installations/lookup`，查到当前有效的安装。
-   如果你的应用在这个服务器上没有有效的安装（从未安装、已卸载、已暂停或未获批准），会返回 `404`，其中 `"code": "installation_not_found"`，不会说明是哪一种。请按 `code` 判断，不要按 `error` 里的句子判断，也不要假定响应体只有这几个字段：Raft 可能会增加字段。把它当作「这里没有安装」，在有人安装你的应用之前不要重试。
+   如果你的应用在这个服务器上没有有效的安装（从未安装、已卸载、已暂停或未获批准），会返回 `404`，其中 `"code": "installation_not_found"`，不会说明是哪一种。请按 `code` 判断，不要按 `error` 里的句子判断，也不要假定响应体只有这几个字段：Raft 可能会增加字段。把它当作「这里没有安装」，停止重试，直到你的应用在那里被安装或恢复。
 2. 用 `{"installation_id":"<installation-uuid>","groups":["agent"]}` 调用 `POST /api/oauth/installation-token`，获取有效期十分钟的安装 token，其权限仅限于实际已批准的组。
 3. 把这个 token 放进 `Authorization: Bearer <installation-token>`，调用 `GET /api/app-installation/agents`，读取该安装所在服务器的数据。请求参数无法选择其他服务器。
 
 响应为 `{ "installation_id": "…", "agent_access": "all" | "selected", "agents": […] }`。用每个 Agent 的 `id` 作为稳定的键，名称用 `display_name ?? handle`，头像用 `avatar_url`。这里的 `avatar_url` 已经是可直接渲染的绝对 URL 或 `null`，这一点和 OAuth userinfo 里的原始头像引用不同。已删除的 Agent 不会出现在列表里，空列表也是合法的。这项权限不包括发送消息、访问对话或读取未读数。
 
 `agent_access` 表示这个安装开放给哪些 Agent：`"all"`（全服 Agent，除非有人为某个 Agent 关掉了该应用）或 `"selected"`（仅限在应用详情里被打开的 Agent）。`agents` 里的每一项都带 `"app_access": true | false`，表示你的应用当前能否不经人工审批就覆盖该 Agent（自动 Agent 登录、短期 Agent JWT，以及 `POST /api/oauth/requests/agent` 的自动批准；在 `"selected"` 下，对 `app_access: false` 的 Agent 调用 `POST /api/oauth/requests/agent` 还会直接返回 `403` `agent_not_selected`，而不会创建待批请求）。在 `"all"` 安装上同样会返回这个字段（被管理员或创建者关掉时为 `false`，此时 `POST /api/oauth/requests/agent` 会进入待批状态而非直接拒绝）。即使 `app_access` 为 `false`，目录仍会列出所有目录可见的 Agent。`agent_access` 或单个 Agent 开关变化时不会推送实时事件，按它行事的应用在行动前重新读取目录即可（定期轮询也足够）。旧版服务端不返回这两个字段：缺少 `agent_access` 时按 `"all"` 处理，缺少 `app_access` 时按未知处理。
+
+每一项还带有 `status`。对于运行在计算机上的 Agent：`active` 表示它在那里有一个活动的会话，不论正在处理某一轮，还是在两轮之间空闲；`inactive` 表示现在没有会话（还没启动，或者断线、重启之后），消息或事件仍会唤醒它；`stopped` 表示有人停止了它，在有人再次启动它之前，什么都不会唤醒它。对于 `runtime` 为 `external` 的 Agent（包括应用 bot），进程不由 Raft 运行，所以 `status` 始终是 `inactive`，不能说明它是否在运行。其他字段：`description`、`runtime`、`model`、`execution_mode`、`is_app_bot`（这个 Agent 是由应用管理的 bot），以及 `created_at` / `updated_at`。这只是读取：应用不能启动、停止或重置 Agent。
 
 要查某一个 Agent（例如跳过第二次审批之前，确认它是不是管理员），用同一个 token 调用 `GET /api/app-installation/agents/{agentId}`。只需要 `agent` 组，不需要 `server`：
 
@@ -979,9 +1231,9 @@ Cache-Control: no-store
 - 应用属于 Agent 所在的服务器，或者已安装在 Agent 所在的服务器上（通过市场或私有共享），并且安装处于有效状态。
 - 如果是第三方应用，该安装已批准 `openid` 和 `profile` 两项。
 - Agent 目前是该服务器的成员。
-- Agent 对该应用的访问没有被撤销。
+- Agent 对该应用的访问没有被撤销；如果安装只开放给 `selected` 的 Agent，还必须已为这个 Agent 打开该应用（否则 Raft 不会签发首次使用的授权，并返回 `AGENT_JWT_NOT_AUTHORIZED`）。
 
-audience 是 Agent 传给 `--service` 的 client key，它必须是你的应用当前的客户端 ID，或者是它的某个[旧 ID](/zh-cn/developers/login-with-raft/#changing-your-client-id)。有效期固定为五分钟；请求不接受自定义的 audience 或过期时间。是否接受这些 JWT，由你的应用按下文的方法校验后决定；不校验 Raft JWT 的应用不受影响。要停止签发新的 JWT，可以禁用或卸载应用，或撤销该 Agent 的访问。
+audience 是 Agent 传给 `--service` 的 client key，它必须是你的应用当前的客户端 ID，或者是它的某个[旧 ID](/zh-cn/developers/login-with-raft/#changing-your-client-id)。有效期固定为五分钟；请求不接受自定义的 audience 或过期时间。是否接受这些 JWT，由你的应用按下文的方法校验后决定；不校验 Raft JWT 的应用不受影响。要停止签发新的 JWT，可以禁用或卸载应用，或为该 Agent 关掉这个应用。
 
 服务器、CLI 和托管运行器的守护进程，三者都必须支持这项功能；请查看 `raft integration token --help`，并升级不支持的运行时。
 
@@ -1145,6 +1397,7 @@ Content-Type: application/json
 | `returnUrl does not match registered OAuth client` | `return_to` 与注册值不是逐字节一致。 |
 | 「This app isn't available to you.」（403 `app_not_available`） | 在所选的服务器上登录被拒：`client_id` 没有注册，`server_id` 不是一个服务器，你的应用在那里不可用（别的服务器的私有应用，或者不公开、在那里也没有安装的应用），或者这个人不是那里的成员。Raft 在自己的登录页上显示这句话，不会调用你的回调，所以你的应用收不到错误。所有原因都是同一个回答，这是刻意设计的：先检查 `client_id`；否则这个人需要换一个自己是成员、并且你的应用可用的服务器。 |
 | `OAuth client not found for server` | Agent 的访问请求所在的服务器上没有安装你的应用（或者是别的服务器的私有应用）。这是刻意设计的笼统 404。安装被暂停时会改为返回 403 `installation_suspended`。 |
+| `agent_not_selected`（403） | `POST /api/oauth/requests/agent` 的目标 Agent 在 `selected` 安装上处于关闭状态（你的安装持有 `agent` 目录组时返回这个错误；没有 `agent` 组时，Raft 返回通用的 `404` `Agent not found`）。不会创建待批请求；在服务器所有者、管理员或这个 Agent 的创建者在 Raft 里为它打开这个应用之前，不要再重试。 |
 | `Unsupported grant type` | `grant_type` 必须是 `authorization_code`；Agent 入站访问请求则用 `urn:slock:grant-type:agent_request`。 |
 | `code is required` | token 兑换请求缺少回调中的授权码。 |
 | `request_already_consumed` | 这个授权码已经兑换过。只能使用一次。 |
