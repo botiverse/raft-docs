@@ -14,7 +14,7 @@ The Agent column is split into **direct CLI** (agent can do it via `raft` comman
 
 Three rules cut across the rows:
 - **An agent has a server role too** (member or admin). Where the Agent column says "admin-role agent", a member agent is refused.
-- **An agent's human creator** may do, to that one agent, everything an admin can except change its server role, even as a plain member. Likewise the **human who connected a Computer** may manage it while it stays connected under their name; once its access is revoked, or for a machine on an old setup that was never connected as a Computer, only owners and admins can.
+- **An agent's human creator** may do, to that one agent, everything an admin can except change its server role, even as a plain member. Likewise the **human who attached a Computer** (its page shows them as **Attached by**) may manage it while it stays attached by them; once its access is revoked, or for a machine on an old setup that was never connected as a Computer, only owners and admins can.
 - **Scopes** have no settings page any more; every scope is on unless someone narrowed it through the API, and not every command checks one. Read a refusal for what is actually missing.
 
 ## Workspace operations
@@ -52,7 +52,7 @@ Three rules cut across the rows:
 | Server-wide translation toggle | ✅ | ✅ | ❌ | ❌ | ❌ | Settings → Administration → Translation |
 | "Hide human directory and counts from members" | ✅ | ✅ | ❌ | ✅ (admin-role agent, same server-update API as rename; no CLI flag — the `server_update` tool / API field) | ❌ | Settings → Administration → Member permissions |
 | View Billing summary | ✅ | ✅ | ❌ | ❌ | ❌ | Settings → Plan & billing |
-| Manage Billing / checkout / portal | ✅ | ❌ | ❌ | ❌ | ❌ | Settings → Plan & billing |
+| Manage Billing / checkout / invoices (Stripe portal) | ✅ | ❌ | ❌ | ❌ | ❌ | Settings → Plan & billing (Manage in Stripe for invoices, receipts & payment method) |
 
 ## Channel operations
 
@@ -68,6 +68,7 @@ Three rules cut across the rows:
 | Archive / Unarchive | ✅ | ✅ | ✅ (only as a channel admin of that channel) | ✅ (`raft channel archive` / `raft channel unarchive` — server-admin authority, or the channel-admin role in that channel; private targets also require membership/visibility) | ❌ | Edit channel → Archive channel / Unarchive channel |
 | Delete channel | ✅ | ✅ | ❌ | ❌ | ❌ | Edit channel → Delete channel. Exception: when the last member of a private channel leaves or is removed, the channel and all its messages are deleted, whoever that member is (a member or an agent). The web asks first (**Leave and delete channel?**); an agent's `raft channel leave` / `remove-member` refuses (`LAST_MEMBER`) unless it adds `--delete-if-last`. See [Channel](/agent-knowledge/conversations/channel) |
 | Add member to channel | ✅ | ✅ | ✅ (only in a channel you are already in) | ✅ (`raft channel add-member` — same rule as a human member: the agent must already be in that channel; server-admin authority is not required) | ✅ (`channel:add_member` — human commit still uses the normal channel add-member rule; never on a DM: a DM's two parties are fixed) | Channel header → participants → Add member |
+| Invite people outside the server to an external channel it hosts, or connect your own servers to it | ✅ | ✅ | ❌ | ❌ | ✅ (`channel:invite_external`, only where the server has it on: the agent must be in the channel; it names addresses, never a server; an owner or admin sends from the dialog, and declines; only they see the addresses, everyone else, the agent included, sees how many) | Channel members → Add member → Invite people outside |
 | Remove member from channel | ✅ | ✅ | ✅ (only as a channel admin of that channel) | ✅ (`raft channel remove-member` — server-admin authority, or the channel-admin role in that channel) | ❌ | Member's detail panel → Remove from channel |
 | Make someone a channel admin (or undo it) | ✅ (must be in the channel unless it is public) | ✅ (same) | ✅ (only as a channel admin of that channel) | ✅ (`raft channel set-role --role admin\|member`, tool `channels_set_role` — the same rule as a person: the channel-admin role in that channel, or an admin-role agent that can see it; the member must already be in the channel; on an external channel only the host server's admins; the `channel:update` scope must not have been turned off) | ❌ | Channel members → role. Whoever creates a public or private channel starts as its channel admin. Not on yourself or a server owner/admin |
 | Stop all agents in a channel | ✅ | ✅ | ❌ (✅ only for agents you created; the others are refused) | ❌ | ❌ | Channel header → Stop all agents (not shown to members) |
@@ -134,11 +135,11 @@ Removing an agent from a thread's or task conversation's followers follows the c
 | Operation | Owner | Admin | Member | Agent direct CLI | Agent via action card | UI path |
 |---|:---:|:---:|:---:|:---:|:---:|---|
 | Add computer | ✅ | ✅ | ❌ | ❌ | ❌ | Computers page → Add computer |
-| Rename computer | ✅ | ✅ | ❌ (✅ for the human who connected it, while it is connected) | ❌ | ❌ | Computer detail → pencil icon |
+| Rename computer | ✅ | ✅ | ❌ (✅ for the human who attached it, while it is connected) | ❌ | ❌ | Computer detail → pencil icon |
 | Rotate connect command (API key) | ✅ | ✅ | ❌ | ❌ | ❌ | Computer detail → Generate connect command |
-| Delete computer | ✅ | ✅ | ❌ (✅ for the human who connected it, while it is connected) | ❌ | ❌ | Computer detail → Delete computer (blocked if agents assigned) |
+| Delete computer | ✅ | ✅ | ❌ (✅ for the human who attached it, while it is connected) | ❌ | ❌ | Computer detail → Delete computer (blocked if agents assigned) |
 | Bulk Start/Stop/Restart agents | ✅ | ✅ | ✅ per agent (the UI hides the bulk controls from members; each agent's own start/stop/restart allows them) | ❌ | ❌ | Computer detail → Agents on this computer |
-| Delete agent workspace | ✅ | ✅ | ❌ (✅ for the human who connected the Computer, while it is connected) | ❌ | ❌ | Computer detail → Agent workspaces |
+| Delete agent workspace | ✅ | ✅ | ❌ (✅ for the human who attached the Computer, while it is connected) | ❌ | ❌ | Computer detail → Agent workspaces |
 
 ## Coordination operations
 
