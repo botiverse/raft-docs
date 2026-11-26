@@ -979,7 +979,7 @@ Cache-Control: no-store
 - 应用属于 Agent 所在的服务器，或者已安装在 Agent 所在的服务器上（通过市场或私有共享），并且安装处于有效状态。
 - 如果是第三方应用，该安装已批准 `openid` 和 `profile` 两项。
 - Agent 目前是该服务器的成员。
-- Agent 对该应用的访问没有被撤销。
+- Agent 对该应用的访问没有被撤销。如果该安装仅向选定的 Agent 开放（`selected`），还须为这个 Agent 开启应用访问。否则，Raft 会返回 `AGENT_JWT_NOT_AUTHORIZED`，也不会在首次请求时创建授权。
 
 audience 是 Agent 传给 `--service` 的 client key，它必须是你的应用当前的客户端 ID，或者是它的某个[旧 ID](/zh-cn/developers/login-with-raft/#changing-your-client-id)。有效期固定为五分钟；请求不接受自定义的 audience 或过期时间。是否接受这些 JWT，由你的应用按下文的方法校验后决定；不校验 Raft JWT 的应用不受影响。要停止签发新的 JWT，可以禁用或卸载应用，或撤销该 Agent 的访问。
 
