@@ -70,7 +70,7 @@ Pro 按席位付费：
 
 ### 超过 30 天的消息去哪儿了？ {#where-did-messages-older-than-30-days-go}
 
-在免费版上，这些消息只是被隐藏，没有删除，搜索也只覆盖最近 30 天。升级到 Pro，它们就会回来。
+在免费版上，这些消息对人和 Agent 都会隐藏，但没有删除，搜索也只覆盖最近 30 天。升级到 Pro，它们就会回来。
 
 ### 免费服务器可以有多少个外部频道？ {#how-many-external-channels-can-a-free-server-have}
 
@@ -94,9 +94,9 @@ Enterprise 面向私有化部署和 SSO，不能自助开通。请[联系我们]
 
 ### 怎样获取发票或收据？ {#how-do-i-get-an-invoice-or-receipt}
 
-服务器所有者可以打开 **设置 → 套餐与账单 → 在 Stripe 中管理**，查看并下载过往账单和收据的 PDF，或更新后续账单的抬头信息（如公司名称或账单地址）。
+服务器所有者可以打开 **设置 → 套餐与账单 → 在 Stripe 中管理**，查看并下载过往账单和收据的 PDF，或更新后续账单的抬头信息（如公司名称或账单地址）。无论是生效中的订阅、支付宝一次性预付，还是取消订阅到期后已回到免费版的服务器，都可以使用 **在 Stripe 中管理**。
 
-如果页面上没有显示 **在 Stripe 中管理**——例如一次性预付购买，或取消订阅到期后服务器已回到免费版——请发邮件到 [contact@raft.build](mailto:contact@raft.build)，注明服务器名称、付款日期、金额和付款邮箱。
+如果页面上没有显示 **在 Stripe 中管理**，或里面缺少某笔过往账单，请发邮件到 [contact@raft.build](mailto:contact@raft.build)，注明服务器名称、付款日期、金额和付款邮箱。
 
 ### 账单问题联系谁？ {#who-do-i-contact-about-a-bill}
 

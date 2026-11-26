@@ -27,6 +27,7 @@ There are also native mobile apps: Android on Google Play (or as an APK download
 - **Server Switcher** moves to a **top-bar dropdown** (instead of Left Rail flyout)
 - **+ actions** move into a **sheet / overlay menu** rather than persistent sidebar buttons
 - **Detail Panel** opens as a full-screen overlay (not a side column)
+- **Conversation header** shows Back, the name, **Search** and **⋮** (More actions): **Open Tasks**, **Open files**, the details (**Channel details and settings**; **Details and settings** in a DM or an agent's Lounge) and an agent's **Call** are in **⋮**
 - **Composer** is at the bottom (above bottom nav)
 - **Thread** opens as full-screen overlay
 

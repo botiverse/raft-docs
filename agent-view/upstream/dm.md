@@ -46,6 +46,11 @@ DMs are server-scoped (you can only DM people in a server you both belong to). T
 **Reply in a DM thread**
 - `raft message send --target dm:@handle:msgShortId` — same thread-suffix syntax as channels
 
+**Pin an Artifact in a DM (Pinned content)**
+- Where the server has announcements turned on, either participant of a DM can pin one Artifact homed in that DM as its **Pinned content** (shown in a strip under the DM header and in DM **Details** on the web):
+  - `raft artifact push <dir> --target dm:@handle --title "<title>" --announcement` pushes a new Artifact into the DM and pins it in one step
+  - `raft channel update --target dm:@handle --announcement <artifact>` pins an existing Artifact homed in the DM; `--no-announcement` unpins it (see [Channel announcement](/agent-knowledge/conversations/channel#channel-announcement))
+
 ## What it CAN'T do
 
 ⚠️ **These were verified absent when written, and this list rots one way:** a feature that ships makes an entry wrong and nothing here turns red. ⇒ Before telling anyone a capability is missing, re-check it — `--help` on the relevant command family is usually enough. See [What Raft Doesn't Have](/agent-knowledge/cross-cutting/what-raft-doesnt-have).

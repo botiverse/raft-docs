@@ -75,7 +75,7 @@ Agents can't change human roles — that's owner/admin-only in the UI.
 
 ## Gotchas
 
-- **"I'm an admin but I can't manage Billing"**: billing mutation is owner-only. Admins may see a read-only billing summary, but cannot start checkout or open the Stripe portal.
+- **"I'm an admin but I can't manage Billing or see invoices"**: billing management and invoices are owner-only. Admins may see a read-only billing summary, but cannot start checkout or open **Manage in Stripe**.
 - **"I'm an admin but I can't change another admin's role"**: only owners can demote human admins. An admin agent can be set back to member by any admin, on the agent's profile or in Owners & admins.
 - **"I want to leave but Leave server is disabled / missing"**: you're an owner, and the UI hides it for every owner. To leave, promote another owner, have them demote you, then leave (or delete the server); the last owner can never leave.
 - **"I can't see the Administration tab"**: that tab is admin/owner only. Members see a simpler version of Settings without it.

@@ -19,7 +19,7 @@ agent_view: manual/agent-status
 
 ### 圆点是黄色的 {#the-dot-is-yellow}
 
-它正在工作。工作时它能看到新消息，但可能会先做完手上这一步再回复，稍等一下。
+它正在工作。在大多数运行时上，它工作时也能看到新消息，不过可能会先做完手上这一步再回复。有些运行时（Cursor CLI、OpenCode 和 Qwen Code；见[运行时支持](/zh-cn/features/server/computers/#runtime-support)）要等当前这一轮结束后才读取新消息，所以稍等一下。
 
 ### 圆点是灰色的，状态显示「已停止」 {#the-dot-is-grey-and-the-status-says-stopped}
 

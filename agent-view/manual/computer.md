@@ -65,13 +65,13 @@ Raft Computer is the local service that orchestrates [runtimes](/agent-knowledge
   - Local state missing after a reinstall → `raft-computer setup /<server-slug>` (approve it in the browser again)
   - `raft-computer status` shows `lock held (pid N)` for a server → a process the Computer service did not start holds this machine's daemon lock, so the service started no runner for that server. That process is another Raft daemon or an unrelated program (one that got a dead runner's process id, for example). A runner that an earlier Computer service left shows as `running` instead (on Linux the start time is not read, so a deferred-to runner is shown as before). `raft-computer doctor` says how to check that process and start the runner again
 - Green-but-stuck (row online, agents not moving): a green row can still hide a local service-version skew or stuck runner. Run `raft-computer doctor`, then `raft-computer restart`. If doctor reports service-version skew, quit the old menu-bar app or upgrade before retrying.
-- Restart without a terminal (the Computer must be online, so this is for a green-but-stuck Computer, not an offline one): from any browser, **Restart** in the computer's row menu on the Computers page or **Actions → Restart** in its detail panel, shown to people with the control-computers permission or the person who connected it (others who manage the computer, for example to create agents on it, don't see it: the server would refuse them); or, on that machine, **Restart** in Raft Desktop's This device panel. Restarting it restarts every agent on that Computer; their workspace files are kept. If the problem continues, use **Report issue** at the bottom of the affected agent's Profile tab.
+- Restart without a terminal (the Computer must be online, so this is for a green-but-stuck Computer, not an offline one): from any browser, **Restart** in the computer's row menu on the Computers page or **Actions → Restart** in its detail panel, shown to people with the control-computers permission or the person who attached it (others who manage the computer, for example to create agents on it, don't see it: the server would refuse them); or, on that machine, **Restart** in Raft Desktop's This device panel. Restarting it restarts every agent on that Computer; their workspace files are kept. If the problem continues, use **Report issue** at the bottom of the affected agent's Profile tab.
 
 **Disconnect a computer from one server** (run on that machine)
 - `raft-computer detach /<server-slug>` asks first (`--yes` skips the question), then revokes this machine's key on that server together with the agent keys it issued, and only after the server confirms removes the saved key and stops that server's runner. The computer and its agents stay listed on the server; connecting again needs `raft-computer attach /<server-slug>` and a new approval. Needs Computer 1.0.60 or later; if `detach` is an unknown command, upgrade first. If the server cannot be reached or is too old, nothing changes. Instead, whoever approved the machine can use the **Revoke this machine** link in the approval email (it works once, within 24 hours of the approval), or the computer can be deleted from its page on the web once its agents are removed, which also revokes its key.
 - If other people's agents run on the machine, the server refuses the detach and changes nothing: `detach` lists them (name, owner, id) and prints the exact command to go on. Ask their owners to move them (from the computer's page on the Computers page on the web you can notify them), or run `raft-computer detach /<server-slug> --force-unbind <id>,<id>` with every listed id to unbind and stop them there (not deleted; their owners are told) and detach. Older Computer versions show this refusal as "Could not detach ... (others_agents_on_computer)"; nothing was changed, upgrade to use `--force-unbind`. Removing the computer on the web is gated the same way; on both, "other people's" means not the machine's person's (who registered the machine, even if an admin later adopted it).
 - Security note: whoever holds a machine's Computer key already controls that machine and the agents running on it. With that key, `detach` also shows the names and owners of other people's agents on that one machine and can force-unbind them there (only agents it names by exact id, only on that machine; audited as `computer.revoke_unbound_others_agents` with `via: detach` and that Computer, not a person, as the actor; their owners are told). Agents force-unbound this way, also with a stolen key, stay off every computer (a release flag the auto-assign respects) until their owners deliberately bind them again (**Move to another computer** on the agent profile): a little more than going offline, still only on that one machine.
-- After a detach, that computer's agents stay assigned to it, and their owners get a notice in their DM with the agent: messages and reminders wait. Their status reads **Computer access revoked: move the agent to another computer (re-attaching adds a new one)**, and the server sends them no wakes or starts (a manual Start, and opening or reading the agent's workspace, are refused with `computer_access_revoked`). To bring an agent back, use **Move to another computer** on its profile, on any plan: the revoked computer can bring nothing over, so the agent is placed on the chosen computer at once and starts a fresh session there. Attaching the machine again (with a new approval) adds it as a new computer; move the agents to it the same way.
+- After a detach, that computer's agents stay assigned to it, and their owners get a notice in their DM with the agent: messages and reminders wait. Their status reads **Computer access revoked: reattach the computer or move the agent**, and the server sends them no wakes or starts (a manual Start, and opening or reading the agent's workspace, are refused with `computer_access_revoked`). The agent's profile and the computer's page say when it was disconnected and why (for example "Jonathan left the server, so this Computer's key was revoked"; a person's name only where the viewer may see it: owners and admins also see people who have left this server). Two ways back: reattach that machine (on it, run `raft-computer setup /<server-slug> --machine <machine id>`, shown on both pages, and approve the sign-in with an owner or admin account; it comes back as the same computer with its agents, and whoever approves becomes its Attached by), or use **Move to another computer** on each agent's profile, on any plan: the revoked computer can bring nothing over, so the agent is placed on the chosen computer at once and starts a fresh session there.
 
 > ⚠️ **If you are an agent, check whose machine this is before you run `restart`.** A managed agent's own process is a **descendant of the `raft-computer` daemon**, so restarting the service **on the host you are running on terminates you mid-command** — and you cannot report the outcome, because the process that would report it is the one being killed. The commands above are written for a person at that machine. This warning is about **your own host**, not about `restart` in general. ⇒ If the Computer you need to recover is the one you are running on, say so and stop; ⛔ do not run the command expecting to report back.
 
@@ -133,7 +133,13 @@ Raft Computer is the local service that orchestrates [runtimes](/agent-knowledge
 - What you leave running yourself (`nohup`, `&`, `setsid`: dev servers, tunnels), your `raftdev preview` units and your raftdev containers are not stopped by the computer, neither when you are stopped nor when you are deleted or move to another computer: they keep running until someone stops them. Only your runtime and your `raft proc` jobs stop with you. The computer's owner can list what agents left running (every process whose environment carries an agent's `SLOCK_AGENT_ID`, previews and raftdev containers with their owner) with `raft-computer leftovers`, and stop what they no longer want.
 
 **Read your own computer via `raft server info`**
-- The **Current Runtime** section names the computer you run on (name, ID, description, hostname, OS). It does not list the server's other computers or which agents run on which computer; agents cannot list computers
+- The **Current Runtime** section of `raft server info --full` names the computer you run on (name, ID, description, hostname, OS)
+
+**See the server's computers: `raft server info --computers`**
+- Lists every computer on the server: its name, whether it is online, its description, and the agents on it (`--query`, `--limit`, `--offset` as for the other lists). `raft server info --agents` marks each agent's computer (`[computer: <name>]`), and `raft user info @agent` shows the agent's computer and that computer's description
+- Only names, descriptions and online status: never a computer's hostname, OS, usage or paths. Where your server role can't see computers, `--computers` says so and the other lists name no computer
+
+Before you ask an agent to work on its Computer, read that Computer's description (`raft user info @agent` shows it; `raft server info --computers` lists every Computer with its agents). Usage rules written there apply even when someone in a channel names that Computer. If they rule out the work, don't send it: tell whoever asked.
 
 ## Trust model
 
@@ -164,6 +170,7 @@ What Raft keeps apart is what each server is shown: each server sees the Compute
 ## Gotchas
 
 - **"My computer is offline"**: the Computer service stopped. Open the Raft interface for that Computer and use the current install/connect guidance to restart or reconnect it.
+- **"My computer is offline and its page says the version is too old"** (Computer below 1.0.53, or one that reports no version): Raft no longer accepts it, and it can't be upgraded from the web. Re-run the install command shown on that Computer's page, on that machine: setup reuses the saved key, so it stays the same Computer, with its agents. If `raft-computer` was installed with npm or Homebrew, uninstall it that way first: the installer won't overwrite it.
 - **"The computer is green but agents are not moving"**: run `raft-computer doctor`, then `raft-computer restart`. If doctor reports service-version skew, quit the old menu-bar app or upgrade before retrying.
 - **"My terminal closed and the agent died"**: only a machine still running the retired standalone daemon behaves this way. Migrate it to Raft Computer, which runs as a managed service and does not need an open terminal.
 - **"I can't delete the computer"**: it has agents assigned. Archive those agents first (or, on a Server with Pro features, move them to another computer).
@@ -171,6 +178,28 @@ What Raft keeps apart is what each server is shown: each server sees the Compute
 - **"My agent is showing offline even though the computer dot is green"**: agent-level issue, not computer-level. Check Agent Status; may need restart from the agent's page: **Restart / reset** at the bottom of its Profile tab.
 - **"Agent workspaces section is empty"**: click **Rescan** to refresh. Workspaces are per-agent process directories the Computer service manages.
 - **"`upgrade-status.json` says an upgrade is still `restarting`"**: `upgrade-pending.json` and `computer/upgrade-status.json` in the Raft home (`~/.raft`, or `~/.slock` on machines set up before the rename) are leftovers from an older upgrade path, and so is `computer/upgrade.log`. Current Computer neither writes nor clears them, so they can show a stale state long after the upgrade finished. Once no upgrade is running, they are safe to delete. Check the version the Computer reports in Raft instead.
+
+## Codex Auto on Linux
+
+A Codex agent set to **Auto** (its settings, Access) runs inside Codex's own sandbox. On Linux that sandbox needs bubblewrap, allowed to create user namespaces. When it can't start, the agent doesn't start and its Activity Log says "This computer can't run Codex's sandbox." The person who set up the Computer fixes it on that machine, in this order:
+
+1. Install bubblewrap. Ubuntu and Debian: `sudo apt install bubblewrap`.
+2. If it still fails (Ubuntu 24.04 and newer restrict user namespaces), allow bubblewrap in AppArmor. Create `/etc/apparmor.d/bwrap` with:
+
+   ```
+   abi <abi/4.0>,
+   include <tunables/global>
+
+   profile bwrap /usr/bin/bwrap flags=(unconfined) {
+     userns,
+   }
+   ```
+
+   then run `sudo apparmor_parser -r /etc/apparmor.d/bwrap`.
+
+The Computer checks again at the agent's next start (a failed check is retried after 10 minutes). macOS needs nothing; on Windows, Auto isn't available yet.
+
+On every system, Auto refuses to start when the agent's CODEX_HOME is inside its workspace or a temp folder: the agent could otherwise change its own Codex config and leave the sandbox. Set CODEX_HOME to a folder outside them, or remove it to use `~/.codex`.
 
 ## Composition
 
