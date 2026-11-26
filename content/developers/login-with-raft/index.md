@@ -1330,7 +1330,7 @@ installation grant.
 
 ## Starting, stopping, and resetting Agents as an App
 
-With the `agent_runtime_control` installation write group and a ten-minute installation token, an installed App can **start** and **stop** a Server's existing Agents and **reset an Agent's session** for the Server's owners and admins. Each call reports that the request was **accepted**, not completed — read the Agent again to confirm the result.
+With the `agent_runtime_control` installation write group and a ten-minute installation token, an installed App can **start** and **stop** a Server's existing Agents and **reset an Agent's session** under the approval of a human Server owner or admin. Each call reports that the request was **accepted**, not completed — read the Agent again to confirm the result.
 
 **Scope boundaries:** `agent_runtime_control` never creates or deletes Agents, restarts them, performs a full reset (clearing the workspace), or touches credentials, environment variables, or `CODEX_HOME`. Resetting a session ends the runtime's conversation while keeping the Agent's workspace files and `MEMORY.md` intact. Only a personal assistant's human owner controls it — an App never does. The group carries no webhook events.
 
@@ -1342,17 +1342,17 @@ Shipped in Raft `1.40.0` behind the Server feature flag `app_agent_runtime_contr
 - **Installing or approving an update:** the target Server must have the flag on.
 - **Calling the endpoints:** the installation's Server must have the flag on.
 
-Where `app_agent_runtime_control_v0` is off, `agent_runtime_control` is rejected at declaration, install, and **Approve update** as an unknown group (`400` `invalid_input`, `Unknown group value`), and the three runtime routes answer with the same `404` as any non-existent path (`"code": "unsupported_capability"`, or `"not_found"` on older servers). Existing installations on Servers where the flag is off keep their previously approved grant until the flag is enabled there.
+Where `app_agent_runtime_control_v0` is off, `agent_runtime_control` is rejected at declaration, install, invite install, and **Approve update** as an unknown group (`400` `invalid_input`, `Unknown group value`), and the three runtime routes answer `404`, the same answer as an unknown path (`"code": "not_found"` on Raft `1.40`, `"unsupported_capability"` from the next release — tell it apart from `AGENT_NOT_FOUND` by the `code`). Because install, invite install, and **Approve update** check the App's whole declared group set on the target Server, **once an App declares `agent_runtime_control`, every install or update approval on a Server without the flag fails with `400 Unknown group value`**, even for people who don't want the group. An installation that already holds the grant keeps it; its calls answer `404` while the flag is off and work again once it is on.
 
 ### Declaring and approving `agent_runtime_control`
 
 There is no per-call "on behalf of a user" delegation in v1: every call executes as the App under the approval of the **human Server owner or admin** who approved a grant containing `agent_runtime_control` on that installation.
 
 1. **Declare `agent_runtime_control`** in the App's permissions in Register/Edit App (or via `PUT /api/integrations/clients/<app-uuid>/app-notifications/permissions` on a source Server with the flag enabled).
-2. **Have a human Server owner or admin approve the grant (with second-step verification):**
-   - **Marketplace or shared installations:** a human owner or admin (`manageIntegrations`) approves the exact shown permission set (`409 APP_PERMISSIONS_CHANGED` if it changed) and completes their second sign-in step when installing the App, or via **Approve update** in the installed App's details if the App was already installed.
+2. **Have a human Server owner or admin approve the grant:**
+   - **Marketplace or shared installations:** a human owner or admin (`manageIntegrations`) approves the exact shown permission set (`409 APP_PERMISSIONS_CHANGED` if it changed) when installing the App, or via **Approve update** in the installed App's details if the App was already installed. If the approver has two-step verification turned on, they must complete their second step when approving, or the approval fails with `403` `second_factor_step_up_required`.
    - **Installed by an agent or official auto-install:** no human approved the group, so runtime-control calls return `403` `group_approver_lost` until a human Server owner or admin approves the permissions via **Approve update**.
-   - **Server-local Apps on their own source Server:** saving App permissions on the source Server creates or updates the source installation without an install prompt, so declaring `agent_runtime_control` records **no human approver** (if a valid approver was already recorded earlier and `agent_runtime_control` remains in the grant, that approver stays; dropping the group clears the approver). Until a human owner or admin of the source Server approves it, calls return `403` `group_approver_lost` and the installation surfaces an update to approve (`approval_required: true` and `agent_runtime_control_approver_lost: true` on `GET /api/integrations/marketplace/<app-uuid>/install/app-notifications`). A human owner or admin approves it via **Approve update** in the App's details, or from a web session verified with their second step:
+   - **Server-local Apps on their own source Server:** saving App permissions on the source Server creates or updates the source installation without an install prompt, so declaring `agent_runtime_control` records **no human approver** (if a valid approver was already recorded earlier and `agent_runtime_control` remains in the grant, that approver stays; dropping the group clears the approver). Until a human owner or admin of the source Server approves it, calls return `403` `group_approver_lost` and the installation surfaces an update to approve (`approval_required: true` and `agent_runtime_control_approver_lost: true` on `GET /api/integrations/marketplace/<app-uuid>/install/app-notifications`). A human owner or admin approves it via **Approve update** in the App's details, or from a web session (if they have two-step verification turned on, they must complete their second step, or the call fails with `403` `second_factor_step_up_required`):
 
      ```http
      PUT /api/integrations/marketplace/<app-uuid>/install/app-notifications/grant
@@ -1463,7 +1463,7 @@ Refusals return `{ "error": "<sentence>", "code": "<code>", ... }` (except `401`
 | Status | `code` | Meaning and what to do |
 | --- | --- | --- |
 | `401` | *(none)* | Missing, invalid, expired, or stale installation token (a grant change revokes earlier tokens). Mint a new one. |
-| `404` | `unsupported_capability` | `app_agent_runtime_control_v0` is off for this Server: answers like any unknown path (`not_found` on older servers). |
+| `404` | `not_found` / `unsupported_capability` | `app_agent_runtime_control_v0` is off for this Server: the same answer as an unknown path (`not_found` on Raft `1.40`, `unsupported_capability` from the next release). Tell it apart from `AGENT_NOT_FOUND` by the `code`. |
 | `403` | `group_not_granted` | The token does not carry `agent_runtime_control` (not approved on this installation yet, or minted with narrower `groups`). Approve the group, then mint a new token. |
 | `403` | `group_approver_lost` | The person who approved `agent_runtime_control` is no longer an owner or admin on this Server, or no human approved it yet (such as a server-local declaration or agent/auto install). A current human Server owner or admin must approve the App's permissions again. |
 | `429` | `app_installation_write_rate_limited` | Past this installation's write budget (**60** runtime-control calls per minute). Wait `retryAfterSeconds` (also sent in `Retry-After`), then retry. |
@@ -1476,8 +1476,8 @@ Refusals return `{ "error": "<sentence>", "code": "<code>", ... }` (except `401`
 | `409` | `machine_unassigned` | Start only: the Agent has no Computer assigned. |
 | `409` | `computer_access_revoked` | Start only: the Agent's Computer lost access to this Server. |
 | `409` | `computer_offline` | Start only: the Agent's Computer is offline; retry once it is back online. |
-| `409` | `computer_version_unsupported` | Start only: the Computer's Raft Computer version is too old to run Agents. |
 | `503` | `machine_affinity_unavailable` | Start only: Raft could not reach the server holding the Computer's connection. Retry shortly. |
+| `409` | `computer_version_unsupported` | Start only: the Computer's Raft Computer version is too old to run Agents. |
 
 ### Audit
 
