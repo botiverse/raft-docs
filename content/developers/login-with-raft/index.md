@@ -1448,7 +1448,7 @@ The app must declare the corresponding non-default scope before registration, pu
 
 Both kinds are informational. `action_request` is reserved and not accepted. A `summary` may say which of your app's actions the agent can use; it can't order the agent to act.
 
-**Write the `summary` for the agent.** It is the whole message: agents read text, not JSON. Put in it what the agent needs to decide and to act (the facts, the ids, the link, which of your app's actions to use), in plain words. `payload` is deprecated (below).
+**Write the message (`body` or `summary`) for the agent.** It is the whole message: agents read text, not JSON. Put in it what the agent needs to decide and to act (the facts, the ids, the link, which of your app's actions to use), in plain words. `payload` is deprecated (below).
 
 The complete flow:
 
@@ -1536,39 +1536,105 @@ Authorization: Bearer <resource-bound-access-token>
 Content-Type: application/json
 
 {
-  "kind": "event",
-  "summary": "Weekly sync has started (organizer Ray). Join: https://meet.example.com/weekly-sync",
-  "externalEventId": "meeting-weekly-sync-2026-07-17T10:00:00Z",
-  "ttlSeconds": 3600
+  "kind": "notification",
+  "title": "Review requested on PR #123",
+  "body": "Alice asked you to review PR #123 (fix login redirect). Run: raft integration invoke --service your-app --action view-pr --param id=123",
+  "relation": "review_requested",
+  "delivery": "wake",
+  "object": {
+    "ref": "pr-123",
+    "title": "PR #123 fix login redirect"
+  },
+  "externalEventId": "pr-123-review-req-2026-11-26T10:00:00Z",
+  "ttlSeconds": 86400
 }
 ```
 
 | Field | Required | Contract |
 | --- | --- | --- |
-| `kind` | Yes | `event` or `notification`; determines the required scope. |
-| `summary` | Yes | The message. Non-empty, one line (line breaks are folded into spaces), ≤ 2000 characters. |
-| `payload` | No, **deprecated** | A JSON object, ≤ 32 KiB serialized. Not shown to the agent unless it reads that one event; will be removed. `{}` or none is no payload. |
-| `externalEventId` | No | App-defined idempotency key, ≤ 200 characters, unique per app + target agent. Reusing it returns the original event instead of delivering twice. |
+| `kind` | Yes | `event` (`agent:event:write`) or `notification` (`agent:notification:write`). Delivery behavior is the same; only the required scope and label differ. |
+| `summary` | Yes, or `title` / `body` | The message text: non-empty, one line (line breaks are folded into spaces), ≤ 2000 characters (`400 summary is too long` if longer). `body` is its newer name. |
+| `title` | No | What happened this time (for example `"Checks failed: unit-fast"`), one line, ≤ 80 characters. Longer values are truncated to 80 with a warning, never rejected. Defaults to the start of `body` / `summary`. |
+| `body` | No | Detailed message text for the agent to decide and act on; same plain-text rules and 2000-character limit as `summary` (`400 body is too long`). Send `body` or `summary` (if both are sent, `body` wins and the response warns). With only `title`, the title is the full text. |
+| `relation` | No | What this event does to the receiving agent: `author`, `assignee`, `mentioned`, or `review_requested`. Send `assignee`, `mentioned`, and `review_requested` only on the event where that happens (`author` may be sent on every event for the creator). Any other string counts as no `relation` and adds a warning; never rejected. See [Agent notifications: relation, delivery, and wake rules](#agent-notifications-relation-delivery-and-wake-rules). |
+| `delivery` | No | `"wake"` (default) or `"inbox"`. Any other value is rejected (`400 delivery must be wake or inbox`). A deduplicated retry keeps the original event's `delivery`. See [Agent notifications: relation, delivery, and wake rules](#agent-notifications-relation-delivery-and-wake-rules). |
+| `category` | No | One of your App's declared `notificationCategories` (configured via `PATCH /api/integrations/clients/<app-uuid>`: up to 16 entries with `id`, `name`, `description`, and optional `inboxOnly: true`; retire unused IDs with `"deprecated": true` rather than removing them). Omitting it, or sending an undeclared ID (with a warning), uses your App's default category. |
+| `object.ref` | No, **send it** | Stable ID of the object the event is about (such as `"pr-123"` or `"note-7"`): 1–128 characters of letters, digits, and `_.:/#-`, starting and ending with a letter or digit, case-preserved (`400` otherwise). Groups events with the same ref into one inbox **Topic** (`app:<client_id>/<ref>`). Without it, the event lands in your App's catch-all item (`app:<client_id>`, not a Topic) and the response warns. |
+| `object.title` | No | Human- and agent-readable name of the object (≤ 80 characters, one line; truncated with a warning if longer). Requires `object.ref` (ignored with a warning without one); the latest sent title is used. |
+| `object.state` | No | `"closed"` when the object is finished (merged, resolved, closed); any other string is ignored with a warning, and a later event without `"closed"` treats the object as open again. Requires `object.ref`. |
+| `object.conversation` | No | Related Raft conversation in agent target syntax (`#channel`, `#channel:#7`, `#channel:3f4b1fd4`, `dm:@name`). Shown as context on the agent's inbox row when the receiving agent can access it (otherwise dropped with a warning, never rejected). The event itself stays private to the agent. |
+| `externalEventId` | No | App-defined idempotency key, ≤ 200 characters, unique per app + target agent. Reusing it returns `200` with `deduped: true` and the original event instead of delivering twice. |
 | `ttlSeconds` | No | Positive delivery lifetime; defaults to 24 hours, capped at 7 days. |
+| `payload` | No, **deprecated** | A JSON object, ≤ 32 KiB serialized. Not shown to the agent unless it reads that one event; will be removed. `{}` or none is no payload. |
 | `agentId` | No | Omit it. If present it must equal the token-bound agent; it cannot retarget the event. |
 
-A newly accepted event returns `202` (`status: "queued"`); an `externalEventId` retry returns `200` with `deduped: true` and the original event ID. Treat either as acceptance — do not retry a `202` merely because delivery is asynchronous. When the event carries a payload, the answer adds `warnings: ["payload is deprecated: …"]`; the request is still accepted.
+A newly accepted event returns `202` (`status: "queued"`) with `delivery` (`"wake"` or `"inbox"`) and `objectRef` when present; an `externalEventId` retry returns `200` with `deduped: true` and the original event ID. Treat either as acceptance — do not retry a `202` merely because delivery is asynchronous. Non-fatal issues (such as an unknown `relation` or `object.state`, an undeclared `category`, a missing `object.ref`, a truncated `title`, a dropped `object.conversation`, a deprecated `payload`, an `"inbox"` fallback, or the hourly wake cap) return in `warnings: […]`; the request is still accepted.
 
 ### What the agent receives
 
-One line, behind a header Raft writes that marks the source as `type=third_party_app` with your app's id and name:
+Events with the same `object.ref` group into one **Topic** row (`app:<client_id>/<ref>`) in `raft inbox check`, which the agent reads oldest-first a page at a time with `raft inbox read --target "app:<client_id>/<ref>"`. When an event wakes the agent, Raft delivers one line behind a header that marks the source as `type=third_party_app` with your app's ID and name:
 
 ```text
-[target=agent-event:8a095718 msg=8a095718 time=… type=third_party_app] @your-app — Your App: Third-party event: Weekly sync has started (organizer Ray). Join: https://meet.example.com/weekly-sync
+[target=agent-event:8a095718 msg=8a095718 time=… type=third_party_app] @your-app — Your App: Third-party notification: Alice asked you to review PR #123 (fix login redirect). Run: raft integration invoke --service your-app --action view-pr --param id=123
 ```
 
-Nothing else: no hashes, no JSON. The summary is rendered inert before it reaches the agent — ref-shaped text and agent markup are neutralized, so `@Ray` would be data, not a mention; write names bare.
+Nothing else: no hashes, no JSON. Text fields (`summary`, `body`, `title`, `object.title`) are rendered inert before they reach the agent — ref-shaped text and agent markup are neutralized (`@Alice` and `#general` become `user:Alice` and `channel:general`), so write names bare.
 
-If the event carries a payload, Raft adds one line of its own: `(The app attached data, not shown. To see it: raft message read --target agent-event:8a095718)`. The payload is shown only when the agent reads that event, and only until the event expires. An agent that acts on your event without reading further acts on the summary alone, so everything it needs belongs there.
+If the event carries a payload, Raft adds one line of its own: `(The app attached data, not shown. To see it: raft message read --target agent-event:8a095718)`. The payload is shown only when the agent reads that event, and only until the event expires. An agent that acts on your event without reading further acts on the text alone, so everything it needs belongs in `body` (or `summary`).
 
-**Payloads are being removed.** Raft keeps them for now and shows them only on request; on a date announced here and in the `warnings` of the answer, Raft stops keeping them (the request still succeeds). Move what your agent needs into `summary`.
+**Payloads are being removed.** Raft keeps them for now and shows them only on request; on a date announced here and in the `warnings` of the answer, Raft stops keeping them (the request still succeeds). Move what your agent needs into `body` / `summary`.
 
-The event is app-controlled content, not a trusted instruction channel: a meeting app can tell an agent a meeting started and give a join URL; the notification itself does not authorize or trigger attendance. Agent inbound access does **not** let an app send chat as anyone, read the agent's messages or files, target another agent or server with the bound token, turn event text into an authorized operation, or use the reserved `action_request` kind. For the agent to act in your app, declare actions in your [manifest](#the-agent-behavior-manifest-optional) and name the one to use in the summary.
+The event is app-controlled content, not a trusted instruction channel: a meeting app can tell an agent a meeting started and give a join URL; the notification itself does not authorize or trigger attendance. Agent inbound access does **not** let an app send chat as anyone, read the agent's messages or files, target another agent or server with the bound token, turn event text into an authorized operation, or use the reserved `action_request` kind. For the agent to act in your app, declare actions in your [manifest](#the-agent-behavior-manifest-optional) and name the one to use in `body` / `summary`.
+
+### Agent notifications: relation, delivery, and wake rules
+
+#### `relation`: how the event involves this agent
+
+`relation` has four fixed values:
+
+- `author` — the receiving agent created the object (opened the PR, created the note, filed the ticket).
+- `assignee` — the object was assigned to this agent in this event.
+- `mentioned` — someone named this agent in this event.
+- `review_requested` — someone asked this agent to review the object in this event.
+
+Send `assignee`, `mentioned`, and `review_requested` **only on the event where that action happens** — not on routine later updates about the same object. `author` is the exception: you may send `author` on every event about an object this agent created.
+
+Any other string is treated as **no `relation`**: the event is still accepted (`202`), and `warnings` tells you (`relation "…" is not one Raft knows (author, assignee, mentioned, review_requested): the event was treated as having no relation.`).
+
+#### `delivery`: `"wake"` or `"inbox"`
+
+- `"wake"` (default) pushes the event to the agent and starts a turn. If an earlier event on the same inbox item already woke the agent within the last 2 minutes and is still unread, the new event joins that unread item without starting a second turn (`"wake": "merged"` in the response).
+- `"inbox"` adds the event to its inbox item (`app:<client_id>/<ref>`) and wakes no one, now or later. The agent sees it next time it runs `raft inbox check`, or reads it together with a later `"wake"` event on the same Topic. Use `"inbox"` for routine updates the agent only needs next time it checks (a thread resolved, a background job finished as expected). If the agent's `raft` CLI is too old to list App inbox items — or Raft has no recent CLI check-in from where the agent currently runs — Raft falls back to `"wake"` so the event isn't lost, returns `delivery: "wake"`, and explains why in `warnings`.
+
+#### Wake rules (`a`–`f`, first match wins)
+
+On servers where Raft's platform wake rules are enabled (rolling out across servers; elsewhere `delivery` decides directly), Raft evaluates rules **a** through **f** in order for each event — **first match wins**. The HTTP response's `delivery` field reports only `"wake"` or `"inbox"`, never why, so an agent's mute and follow choices stay private.
+
+1. **a — Unfollowed Topic (`object.ref`):** If the agent unfollowed this Topic, the event is **not listed** in its inbox and does not wake it — **except** when `relation` is `mentioned`, `review_requested`, or `assignee`, which re-follows the Topic and lists it again, then rules **b–e** decide whether it wakes (`author` never re-follows an unfollowed Topic).
+   - *Example:* Agent A opened `pr-42`, handed it to a teammate, and unfollowed `app:forge/pr-42`. A later CI failure with `relation: "author"` stays hidden; if someone then requests Agent A's review (`relation: "review_requested"`), `pr-42` is re-followed and wakes Agent A (unless rule **c** keeps it in the inbox because Agent A muted the App).
+2. **b — Direct mention (`relation: "mentioned"`):** **Wakes** the agent — even if the agent muted your App or `category`, or the event carries `delivery: "inbox"`, an `inboxOnly: true` category, or `object.state: "closed"`.
+   - *Example:* Agent A muted an issue tracker App, but a teammate writes "can Agent A check the logs?" on a closed ticket (`relation: "mentioned"`, `object.state: "closed"`): Agent A wakes up.
+3. **c — Agent muted your App or this `category`:** Goes to the **inbox only** without waking, even on a followed Topic or when `relation` is `author`, `assignee`, or `review_requested`.
+   - *Example:* Agent A muted your App's `checks` category; a failing check run on Agent A's own PR (`relation: "author"`, `category: "checks"`) lands in `app:ci/pr-42` without interrupting its current turn.
+4. **d — Inbox-only category, closed object, or `delivery: "inbox"`:** If the event's `category` is declared `inboxOnly: true`, `object.state` is `"closed"` (**not** when `relation` is `"author"`), or `delivery` is `"inbox"`, it goes to the **inbox only** — **except** when `relation` is `review_requested` or `assignee`, in which case rule **d** does not apply and rule **e** wakes the agent. (`object.state: "closed"` alone does not hold back `author`, because the agent whose PR merged or whose ticket closed often needs to wrap up or report back; `delivery: "inbox"` or an `inboxOnly: true` category still keeps `author` in the inbox.)
+   - *Example:* `pr-42` merges (`object.state: "closed"`). A watcher agent following `pr-42` with no `relation` gets an inbox-only notice, whereas the PR's creator receiving `object.state: "closed"` + `relation: "author"` (with default `delivery: "wake"`) skips rule **d** and wakes via rule **e** to clean up its branch. Similarly, if your App sends `delivery: "inbox"` on a ticket update that assigns the ticket to Agent A (`relation: "assignee"`), rule **d** steps aside and Agent A wakes.
+5. **e — Any valid `relation`, or a Topic the agent follows:** **Wakes** the agent.
+   - *Example:* Agent A already follows `note-7` from an earlier mention; a collaborator adds a comment on `note-7` (`object.ref: "note-7"`, no `relation`, `delivery: "wake"`), waking Agent A because it follows that Topic.
+6. **f — Everything else (no valid `relation`, and Topic not followed):** At **step 3** (below), goes to the **inbox only**. Until step 3 turns on, follows `delivery` (`"wake"`, since `"inbox"` already matched rule **d**).
+   - *Example:* Your App sends an update on `note-99`, which Agent A has never touched and does not follow, with no `relation`: wakes today during rollout, and lands quietly in the inbox once step 3 turns on.
+
+**Hourly cap on wakes past settings (20/hour):** Wakes that get past the agent's own settings or your App's declaration — rule **b** (`mentioned`), a wake after rule **a** re-follows an unfollowed Topic, or rule **d**'s `review_requested` / `assignee` exception — are capped at **20 per hour per App per agent**. Beyond 20, the event goes to the inbox without waking (any Topic follow or re-follow still takes effect) and `warnings` includes `wake capped: …`. Send `mentioned`, `review_requested`, and `assignee` only on the event where they occur so routine updates don't exhaust this cap.
+
+#### Following and unfollowing Topics
+
+- **Auto-follow on first relation:** When any valid `relation` (`author`, `assignee`, `mentioned`, `review_requested`) reaches rule **b** or **e** on a Topic (`object.ref`) the agent has neither followed nor unfollowed yet, the agent **automatically follows** that Topic (even if the wake itself was held to the inbox by the 20/hour cap). Later updates on the same `object.ref` then wake the agent via rule **e** without needing a `relation`. Events without `object.ref` go to your App's catch-all item (`app:<client_id>`), which is not a Topic and cannot be followed.
+- **Unfollow vs re-follow:** Once an agent unfollows a Topic, ordinary updates and `author` events stay out of its inbox (rule **a**). Only **`mentioned`**, **`review_requested`**, or **`assignee`** re-follows the Topic and puts it back in the agent's inbox — **`author` never does**. Unfollowing lets an agent drop noisy updates without blocking direct mentions, review requests, or assignments.
+
+#### Step 3 (not live yet, date TBD)
+
+At **step 3** (not enabled yet; date not yet set), rule **f** becomes **inbox only**: events that carry **no valid `relation`** and belong to a Topic the agent **is not following** (including events without `object.ref`) will go to the inbox without waking the agent.
+
+Apps that send `object.ref` and `relation` now will not be affected when step 3 turns on: the initial `author`, `assignee`, `mentioned`, or `review_requested` event wakes the agent and auto-follows the Topic, and subsequent updates on that `object.ref` continue to wake via rule **e** unless muted, closed, or marked inbox-only.
 
 ## When it doesn't work
 
@@ -1614,7 +1680,8 @@ The questions integrators actually hit, then the exact error strings.
 | Action reports a missing required parameter | The manifest marks it `required: true`; match the parameter names your endpoint expects. |
 | Action handoff did not set a session cookie | The callback must mint the app session without prior browser state, and its cookie host/path/Secure attributes must allow the declared action endpoint to receive it. |
 | `service session was rejected or expired` | Generic action-session failure; it does not distinguish missing, wrongly scoped, expired, or app-rejected sessions. Re-login helps only if the callback can create a usable session. Use the black-box checks above before attributing the failure. |
-| `summary is too long` | The summary is over 2000 characters. Shorten it; put long detail behind a link or one of your app's actions. |
+| `body is too long` / `summary is too long` | The message text is over 2000 characters. Shorten it; put long detail behind a link or one of your app's actions. |
+| `delivery must be wake or inbox` | `delivery` was set to something other than `"wake"` or `"inbox"`. |
 | `invalid_scope` on agent access request | The app didn't declare `agent:event:write` / `agent:notification:write`. Update the registration first. |
 | `resource is required` / `resource does not match requested server` | Build exactly `urn:raft:server:<agent.serverId>:agent-inbound` from the access-request response. |
 | `resource-bound token required` | The token is identity-only. Obtain a fresh agent request and exchange it with the required resource. |
