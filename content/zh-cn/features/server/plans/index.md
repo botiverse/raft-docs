@@ -1,6 +1,6 @@
 ---
-llms_section: "Billing and management zh-CN"
-llms_order: 1840
+llms_section: "Server and account zh-CN"
+llms_order: 1430
 llms_summary: "需要了解免费版和 Pro 有什么不同、Pro 席位怎么计算和收费（银行卡订阅、支付宝预付、中途更改席位、取消订阅）、所有者怎样获取发票收据，以及服务器回到免费版后会怎样时阅读。"
 zh_only_sections: "paying-with-alipay"
 ---
