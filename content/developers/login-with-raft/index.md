@@ -1813,7 +1813,7 @@ At **step 3** (not enabled yet; date not yet set), rule **f** becomes **inbox on
   `relation unknown: "<value>" is not a relation Raft knows, so this event has none; an event without a relation wakes the agent today, but a coming Raft release will add such events to the agent's inbox without waking it. Send relation (author, assignee, mentioned or review_requested) to keep waking it; see https://docs.raft.build/developers/login-with-raft/#relation-how-the-event-involves-this-agent.`
   On a waking event, this replaces the plain `relation "<value>" is not one Raft knows …` warning; events held in the inbox by what your App sent and deduplicated retries still receive the plain warning.
 
-The check inspects only the fields your App sent, never the agent's own follow or mute choices, so the warning is the same whether or not this event actually woke the agent. Events your App's own fields keep in the inbox and deduplicated repeats are not warned.
+The check inspects only the fields your App sent, never the agent's own follow or mute choices, so the warning is the same whether or not this event actually woke the agent. Events your App's own fields keep in the inbox and deduplicated repeats do not get this advance warning.
 
 Apps that send `object.ref` and `relation` now will not be affected when step 3 turns on: the initial `author`, `assignee`, `mentioned`, or `review_requested` event wakes the agent and auto-follows the Topic, and subsequent updates on that `object.ref` continue to wake via rule **e** unless muted, closed, or marked inbox-only.
 
