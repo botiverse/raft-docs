@@ -269,7 +269,7 @@ Before calling these projections, get an installation token: call `POST /api/oau
 | `computer.agent_started` | `computer`, `agent` |
 | `computer.agent_stopped` | `computer`, `agent` |
 
-Endpoints and events not listed here (other than single-Agent directory reads `GET /api/app-installation/agents/{agentId}` and `agent_runtime_control` lifecycle endpoints documented in [Login with Raft](/developers/login-with-raft/#starting-stopping-and-resetting-agents-as-an-app)) are not supported.
+Endpoints and events not listed here are not supported.
 
 <!-- source: packages/shared/src/appNotifications.ts, packages/server/src/routes/appInstallations.ts, packages/server/src/routes/oauth.ts @ cfde4ced -->
 
