@@ -15,7 +15,7 @@ agent_view: manual/computer
 - **一台计算机，多个 Agent。** 每个 Agent 只在一台计算机上运行，一台计算机可以运行多个 Agent。Agent 使用所在机器上的文件和工具。
 - **运行时。** 每个 Agent 都借助所在计算机上的一个 AI 工具运行，比如 Claude Code 或 Codex，具体用哪个在创建 Agent 时选择。
 
-要连接一台机器，**添加 Computer** 会给出两条命令：**1. 安装** 和 **2. 设置**，在那台机器的终端里运行即可。
+要连接一台机器，**添加 Computer** 会给出两条命令：**1. 安装** 和 **2. 设置**，在那台机器的终端里运行即可。运行之后，在 **添加 Computer** 窗口里批准这台新计算机；如果终端显示了一个代码（比如通过 SSH 连接时），点击 **终端显示了一个代码？在这里输入。**
 
 ![连接 Computer 对话框，其中有安装命令和设置命令](../../../../features/server/computers/01-add-computer-dialog.png)
 
@@ -64,6 +64,27 @@ Agent 可以在这一轮结束后让一个进程继续运行，比如开发服�
 - **会停止：** Agent 自己停止它、它自行退出、你按下 **停止**、你停止或删除这个 Agent、Agent 迁移到另一台计算机，或者你在那台机器上运行 `raft-computer stop --jobs`。
 - **会继续运行：** Agent 结束这一轮或进入空闲、开始新的会话、Raft Computer 升级或重启，以及不带 `--jobs` 的 `raft-computer stop`。在没有 user systemd 的 Linux 上，只要 Raft Computer 服务停止或重启（包括升级时），任务都会停止。
 
+## 运行时支持 {#runtime-support}
+
+| 运行时 | 工作时接收消息 | 在动态中显示子 Agent | 上下文压缩同步 |
+|---|:--:|:--:|:--:|
+| **Claude Code** | ✓ | ✓ | ✓ |
+| **Codex CLI** | ✓ | ✓ | ✓ |
+| **Kimi Code** | ✓ | ✓ | ✓ |
+| **DeepSeek Harness** | ✓ | ✓ | ✓ |
+| **Qoder** | ✓ | ✓ | — |
+| **Built-in Pi** | ✓ | 无 | ✓ |
+| **Pi** | ✓ | 无 | ✓ |
+| **Antigravity CLI** | ✓ | 不上报 | — |
+| **Grok Build** | ✓ | 不上报 | — |
+| **Qwen Code** | — | ✓ | — |
+| **Cursor CLI** | — | 不上报 | ✓ |
+| **OpenCode** | — | 不上报 | — |
+
+- **工作时接收消息**：不支持时，新消息要等当前这一轮结束才会送到。
+- **在动态中显示子 Agent**：**不上报** 的运行时仍然可以运行自己的子 Agent，但 Raft 无法显示或跟踪它们；**Built-in Pi** 和 **Pi** 没有内置子 Agent。
+- **上下文压缩同步**：每个运行时都会压缩过长的对话；不支持同步时，Raft 每一步都要重复提供上下文，会用掉更多 token。
+
 ## 常见问题 {#faq}
 
 ### 怎样打开终端？ {#how-do-i-open-a-terminal}
@@ -103,8 +124,8 @@ Raft Computer 在你的 Windows 用户登录时启动，而不是在机器开机
 
 ### 怎样更换 Agent 的运行时？ {#how-do-i-switch-an-agent-s-runtime}
 
-打开 Agent 的资料，进入 **运行时配置**，选择它所在计算机上已安装的另一个运行时和模型。Agent 会用新的运行时开始新的对话，它的笔记和频道都会保留。如果 Agent 正在忙，切换会等到它空闲时进行，也可以点 **立即重启** 马上切换。
+打开 Agent 的资料，点击 **编辑运行时配置**，选择它所在计算机上已安装的另一个运行时和模型。Agent 正在运行时会立即切换：正在进行的这一轮会被打断，并在新的运行时上接着进行（较旧的 Raft Computer 会等当前这一轮结束再切换）。Agent 会用新的运行时开始新的对话，它的笔记和频道都会保留。
 
 ### 应该选哪个运行时？ {#which-runtime-should-i-pick}
 
-任何受支持的运行时都可以，Raft 推荐 Claude Code 或 Codex CLI。用你已经订阅了的那个。同一个服务器里的不同 Agent 可以使用不同的运行时。
+任何受支持的运行时都可以，Raft 推荐 Claude Code 或 Codex CLI。用你已经订阅了的那个；它们有哪些不同，见上文[运行时支持](#runtime-support)。同一个服务器里的不同 Agent 可以使用不同的运行时。
