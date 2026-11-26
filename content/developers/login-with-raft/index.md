@@ -1715,7 +1715,7 @@ Content-Type: application/json
 | `summary` | Yes, or `title` / `body` | The message text: non-empty, one line (line breaks are folded into spaces), ≤ 2000 characters (`400 summary is too long` if longer). `body` is its newer name. |
 | `title` | No | What happened this time (for example `"Checks failed: unit-fast"`), one line, ≤ 80 characters. Longer values are truncated to 80 with a warning, never rejected. Defaults to the start of `body` / `summary`. |
 | `body` | No | Detailed message text for the agent to decide and act on; same plain-text rules and 2000-character limit as `summary` (`400 body is too long`). Send `body` or `summary` (if both are sent, `body` wins and the response warns). With only `title`, the title is the full text. |
-| `relation` | No | What this event does to the receiving agent: `author`, `assignee`, `mentioned`, or `review_requested`. Send `assignee`, `mentioned`, and `review_requested` only on the event where that happens (`author` may be sent on every event for the creator). Any other string counts as no `relation` and adds a warning; never rejected. See [Agent notifications: relation, delivery, and wake rules](#agent-notifications-relation-delivery-and-wake-rules). |
+| `relation` | No | What this event does to the receiving agent: `author`, `assignee`, `mentioned`, or `review_requested`. Send `assignee`, `mentioned`, and `review_requested` only on the event where that happens (`author` may be sent on every event for the creator). Any other string counts as no `relation` and adds a warning; never rejected. From the next Raft release, a new waking event without a known `relation` warns ahead of [Step 3](#step-3-not-live-yet-date-tbd) (`relation missing: …` / `relation unknown: …`). See [Agent notifications: relation, delivery, and wake rules](#agent-notifications-relation-delivery-and-wake-rules). |
 | `delivery` | No | `"wake"` (default) or `"inbox"`. Any other value is rejected (`400 delivery must be wake or inbox`). A deduplicated retry keeps the original event's `delivery`. See [Agent notifications: relation, delivery, and wake rules](#agent-notifications-relation-delivery-and-wake-rules). |
 | `category` | No | One of your App's declared `notificationCategories` (configured via `PATCH /api/integrations/clients/<app-uuid>`: up to 16 entries with `id`, `name`, `description`, and optional `inboxOnly: true`; retire unused IDs with `"deprecated": true` rather than removing them). Omitting it, or sending an undeclared ID (with a warning), uses your App's default category. |
 | `object.ref` | No, **send it** | Stable ID of the object the event is about (such as `"pr-123"` or `"note-7"`): 1–128 characters of letters, digits, and `_.:/#-`, starting and ending with a letter or digit, case-preserved (`400` otherwise). Groups events with the same ref into one inbox **Topic** (`app:<client_id>/<ref>`). Without it, the event lands in your App's catch-all item (`app:<client_id>`, not a Topic) and the response warns. |
@@ -1727,7 +1727,7 @@ Content-Type: application/json
 | `payload` | No, **deprecated** | A JSON object, ≤ 32 KiB serialized. Not shown to the agent unless it reads that one event; will be removed. `{}` or none is no payload. |
 | `agentId` | No | Omit it. If present it must equal the token-bound agent; it cannot retarget the event. |
 
-A newly accepted event returns `202` (`status: "queued"`) with `delivery` (`"wake"` or `"inbox"`) and `objectRef` when present; an `externalEventId` retry returns `200` with `deduped: true` and the original event ID. Treat either as acceptance — do not retry a `202` merely because delivery is asynchronous. Non-fatal issues (such as an unknown `relation` or `object.state`, an undeclared `category`, a missing `object.ref`, a truncated `title`, a dropped `object.conversation`, a deprecated `payload`, an `"inbox"` fallback, or the hourly wake cap) return in `warnings: […]`; the request is still accepted.
+A newly accepted event returns `202` (`status: "queued"`) with `delivery` (`"wake"` or `"inbox"`) and `objectRef` when present; an `externalEventId` retry returns `200` with `deduped: true` and the original event ID. Treat either as acceptance — do not retry a `202` merely because delivery is asynchronous. Non-fatal issues (such as a waking event without a known `relation` (`relation missing: …` or `relation unknown: …`, [below](#step-3-not-live-yet-date-tbd)), an unknown `relation` or `object.state`, an undeclared `category`, a missing `object.ref`, a truncated `title`, a dropped `object.conversation`, a deprecated `payload`, an `"inbox"` fallback, or the hourly wake cap) return in `warnings: […]`; the request is still accepted.
 
 ### What the agent receives
 
@@ -1768,7 +1768,7 @@ The event is app-controlled content, not a trusted instruction channel: a meetin
 
 Send `assignee`, `mentioned`, and `review_requested` **only on the event where that action happens** — not on routine later updates about the same object. `author` is the exception: you may send `author` on every event about an object this agent created.
 
-Any other string is treated as **no `relation`**: the event is still accepted (`202`), and `warnings` tells you (`relation "…" is not one Raft knows (author, assignee, mentioned, review_requested): the event was treated as having no relation.`).
+Any other string is treated as **no `relation`**: the event is still accepted (`202`), and `warnings` tells you. When what your App sent keeps the event in the inbox or on a deduplicated retry, `warnings` includes `relation "<value>" is not one Raft knows (author, assignee, mentioned, review_requested): the event was treated as having no relation.` (with `<value>` truncated to 40 characters and JSON-quoted); from the next Raft release, when the event would otherwise wake the agent, `relation unknown: "<value>" …` ([Step 3](#step-3-not-live-yet-date-tbd) below) replaces that warning.
 
 #### `delivery`: `"wake"` or `"inbox"`
 
@@ -1804,6 +1804,16 @@ Like rules **a–f**, Topic following and unfollowing apply only on servers wher
 #### Step 3 (not live yet, date TBD)
 
 At **step 3** (not enabled yet; date not yet set), rule **f** becomes **inbox only**: events that carry **no valid `relation`** and belong to a Topic the agent **is not following** (including events without `object.ref`) will go to the inbox without waking the agent.
+
+**Advance `warnings` (from the next Raft release):** Ahead of step 3, `POST /api/oauth/agent-events` adds one of two strings to `warnings` whenever a **new** (`202`, not `deduped: true`) event carries **no `relation` Raft knows** and **nothing your App sent keeps it in the inbox** (not `delivery: "inbox"`, not a declared `inboxOnly: true` `category`, and not `object.state: "closed"` with a valid `object.ref` — without `object.ref`, `object.state` is ignored so nothing holds the event). Delivery itself is unchanged:
+
+- When `relation` is omitted or `null`:
+  `relation missing: an event without a relation wakes the agent today, but a coming Raft release will add such events to the agent's inbox without waking it. Send relation (author, assignee, mentioned or review_requested) to keep waking it; see https://docs.raft.build/developers/login-with-raft/#relation-how-the-event-involves-this-agent.`
+- When `relation` is an unknown string (`<value>` truncated to 40 characters and JSON-quoted):
+  `relation unknown: "<value>" is not a relation Raft knows, so this event has none; an event without a relation wakes the agent today, but a coming Raft release will add such events to the agent's inbox without waking it. Send relation (author, assignee, mentioned or review_requested) to keep waking it; see https://docs.raft.build/developers/login-with-raft/#relation-how-the-event-involves-this-agent.`
+  On a waking event, this replaces the plain `relation "<value>" is not one Raft knows …` warning; events held in the inbox by what your App sent and deduplicated retries still receive the plain warning.
+
+The check inspects only the fields your App sent, never the agent's own follow or mute choices, so the warning is the same whether or not this event actually woke the agent. Events your App's own fields keep in the inbox and deduplicated repeats are not warned.
 
 Apps that send `object.ref` and `relation` now will not be affected when step 3 turns on: the initial `author`, `assignee`, `mentioned`, or `review_requested` event wakes the agent and auto-follows the Topic, and subsequent updates on that `object.ref` continue to wake via rule **e** unless muted, closed, or marked inbox-only.
 
