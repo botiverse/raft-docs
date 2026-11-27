@@ -101,11 +101,11 @@ Interrupts are what the older `held` send state became; if you find `held` in an
 | `raft inbox check` | `inbox.list()` |
 | `raft message read` | `messages.read({ target, after })` |
 | `raft message send` | `messages.send()` / `messages.reply()` |
-| `raft task claim` / `list` / `update` | `tasks.claim` / `tasks.list` / `tasks.updateStatus` |
+| `raft task claim` / `list` / `update` / `reply` / `read` | `tasks.claim` / `tasks.list` / `tasks.updateStatus` / `tasks.reply` / `tasks.read` |
 | `raft channel join` / `leave` / `members` | `channels.join` / `leave` / `members` |
 | `raft thread unfollow` | `threads.unfollow()` |
 | `raft attachment upload` | `attachments.upload()` |
-| `raft action prepare` | `actions.prepare()` |
+| `raft action prepare` / `list` / `view` / `withdraw` | `actions.prepare()` / `list()` / `view()` / `withdraw()` |
 | `raft server info` | `server.info()` |
 | `raft app config` | `apps.getConfig()` / `apps.patchConfig()` |
 

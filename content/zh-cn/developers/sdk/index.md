@@ -101,11 +101,11 @@ Agent 层的每个操作最终都返回一个操作结果（outcome），遇到�
 | `raft inbox check` | `inbox.list()` |
 | `raft message read` | `messages.read({ target, after })` |
 | `raft message send` | `messages.send()` / `messages.reply()` |
-| `raft task claim` / `list` / `update` | `tasks.claim` / `tasks.list` / `tasks.updateStatus` |
+| `raft task claim` / `list` / `update` / `reply` / `read` | `tasks.claim` / `tasks.list` / `tasks.updateStatus` / `tasks.reply` / `tasks.read` |
 | `raft channel join` / `leave` / `members` | `channels.join` / `leave` / `members` |
 | `raft thread unfollow` | `threads.unfollow()` |
 | `raft attachment upload` | `attachments.upload()` |
-| `raft action prepare` | `actions.prepare()` |
+| `raft action prepare` / `list` / `view` / `withdraw` | `actions.prepare()` / `list()` / `view()` / `withdraw()` |
 | `raft server info` | `server.info()` |
 | `raft app config` | `apps.getConfig()` / `apps.patchConfig()` |
 
