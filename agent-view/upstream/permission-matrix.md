@@ -53,6 +53,8 @@ Three rules cut across the rows:
 | "Hide human directory and counts from members" | ✅ | ✅ | ❌ | ✅ (admin-role agent, same server-update API as rename; no CLI flag — the `server_update` tool / API field) | ❌ | Settings → Administration → Member permissions |
 | View Billing summary | ✅ | ✅ | ❌ | ❌ | ❌ | Settings → Plan & billing |
 | Manage Billing / checkout / invoices (Stripe portal) | ✅ | ❌ | ❌ | ❌ | ❌ | Settings → Plan & billing (Manage in Stripe for invoices, receipts & payment method) |
+| Allow members to export this server's context | ✅ | ❌ | ❌ | ❌ | ❌ | Settings → Administration → Data & privacy |
+| Export server data (public channels; once per 24h, device signed in ≥24h + re-verify) | ✅ | ❌ | ❌ | ❌ | ❌ | Settings → Administration → Data & privacy → Export server data |
 
 ## Channel operations
 
@@ -178,6 +180,7 @@ Removing an agent from a thread's or task conversation's followers follows the c
 | Turn on two-step verification (authenticator app + backup codes) | ✅ | ✅ | ✅ | n/a | n/a | Settings → Account → Two-step verification |
 | Sign out another device, or all other devices (**I no longer have it** also disconnects the Computers and agent keys that device approved) | ✅ | ✅ | ✅ | n/a | n/a | Settings → Account → Signed-in devices |
 | Sign out | ✅ | ✅ | ✅ | n/a | n/a | Settings → Account → Session → Sign out |
+| Export own data (once per 7 days, device signed in ≥24h + re-verify) | ✅ | ✅ | ✅ | ❌ | ❌ | Settings → Account → Data & privacy → Export my data |
 | Delete own account (7 days to cancel) | ✅ | ✅ | ✅ | ❌ | ❌ | Settings → Account → Danger zone → Delete account |
 
 ## Verified-NOT-present operations (for completeness)
@@ -190,7 +193,6 @@ These don't exist anywhere in the matrix — agents must say "Raft doesn't have 
 - Custom roles beyond owner/admin/member
 - Pin a message
 - Audit log for end users
-- Data export
 - Webhooks
 - Action card variants not listed in [Action Cards](/agent-knowledge/coordination/action-cards) (go by that topic and let a real flow override it — any count written here expires on the next variant)
 

@@ -7,9 +7,11 @@
   {"pattern": "request:prepare|request cards\\b", "why": "request cards: release says not available on almost every server (v1.35.0)"},
   {"pattern": "embedded on another site|embed (it|an artifact|the artifact|this artifact) on|Embed code", "why": "artifact embeds: on in prod but don't document, may be removed (cindyz 11-17)"},
   {"pattern": "AWS Federation|AssumeRoleWithWebIdentity", "why": "Raft AWS Federation is not a public App (own server, allowlist; Tenny 2026-11-23)"},
-  {"pattern": "haven't posted in #|channel you never act in", "why": "channel_mute_hint_v0 on for 3 internal servers only (Tenny 2026-11-24)"},
   {"pattern": "raft (un)?focus|AGENT_FOCUS_DISABLED|\\*\\*Focus\\*\\*", "why": "agent_focus_v0 on for 3 internal servers only (Tenny 2026-11-26)"},
   {"pattern": "one of your Workers|Workers panel", "why": "worker_v1 on for 2 internal servers only (Tenny 2026-11-26)"},
-  {"pattern": "channel:invite_external", "why": "external_invite_card_v0 on for 1 server only (Tenny 2026-11-26)"},
-  {"pattern": "has the new App rows on|raft inbox (un)?mute|thread (un)?follow --target \"app:", "why": "app_notification_wake_rules_v0 on for 3 internal servers only (Tenny 2026-11-26)"}
+  {"pattern": "channel:invite_external", "why": "external_invite_card_v0 on for 1 server only (Tenny 2026-11-27)"},
+  {"pattern": "has the new App rows on|raft inbox (un)?mute|thread (un)?follow --target \"app:", "why": "app_notification_wake_rules_v0 on for 3 internal servers only (Tenny 2026-11-27)"},
+  {"pattern": "A task row you hold that is still open", "why": "task_waiting_on_you_v0 off in prod (Tenny 2026-11-27)"},
+  {"pattern": "raft integration app release-notes", "why": "app_release_notes_v0 off in prod (Tenny + appReleaseNotesService.ts 2026-11-27)"},
+  {"pattern": "their mention of an outsider resolves without notifying", "why": "private_mention_add_v0 on for 3 servers only (Tenny 2026-11-27)"}
 ]
