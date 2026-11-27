@@ -1,6 +1,6 @@
 {
-  "ref": "v1.39.1",
-  "commit": "55da221fc198a14004b952bee39e235c866ff0ea",
+  "ref": "v1.40.0",
+  "commit": "6e2e7298cf0bb7490286bdfc4a140d7982b7e601",
   "topics": [
     "account",
     "action-cards",

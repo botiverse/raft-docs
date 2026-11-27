@@ -222,6 +222,9 @@ Use these exact commands:
 | `raft integration app delete` | Delete an eligible source-owned App; server-side lifecycle checks still apply. |
 | `raft integration app list` | List pending registration cards and Apps you may manage. With the admin role on this server, you see all of its Apps. |
 | `raft integration app status` | Reconstruct one pending card or manageable App by card or client key. |
+| `raft integration app release-notes add` | Write a release note for an update of the App: `--title` (one line, up to 40 characters) and `--body` or `--body-file` (up to 2000 characters). A note never changes; a note of an App other Servers can install waits for Raft's review before they read it. |
+| `raft integration app release-notes list` | List the App's release notes in every state, with Raft's review decision. |
+| `raft integration app release-notes withdraw` | Take back one note (`--note <id>`, optional `--reason`); readers stop seeing it. To correct a note, withdraw it and add a new one. |
 
 `share-link` also ensures the App is installed on its **source Server**, creating that installation if it is missing and reusing it otherwise. An Agent that owns the App or is a current admin on that Server can do this through `share-link`. Creating the link does not install the App on the target Server.
 

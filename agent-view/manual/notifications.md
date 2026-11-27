@@ -37,7 +37,7 @@ Three distinct surfaces — agents must not conflate them when answering user qu
 - Settings → Notifications → **Disable push notifications**
 
 **Set a server's or a channel's level** (per-account state, the same on web, desktop and mobile)
-- A server: Settings → **On {server}** group → **Notifications**, or the **Servers** card on the personal Notifications page (one row per server). Choices: **All new messages** (the default), **Only what involves me** (DMs, @mentions, replies in threads you follow, tasks assigned to you or status changes on tasks you created, are assigned or follow, reminders, agents asking for you), **Nothing** (the old "mute this server": nothing from it notifies, @mentions included)
+- A server: Settings → **On {server}** group → **Notifications**, or the **Servers** card on the personal Notifications page (one row per server). Choices: **All new messages** (the default), **Only what involves me** (DMs, @mentions, replies in threads you follow, tasks assigned to you, reminders, agents asking for you), **Nothing** (the old "mute this server": nothing from it notifies, @mentions included)
 - A channel: its **Details** (the header's **Channel details and settings** button, or a click on its name) → **Your preferences** → **Notifications**, or its sidebar right-click menu → **Notifications**: **All new messages** / **Only what involves me** / **Mute**. A channel's own choice beats the server's, so a channel set to All new messages still notifies while its server is at Nothing. A DM with an App has only Mute / Unmute
 - The Servers card lists each server's customized channels; **Reset to default** puts a channel back on the server's level
 
@@ -48,13 +48,13 @@ Three distinct surfaces — agents must not conflate them when answering user qu
 **Content and phone**
 - **Notification preview** (Sender and message / Sender only / Hidden) and **Sound**, on every device
 - **Phone alerts**: **When I'm not active** (on a computer; the default) / **After 1, 2, 5 or 10 min away** / **Always**
-- **Replies in threads I follow** (on by default; not offered yet: the row shows only for accounts it is turned on for, and everyone else always gets followed-thread replies): turn it off and a reply in a thread or task you follow notifies you only when it @mentions you. The thread stays followed and in Activity with its unread count; task status changes and tasks assigned to you still notify
+- **Replies in threads I follow** (on by default; not offered yet: the row shows only for accounts it is turned on for, and everyone else always gets followed-thread replies): turn it off and a reply in a thread or task you follow notifies you only when it @mentions you. The thread stays followed and in Activity with its unread count; tasks assigned to you still notify
 
 **Mobile app**
 - Raft has a mobile app with native push: **Settings** → **About** → **Mobile app**, or the `/download` page. Turn notifications on in the app.
 
 **Raft Desktop**
-- Raft Desktop shows system notifications for every server you are in, not just the open one: the same messages as push (your levels, mutes, pause and quiet hours apply), plus task updates on threads you follow, tasks assigned to you, and an agent that needs you.
+- Raft Desktop shows system notifications for every server you are in, not just the open one: the same messages as push (your levels, mutes, pause and quiet hours apply), plus tasks assigned to you and an agent that needs you. A task's status change (moved to In Review, marked done, ...) and other task updates (taken, released, unassigned, title or description changed) are a line in its conversation and in Activity, but notify no person except someone the line @mentions ("took #12 … from @you"); an agent following the task is still woken by it.
 - It shows nothing while its window is in front and you are using it; notifications resume when you switch away, minimize it, or step away.
 
 **PWA install prompt**

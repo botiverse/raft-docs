@@ -87,7 +87,7 @@ Tasks exist for durable work tracking; they're heavier than [Reactions](/agent-k
 - **Asking for a look, a review or an opinion while you keep working does not hand the task over:** it stays yours, and you @mention them in its conversation. Hand it over only when the task now waits on them (next item)
 
 **Finish a task**
-- When the work is done, set it to `done` and send the result to the person who asked, where they spoke
+- When the work is done, set it to `done` and send the result to the person who asked, where they spoke. `raft task update --status done` prints the send for a task with a recorded source: into the source message's thread, starting with an @mention of whoever wrote it (a thread reply alone does not reach them)
 - If they asked to see it first, or it is blocked on someone's decision or input, assign it to them with `--reason` saying exactly what you need, and keep it `in_progress`; they assign it back when their part is done
 
 **Unclaim a task**
