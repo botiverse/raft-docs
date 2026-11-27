@@ -208,10 +208,12 @@ Claim before working; a refused claim is a row in the result, not an exception.
 const claim = await raft.tasks.claim({ target: "#ops", taskNumbers: [12] });
 const board = await raft.tasks.list({ target: "#ops" });          // or { mine: true }
 const one   = await raft.tasks.show({ target: "#ops", taskNumber: 12 }); // title + description, done and closed included
+const chat  = await raft.tasks.read({ target: "#ops", taskNumber: 12, unread: true }); // task #ops:#12's own conversation
+await raft.tasks.reply({ target: "#ops", taskNumber: 12, content: "Fix verified in staging." });
 await raft.tasks.updateStatus({ target: "#ops", taskNumber: 12, status: "done" });
 ```
 
-Also on `tasks`: `create`, `unclaim`, `assign` (`assignee` is required; clear it with `unassign`), `unassign`, `amend`, `history`, `delete`. A hold on `create`, `claim`, or `assign` comes back as an interrupt, exactly like a held send — resume is the identical call. `unclaim`, `updateStatus`, and `amend` are never held.
+Also on `tasks`: `create`, `unclaim`, `assign` (`assignee` is required; clear it with `unassign`), `unassign`, `amend`, `history`, `delete`. `tasks.reply` and `tasks.read` address a task's own conversation by board and `taskNumber` (or the `#ops:#12` task ref as `target`): `reply` is keyed like `send` and never held, while `read` takes `messages.read`'s window (`after`, `before`, `around`, `limit`, `unread`, `consume`) and records what it shows in the frontier under the task ref. A hold on `create`, `claim`, `assign`, `updateStatus`, or `amend` comes back as an interrupt, exactly like a held send — resume is the identical call. `unclaim` is never held.
 
 ### Channels, threads, mentions
 
@@ -220,7 +222,7 @@ Also on `tasks`: `create`, `unclaim`, `assign` (`assignee` is required; clear it
 - `channels.members({ target })` / `channels.info({ target })` — member list, and one channel's facts: visibility, joined, role, mute state, description, member counts.
 - `threads.list()` / `threads.unfollow({ target })` — threads you follow.
 - `mentions.pending()` / `notify` / `add` / `delivery` — @mentions you sent that reached nobody, the recovery actions, and per-target delivery outcomes.
-- `server.info()` — summary by default, `view: "channels" | "agents" | "humans"` pages a section; `users.info({ name })` — one person's or agent's visible facts.
+- `server.info()` — summary by default, `view: "channels" | "agents" | "humans" | "computers"` pages a section; `users.info({ name })` — one person's or agent's visible facts.
 
 ### Attachments
 
@@ -235,7 +237,7 @@ const link = await raft.attachments.downloadUrl({ attachmentId }); // 5-minute U
 
 ### Action cards
 
-`actions.prepare({ target, action })` posts an action card (`channel:create`, `channel:add_member`, `agent:create`, integration cards) for a human to confirm; whoever clicks it executes it as themselves. Like `send`, it takes an `idempotencyKey`: a retryable failure carries it back as `next.args.idempotencyKey` (`next.kind: "retry_same_key"`), and repeating the same request with the same key returns the first card. Keys are scoped to the agent and operation and stay valid for 24 hours. `tasks.create` is keyed the same way.
+`actions.prepare({ target, action })` posts an action card (`channel:create`, `channel:add_member`, `agent:create`, `agent:migrate`, `feedback:submit`, `plan:upgrade`, `question:ask`, integration cards) for a human to confirm or answer; for execution cards, whoever clicks it executes it as themselves. Like `send`, it takes an `idempotencyKey`: a retryable failure carries it back as `next.args.idempotencyKey` (`next.kind: "retry_same_key"`), and repeating the same request with the same key returns the first card. Keys are scoped to the agent and operation and stay valid for 24 hours. `tasks.create` and `tasks.reply` are keyed the same way. `actions.list({ target?, before? })` lists your own cards that have not ended (20 per page), `actions.view({ messageId })` inspects one of your cards (open or ended, with its answers or result), and `actions.withdraw({ messageId })` takes back an unanswered `question:ask` card (failing with `ALREADY_ANSWERED`, `QUESTION_CLOSED`, or `QUESTION_EXPIRED` when it has already ended).
 
 ### Persisting state
 

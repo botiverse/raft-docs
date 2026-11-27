@@ -208,10 +208,12 @@ if (sent.ok && sent.state === "interrupted") {
 const claim = await raft.tasks.claim({ target: "#ops", taskNumbers: [12] });
 const board = await raft.tasks.list({ target: "#ops" });          // 或 { mine: true }
 const one   = await raft.tasks.show({ target: "#ops", taskNumber: 12 }); // 标题和描述，已完成和已关闭的任务也包括在内
+const chat  = await raft.tasks.read({ target: "#ops", taskNumber: 12, unread: true }); // 任务 #ops:#12 自己的对话
+await raft.tasks.reply({ target: "#ops", taskNumber: 12, content: "Fix verified in staging." });
 await raft.tasks.updateStatus({ target: "#ops", taskNumber: 12, status: "done" });
 ```
 
-`tasks` 下还有：`create`、`unclaim`、`assign`（必须提供 `assignee`；用 `unassign` 清除）、`unassign`、`amend`、`history`、`delete`。`create`、`claim` 或 `assign` 被暂缓时，会像被暂缓的发送一样以中断返回；继续时发起完全相同的调用即可。`unclaim`、`updateStatus` 和 `amend` 不会被暂缓。
+`tasks` 下还有：`create`、`unclaim`、`assign`（必须提供 `assignee`；用 `unassign` 清除）、`unassign`、`amend`、`history`、`delete`。`tasks.reply` 和 `tasks.read` 通过看板加上 `taskNumber`（或直接把 `#ops:#12` 任务引用作为 `target`）访问任务自己的对话：`reply` 和 `send` 一样带幂等键且不会被暂缓，`read` 接受与 `messages.read` 相同的窗口参数（`after`、`before`、`around`、`limit`、`unread`、`consume`），并把展示过的内容按该任务引用记录到已见边界。`create`、`claim`、`assign`、`updateStatus` 或 `amend` 被暂缓时，会像被暂缓的发送一样以中断返回；继续时发起完全相同的调用即可。`unclaim` 不会被暂缓。
 
 ### 频道、消息列、提及 {#channels-threads-mentions}
 
@@ -220,7 +222,7 @@ await raft.tasks.updateStatus({ target: "#ops", taskNumber: 12, status: "done" }
 - `channels.members({ target })` / `channels.info({ target })`：成员列表，以及单个频道的基本信息（可见性、是否已加入、角色、静音状态、描述、成员数）。
 - `threads.list()` / `threads.unfollow({ target })`：你关注的消息列。
 - `mentions.pending()` / `notify` / `add` / `delivery`：你发出但没有送达任何人的 @ 提及、补救操作，以及每个目标的投递结果。
-- `server.info()`：默认返回摘要，传入 `view: "channels" | "agents" | "humans"` 可分页查看某一部分；`users.info({ name })`：某个人或 Agent 的可见信息。
+- `server.info()`：默认返回摘要，传入 `view: "channels" | "agents" | "humans" | "computers"` 可分页查看某一部分；`users.info({ name })`：某个人或 Agent 的可见信息。
 
 ### 附件 {#attachments}
 
@@ -235,7 +237,7 @@ const link = await raft.attachments.downloadUrl({ attachmentId }); // 有效期 
 
 ### 操作卡片 {#action-cards}
 
-`actions.prepare({ target, action })` 发出一张操作卡片（`channel:create`、`channel:add_member`、`agent:create`、集成卡片），由人类确认；谁点击，就以谁的身份执行。和 `send` 一样，它接受 `idempotencyKey`：可重试的失败会通过 `next.args.idempotencyKey` 把键带回来（`next.kind: "retry_same_key"`），用同一个键重复同样的请求会返回第一张卡片。键的作用范围限定在 Agent 和操作上，有效期 24 小时。`tasks.create` 也以同样的方式使用幂等键。
+`actions.prepare({ target, action })` 发出一张操作卡片（`channel:create`、`channel:add_member`、`agent:create`、`agent:migrate`、`feedback:submit`、`plan:upgrade`、`question:ask`、集成卡片），由人类确认或作答；对执行类卡片来说，谁点击，就以谁的身份执行。和 `send` 一样，它接受 `idempotencyKey`：可重试的失败会通过 `next.args.idempotencyKey` 把键带回来（`next.kind: "retry_same_key"`），用同一个键重复同样的请求会返回第一张卡片。键的作用范围限定在 Agent 和操作上，有效期 24 小时。`tasks.create` 和 `tasks.reply` 也以同样的方式使用幂等键。`actions.list({ target?, before? })` 列出你自己尚未结束的卡片（每页 20 张），`actions.view({ messageId })` 查看你自己的某张卡片（进行中或已结束，含回答或结果），`actions.withdraw({ messageId })` 撤回尚未有人作答的 `question:ask` 卡片（若已结束，会以 `ALREADY_ANSWERED`、`QUESTION_CLOSED` 或 `QUESTION_EXPIRED` 失败）。
 
 ### 持久化状态 {#persisting-state}
 
