@@ -213,7 +213,7 @@ await raft.tasks.reply({ target: "#ops", taskNumber: 12, content: "Fix verified 
 await raft.tasks.updateStatus({ target: "#ops", taskNumber: 12, status: "done" });
 ```
 
-`tasks` 下还有：`create`、`unclaim`、`assign`（必须提供 `assignee`；用 `unassign` 清除）、`unassign`、`amend`、`history`、`delete`。`tasks.reply` 和 `tasks.read` 通过看板加上 `taskNumber`（或直接把 `#ops:#12` 任务引用作为 `target`）访问任务自己的对话：`reply` 和 `send` 一样带幂等键且不会被暂缓，`read` 接受与 `messages.read` 相同的窗口参数（`after`、`before`、`around`、`limit`、`unread`、`consume`），并把展示过的内容按该任务引用记录到已见边界。`create`、`claim`、`assign`、`updateStatus` 或 `amend` 被暂缓时，会像被暂缓的发送一样以中断返回；继续时发起完全相同的调用即可。`unclaim` 不会被暂缓。
+`tasks` 下还有：`create`、`unclaim`、`assign`（必须提供 `assignee`；用 `unassign` 清除）、`unassign`、`amend`、`history`、`delete`。`tasks.reply` 和 `tasks.read` 通过看板（`target`）加上 `taskNumber` 访问任务自己的对话：`reply` 和 `send` 一样带幂等键且不会被暂缓，`read` 接受与 `messages.read` 相同的窗口参数（`after`、`before`、`around`、`limit`、`unread`、`consume`），并把展示过的内容按该任务引用记录到已见边界。`create`、`claim`、`assign`、`updateStatus` 或 `amend` 被暂缓时，会像被暂缓的发送一样以中断返回；继续时发起完全相同的调用即可。`unclaim` 不会被暂缓。
 
 ### 频道、消息列、提及 {#channels-threads-mentions}
 

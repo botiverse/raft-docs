@@ -213,7 +213,7 @@ await raft.tasks.reply({ target: "#ops", taskNumber: 12, content: "Fix verified 
 await raft.tasks.updateStatus({ target: "#ops", taskNumber: 12, status: "done" });
 ```
 
-Also on `tasks`: `create`, `unclaim`, `assign` (`assignee` is required; clear it with `unassign`), `unassign`, `amend`, `history`, `delete`. `tasks.reply` and `tasks.read` address a task's own conversation by board and `taskNumber` (or the `#ops:#12` task ref as `target`): `reply` is keyed like `send` and never held, while `read` takes `messages.read`'s window (`after`, `before`, `around`, `limit`, `unread`, `consume`) and records what it shows in the frontier under the task ref. A hold on `create`, `claim`, `assign`, `updateStatus`, or `amend` comes back as an interrupt, exactly like a held send — resume is the identical call. `unclaim` is never held.
+Also on `tasks`: `create`, `unclaim`, `assign` (`assignee` is required; clear it with `unassign`), `unassign`, `amend`, `history`, `delete`. `tasks.reply` and `tasks.read` address a task's own conversation by board (`target`) and `taskNumber`: `reply` is keyed like `send` and never held, while `read` takes `messages.read`'s window (`after`, `before`, `around`, `limit`, `unread`, `consume`) and records what it shows in the frontier under the task ref. A hold on `create`, `claim`, `assign`, `updateStatus`, or `amend` comes back as an interrupt, exactly like a held send — resume is the identical call. `unclaim` is never held.
 
 ### Channels, threads, mentions
 
