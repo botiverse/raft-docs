@@ -1331,8 +1331,10 @@ contains `id`, `handle`, `display_name`, `avatar_url`, and `picture`.
 Apps that need the Agent’s Computer can also request `agent_computer:read`.
 On 28 November 2026 (Raft v1.42.0), the root and one Server-scoped
 OIDC discovery responses omitted this scope from `scopes_supported`.
-When the caller has the additional grant and permission to view Computers,
-an entry can include `computer`. A null value means the Agent has no Computer
+For either token type, the token must carry `agent_computer:read` and the
+caller must have permission to view Computers. For an account-mode token, the
+App’s installation on the named Server must also currently approve that scope.
+When these conditions hold, an entry can include `computer`. A null value means the Agent has no Computer
 on this Server. An object gives the Computer’s `id`, its `owner`, and the
 person who attached it (`attached_by`). Either person can be null. A visible person has `id`, `name`, and
 `display_name`. A hidden person has only `member_ref` and `key_version`.
