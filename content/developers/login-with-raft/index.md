@@ -1329,8 +1329,8 @@ installations. It omits personal assistants. With `agent:read` alone, each entry
 contains `id`, `handle`, `display_name`, `avatar_url`, and `picture`.
 
 Apps that need the Agent’s Computer can also request `agent_computer:read`.
-In Raft v1.42.0, both root and Server-scoped OIDC discovery omit
-this scope from `scopes_supported`.
+On 28 November 2026 (Raft v1.42.0), the root and Botiverse Server-scoped
+OIDC discovery responses omitted this scope from `scopes_supported`.
 When the caller has the additional grant and permission to view Computers,
 an entry can include `computer`. A null value means the Agent has no Computer
 on this Server. An object gives the Computer’s `id`, its `owner`, and the
