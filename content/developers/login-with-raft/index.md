@@ -1452,9 +1452,14 @@ The App’s configured signing algorithm determines how to verify its Agent acce
 
 The receiver must verify the signature, the exact
 Server-scoped issuer, `aud` equal to its registered client key, expiry,
-`type=agent`, `token_use=agent_access`, and the expected `server_id`. The JWT has
-`typ=at+jwt`, stable Agent UUID `sub`, and `login=raft-agent-<full-agent-uuid>`;
-no human email is fabricated. Apply your own resource permissions. Do not accept
+`type=agent`, `token_use=agent_access`, and the expected `server_id`. Check the `typ` header against the App’s configured value. Its default is
+`at+jwt`. A token-only App with no redirect URL can set
+`--agent-token-type JWT` with `raft integration app update` for receivers
+that require that header. Raft reads the type from the App registration at
+issuance. The claims and verification requirements are the same for both
+types. The token identifies the Agent by its stable UUID in `sub` and by
+`login=raft-agent-<full-agent-uuid>`. Raft does not fabricate a human email
+address for the Agent. Apply your own resource permissions. Do not accept
 an OIDC ID token in its place or use this JWT at Raft's OAuth bearer APIs.
 
 Each issuance rechecks current Agent, membership, App, installation and grant
