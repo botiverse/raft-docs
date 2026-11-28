@@ -1203,6 +1203,35 @@ Invoking the example with `noteId=n_42` and `text=Looks good` sends `POST /api/n
 
 Invoking a flat action such as `POST /api/raft/actions/archive-note` with `id=n_42` sends `POST /api/raft/actions/archive-note?id=n_42` with the JSON body `{"id":"n_42"}`. Read `id` from one place, the body for a flat `POST` action, and don't reject the request because the query also carries it. If you want `id` sent only once, put `{id}` in the path.
 
+#### Error answers
+
+When an action fails, answer with an HTTP error status and a JSON body that says why. `raft integration invoke` reads two body shapes as your app's own answer:
+
+- Nested: `{"error": {"code": "...", "message": "..."}}`, optionally with `details` (an object) and `request_id` inside `error`.
+- Flat: `{"error": "<one sentence>", "code": "..."}`, optionally with `retryable` (a boolean), `next` (the command the agent should run next), `retry_after` (seconds, a number) and `request_id`.
+
+`code` and the sentence are both required; without either, the body is not read as your answer. The agent sees the status and your `code`, your sentence quoted as yours, then `retryable`, your `next` (quoted as yours too, under `next step, as the App gives it:`), `retry_after` and `request_id` when you sent them, and every other field under `other fields:`. Credential-looking values are redacted. A flat `403` prints as:
+
+```text
+Error: service action answered HTTP 403 SECRET_REQUEST_RECIPIENT_NOT_ALLOWED:
+  │ Only people in #ops can be sent this secret request. Ask an owner to add them first.
+retryable: false
+next step, as the App gives it:
+  │ raft secret share "OpenAI prod" @bob --level view --for 7d
+other fields: {"ok":false,"status":403}
+```
+
+The status decides whether the agent is told to log in again:
+
+| Status | What the agent reads |
+| --- | --- |
+| `401` | A refused service session, whatever the body: `service session was rejected or expired`, then run `raft integration login --service <id>` and retry. |
+| `403` with either shape | Your app refusing the action. No login step: logging in again would not change the answer. |
+| `403` with neither shape | Read like `401`: a refused session, with the login step. |
+| Any other error status | Either shape prints as above; any other body as `service action failed (HTTP <status>); response body: ...`. |
+
+Answer `401` only when the session itself is missing or invalid. Give every other refusal a `code` and a sentence that ends with the next step. A body with a top-level string `text` (reply text) is printed as that text instead, on any status but `401`. Older Raft CLI releases read only the nested shape, so a flat `403` there still reads as a refused session.
+
 ### Unsupported manifest patterns
 
 - Shell commands (`node script.js`, `drive9 --token ...`, `/usr/local/bin/drive9`)
@@ -1701,7 +1730,7 @@ The questions integrators actually hit, then the exact error strings.
 | No actions appear to agents | Manifest needs `execution.mode: "http_api"` and an `actions` array; each action needs a unique `name`, a supported method, and a relative path starting with `/`. |
 | Action reports a missing required parameter | The manifest marks it `required: true`; match the parameter names your endpoint expects. |
 | Action handoff did not set a session cookie | The callback must mint the app session without prior browser state, and its cookie host/path/Secure attributes must allow the declared action endpoint to receive it. |
-| `service session was rejected or expired` | Generic action-session failure; it does not distinguish missing, wrongly scoped, expired, or app-rejected sessions. Re-login helps only if the callback can create a usable session. Use the black-box checks above before attributing the failure. |
+| `service session was rejected or expired` | The action answered `401`, or `403` without a typed error body ([Error answers](#error-answers)). Generic action-session failure; it does not distinguish missing, wrongly scoped, expired, or app-rejected sessions. To refuse the action itself without sending the agent to log in again, answer `403` with a `code` and a sentence. Re-login helps only if the callback can create a usable session. Use the black-box checks above before attributing the failure. |
 | `body is too long` / `summary is too long` | The message text is over 2000 characters. Shorten it; put long detail behind a link or one of your app's actions. |
 | `delivery must be wake or inbox` | `delivery` was set to something other than `"wake"` or `"inbox"`. |
 | `invalid_scope` on agent access request | The app didn't declare `agent:event:write` / `agent:notification:write`. Update the registration first. |

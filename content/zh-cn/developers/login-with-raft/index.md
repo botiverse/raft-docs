@@ -1125,6 +1125,35 @@ Agent 通过 Raft 调用某个操作时，Raft 会带上操作参数，以及经
 
 用 `id=n_42` 调用 `POST /api/raft/actions/archive-note` 这样的扁平操作，发送的是 `POST /api/raft/actions/archive-note?id=n_42`，JSON 请求体为 `{"id":"n_42"}`。只从一个地方读取 `id`（扁平的 `POST` 操作就读请求体），也不要因为查询字符串里同样带着它就拒绝请求。如果你希望 `id` 只发送一次，就把 `{id}` 放进路径。
 
+#### 出错时的应答 {#error-answers}
+
+操作失败时，用 HTTP 错误状态码应答，并在 JSON 响应体里说明原因。`raft integration invoke` 把两种响应体形状当作你的应用自己的应答：
+
+- 嵌套形状：`{"error": {"code": "...", "message": "..."}}`，`error` 里还可以带 `details`（一个对象）和 `request_id`。
+- 扁平形状：`{"error": "<one sentence>", "code": "..."}`，还可以带 `retryable`（布尔值）、`next`（Agent 下一步该运行的命令）、`retry_after`（秒数，数字）和 `request_id`。
+
+`code` 和那句话都必须有；缺了任何一个，响应体就不会被当作你的应答。Agent 先看到状态码和你的 `code`，然后是以你的名义引用的那句话，再是你发了的 `retryable`、`next`（同样以你的名义引用，放在 `next step, as the App gives it:` 下面）、`retry_after` 和 `request_id`，其余字段都放在 `other fields:` 后面。看起来像凭据的值会被遮盖。一个扁平形状的 `403` 打印出来是这样：
+
+```text
+Error: service action answered HTTP 403 SECRET_REQUEST_RECIPIENT_NOT_ALLOWED:
+  │ Only people in #ops can be sent this secret request. Ask an owner to add them first.
+retryable: false
+next step, as the App gives it:
+  │ raft secret share "OpenAI prod" @bob --level view --for 7d
+other fields: {"ok":false,"status":403}
+```
+
+状态码决定 Agent 会不会被叫去重新登录：
+
+| 状态码 | Agent 看到的 |
+| --- | --- |
+| `401` | 不管响应体是什么，都是服务会话被拒绝：`service session was rejected or expired`，然后运行 `raft integration login --service <id>` 再重试。 |
+| 带任一形状的 `403` | 你的应用拒绝了这个操作。没有登录这一步：重新登录也不会改变应答。 |
+| 两种形状都不是的 `403` | 和 `401` 一样，当作会话被拒绝，带登录这一步。 |
+| 其他错误状态码 | 两种形状都按上面的方式打印；其他响应体打印为 `service action failed (HTTP <status>); response body: ...`。 |
+
+只有会话本身缺失或无效时才应答 `401`。其他拒绝都给出 `code` 和一句以下一步结尾的话。带顶层字符串 `text`（回复文本）的响应体，除了 `401`，在任何状态码下都改为打印这段文本。较早的 Raft CLI 版本只认嵌套形状，在那些版本里扁平形状的 `403` 仍会被当作会话被拒绝。
+
 ### 不支持的 manifest 写法 {#unsupported-manifest-patterns}
 
 - shell 命令（`node script.js`、`drive9 --token ...`、`/usr/local/bin/drive9`）
@@ -1415,7 +1444,7 @@ Content-Type: application/json
 | Agent 看不到任何操作 | manifest 需要 `execution.mode: "http_api"` 和 `actions` 数组；每个操作都需要唯一的 `name`、受支持的方法，以及以 `/` 开头的相对路径。 |
 | 操作报告缺少必填参数 | manifest 把它标成了 `required: true`；让参数名与你的端点期望的一致。 |
 | 操作交接没有设置会话 cookie | 回调必须在没有事先浏览器状态的情况下签发应用会话，并且 cookie 的 host、path、Secure 属性必须让所声明的操作端点能收到它。 |
-| `service session was rejected or expired` | 笼统的操作会话失败；不区分会话缺失、作用范围错误、已过期还是被应用拒绝。只有当回调能创建可用的会话时，重新登录才有用。在判断失败原因之前，先做上面的黑盒检查。 |
+| `service session was rejected or expired` | 操作应答了 `401`，或者应答了不带类型化错误响应体的 `403`（见[出错时的应答](#error-answers)）。笼统的操作会话失败；不区分会话缺失、作用范围错误、已过期还是被应用拒绝。只有当回调能创建可用的会话时，重新登录才有用。在判断失败原因之前，先做上面的黑盒检查。要拒绝操作本身、又不让 Agent 去重新登录，就应答带 `code` 和一句话的 `403`。 |
 | `summary is too long` | summary 超过 2000 个字符。请缩短；较长的细节放到链接或你应用的某个操作后面。 |
 | Agent 访问请求返回 `invalid_scope` | 应用没有声明 `agent:event:write` / `agent:notification:write`。先更新注册信息。 |
 | `resource is required` / `resource does not match requested server` | 根据访问请求的响应，严格构造 `urn:raft:server:<agent.serverId>:agent-inbound`。 |
