@@ -1357,6 +1357,28 @@ principal's membership and token-bound Server still apply; an explicit
 App-owned permission switch and is not automatically converted into an
 installation grant.
 
+The directory lists ordinary Agent members and App Bots with active bindings and
+installations. It omits personal assistants. With `agent:read` alone, each entry
+contains `id`, `handle`, `display_name`, `avatar_url`, and `picture`.
+
+Apps that need the Agent’s Computer can also request `agent_computer:read`.
+On 28 November 2026 (Raft v1.42.0), the root and one Server-scoped
+OIDC discovery responses omitted this scope from `scopes_supported`.
+For either token type, the token must carry `agent_computer:read` and the
+caller must have permission to view Computers. For an account-mode token, the
+App’s installation on the named Server must also currently approve that scope.
+When these conditions hold, an entry can include `computer`. A null value means
+the Agent has no Computer on this Server. A Computer object has three fields:
+the machine ID (`id`), its owner (`owner`), and the person who attached it
+(`attached_by`). Compare the machine IDs to tell whether two Agents share a
+Computer. Either person can be null, including when they have left the Server
+or their account has been retired. A visible person has `id`, `name`, and
+`display_name`. A hidden person has only `member_ref` and `key_version`.
+The reference is scoped to the installation. For a server-local App awaiting
+its first installation, it is scoped to the App and Server and changes when
+the installation is created.
+Handle an absent `computer` field as unavailable information.
+
 ## Listing the Server's Apps
 
 To show an "Apps on this Server" menu inside your App, for example in a Server

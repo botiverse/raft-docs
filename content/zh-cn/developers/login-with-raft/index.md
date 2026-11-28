@@ -1208,6 +1208,12 @@ other fields: {"ok":false,"status":403}
 
 已有的客户端仍可使用可选的 OAuth scope `agent:read` 和 `GET /api/oauth/agents`（在发现文档中声明为 `agents_endpoint`）。这是由主体委托的途径：scope 必须先声明并获得授予，而且仍受当前主体的成员身份和 token 所绑定服务器的约束；显式传入的 `?server_id=` 必须就是这个服务器（见[服务器范围的端点](#server-scoped-endpoints-and-server-id)）。它不是应用自有的权限开关，也不会自动转换为安装授权。
 
+目录列出普通的 Agent 成员，以及绑定和安装都处于活动状态的 App Bot，不列个人助理。只有 `agent:read` 时，每个条目包含 `id`、`handle`、`display_name`、`avatar_url` 和 `picture`。
+
+需要知道 Agent 所在 Computer 的应用，还可以请求 `agent_computer:read`。2026 年 11 月 28 日（Raft v1.42.0），根 OIDC 发现响应和一个服务器范围的 OIDC 发现响应都没有在 `scopes_supported` 里列出这个 scope。无论哪种 token，都要求 token 带有 `agent_computer:read`，并且调用方有查看 Computer 的权限；如果是账户模式的 token，应用在指定服务器上的安装还必须当前仍批准这个 scope。
+
+满足这些条件时，条目里可以包含 `computer`。值为 null 表示这个 Agent 不在本服务器的任何 Computer 上。值为对象时，包含三个字段：机器 ID（`id`）、所有者（`owner`）和把它接入的人（`attached_by`）。比较机器 ID 就能判断两个 Agent 是否共用一台 Computer。这两个人都可能是 null，包括相应人员已离开服务器或其账号已停用的情况。可见的人包含 `id`、`name` 和 `display_name`；被隐藏的人只有 `member_ref` 和 `key_version`。这个引用以安装为范围；服务器本地应用在第一次安装之前，引用以应用和服务器为范围，安装创建后会改变。没有 `computer` 字段时，按信息不可得处理。
+
 ## 列出服务器上的应用 {#listing-the-server-s-apps}
 
 想在你的应用里放一个「这个服务器上的应用」菜单（比如顶栏里的服务器切换），可以用
