@@ -1324,6 +1324,18 @@ principal's membership and token-bound Server still apply; an explicit
 App-owned permission switch and is not automatically converted into an
 installation grant.
 
+The directory lists ordinary Agent members and App Bots with active bindings and
+installations. It omits personal assistants. With `agent:read` alone, each entry
+contains `id`, `handle`, `display_name`, `avatar_url`, and `picture`.
+
+Apps that need the Agent’s Computer can also request `agent_computer:read`.
+When the caller has the additional grant and permission to view Computers,
+an entry can include `computer`. A null value means the Agent has no Computer
+on this Server. An object gives the Computer’s `id`, its `owner`, and the
+person who attached it (`attached_by`). Either person can be null. A person
+hidden from the caller appears only as an installation-scoped reference.
+Handle an absent `computer` field as unavailable information.
+
 ## Listing the Server's Apps
 
 To show an "Apps on this Server" menu inside your App, for example in a Server
