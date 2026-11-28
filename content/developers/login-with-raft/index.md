@@ -1329,13 +1329,16 @@ installations. It omits personal assistants. With `agent:read` alone, each entry
 contains `id`, `handle`, `display_name`, `avatar_url`, and `picture`.
 
 Apps that need the Agent’s Computer can also request `agent_computer:read`.
-On 28 November 2026 (Raft v1.42.0), the root and Botiverse Server-scoped
+On 28 November 2026 (Raft v1.42.0), the root and one Server-scoped
 OIDC discovery responses omitted this scope from `scopes_supported`.
 When the caller has the additional grant and permission to view Computers,
 an entry can include `computer`. A null value means the Agent has no Computer
 on this Server. An object gives the Computer’s `id`, its `owner`, and the
-person who attached it (`attached_by`). Either person can be null. A person
-hidden from the caller appears only as an installation-scoped reference.
+person who attached it (`attached_by`). Either person can be null. A visible person has `id`, `name`, and
+`display_name`. A hidden person has only `member_ref` and `key_version`.
+The reference is scoped to the installation. For a server-local App awaiting
+its first installation, it is scoped to the App and Server and changes when
+the installation is created.
 Handle an absent `computer` field as unavailable information.
 
 ## Listing the Server's Apps
