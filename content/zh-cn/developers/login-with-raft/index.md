@@ -1132,13 +1132,14 @@ Agent 通过 Raft 调用某个操作时，Raft 会带上操作参数，以及经
 - 嵌套形状：`{"error": {"code": "...", "message": "..."}}`，`error` 里还可以带 `details`（一个对象）和 `request_id`。
 - 扁平形状：`{"error": "<one sentence>", "code": "..."}`，还可以带 `retryable`（布尔值）、`next`（Agent 下一步该运行的命令）、`retry_after`（秒数，数字）和 `request_id`。
 
-`code` 和那句话都必须有；缺了任何一个，响应体就不会被当作你的应答。Agent 先看到状态码和你的 `code`，然后是以你的名义引用的那句话，再是你发了的 `retryable`、`next`、`retry_after` 和 `request_id`，其余字段都放在 `other fields:` 后面。看起来像凭据的值会被遮盖。一个扁平形状的 `403` 打印出来是这样：
+`code` 和那句话都必须有；缺了任何一个，响应体就不会被当作你的应答。Agent 先看到状态码和你的 `code`，然后是以你的名义引用的那句话，再是你发了的 `retryable`、`next`（同样以你的名义引用，放在 `next step, as the App gives it:` 下面）、`retry_after` 和 `request_id`，其余字段都放在 `other fields:` 后面。看起来像凭据的值会被遮盖。一个扁平形状的 `403` 打印出来是这样：
 
 ```text
 Error: service action answered HTTP 403 SECRET_REQUEST_RECIPIENT_NOT_ALLOWED:
   │ Only people in #ops can be sent this secret request. Ask an owner to add them first.
 retryable: false
-next: raft secret share "OpenAI prod" @bob --level view --for 7d
+next step, as the App gives it:
+  │ raft secret share "OpenAI prod" @bob --level view --for 7d
 other fields: {"ok":false,"status":403}
 ```
 

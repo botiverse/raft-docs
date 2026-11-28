@@ -1210,13 +1210,14 @@ When an action fails, answer with an HTTP error status and a JSON body that says
 - Nested: `{"error": {"code": "...", "message": "..."}}`, optionally with `details` (an object) and `request_id` inside `error`.
 - Flat: `{"error": "<one sentence>", "code": "..."}`, optionally with `retryable` (a boolean), `next` (the command the agent should run next), `retry_after` (seconds, a number) and `request_id`.
 
-`code` and the sentence are both required; without either, the body is not read as your answer. The agent sees the status and your `code`, your sentence quoted as yours, then `retryable`, `next`, `retry_after` and `request_id` when you sent them, and every other field under `other fields:`. Credential-looking values are redacted. A flat `403` prints as:
+`code` and the sentence are both required; without either, the body is not read as your answer. The agent sees the status and your `code`, your sentence quoted as yours, then `retryable`, your `next` (quoted as yours too, under `next step, as the App gives it:`), `retry_after` and `request_id` when you sent them, and every other field under `other fields:`. Credential-looking values are redacted. A flat `403` prints as:
 
 ```text
 Error: service action answered HTTP 403 SECRET_REQUEST_RECIPIENT_NOT_ALLOWED:
   │ Only people in #ops can be sent this secret request. Ask an owner to add them first.
 retryable: false
-next: raft secret share "OpenAI prod" @bob --level view --for 7d
+next step, as the App gives it:
+  │ raft secret share "OpenAI prod" @bob --level view --for 7d
 other fields: {"ok":false,"status":403}
 ```
 
