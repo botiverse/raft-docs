@@ -967,6 +967,8 @@ Cache-Control: no-store
 
 **角色或成员关系最多缓存 60 秒**。这是协议的一部分，不是建议。你的应用缓存某个人在某个服务器上的角色或成员关系，最长 60 秒，不管它是从哪里读到的：userinfo 的 `server_role`、`/membership` 或 `/servers`。`/membership` 和 `/servers` 的响应带有 `Cache-Control: private, max-age=60`，就是这个上限。Raft 自己不缓存：每次请求都实时检查，所以离开服务器、角色降低、卸载或暂停，端到端都会在 60 秒内到达你的应用。绝不要根据登录时存下来的角色授权（见[不要根据存下来的角色授权](#authorization-is-yours-on-every-request)）。
 
+<a id="login-modes"></a>
+
 **登录模式**。现在每个应用都使用服务器模式：一个登录绑定到这个人选择的服务器，身份响应里带有 `server_id`、`server_slug` 和 `server_role`。一种需要应用主动启用的账户模式正在计划中：在这种模式下，登录不带服务器，每个服务器范围的调用都必须写明 `server_id`。在现有应用主动启用之前，它不会改变任何东西。显式传 `server_id`，并按它给你的数据分键，两种模式下都适用。
 
 ### 应用可用性 {#app-availability}
@@ -1172,7 +1174,7 @@ other fields: {"ok":false,"status":403}
 
 客户端密钥留在你的后端。前两个请求用 HTTP Basic 认证，凭据是应用的客户端 ID 和密钥：
 
-1. 用 `{"server_id":"<target-server-uuid>"}` 调用 `POST /api/oauth/installations/lookup`，查到当前有效的安装。
+1. 用 `{"server_id":"<target-server-uuid>"}` 调用 `POST /api/oauth/installations/lookup`，查到当前有效的安装。成功响应的 `login_mode` 表示应用的登录模式。对于目前支持的[服务器登录流程](#login-modes)，该值为 `server`。
    如果你的应用在这个服务器上没有有效的安装（从未安装、已卸载、已暂停或未获批准），会返回 `404`，其中 `"code": "installation_not_found"`，不会说明是哪一种。请按 `code` 判断，不要按 `error` 里的句子判断，也不要假定响应体只有这几个字段：Raft 可能会增加字段。把它当作「这里没有安装」，停止重试，直到你的应用在那里被安装或恢复。
 2. 用 `{"installation_id":"<installation-uuid>","groups":["agent"]}` 调用 `POST /api/oauth/installation-token`，获取有效期十分钟的安装 token，其权限仅限于实际已批准的组。
 3. 把这个 token 放进 `Authorization: Bearer <installation-token>`，调用 `GET /api/app-installation/agents`，读取该安装所在服务器的数据。请求参数无法选择其他服务器。
@@ -1202,7 +1204,7 @@ other fields: {"ok":false,"status":403}
 
 `agent` 就是这个 Agent 在列表里的那一项（含 `app_access`），再加上 `role`，每次调用都实时读取。`role` 是 `"admin"`、`"member"` 或 `null`；`null` 表示这个 Agent 不是该服务器的成员，没有角色（列表里的应用 bot）。`null` 要和其他非管理员角色一样处理：拒绝。所有查不到的情况都返回同一个 `404`，其中 `"code": "AGENT_NOT_FOUND"`：不在目录里的 Agent（私人助理、已删除的 Agent、已禁用的应用 bot）、其他服务器上的 Agent、已离开该服务器的 Agent，以及未知的 id。响应带 `Cache-Control: private, no-store`。结果只代表读取那一刻；下次需要时重新读，遇到 `null`、`404` 或任何错误都按拒绝处理。
 
-在该组获批之前，用 `groups: ["agent"]` 申请安装 token，token 端点会返回 `400`。安装 token 本身有效、但不含 `agent` 组时，调用 Agent 目录会返回 `403`。无效、过期、已撤销或已失效的安装 token 返回 `401`。已禁用的应用，以及已暂停或已卸载的安装，都会失去访问权限。这些凭据有别于主体的 OAuth access token，也有别于下文的服务 JWT。
+在该组获批之前，用 `groups: ["agent"]` 申请安装 token，token 端点会返回 `403`，其中 `"code": "group_not_granted"`。安装 token 本身有效、但不含 `agent` 组时，调用 Agent 目录会返回 `403`。无效、过期、已撤销或已失效的安装 token 返回 `401`。已禁用的应用，以及已暂停或已卸载的安装，都会失去访问权限。这些凭据有别于主体的 OAuth access token，也有别于下文的服务 JWT。
 
 已有的客户端仍可使用可选的 OAuth scope `agent:read` 和 `GET /api/oauth/agents`（在发现文档中声明为 `agents_endpoint`）。这是由主体委托的途径：scope 必须先声明并获得授予，而且仍受当前主体的成员身份和 token 所绑定服务器的约束；显式传入的 `?server_id=` 必须就是这个服务器（见[服务器范围的端点](#server-scoped-endpoints-and-server-id)）。它不是应用自有的权限开关，也不会自动转换为安装授权。
 
